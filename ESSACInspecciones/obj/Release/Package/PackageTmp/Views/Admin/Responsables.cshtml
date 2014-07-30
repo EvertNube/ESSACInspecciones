@@ -1,0 +1,35 @@
+﻿@{
+    ViewBag.Title = "Reporte Responsables";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<section class="vbox">
+    <section class="scrollable padder">
+        <div class="row m-b">
+            <div class="col-xs-12 col-md-10 col-md-offset-1">
+                <h2>Vista Mensual de Responsables</h2>
+                @using (Html.BeginForm("ReporteMes", "Admin", FormMethod.Post))
+                {
+                    @Html.ValidationSummary(true)
+                    <div class="row m-b">
+                        <div class="col-xs-12 col-md-6">
+                            @Html.Partial("_showAlertMessages")
+
+                            <section class="panel panel-default">
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <label>Seleccione los responsables a visualizar</label>
+                                        @Html.DropDownList("responsables", new SelectList(ViewBag.Responsables, "IdUsuario", "Nombre"), new {@multiple = "multiple",  @class = "parsley-validated form-control" })
+                                    </div>
+                                    <div class="line line-dashed line-lg pull-in"></div>
+                                    <button type="submit" class="btn btn-sm btn-primary btn-rounded">Ver Reporte</button>
+                                    <a class="btn btn-sm btn-danger btn-rounded" href="@Url.Action("Index")">Salir</a>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+</section>

@@ -1,0 +1,70 @@
+﻿@{
+    ViewBag.Title = "Servicios";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+@model IList<ESSACInspecciones.Core.DTO.ServicioDTO>
+<section class="vbox">
+    <section class="scrollable padder">
+        <div class="row m-b">
+            <div class="col-xs-12 col-md-10 col-md-offset-1">
+                <h2>Servicios</h2>
+                @Html.Partial("_showAlertMessages")
+                <section class="panel panel-default">
+                    <div class="row text-sm wrapper">
+                        <div class="col-sm-8">
+                            <div class="btn-group">
+                                @if (ViewBag.EsAdmin)
+                                {
+                                    <label><input type="checkbox" id="btn-showInactive" /> Mostrar Inactivos</label>
+                                }
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <a class="btn btn-sm btn-success pull-right btn-rounded" href="@Url.Action("Servicio")"><i class="fa fa-plus"></i> Crear nuevo Servicio</a>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped m-b-none">
+                            <thead>
+                                <tr>
+                                    <th width="10%">ID</th>
+                                    <th width="40%">Nombre</th>
+                                    <th width="40%">Nombre Corto</th>
+                                    @if (ViewBag.EsAdmin)
+                                    {
+                                        <th width="10%">Opciones</th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @if (Model != null) {
+                                int cont = 1;
+                                foreach (var obj in Model)
+                                {
+                                    var classInactive = (ViewBag.EsAdmin && !obj.Active) ? "class='inactive'" : "";
+                                    <tr @Html.Raw(classInactive)>
+                                        <td align="center">
+                                            @if (ViewBag.EsAdmin && !obj.Active)
+                                            { <span class="badge bg-danger" data-toggle="tooltip" data-placement="left" data-original-title="Inactivo">@cont</span>}
+                                            else
+                                            {@cont}
+                                        </td>
+                                        <td>@obj.NombreServicio</td>
+                                        <td>@obj.NombreCorto</td>
+                                        @if (ViewBag.EsAdmin)
+                                        {
+                                            <td align="center"><a href="@Url.Action("Servicio", new { id = obj.IdServicio})"><i class="fa fa-pencil"></i></a></td>
+                                        }
+                                    </tr>
+                                        cont++;
+                                }
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+    </section>
+</section>

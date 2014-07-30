@@ -1,0 +1,66 @@
+﻿
+@model IList<ESSACInspecciones.Core.DTO.ContactoDTO>
+
+        <div class="row m-b">
+            <div class="col-xs-12 col-md-11">
+                <h2>Contactos</h2>
+                <section class="panel panel-default">
+                    <div class="row text-sm wrapper">
+                        <div class="col-sm-8">
+                            <div class="btn-group">
+                                @if (ViewBag.EsAdmin)
+                                {
+                                    <label><input type="checkbox" id="btn-showInactive" /> Mostrar Inactivos</label>
+                                }
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <a class="btn btn-sm btn-success pull-right btn-rounded" href="@Url.Action("Contacto", new { IdCliente = ViewBag.IdCliente})"><i class="fa fa-plus"></i> Agregar Contacto</a>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped m-b-none">
+                            <thead>
+                                <tr>
+                                    <th width="10%">ID</th>
+                                    <th width="30%">Nombre</th>
+                                    <th width="30%">Email</th>
+                                    <th width="20%">Teléfonos</th>
+                                    @if (ViewBag.EsAdmin)
+                                    {
+                                        <th width="10%">Opciones</th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @if (Model != null) { 
+                                int cont = 1;
+                                foreach (var obj in Model)
+                                {
+                                    var classInactive = (ViewBag.EsAdmin && !obj.Active) ? "class='inactive'" : "";
+                                    <tr @Html.Raw(classInactive)>
+                                        <td align="center">
+                                            @if (ViewBag.EsAdmin && !obj.Active)
+                                            { <span class="badge bg-danger" data-toggle="tooltip" data-placement="left" data-original-title="Inactivo">@cont</span>}
+                                            else
+                                            {@cont}
+                                    </td>
+                                    <td>@obj.Nombre</td>
+                                    <td>@obj.Email</td>
+                                    <td>@obj.Telefono @if (!String.IsNullOrWhiteSpace(obj.Anexo)){ 
+                                        <span>(@obj.Anexo)</span> 
+                                        }  / @obj.Celular</td>
+                                    @if (ViewBag.EsAdmin)
+                                    {
+                                        <td align="center"><a href="@Url.Action("Contacto", new { id = obj.IdContacto, IdCliente = ViewBag.IdCliente })"><i class="fa fa-pencil"></i></a></td>
+                                    }
+                                </tr>
+                                    cont++;
+                                }
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </div>

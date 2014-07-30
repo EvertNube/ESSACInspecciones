@@ -1,0 +1,422 @@
+﻿@using ESSACInspecciones.Core.DTO;
+@section styles{
+    @Styles.Render("~/Content/themes/admin/js/fuelux/fuelux.css")
+}
+@section scripts{
+    @Scripts.Render("~/Content/themes/admin/js/fuelux/fuelux.js")
+}
+@model ESSACInspecciones.Core.DTO.ProtocoloDTO
+@{
+    if (Model == null || Model.IdProtocolo == 0)
+    {
+        ViewBag.Title = "ES-13-000063-RPD-PP-053-00-Ejemplo";
+    }
+    else { ViewBag.Title = Model.NombreAreaProtegida; }
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<section class="vbox">
+    <section class="scrollable padder">
+        <div class="row m-b">
+            <div class="col-xs-12 col-md-10 col-md-offset-1">
+                @if (Model == null || Model.IdProtocolo == 0)
+                {
+                    <h2>Nuevo Protocolo</h2>
+                }
+                else
+                {<h2>Actualizar Protocolo</h2>}
+
+                @using (Html.BeginForm("AddProtocolo_053", "Admin", FormMethod.Post))
+                {
+                    @Html.ValidationSummary(true)
+                    <div class="row m-b">
+                        <div class="col-xs-12 col-md-12">
+                            @Html.Partial("_showAlertMessages")
+
+                            <section class="panel panel-default">
+                                <header class="panel-heading font-bold">Protocolo de Pruebas según NFPA 20<br />Motobomba de agua Contra Incendio</header>
+                                <div class="panel-body">
+
+                                    <section class="panel panel-default scrollable padder wizard">
+                                        <div class="clearfix wizard-steps">
+                                            <ul class="steps">
+                                                @for (int i = 1; i <= Model.TotalPaginas; i++)
+                                                {
+                                                    var stepName = "step" + i; string activeStep = string.Empty, badgeStep = string.Empty;
+                                                    if (i == 1) { activeStep = "active"; badgeStep = "badge-info"; }
+                                                    <li data-target="#@stepName" class="@activeStep"><span class="badge @badgeStep">@i</span>Step @i</li>
+                                                }
+                                                @*<li data-target="#step1" class="active"><span class="badge badge-info">1</span>Step 1</li>
+                                                    <li data-target="#step2"><span class="badge">2</span>Step 2</li>
+                                                    <li data-target="#step3"><span class="badge">3</span>Step 3</li>
+                                                    <li data-target="#step4"><span class="badge">4</span>Step 4</li>
+                                                    <li data-target="#step5"><span class="badge">5</span>Step 5</li>*@
+                                            </ul>
+                                            <div class="actions">
+                                                @*<button type="button" class="btn btn-default btn-sm btn-prev" disabled="disabled">Prev</button>
+                                                    <button type="button" class="btn btn-default btn-sm btn-next" data-last="Finish">Next</button>*@
+                                                <button type="button" class="btn btn-default btn-sm btn-prev" disabled="disabled"><i class="glyphicon glyphicon-chevron-left"></i> Anterior</button>
+                                                <button type="button" class="btn btn-default btn-sm btn-next" data-last="Último">Siguiente <i class="glyphicon glyphicon-chevron-right"></i></button>
+                                            </div>
+                                        </div>
+                                        <div class="step-content">
+
+                                            @for (int i = 1; i <= Model.TotalPaginas; i++)
+                                            {
+                                                var stepname = "step" + i; string activeStep = string.Empty; if (i == 1) { activeStep = "active"; }
+                                                <div class="step-pane @activeStep" id="@stepname">
+                                                    @if (i == 1)
+                                                    {
+                                                        <table class="table table-bordered">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td colspan="6" style="background-color: #c2c0c2;"><label><strong> Nombre del Área Protegida: </strong></label></td>
+                                                                    <td colspan="6" style="background-color: #c2c0c2;"><label><strong> Fecha: </strong></label></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td colspan="6">
+                                                                        @Html.TextBoxFor(u => u.NombreAreaProtegida, new { @class = "form-control", @placeholder = "Ingrese el nombre", @type = "text" })
+                                                                        @Html.ValidationMessageFor(u => u.NombreAreaProtegida)
+                                                                    </td>
+                                                                    <td colspan="6">
+                                                                        @Html.TextBoxFor(u => u.Fecha, "{0:dd/MM/yyyy}", new { @class = "datepicker-input form-control", @type = "text", @data_provide = "datepicker" })
+                                                                        @Html.ValidationMessageFor(u => u.Fecha)
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td colspan="6" style="background-color: #c2c0c2;"><label><strong> Dirección: </strong></label></td>
+                                                                    <td colspan="6" style="background-color: #c2c0c2;"><label><strong> Hora de Inicio: </strong></label></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td colspan="6">
+                                                                        @Html.TextBoxFor(u => u.Direccion, new { @class = "form-control", @placeholder = "Ingrese la dirección", @type = "text" })
+                                                                        @Html.ValidationMessageFor(u => u.Direccion)
+                                                                    </td>
+                                                                    <td colspan="6">
+                                                                        <div class="input-group">
+                                                                            @Html.DropDownListFor(u => u.HoraInicio, new SelectList(ViewBag.Horas, "id", "name", Model != null ? Model.HoraInicio : 0), new { @class = "hour form-control parsley-validated", @style = "width: auto;" }) :
+                                                                            @Html.DropDownListFor(u => u.MinutoInicio, new SelectList(ViewBag.Minutos, "id", "name", Model != null ? Model.MinutoInicio : 0), new { @class = "minute form-control parsley-validated", @style = "width: auto;" })
+                                                                            @Html.ValidationMessageFor(u => u.HoraInicio)
+                                                                            @Html.ValidationMessageFor(u => u.MinutoInicio)
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    }
+
+                                                    @if (Model.Secciones.Count > 0)
+                                                    {
+                                                        var firstLevelName = "accordionN1_" + stepname;
+                                                        <div class="panel-group m-b" id="@firstLevelName">
+                                                            @{ List<SeccionDTO> Secciones = Model.Secciones.Where(x => x.Pagina == i).ToList(); }
+
+                                                            @foreach (var seccion in Secciones)
+                                                            {
+                                                                <div class="panel panel-default">
+                                                                    <div class="panel-heading">
+                                                                        <h4 class="panel-title">
+                                                                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#@firstLevelName" href="#@seccion.IdSeccion"> @seccion.Nombre </a>
+                                                                        </h4>
+                                                                    </div>
+                                                                    <div id="@seccion.IdSeccion" class="panel-collapse collapse">
+                                                                        <div class="panel-body">
+
+                                                                            @if (seccion.SeccionBodys.Count > 0)
+                                                                            {
+                                                                                <div class="table-responsive">
+                                                                                    <table class="table table-bordered">
+                                                                                        <tbody>
+                                                                                            @{ int tmpFilaItem = 1, totalItems = seccion.SeccionBodys.Count; string styleItem = "background-color:#c2c0c2;";
+                                                                                             for (int s = 0; s < totalItems; s++)
+                                                                                             {
+                                                                                                 int filaItem = seccion.SeccionBodys[s].NumeroFila;
+                                                                                                 if (s == 0 || tmpFilaItem != filaItem)
+                                                                                                 {
+                                                                                                    @Html.Raw("<tr>");
+                                                                                                 }
+                                                                                                 if (seccion.SeccionBodys[s].IdTipoCelda == 1)
+                                                                                                 {
+                                                                                                     if (seccion.SeccionBodys[s].BackgroundColor == true)
+                                                                                                     {
+                                                                                                    <th rowspan='@seccion.SeccionBodys[s].Rowspan' colspan='@seccion.SeccionBodys[s].Colspan' style='@styleItem'> @seccion.SeccionBodys[s].Descripcion </th>
+                                                                                                     }
+                                                                                                     else
+                                                                                                     {
+                                                                                                        <th rowspan='@seccion.SeccionBodys[s].Rowspan' colspan='@seccion.SeccionBodys[s].Colspan'> @seccion.SeccionBodys[s].Descripcion </th>
+                                                                                                     }
+                                                                                                 }
+                                                                                                 else
+                                                                                                 {
+                                                                                                     switch (seccion.SeccionBodys[s].IdTipoTag)
+                                                                                                     {
+                                                                                                         case 2:
+                                                                                                            <td rowspan='@seccion.SeccionBodys[s].Rowspan' colspan='@seccion.SeccionBodys[s].Colspan'>
+                                                                                                                @Html.TextBoxFor(u => u.GroupDescripcion, new { @Value = seccion.SeccionBodys[s].Respuesta, @class = "form-control input-sm", @placeholder = "", @type = "text" })
+                                                                                                            </td>
+                                                                                                             break;
+                                                                                                         case 3:
+                                                                                                        <td rowspan='@seccion.SeccionBodys[s].Rowspan' colspan='@seccion.SeccionBodys[s].Colspan'>
+                                                                                                            @Html.DropDownListFor(u => u.GroupDescripcion, new SelectList(ViewBag.Items_SelectSINO, "id", "name", seccion.SeccionBodys[s].Respuesta != null ? Convert.ToInt32(seccion.SeccionBodys[s].Respuesta) : 0), new { @class = "input-sm parsley-validated", @style = "width: auto;" })
+                                                                                                            @*Model.Respuestas.Where(x => x.IdSeccionBody == subSeccion.SeccionBodys[s].IdSeccionBody) subSeccion.SeccionBodys[s].Descripcion *@
+                                                                                                        </td>
+                                                                                                             break;
+                                                                                                         case 4:
+                                                                                                        <td rowspan='@seccion.SeccionBodys[s].Rowspan' colspan='@seccion.SeccionBodys[s].Colspan'>
+                                                                                                            @Html.DropDownListFor(u => u.GroupDescripcion, new SelectList(ViewBag.Items_SelectBomba, "id", "name", seccion.SeccionBodys[s].Respuesta != null ? Convert.ToInt32(seccion.SeccionBodys[s].Respuesta) : 0), new { @class = "input-sm parsley-validated", @style = "width: auto;" })
+                                                                                                        </td>
+                                                                                                             break;
+                                                                                                         case 5:
+                                                                                                        <td rowspan='@seccion.SeccionBodys[s].Rowspan' colspan='@seccion.SeccionBodys[s].Colspan'>
+                                                                                                            @Html.DropDownListFor(u => u.GroupDescripcion, new SelectList(ViewBag.Items_SelectNivelTanque, "id", "name", seccion.SeccionBodys[s].Respuesta != null ? Convert.ToInt32(seccion.SeccionBodys[s].Respuesta) : 0), new { @class = "input-sm parsley-validated", @style = "width: auto;" })
+                                                                                                        </td>
+                                                                                                             break;
+                                                                                                         case 6:
+                                                                                                        <td rowspan='@seccion.SeccionBodys[s].Rowspan' colspan='@seccion.SeccionBodys[s].Colspan'>
+                                                                                                            @Html.DropDownListFor(u => u.GroupDescripcion, new SelectList(ViewBag.Items_SelectAccesorios, "id", "name", seccion.SeccionBodys[s].Respuesta != null ? Convert.ToInt32(seccion.SeccionBodys[s].Respuesta) : 0), new { @class = "input-sm parsley-validated", @style = "width: auto;" })
+                                                                                                        </td>
+                                                                                                             break;
+                                                                                                         case 7:
+                                                                                                        <td rowspan='@seccion.SeccionBodys[s].Rowspan' colspan='@seccion.SeccionBodys[s].Colspan'>
+                                                                                                            @Html.DropDownListFor(u => u.GroupDescripcion, new SelectList(ViewBag.Items_SelectPresiones, "id", "name", seccion.SeccionBodys[s].Respuesta != null ? Convert.ToInt32(seccion.SeccionBodys[s].Respuesta) : 0), new { @class = "input-sm parsley-validated", @style = "width: auto;" })
+                                                                                                        </td>
+                                                                                                             break;
+                                                                                                     }
+                                                                                                    @Html.HiddenFor(u => u.GroupIdTableBody, new { @Value = seccion.SeccionBodys[s].IdSeccionBody })
+                                                                                                 }
+                                                                                                 if (s == (totalItems - 1) || filaItem != seccion.SeccionBodys[s + 1].NumeroFila)
+                                                                                                 {
+                                                                                                    @Html.Raw("</tr>");
+                                                                                                 }
+                                                                                                 tmpFilaItem = seccion.SeccionBodys[s].NumeroFila;
+                                                                                             }
+                                                                                            }
+                                                                                            </tbody>
+                                                                                        </table>
+                                                                                </div>
+                                                                            }
+
+                                                                            @if (seccion.SubSecciones.Count > 0)
+                                                                            {
+                                                                                var secondtLevelName = "accordionN2_" + stepname;
+                                                                                <div class="panel-group m-b" id="@secondtLevelName">
+                                                                                    @foreach (var subSeccion in seccion.SubSecciones)
+                                                                                    {
+                                                                                        <div class="panel panel-default">
+                                                                                            <div class="panel-heading">
+                                                                                                <h6 class="panel-title">
+                                                                                                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#@secondtLevelName" href="#@subSeccion.IdSeccion"> @subSeccion.Nombre </a>
+                                                                                                </h6>
+                                                                                            </div>
+                                                                                            <div id="@subSeccion.IdSeccion" class="panel-collapse collapse">
+                                                                                                <div class="panel-body text-sm">
+
+                                                                                                    @if (subSeccion.SeccionBodys.Count > 0)
+                                                                                                    {
+                                                                                                        <div class="table-responsive">
+                                                                                                            <table class="table table-bordered">
+                                                                                                                <tbody>
+                                                                                                                    @{ int tmpFilaItem = 1, totalItems = subSeccion.SeccionBodys.Count; string styleItem = "background-color:#c2c0c2;";
+                                                                                                                     for (int s = 0; s < totalItems; s++)
+                                                                                                                     {
+                                                                                                                         int filaItem = subSeccion.SeccionBodys[s].NumeroFila;
+                                                                                                                         if (s == 0 || tmpFilaItem != filaItem)
+                                                                                                                         {
+                                                                                                                    @Html.Raw("<tr>");
+                                                                                                                         }
+                                                                                                                         if (subSeccion.SeccionBodys[s].IdTipoCelda == 1)
+                                                                                                                         {
+                                                                                                                             if (subSeccion.SeccionBodys[s].BackgroundColor == true)
+                                                                                                                             {
+                                                                                                                <th rowspan='@subSeccion.SeccionBodys[s].Rowspan' colspan='@subSeccion.SeccionBodys[s].Colspan' style='@styleItem'> @subSeccion.SeccionBodys[s].Descripcion </th>
+                                                                                                                             }
+                                                                                                                             else
+                                                                                                                             {
+                                                                                                                <th rowspan='@subSeccion.SeccionBodys[s].Rowspan' colspan='@subSeccion.SeccionBodys[s].Colspan'> @subSeccion.SeccionBodys[s].Descripcion </th>
+                                                                                                                             }
+                                                                                                                         }
+                                                                                                                         else
+                                                                                                                         {
+                                                                                                                             switch (subSeccion.SeccionBodys[s].IdTipoTag)
+                                                                                                                             {
+                                                                                                                                 case 2:
+                                                                                                                <td rowspan='@subSeccion.SeccionBodys[s].Rowspan' colspan='@subSeccion.SeccionBodys[s].Colspan'>
+                                                                                                                    @Html.TextBoxFor(u => u.GroupDescripcion, new { @Value = subSeccion.SeccionBodys[s].Respuesta, @class = "form-control input-sm", @placeholder = "", @type = "text" })
+                                                                                                                </td>
+                                                                                                                                     break;
+                                                                                                                                 case 3:
+                                                                                                                <td rowspan='@subSeccion.SeccionBodys[s].Rowspan' colspan='@subSeccion.SeccionBodys[s].Colspan'>
+                                                                                                                    @Html.DropDownListFor(u => u.GroupDescripcion, new SelectList(ViewBag.Items_SelectSINO, "id", "name", subSeccion.SeccionBodys[s].Respuesta != null ? Convert.ToInt32(subSeccion.SeccionBodys[s].Respuesta) : 0), new { @class = "input-sm parsley-validated", @style = "width: auto;" })
+                                                                                                                </td>
+                                                                                                                                     break;
+                                                                                                                                 case 4:
+                                                                                                                <td rowspan='@subSeccion.SeccionBodys[s].Rowspan' colspan='@subSeccion.SeccionBodys[s].Colspan'>
+                                                                                                                    @Html.DropDownListFor(u => u.GroupDescripcion, new SelectList(ViewBag.Items_SelectBomba, "id", "name", subSeccion.SeccionBodys[s].Respuesta != null ? Convert.ToInt32(subSeccion.SeccionBodys[s].Respuesta) : 0), new { @class = "input-sm parsley-validated", @style = "width: auto;" })
+                                                                                                                </td>
+                                                                                                                                     break;
+                                                                                                                                 case 5:
+                                                                                                                <td rowspan='@subSeccion.SeccionBodys[s].Rowspan' colspan='@subSeccion.SeccionBodys[s].Colspan'>
+                                                                                                                    @Html.DropDownListFor(u => u.GroupDescripcion, new SelectList(ViewBag.Items_SelectNivelTanque, "id", "name", subSeccion.SeccionBodys[s].Respuesta != null ? Convert.ToInt32(subSeccion.SeccionBodys[s].Respuesta) : 0), new { @class = "input-sm parsley-validated", @style = "width: auto;" })
+                                                                                                                </td>
+                                                                                                                                     break;
+                                                                                                                                 case 6:
+                                                                                                                <td rowspan='@subSeccion.SeccionBodys[s].Rowspan' colspan='@subSeccion.SeccionBodys[s].Colspan'>
+                                                                                                                    @Html.DropDownListFor(u => u.GroupDescripcion, new SelectList(ViewBag.Items_SelectAccesorios, "id", "name", subSeccion.SeccionBodys[s].Respuesta != null ? Convert.ToInt32(subSeccion.SeccionBodys[s].Respuesta) : 0), new { @class = "input-sm parsley-validated", @style = "width: auto;" })
+                                                                                                                </td>
+                                                                                                                                     break;
+                                                                                                                                 case 7:
+                                                                                                                <td rowspan='@subSeccion.SeccionBodys[s].Rowspan' colspan='@subSeccion.SeccionBodys[s].Colspan'>
+                                                                                                                    @Html.DropDownListFor(u => u.GroupDescripcion, new SelectList(ViewBag.Items_SelectPresiones, "id", "name", subSeccion.SeccionBodys[s].Respuesta != null ? Convert.ToInt32(subSeccion.SeccionBodys[s].Respuesta) : 0), new { @class = "input-sm parsley-validated", @style = "width: auto;" })
+                                                                                                                </td>
+                                                                                                                                     break;
+                                                                                                                             }
+                                                                                                                @Html.HiddenFor(u => u.GroupIdTableBody, new { @Value = subSeccion.SeccionBodys[s].IdSeccionBody })
+                                                                                                                         }
+                                                                                                                         if (s == (totalItems - 1) || filaItem != subSeccion.SeccionBodys[s + 1].NumeroFila)
+                                                                                                                         {
+                                                                                                                @Html.Raw("</tr>");
+                                                                                                                         }
+                                                                                                                         tmpFilaItem = subSeccion.SeccionBodys[s].NumeroFila;
+                                                                                                                     }
+                                                                                                                    }
+                                                                                                                    </tbody>
+                                                                                                                </table>
+                                                                                                            </div>
+                                                                                                    }
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    }
+                                                                                </div>
+                                                                            }
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            }
+                                                        </div>
+                                                    }
+                                                </div>
+                                            }
+                                        </div>
+                                    </section>
+
+                                    @*<div>
+                                            <table class="table table-bordered">
+                                                <tbody>
+                                                    <tr>
+                                                        <td colspan="6" style="background-color: #c2c0c2;"><label><strong> Nombre del Área Protegida: </strong></label></td>
+                                                        <td colspan="6" style="background-color: #c2c0c2;"><label><strong> Fecha: </strong></label></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="6">
+                                                            @Html.TextBoxFor(u => u.NombreAreaProtegida, new { @class = "form-control", @placeholder = "Ingrese el nombre", @type = "text" })
+                                                            @Html.ValidationMessageFor(u => u.NombreAreaProtegida)
+                                                        </td>
+                                                        <td colspan="6">
+                                                            @Html.TextBoxFor(u => u.Fecha, "{0:dd/MM/yyyy}", new { @class = "datepicker-input form-control", @type = "text", @data_provide = "datepicker" })
+                                                            @Html.ValidationMessageFor(u => u.Fecha)
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="6" style="background-color: #c2c0c2;"><label><strong> Dirección: </strong></label></td>
+                                                        <td colspan="6" style="background-color: #c2c0c2;"><label><strong> Hora de Inicio: </strong></label></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="6">
+                                                            @Html.TextBoxFor(u => u.Direccion, new { @class = "form-control", @placeholder = "Ingrese la dirección", @type = "text" })
+                                                            @Html.ValidationMessageFor(u => u.Direccion)
+                                                        </td>
+                                                        <td colspan="6">
+                                                            <div class="input-group">
+                                                                @Html.DropDownListFor(u => u.HoraInicio, new SelectList(ViewBag.Horas, "id", "name", Model != null ? Model.HoraInicio : 0), new { @class = "hour form-control parsley-validated", @style = "width: auto;" }) :
+                                                                @Html.DropDownListFor(u => u.MinutoInicio, new SelectList(ViewBag.Minutos, "id", "name", Model != null ? Model.MinutoInicio : 0), new { @class = "minute form-control parsley-validated", @style = "width: auto;" })
+                                                                @Html.ValidationMessageFor(u => u.HoraInicio)
+                                                                @Html.ValidationMessageFor(u => u.MinutoInicio)
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                                @foreach (var seccion in Model.Secciones)
+                                                {
+                                                    <tbody>
+                                                        @{
+                                                    string htmlStrBody = string.Empty, fila = string.Empty, strItem = string.Empty, styleItem = string.Empty, selected = string.Empty;
+                                                    int tmpFilaBody = 1, totalBody;// = 0;
+                                                    htmlStrBody = string.Empty; fila = string.Empty;
+                                                    tmpFilaBody = 1; totalBody = seccion.SeccionBodys.Count;
+                                                    for (int i = 0; i < totalBody; i++)
+                                                    {
+                                                        strItem = string.Empty; styleItem = string.Empty;
+                                                        if (tmpFilaBody != seccion.SeccionBodys[i].NumeroFila) { htmlStrBody += "</tr><tr>"; }
+                                                        if (i == 0) { htmlStrBody += "<tr>"; }
+
+                                                        if (seccion.SeccionBodys[i].IdTipoCelda == 1)
+                                                        {
+                                                            if (seccion.SeccionBodys[i].BackgroundColor == true) { styleItem = "background-color:#c2c0c2;"; }
+                                                            fila = "<th rowspan='" + seccion.SeccionBodys[i].Rowspan + "' colspan='" + seccion.SeccionBodys[i].Colspan + "' style='" + styleItem + "' >" + seccion.SeccionBodys[i].Descripcion + "</th>";
+                                                        }
+                                                        else
+                                                        {
+                                                            switch (seccion.SeccionBodys[i].IdTipoTag)
+                                                            {
+                                                                case 2:
+                                                                    strItem = "<input type=text value='" + seccion.SeccionBodys[i].Descripcion + "' />";
+                                                                    break;
+                                                                case 3:
+                                                                    strItem = "<select>";
+                                                                    foreach (var item in ViewBag.Items_Select)
+                                                                    {
+                                                                        selected = string.Empty;
+                                                                        if (item.id.ToString() == seccion.SeccionBodys[i].Descripcion) { selected = "selected"; }
+                                                                        strItem += "<option value='" + item.id + "' " + selected + ">" + item.name + "</option>";
+                                                                    }
+                                                                    strItem += "</select>";
+                                                                    break;
+                                                            }
+                                                            fila = "<td rowspan='" + seccion.SeccionBodys[i].Rowspan + "' colspan='" + seccion.SeccionBodys[i].Colspan + "' >" + strItem + "</td>";
+                                                        }
+                                                        htmlStrBody += fila;
+                                                        if (i == (totalBody - 1)) { htmlStrBody += "</tr>"; }
+                                                        tmpFilaBody = seccion.SeccionBodys[i].NumeroFila;
+                                                    }
+                                                    if (htmlStrBody.Length > 0)
+                                                    {
+                                                        @Html.Raw(htmlStrBody);
+                                                    }
+                                                        }
+                                                    </tbody>
+                                                }
+                                            </table>
+                                        </div>*@
+
+                                    @if (ViewBag.EsAdmin && Model != null && Model.IdProtocolo > 0)
+                                    {
+                                        <div class="line line-dashed line-lg pull-in"></div>
+                                        <div class="checkbox">
+                                            <label>
+                                                @Html.CheckBoxFor(u => u.Active)
+                                                Activo
+                                            </label>
+                                            @Html.ValidationMessageFor(u => u.Active)
+                                        </div>}
+                                    else
+                                    {
+                                        @Html.TextBoxFor(u => u.Active, new { @value = Model != null ? Model.Active : false, @type = "hidden" })
+                                    }
+                                    <div class="line line-dashed line-lg pull-in"></div>
+                                    @Html.TextBoxFor(u => u.IdProtocolo, new { @value = Model != null ? Model.IdProtocolo.ToString() : "", @type = "hidden" })
+                                    @Html.TextBoxFor(u => u.IdPlantilla, new { @value = Model != null ? Model.IdPlantilla.ToString() : "", @type = "hidden" })
+                                    @Html.TextBoxFor(u => u.IdInmueble, new { @value = Model != null ? Model.IdInmueble.ToString() : "", @type = "hidden" })
+                                    @{var btnName = (Model != null && Model.IdProtocolo > 0) ? "Guardar Cambios" : "Crear";}
+                                    <button type="submit" id="btnGuardar" class="btn btn-sm btn-primary btn-rounded">@btnName</button>
+                                    <a class="btn btn-sm btn-danger btn-rounded" href="@Url.Action("Protocolos")">Salir</a>
+                                </div>
+
+                            </section>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+    </section>
+</section>

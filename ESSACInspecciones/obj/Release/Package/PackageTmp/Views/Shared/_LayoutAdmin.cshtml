@@ -1,0 +1,172 @@
+﻿@using ESSACInspecciones.Helpers;
+<!DOCTYPE html>
+<html lang="es" class="app">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+    @Styles.Render("~/Content/themes/admin/css/bootstrap.css")
+    @Styles.Render("~/Content/themes/admin/css/animate.css")
+    @Styles.Render("~/Content/themes/admin/css/font-awesome.min.css")
+    @Styles.Render("~/Content/themes/admin/css/font.css")
+    @Styles.Render("~/Content/themes/admin/css/app.css")
+    @Styles.Render("~/Content/themes/admin/js/datepicker/datepicker.css")
+    @Styles.Render("~/Content/themes/admin/css/main.css")
+    @Styles.Render("~/Content/themes/views/css/comunes.css")
+    @RenderSection("styles", required: false)
+
+    <!--[if lt IE 9]>
+      @Scripts.Render("~/Content/themes/admin/js/html5shiv.js")
+      @Scripts.Render("~/Content/themes/admin/js/respond.min.js")
+      @Scripts.Render("~/Content/themes/admin/js/excanvas.js")
+    <![endif]-->
+</head>
+<body>
+    <section class="vbox">
+        <header class="bg-gray dk header navbar navbar-fixed-top-xs">
+            <div class="navbar-header aside-md">
+                <a class="btn btn-link visible-xs" data-toggle="class:nav-off-screen,open" data-target="#nav,html">
+                    <i class="fa fa-bars"></i>
+                </a>
+                <a href="#" class="navbar-brand" data-toggle="fullscreen"><img src="@Url.Content("~/Content/themes/admin/images/logo.png")"></a>
+                <a class="btn btn-link visible-xs" data-toggle="dropdown" data-target=".nav-user">
+                    <i class="fa fa-cog"></i>
+                </a>
+            </div>
+            @using (Html.BeginForm("Busqueda", "Admin", FormMethod.Post))
+            {
+                <div class="input-group m-t-sm m-b-sm" style="width: 30%; float: left;">
+                    <input type="text" class="form-control input-sm" id="search-note-global" name="search" placeholder="Buscar..." />
+                    <div class="input-group-btn" id="BuscarTareasGlobal">
+                        <button type="submit" class="btn btn-default btn-sm"><i class="fa fa-search"></i></button>
+                    </div>
+                </div>
+            }
+            <ul class="nav navbar-nav navbar-right hidden-xs nav-user">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        @{ var user = (ESSACInspecciones.Core.DTO.UsuarioDTO)HttpContext.Current.Session["User"]; }
+                        @user.Nombre <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu animated fadeInRight">
+                        <span class="arrow top"></span>
+                        <li>
+                            <a href="@Url.Action("Usuario", new { id = user.IdUsuario})">Editar Cuenta</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="@Url.Action("Logout")">Salir</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </header>
+        <section>
+            <section class="hbox stretch">
+                <!-- .aside -->
+                <aside class="bg-dark lter aside-md hidden-print" id="nav">
+                    <section class="vbox">
+
+                        <section class="w-f scrollable">
+                            <div class="slim-scroll" data-height="auto" data-disable-fade-out="true" data-distance="0" data-size="5px" data-color="#333333">
+
+                                <!-- nav -->
+                                <nav class="nav-primary hidden-xs">
+                                    <ul class="nav">
+                                        <li class="active">
+                                            <a href="@Url.Action("Index")" class="active">
+                                                <i class="fa fa-calendar icon">
+                                                    <b class="bg-danger"></b>
+                                                </i>
+                                                <span>Calendario</span>
+                                            </a>
+                                        </li>
+                                        <li class="">
+                                            <a href="@Url.Action("Tareas")" class="active">
+                                                <i class="fa fa-tasks icon">
+                                                    <b class="bg-info"></b>
+                                                </i>
+                                                <span>Tareas</span>
+                                            </a>
+                                        </li>
+                                        <li class="">
+                                            <a href="@Url.Action("Clientes")" class="active">
+                                                <i class="fa fa-building-o icon">
+                                                    <b class="bg-info"></b>
+                                                </i>
+                                                <span>Clientes</span>
+                                            </a>
+                                        </li>
+                                        @if (ViewBag.EsAdmin)
+                                        {
+                                            <li class="">
+                                                <a href="@Url.Action("Servicios")" class="active">
+                                                    <i class="fa fa-gear icon">
+                                                        <b class="bg-info"></b>
+                                                    </i>
+                                                    <span>Servicios</span>
+                                                </a>
+                                            </li>
+
+                                            <li>
+                                                <a href="@Url.Action("Usuarios")">
+                                                    <i class="fa fa-user icon">
+                                                        <b class="bg-warning"></b>
+                                                    </i>
+                                                    <span>Usuarios</span>
+                                                </a>
+                                            </li>
+                                        }
+                                        @if (ViewBag.IdRol == CONSTANTES.ROL_RESPONSABLE)
+                                        {
+                                            <li class="">
+                                                <a href="@Url.Action("Protocolos")" class="active">
+                                                    <i class="fa fa-gear icon">
+                                                        <b class="bg-info"></b>
+                                                    </i>
+                                                    <span>Protocolos Asignados</span>
+                                                </a>
+                                            </li>
+                                        }
+                                    </ul>
+                                </nav>
+                                <!-- / nav -->
+                            </div>
+                        </section>
+
+                        <footer class="footer lt hidden-xs b-t b-dark">
+                            <a href="#nav" data-toggle="class:nav-xs" class="pull-right btn btn-sm btn-dark btn-icon">
+                                <i class="fa fa-angle-left text"></i>
+                                <i class="fa fa-angle-right text-active"></i>
+                            </a>
+                        </footer>
+                    </section>
+                </aside>
+                <!-- /.aside -->
+                <section id="content">
+                    @RenderBody()
+                    <a href="#" class="hide nav-off-screen-block" data-toggle="class:nav-off-screen" data-target="#nav"></a>
+                </section>
+                <aside class="bg-light lter b-l aside-md hide" id="notes">
+                    <div class="wrapper">Notification</div>
+                </aside>
+            </section>
+        </section>
+    </section>
+    @Scripts.Render("~/Content/themes/admin/js/jquery.min.js")
+    <!-- Bootstrap -->
+    @Scripts.Render("~/Content/themes/admin/js/bootstrap.js")
+    <!-- App -->
+    @Scripts.Render("~/Content/themes/admin/js/app.js")
+    @Scripts.Render("~/Content/themes/admin/js/app.plugin.js")
+    @Scripts.Render("~/Content/themes/admin/js/slimscroll/jquery.slimscroll.min.js")
+    @Scripts.Render("~/Content/themes/admin/js/datepicker/bootstrap-datepicker.js")
+    @Scripts.Render("~/Content/themes/admin/js/libs/moment.min.js")
+    @Scripts.Render("~/Content/themes/admin/js/main.js")
+    @*@Scripts.Render("~/Content/themes/views/js/utilitarios.js")*@
+
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>

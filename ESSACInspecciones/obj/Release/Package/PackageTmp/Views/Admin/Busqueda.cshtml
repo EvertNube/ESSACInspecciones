@@ -1,0 +1,182 @@
+﻿@using ESSACInspecciones.Core.DTO;
+@{
+    ViewBag.Title = "Resultado de la Búsqueda";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    IList<ClienteDTO> Clientes = (IList<ClienteDTO>)ViewBag.Clientes ?? new List<ClienteDTO>();
+    IList<InmuebleDTO> Inmuebles = (IList<InmuebleDTO>)ViewBag.Inmuebles ?? new List<InmuebleDTO>();
+    IList<UsuarioDTO> Responsables = (IList<UsuarioDTO>)ViewBag.Responsables ?? new List<UsuarioDTO>();
+    IList<TareaDTO> Tareas = (IList<TareaDTO>)ViewBag.Tareas ?? new List<TareaDTO>();
+    IList<ServicioDTO> Servicios = (IList<ServicioDTO>)ViewBag.Servicios ?? new List<ServicioDTO>();
+}
+<section class="hbox stretch">
+    <aside>
+        <section class="vbox">
+            <section class="scrollable padder">
+                <div class="row m-b">
+                    <div class="col-xs-12 col-md-10 col-md-offset-1">
+                        <h2>Resultado de la Búsqueda</h2>
+                        @Html.Partial("_showAlertMessages")
+                        <section class="panel panel-default">
+                            <header class="panel-heading bg-light">
+                                <ul class="nav nav-tabs nav-justified">
+                                    <li class="active"><a href="#clientes" data-toggle="tab">Clientes (@Clientes.Count)</a></li>
+                                    <li><a href="#inmuebles" data-toggle="tab">Inmuebles (@Inmuebles.Count)</a></li>
+                                    <li><a href="#responsables" data-toggle="tab">Responsables (@Responsables.Count)</a></li>
+                                    <li><a href="#tareas" data-toggle="tab">Tareas (@Tareas.Count)</a></li>
+                                    <li><a href="#servicios" data-toggle="tab">Servicios (@Servicios.Count)</a></li>
+                                </ul>
+                            </header>
+                            <div class="panel-body">
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="clientes">
+                                        <ul id="listClientes" class="list-group list-group-sp">
+                                            @if (ViewBag.Clientes != null)
+                                            {
+                                                foreach (ClienteDTO cliente in ViewBag.Clientes)
+                                                {
+                                                    <li class="list-group-item" id="@cliente.IdCliente">
+                                                        <div class="contenidos">
+                                                            <div class="view">
+                                                                <div class="note-name"> <strong> @cliente.NombreEmpresa </strong> </div>
+                                                                <div class="note-desc"> Telefono 1 : @cliente.Telefono1 </div>
+                                                                <div class="note-desc"> Telefono 2 : @cliente.Telefono2 </div>
+                                                                @*<span class="text-xs text-muted">@tarea.Servicio.Telefono_2</span>*@
+                                                                <div>&nbsp;</div>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                }
+                                            }
+                                        </ul>
+                                    </div>
+                                    <div class="tab-pane" id="inmuebles">
+                                        <ul id="listInmuebles" class="list-group list-group-sp">
+                                            @if (ViewBag.Inmuebles != null)
+                                            {
+                                                foreach (InmuebleDTO inmuebles in ViewBag.Inmuebles)
+                                                {
+                                                    <li class="list-group-item" id="@inmuebles.IdInmueble" data-cliente="@inmuebles.IdCliente">
+                                                        <div class="contenidos">
+                                                            <div class="view">
+                                                                <div class="note-name"> <strong> @inmuebles.NombreInmueble </strong> </div>
+                                                                <div class="note-desc"> Dirección : @inmuebles.Direccion </div>
+                                                                <div>&nbsp;</div>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                }
+                                            }
+                                        </ul>
+                                    </div>
+                                    <div class="tab-pane" id="responsables">
+                                        <ul id="listResponsables" class="list-group list-group-sp">
+                                            @if (ViewBag.Responsables != null)
+                                            {
+                                                foreach (UsuarioDTO responsables in ViewBag.Responsables)
+                                                {
+                                                    <li class="list-group-item" id="@responsables.IdUsuario">
+                                                        <div class="contenidos">
+                                                            <div class="view">
+                                                                <div class="note-name"> <strong> @responsables.Nombre </strong> </div>
+                                                                <div class="note-desc"> Iniciales : @responsables.InicialesNombre </div>
+                                                                <div class="note-desc"> E-mail : @responsables.Email </div>
+                                                                <div>&nbsp;</div>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                }
+                                            }
+                                        </ul>
+                                    </div>
+                                    <div class="tab-pane" id="tareas">
+                                        <ul id="listTareas" class="list-group list-group-sp">
+                                            @if (ViewBag.Tareas != null)
+                                            {
+                                                foreach (TareaDTO tareas in ViewBag.Tareas)
+                                                {
+                                                    <li class="list-group-item" id="@tareas.IdTarea">
+                                                        <div class="contenidos">
+                                                            <div class="view">
+                                                                <div class="note-name"> <strong> @tareas.NombreTarea </strong> </div>
+                                                                <div class="note-desc"> Descripción : @tareas.Descripcion </div>
+                                                                <div class="note-desc"> <strong>Cliente</strong> : @tareas.Cliente.NombreEmpresa </div>
+                                                                <div class="note-desc"> Telefono 1 : @tareas.Cliente.Telefono1 </div>
+                                                                <div class="note-desc"> Telefono 2 : @tareas.Cliente.Telefono2 </div>
+                                                                <div class="note-desc"> <strong>Inmueble</strong> : @tareas.Inmueble.NombreInmueble </div>
+                                                                <div class="note-desc"> Dirección : @tareas.Inmueble.Direccion </div>
+                                                                @foreach (UsuarioDTO resp in tareas.Responsables)
+                                                                {
+                                                                    <div class="note-desc"> <strong>Responsable</strong> : @resp.Nombre </div>
+                                                                    <div class="note-desc"> Iniciales : @resp.InicialesNombre </div>
+                                                                    <div class="note-desc"> E-mail : @resp.Email </div>
+                                                                }
+                                                                <div class="note-desc"> <strong>Servicio</strong> : @tareas.Servicio.NombreServicio </div>
+                                                                <div class="note-desc"> Nombre Corto : @tareas.Servicio.NombreCorto </div>
+                                                                <div>&nbsp;</div>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                }
+                                            }
+                                        </ul>
+                                    </div>
+                                    <div class="tab-pane" id="servicios">
+                                        <ul id="listServicios" class="list-group list-group-sp">
+                                            @if (ViewBag.Servicios != null)
+                                            {
+                                                foreach (ServicioDTO servicios in ViewBag.Servicios)
+                                                {
+                                                    <li class="list-group-item" id="@servicios.IdServicio">
+                                                        <div class="contenidos">
+                                                            <div class="view">
+                                                                <div class="note-name"> <strong> @servicios.NombreServicio </strong> </div>
+                                                                <div class="note-desc"> Nombre Corto : @servicios.NombreCorto </div>
+                                                                <div class="note-desc"> Descripción : @servicios.Descripcion </div>
+                                                                <div>&nbsp;</div>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                }
+                                            }
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </section>
+        </section>
+    </aside>
+</section>
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#listClientes li').each(function () {
+                $(this).click(function () {
+                    window.location = "/Admin/Cliente/" + $(this).attr("id");
+                });
+            });
+            $('#listInmuebles li').each(function () {
+                $(this).click(function () {
+                    window.location = "/Admin/Inmueble/" + $(this).attr("id") + "?IdCliente=" + $(this).data("cliente");
+                });
+            });
+            $('#listResponsables li').each(function () {
+                $(this).click(function () {
+                    window.location = "/Admin/Usuario/" + $(this).attr("id");
+                });
+            });
+            $('#listTareas li').each(function () {
+                $(this).click(function () {
+                    window.location = "/Admin/Tarea/" + $(this).attr("id");
+                });
+            });
+            $('#listServicios li').each(function () {
+                $(this).click(function () {
+                    window.location = "/Admin/Servicio/" + $(this).attr("id");
+                });
+            });
+        });
+    </script>
+}

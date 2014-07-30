@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{2966E74D-FDE1-419F-AFD5-2C8F2D51702C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ESSACInspecciones.Core</RootNamespace>
+    <AssemblyName>ESSACInspecciones.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\ESSACInspecciones.Data\bin\Debug\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BL\Base.cs" />
+    <Compile Include="BL\BolsaTareasBL.cs" />
+    <Compile Include="BL\ClienteBL.cs" />
+    <Compile Include="BL\ServiciosBL.cs" />
+    <Compile Include="BL\ProtocoloBL.cs" />
+    <Compile Include="BL\TareaBL.cs" />
+    <Compile Include="BL\UsuariosBL.cs" />
+    <Compile Include="Class1.cs" />
+    <Compile Include="DTO\ClienteDTO.cs" />
+    <Compile Include="DTO\ContactoDTO.cs" />
+    <Compile Include="DTO\PlantillaDTO.cs" />
+    <Compile Include="DTO\RespuestaDTO.cs" />
+    <Compile Include="DTO\SeccionBodyDTO.cs" />
+    <Compile Include="DTO\TableHeaderDTO.cs" />
+    <Compile Include="DTO\ItemDTO.cs" />
+    <Compile Include="DTO\EstadoDTO.cs" />
+    <Compile Include="DTO\InmuebleDTO.cs" />
+    <Compile Include="DTO\SeccionDTO.cs" />
+    <Compile Include="DTO\ReporteDTO.cs" />
+    <Compile Include="DTO\RolDTO.cs" />
+    <Compile Include="DTO\ServicioDTO.cs" />
+    <Compile Include="DTO\EventDTO.cs" />
+    <Compile Include="DTO\ProtocoloDTO.cs" />
+    <Compile Include="DTO\TareaDTO.cs" />
+    <Compile Include="DTO\CargoDTO.cs" />
+    <Compile Include="DTO\BaseDTO.cs" />
+    <Compile Include="DTO\UsuarioDTO.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ESSACInspecciones.Data\ESSACInspecciones.Data.csproj">
+      <Project>{92266ec8-4d80-478c-90b9-1edfd7961df0}</Project>
+      <Name>ESSACInspecciones.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ESSACInspecciones.Helpers\ESSACInspecciones.Helpers.csproj">
+      <Project>{a0225206-5cb2-4d19-8f78-e9a8c2640d0a}</Project>
+      <Name>ESSACInspecciones.Helpers</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,10 @@
+C:\Apps\ESSACInspecciones\ESSACInspecciones.Helpers\bin\Release\ESSACInspecciones.Helpers.dll
+C:\Apps\ESSACInspecciones\ESSACInspecciones.Helpers\bin\Release\ESSACInspecciones.Helpers.pdb
+C:\Apps\ESSACInspecciones\ESSACInspecciones.Helpers\obj\Release\ESSACInspecciones.Helpers.csprojResolveAssemblyReference.cache
+C:\Apps\ESSACInspecciones\ESSACInspecciones.Helpers\obj\Release\ESSACInspecciones.Helpers.dll
+C:\Apps\ESSACInspecciones\ESSACInspecciones.Helpers\obj\Release\ESSACInspecciones.Helpers.pdb
+D:\Proyectos\ESSACInspecciones\ESSACInspecciones.Helpers\bin\Release\ESSACInspecciones.Helpers.dll
+D:\Proyectos\ESSACInspecciones\ESSACInspecciones.Helpers\bin\Release\ESSACInspecciones.Helpers.pdb
+D:\Proyectos\ESSACInspecciones\ESSACInspecciones.Helpers\obj\Release\ESSACInspecciones.Helpers.csprojResolveAssemblyReference.cache
+D:\Proyectos\ESSACInspecciones\ESSACInspecciones.Helpers\obj\Release\ESSACInspecciones.Helpers.dll
+D:\Proyectos\ESSACInspecciones\ESSACInspecciones.Helpers\obj\Release\ESSACInspecciones.Helpers.pdb

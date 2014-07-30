@@ -1,0 +1,51 @@
+
+                                            @foreach (var seccion in Model.Secciones)
+                                            {
+                                                <tbody>
+                                                    @{
+                                                        string htmlStrBody = string.Empty, fila = string.Empty, strItem = string.Empty, styleItem = string.Empty, selected = string.Empty;
+                                                        int tmpFilaBody = 1, totalBody;// = 0;
+                                                        htmlStrBody = string.Empty; fila = string.Empty;
+                                                        tmpFilaBody = 1; totalBody = seccion.TableBodys.Count;
+                                                        for (int i = 0; i < totalBody; i++)
+                                                        {
+                                                            strItem = string.Empty; styleItem = string.Empty;
+                                                            if (tmpFilaBody != seccion.TableBodys[i].NumeroFila) { htmlStrBody += "</tr><tr>"; }
+                                                            if (i == 0) { htmlStrBody += "<tr>"; }
+
+                                                            if (seccion.TableBodys[i].IdTipoCelda == 1)
+                                                            {
+                                                                if (seccion.TableBodys[i].BackgroundColor == true) { styleItem = "background-color:#c2c0c2;"; }
+                                                                fila = "<th rowspan='" + seccion.TableBodys[i].Rowspan + "' colspan='" + seccion.TableBodys[i].Colspan + "' style='" + styleItem + "' >" + seccion.TableBodys[i].Descripcion + "</th>";
+                                                            }
+                                                            else
+                                                            {
+                                                                switch (seccion.TableBodys[i].IdTipoTag)
+                                                                {
+                                                                    case 2:
+                                                                        strItem = "<input type=text value='"+ seccion.TableBodys[i].Descripcion + "' />";
+                                                                        break;
+                                                                    case 3:
+                                                                        strItem = "<select>";
+                                                                        foreach (var item in ViewBag.Items_Select)
+                                                                        {
+                                                                            selected = string.Empty;
+                                                                            if (item.id.ToString() == seccion.TableBodys[i].Descripcion) { selected = "selected"; }
+                                                                            strItem += "<option value='" + item.id + "' " + selected + ">" + item.name + "</option>";
+                                                                        }
+                                                                        strItem += "</select>";
+                                                                        break;
+                                                                }
+                                                                fila = "<td rowspan='" + seccion.TableBodys[i].Rowspan + "' colspan='" + seccion.TableBodys[i].Colspan + "' >" + strItem + "</td>";
+                                                            }
+                                                            htmlStrBody += fila;
+                                                            if (i == (totalBody - 1)) { htmlStrBody += "</tr>"; }
+                                                            tmpFilaBody = seccion.TableBodys[i].NumeroFila;
+                                                        }
+                                                        if (htmlStrBody.Length > 0)
+                                                        {
+                                                            @Html.Raw(htmlStrBody);
+                                                        }
+                                                    }
+                                                </tbody>
+                                            }

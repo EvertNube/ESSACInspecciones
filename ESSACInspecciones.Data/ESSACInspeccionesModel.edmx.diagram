@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="71a0acce417849aeaea46bbffbc34e7e" Name="Diagram1">
+        <EntityTypeShape EntityType="ESSAC.InspeccionesDbModel.Cliente" Width="1.5" PointX="0.75" PointY="6.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="ESSAC.InspeccionesDbModel.ContactoCliente" Width="1.5" PointX="3" PointY="4.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="ESSAC.InspeccionesDbModel.Estado" Width="1.5" PointX="6" PointY="5.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="ESSAC.InspeccionesDbModel.EstadoProtocolo" Width="1.5" PointX="3" PointY="12.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="ESSAC.InspeccionesDbModel.Inmueble" Width="1.5" PointX="3" PointY="8.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="ESSAC.InspeccionesDbModel.Plantilla" Width="1.5" PointX="3" PointY="15.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="ESSAC.InspeccionesDbModel.Protocolo" Width="1.5" PointX="5.25" PointY="8" IsExpanded="true" />
+        <EntityTypeShape EntityType="ESSAC.InspeccionesDbModel.Respuesta" Width="1.5" PointX="7.5" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ESSAC.InspeccionesDbModel.Rol" Width="1.5" PointX="8.25" PointY="3.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="ESSAC.InspeccionesDbModel.Seccion" Width="1.5" PointX="3" PointY="18.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="ESSAC.InspeccionesDbModel.SeccionBody" Width="1.5" PointX="5.25" PointY="20.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="ESSAC.InspeccionesDbModel.Servicio" Width="1.5" PointX="6" PointY="14.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="ESSAC.InspeccionesDbModel.ServicioEstado" Width="1.5" PointX="10.25" PointY="12.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="ESSAC.InspeccionesDbModel.Tarea" Width="1.5" PointX="8.25" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ESSAC.InspeccionesDbModel.TipoCelda" Width="1.5" PointX="3" PointY="22.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="ESSAC.InspeccionesDbModel.TipoTag" Width="1.5" PointX="3" PointY="24.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="ESSAC.InspeccionesDbModel.Usuario" Width="1.5" PointX="10.5" PointY="7" IsExpanded="true" />
+        <AssociationConnector Association="ESSAC.InspeccionesDbModel.FK_ContactoCliente_Cliente" ManuallyRouted="false" />
+        <AssociationConnector Association="ESSAC.InspeccionesDbModel.FK_Inmueble_Cliente" ManuallyRouted="false" />
+        <AssociationConnector Association="ESSAC.InspeccionesDbModel.FK_Tarea_Cliente" ManuallyRouted="false" />
+        <AssociationConnector Association="ESSAC.InspeccionesDbModel.FK_ServicioEstado_Estado" ManuallyRouted="false" />
+        <AssociationConnector Association="ESSAC.InspeccionesDbModel.FK_Tarea_Estado" ManuallyRouted="false" />
+        <AssociationConnector Association="ESSAC.InspeccionesDbModel.FK_Protocolo_EstadoProtocolo" ManuallyRouted="false" />
+        <AssociationConnector Association="ESSAC.InspeccionesDbModel.FK_Protocolo_Inmueble" ManuallyRouted="false" />
+        <AssociationConnector Association="ESSAC.InspeccionesDbModel.FK_Tarea_Inmueble" ManuallyRouted="false" />
+        <AssociationConnector Association="ESSAC.InspeccionesDbModel.FK_Protocolo_Plantilla" ManuallyRouted="false" />
+        <AssociationConnector Association="ESSAC.InspeccionesDbModel.FK_Seccion_Plantilla" ManuallyRouted="false" />
+        <AssociationConnector Association="ESSAC.InspeccionesDbModel.FK_Protocolo_Usuario" ManuallyRouted="false" />
+        <AssociationConnector Association="ESSAC.InspeccionesDbModel.FK_Respuesta_Protocolo" ManuallyRouted="false" />
+        <AssociationConnector Association="ESSAC.InspeccionesDbModel.FK_Respuesta_TableBody" ManuallyRouted="false" />
+        <AssociationConnector Association="ESSAC.InspeccionesDbModel.FK_Usuario_Rol" ManuallyRouted="false" />
+        <AssociationConnector Association="ESSAC.InspeccionesDbModel.FK_TableBody_Seccion" ManuallyRouted="false" />
+        <AssociationConnector Association="ESSAC.InspeccionesDbModel.FK_TableBody_TipoCelda" ManuallyRouted="false" />
+        <AssociationConnector Association="ESSAC.InspeccionesDbModel.FK_TableBody_TipoTag" ManuallyRouted="false" />
+        <AssociationConnector Association="ESSAC.InspeccionesDbModel.FK_ServicioEstado_Servicio" ManuallyRouted="false" />
+        <AssociationConnector Association="ESSAC.InspeccionesDbModel.FK_Tarea_Servicio" ManuallyRouted="false" />
+        <AssociationConnector Association="ESSAC.InspeccionesDbModel.Responsables_Tarea" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

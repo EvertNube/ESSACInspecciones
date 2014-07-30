@@ -1,0 +1,65 @@
+﻿@{
+    Layout = null;
+}
+@model ESSACInspecciones.Core.DTO.UsuarioDTO
+
+<!DOCTYPE html>
+<html lang="es" class="bg-gray">
+<head>
+    <meta charset="utf-8" />
+    <title>ESSAC Inspecciones</title>
+    <meta name="description" content="app, web app, responsive, admin dashboard, admin, flat, flat ui, ui kit, off screen nav" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    @Styles.Render("~/Content/themes/admin/css/bootstrap.css")
+    @Styles.Render("~/Content/themes/admin/css/animate.css")
+    @Styles.Render("~/Content/themes/admin/css/font-awesome.min.css")
+    @Styles.Render("~/Content/themes/admin/css/font.css")
+    @Styles.Render("~/Content/themes/admin/css/app.css")
+    @Styles.Render("~/Content/themes/admin/css/main.css")
+
+    <!--[if lt IE 9]>
+      @Scripts.Render("~/Content/themes/admin/js/html5shiv.js")
+      @Scripts.Render("~/Content/themes/admin/js/respond.min.js")
+      @Scripts.Render("~/Content/themes/admin/js/excanvas.js")
+    <![endif]-->
+</head>
+<body>
+    @Html.Partial("_showAlertMessages")
+    <section id="content" class="m-t-lg wrapper-md animated fadeInUp">
+        <div class="container aside-xxl m-t-90">
+            <a class="text-center block"><img src="@Url.Content("~/Content/themes/admin/images/logo-rpd.png")" style="width: 30%;"></a>
+            <section class="panel m-t-lg panel-login">
+                @using (Html.BeginForm("Login", "Admin", FormMethod.Post, new { @class = "panel-body wrapper-lg" }))
+                {
+                    <div class="form-group">
+                        @Html.TextBoxFor(u => u.Cuenta, new { @class = "form-control input-md btn-rounded text-sm", @placeholder = "Usuario", @type = "text" })
+                    </div>
+                    <div class="form-group">
+                        @Html.TextBoxFor(u => u.Pass, new { @class = "form-control input-md btn-rounded text-sm", @placeholder = "Contraseña", @type = "password" })
+                    </div>
+                    <button type="submit" class="btn btn-dark btn-rounded btn-sm">Ingresar</button>
+                    @Html.ActionLink("Recuperar contraseña", "RecuperaContrasena", null, new { @class="recover"})
+                }
+            </section>
+        </div>
+    </section>
+    <!-- footer -->
+    <footer id="footer">
+        <div class="text-center padder">
+            <p><a class="text-center block"><img src="@Url.Content("~/Content/themes/admin/images/logo-essac.png")" style="width: 20%;margin-top:10px; margin-bottom: 20px;"></a></p>
+            <p>
+                <small>NubeLabs / ESSAC Inspecciones 1.0<br>&copy; 2014</small>
+            </p>
+        </div>
+    </footer>
+    @Scripts.Render("~/Content/themes/admin/js/jquery.min.js")
+    <!-- Bootstrap -->
+    @Scripts.Render("~/Content/themes/admin/js/bootstrap.js")
+    <!-- App -->
+    @Scripts.Render("~/Content/themes/admin/js/app.js")
+    @Scripts.Render("~/Content/themes/admin/js/app.plugin.js")
+    @Scripts.Render("~/Content/themes/admin/js/slimscroll/jquery.slimscroll.min.js")
+
+
+</body>
+</html>

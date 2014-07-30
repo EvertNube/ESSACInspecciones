@@ -1,0 +1,258 @@
+﻿@model ESSACInspecciones.Core.DTO.TareaDTO
+
+@{
+    if (Model == null || Model.IdTarea == 0)
+    {
+        ViewBag.Title = "Tarea";
+    }
+    else { ViewBag.Title = Model.NombreTarea; }
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<section class="vbox">
+    <section class="scrollable padder">
+        <div class="row m-b">
+            <div class="col-xs-12 col-md-10 col-md-offset-1">
+                @if (Model == null || Model.IdTarea == 0)
+                {
+                    <h2>Nueva Tarea</h2>
+                }
+                else
+                {<h2>Actualizar Tarea</h2>}
+
+                @using (Html.BeginForm("AddTarea", "Admin", FormMethod.Post))
+                {
+                    @Html.ValidationSummary(true)
+                    <div class="row m-b">
+                        <div class="col-xs-12 col-md-9">
+                            @Html.Partial("_showAlertMessages")
+
+                            <section class="panel panel-default">
+                                <header class="panel-heading font-bold">Formulario de Registro</header>
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <label>Nombre</label>
+                                        @Html.TextBoxFor(u => u.NombreTarea, new { @class = "form-control", @placeholder = "Ingrese el nombre de la tarea", @type = "text" })
+                                        @Html.ValidationMessageFor(u => u.NombreTarea)
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Descripción</label>
+                                        @Html.TextAreaFor(u => u.Descripcion, new { @class = "form-control", @placeholder = "Ingrese la descripción de la tarea", @type = "text" })
+                                        @Html.ValidationMessageFor(u => u.Descripcion)
+                                    </div>
+                                    <div class="line line-dashed line-lg pull-in"></div>
+                                    <div class="form-group">
+                                        <label>Servicio</label>
+                                        @Html.DropDownListFor(u => u.IdServicio, new SelectList(ViewBag.Servicios, "IdServicio", "NombreServicio", Model != null ? (Model.IdServicio != null ? Model.IdServicio : 0) : 0), new { @class = "form-control parsley-validated" })
+                                        @Html.ValidationMessageFor(u => u.IdServicio)
+                                    </div>
+                                    <div class=" form-horizontal">
+                                        <div class="form-group">
+                                            <label class="col-lg-3">Responsable</label>
+                                            <div class="col-lg-8">
+                                                @Html.DropDownList("responsableTarea", new SelectList(ViewBag.Responsables, "IdUsuario", "Nombre", 0), new { @class = "form-control parsley-validated" })
+                                            </div>
+                                            <div class="col-lg-1">
+                                                <button type="button" class="btn btn-dark btn-sm btn-icon btn-rounded" id="add-responsable" data-toggle="tooltip" data-placement="right" title="" data-original-title="Agregar Responsable">
+                                                    <i class="fa fa-plus"></i>
+                                                </button>
+                                            </div>
+                                            @Html.ValidationMessageFor(u => u.IdResponsable)
+                                        </div>
+                                    </div>
+                                    <div class=" form-horizontal">
+                                        <div class="form-group">
+                                            <label class="col-lg-3"></label>
+                                            <div class="col-lg-8">
+                                                @Html.DropDownListFor(u => u.Responsables, new MultiSelectList(Model != null ? ViewBag.Resources ?? new List<ESSACInspecciones.Core.DTO.UsuarioDTO>() : new List<ESSACInspecciones.Core.DTO.UsuarioDTO>(), "IdUsuario", "Nombre"), new { @multiple = "multiple", @class = "form-control" })
+                                            </div>
+                                            <div class="col-lg-1">
+                                                <button type="button" class="btn btn-dark btn-sm btn-icon btn-rounded" id="remove-responsable" data-toggle="tooltip" data-placement="right" title="" data-original-title="Quitar Responsable">
+                                                    <i class="fa fa-minus-circle"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Cliente</label>
+                                        @Html.DropDownListFor(u => u.IdCliente, new SelectList(ViewBag.Clientes, "IdCliente", "NombreEmpresa", Model != null ? (Model.IdCliente != null ? Model.IdCliente : 0) : 0), new { id = "ddlCliente", @class = "form-control parsley-validated" })
+                                        @Html.ValidationMessageFor(u => u.IdCliente)
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Inmueble</label>
+                                        @Html.DropDownListFor(u => u.IdInmueble, new SelectList(Enumerable.Empty<SelectListItem>(), "IdInmueble", "NombreInmueble"), new { @class = "form-control parsley-validated" })
+                                        @*@Html.DropDownListFor(u => u.IdInmueble, new SelectList(ViewBag.Inmuebles, "IdInmueble", "NombreInmueble", Model != null ? (Model.IdInmueble != null ? Model.IdInmueble : 0) : 0), new { @class = "form-control parsley-validated" })*@
+                                        @Html.ValidationMessageFor(u => u.IdInmueble)
+                                    </div>
+                                    <div class="line line-dashed line-lg pull-in"></div>
+                                    <div class=" form-horizontal">
+                                        <div class="form-group">
+                                            <label class="col-lg-3 control-label">Fecha Inicio</label>
+                                            <div class="input-group col-lg-2">
+                                                @Html.TextBoxFor(u => u.FechaInicio, "{0:dd/MM/yyyy}", new { @class = "datepicker-input form-control", @type = "text", @data_provide = "datepicker" })
+                                                @*@{DateTime dateInicio = Model != null ? Model.FechaInicio ?? DateTime.Now : DateTime.Now; }
+                                                @Html.TextBox("FechaInicio", dateInicio.Date != DateTime.Now.Date ? dateInicio.ToString("dd/MM/yyyy") : string.Empty, new { @class = "datepicker-input form-control", @type = "text", @id = "FechaInicio", @style = "width: auto;" })*@
+                                            </div>
+                                            <div class="input-group col-lg-4">
+                                                @*@Html.ValidationMessageFor(u => u.FechaInicio)*@
+                                                @Html.DropDownListFor(u => u.HoraInicio, new SelectList(ViewBag.Horas, "id", "name", Model != null ? Model.HoraInicio : 0), new { @class = "hour form-control parsley-validated", @style = "width: auto;" }) :
+                                                @Html.DropDownListFor(u => u.MinutoInicio, new SelectList(ViewBag.Minutos, "id", "name", Model != null ? Model.MinutoInicio : 0), new { @class = "minute form-control parsley-validated", @style = "width: auto;" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-lg-3 control-label">Fecha Fin</label>
+                                            <div class="input-group col-lg-2">
+                                                @Html.TextBoxFor(u => u.FechaFin, "{0:dd/MM/yyyy}", new { @class = "datepicker-input form-control", @type = "text", @data_provide = "datepicker" })
+                                                @*@{DateTime dateFin = Model != null ? Model.FechaInicio ?? DateTime.Now : DateTime.Now; }
+                                                @Html.TextBox("FechaFin", dateFin.Date != DateTime.Now.Date ? dateFin.ToString("dd/MM/yyyy") : string.Empty, new { @class = "datepicker-input form-control", @type = "text", @id = "FechaFin", @style = "width: auto;" })*@
+                                            </div>
+                                            <div class="input-group col-lg-4">
+                                                @*@Html.ValidationMessageFor(u => u.FechaFin)*@
+                                                @Html.DropDownListFor(u => u.HoraFin, new SelectList(ViewBag.Horas, "id", "name", Model != null ? Model.HoraFin : 0), new { id = "ddlHoraFin", @class = "hour form-control parsley-validated", @style = "width: auto;" }) :
+                                                @Html.DropDownListFor(u => u.MinutoFin, new SelectList(ViewBag.Minutos, "id", "name", Model != null ? Model.MinutoFin : 0), new { id = "ddlMinutoFin", @class = "minute form-control parsley-validated", @style = "width: auto;" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="line line-dashed line-lg pull-in"></div>
+                                    <div class="form-group">
+                                        <label>Observaciones</label>
+                                        @Html.TextAreaFor(u => u.Observaciones, new { @class = "form-control", @placeholder = "Observaciones", @type = "text" })
+                                        @Html.ValidationMessageFor(u => u.Observaciones)
+                                    </div>
+                                    @if (Model != null && Model.IdTarea > 0)
+                                    {
+                                        <div class="form-group">
+                                            <label>Estado</label>
+                                            @Html.DropDownListFor(u => u.IdEstado, new SelectList(Enumerable.Empty<SelectListItem>(), "IdEstado", "NombreEstado"), new { @class = "form-control parsley-validated" })
+                                            @Html.ValidationMessageFor(u => u.IdEstado)
+                                        </div>
+                                    }
+                                    @if (ViewBag.EsAdmin && Model != null && Model.IdTarea > 0)
+                                    {
+                                        <div class="line line-dashed line-lg pull-in"></div>
+                                        <div class="checkbox">
+                                            <label>
+                                                @Html.CheckBoxFor(u => u.Active)
+                                                Activo
+                                            </label>
+                                            @Html.ValidationMessageFor(u => u.Active)
+                                        </div>}
+                                    else
+                                    {
+                                        @Html.TextBoxFor(u => u.Active, new { @value = Model != null ? Model.Active : false, @type = "hidden" })
+                                    }
+                                    <div class="line line-dashed line-lg pull-in"></div>
+                                    @Html.TextBoxFor(u => u.IdTarea, new { @value = Model != null ? Model.IdTarea.ToString() : "", @type = "hidden" })
+                                    @{var btnName = (Model != null && Model.IdTarea > 0) ? "Guardar Cambios" : "Crear";}
+                                    <button type="submit" id="btnGuardar" class="btn btn-sm btn-primary btn-rounded">@btnName</button>
+                                    <a class="btn btn-sm btn-danger btn-rounded" href="@Url.Action("Tareas")">Salir</a>
+                                    @*@if (Model != null && Model.IdTarea != 0)
+                                        {
+                                            <a href="@Url.Action("AddBolsaTarea", new { id = Model.IdTarea })" onclick="return confirmAddBolsaTarea();">Agregar a la Bolsa de Tareas</a>
+                                        }*@
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+    </section>
+</section>
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#ddlCliente").on("change", function () {
+                var ClienteId = $(this).val();
+                $.getJSON("/Admin/GetListInmueblesByClienteId", { id: ClienteId }, function (data) {
+                }).done(function (data) {
+                    var select = $("#IdInmueble");
+                    select.empty();
+                    //select.append($('<option />', { value: 0, text: "Select a Inmueble" }));
+                    $.each(data, function (index, itemData) {
+                        select.append($('<option />', {
+                            value: itemData.IdInmueble,
+                            text: itemData.NombreInmueble
+                        }));
+                    });
+                    @{ var selectedInmueble = (Model != null ? (Model.IdInmueble != null ? Model.IdInmueble : 0) : 0);}
+                    $("#IdInmueble").val(@selectedInmueble);
+                });
+            });
+            //
+            var selectedCliente = $("#ddlCliente").val();
+            if (selectedCliente != "0") $("#ddlCliente").trigger("change");
+
+            $("#add-responsable").click(function () {
+                var existe = false;
+                var valueResponsable = $('#responsableTarea :selected').val();
+                if (valueResponsable > 0) {
+                    var textResponsable = $('#responsableTarea :selected').text();
+                    $('#Responsables option').each(function () {
+                        if ($(this).val() == valueResponsable) existe = true;
+                    });
+                    if (!existe) {
+                        $('#Responsables').append($('<option>', {
+                            value: valueResponsable,
+                            text: textResponsable
+                        }));
+                        $('#responsableTarea :selected').remove();
+                    } else {
+                        alert("No se puede agregar al responsable " + textResponsable + ", porque ya se encuentra agregado.");
+                    }
+                } else {
+                    alert("Por favor, seleccione un responsable válido.");
+                }
+            });
+            $("#remove-responsable").click(function () {
+                var val = $('#Responsables :selected').val();
+                var text = $('#Responsables :selected').text();
+                $('#responsableTarea').append($('<option>', {
+                    value: val,
+                    text: text
+                }));
+                $("select#responsableTarea").html($("select#responsableTarea option").sort(function (a, b) {
+                    return a.text == b.text ? 0 : a.value > b.value ? 1 : -1;
+                }));
+                $('#Responsables :selected').remove();
+            });
+
+            $("#btnGuardar").click(function () {
+                //console.log("seteando");
+                var values = [];
+                $('#Responsables option').each(function () {
+                    values.push($(this).val());
+                });
+                $("#Responsables").val(values);//(["2", "3"]);
+            });
+
+            @*@{ var edicion = (Model != null && Model.IdTarea > 0) ? true : false; }*@
+            var IdTarea = $("#IdTarea").val();
+            if (IdTarea != "") {
+                $("#IdServicio").on("change", function () {
+                    var ServicioId = $(this).val();
+                    $.getJSON("/Admin/GetEstadosByServicioId", { id: ServicioId }, function (data) {
+                    }).done(function (data) {
+                        var select = $("#IdEstado");
+                        select.empty();
+                        $.each(data, function (index, itemData) {
+                            select.append($('<option />', {
+                                value: itemData.IdEstado,
+                                text: itemData.NombreEstado
+                            }));
+                        });
+                        @{ var selectedEstado = (Model != null ? (Model.IdEstado != null ? Model.IdEstado : 0) : 0);}
+                        $("#IdEstado").val(@selectedEstado);
+                    });
+                });
+                var selectedServicio = $("#IdServicio").val();
+                if (selectedServicio != "0") {
+                    $("#IdServicio").trigger("change");
+                }
+            }
+            
+        });
+
+    </script>
+}

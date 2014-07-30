@@ -1,0 +1,88 @@
+﻿@{
+    ViewBag.Title = "Reporte Mes";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+@section styles{
+    @Styles.Render("~/Content/themes/admin/js/fullcalendar/fullcalendar.css")
+    @Styles.Render("~/Content/themes/admin/js/fullcalendar/theme.css")
+}
+
+@section scripts{
+    <script type="text/javascript">
+        var responsablesReporte = '@ViewBag.ResponsablesString';
+        $(document).ready(function () {
+            $('#cReporte').on('slid.bs.carousel', function () {
+                var IdCalendario = $(this).find(".item.active .calendar").attr("id");
+                $("#"+IdCalendario).fullCalendar('render');
+            })
+        });
+    </script>
+    @Scripts.Render("~/Content/themes/admin/js/fullcalendar/fullcalendar.min.js")
+    @Scripts.Render("~/Content/themes/admin/js/fullcalendar/ReporteMes.js")
+
+}
+
+<section class="hbox stretch">
+    <aside>
+        <section class="vbox">
+            <section class="scrollable wrapper">
+                <section>
+                    <div class="carousel slide" id="cReporte" data-interval="false" >
+                        <a class="right carousel-control" href="@Url.Action("Responsables", "Admin")" data-toggle="tooltip" data-original-title="Regresar">
+                            <i class="fa fa-arrow-left"></i>
+                        </a>
+                        <h2>Reporte por Mes</h2>
+                        <a class="left carousel-control" href="#cReporte" data-slide="prev">
+                            <i class="fa fa-angle-left"></i>
+                        </a>
+                        <a class="right carousel-control" href="#cReporte" data-slide="next">
+                            <i class="fa fa-angle-right"></i>
+                        </a>
+                        <div class="carousel-inner panel panel-default">
+                            @if (ViewBag.Responsables != null)
+                            {
+                                var active = "active";
+                                foreach (var responsable in ViewBag.Responsables)
+                                {
+                                    <div class="item @Html.Raw(active)">
+                                        @{active = "";}
+                                        <div class="panel-body">
+                                            <div class="panel-header">
+                                                <div class="btn-group pull-right" data-toggle="buttons">
+                                                    <label class="btn btn-sm btn-bg btn-dark active monthview btn-rounded" data-target="@responsable">
+                                                        <input type="radio" name="options">Mes
+                                                    </label>
+                                                    <label class="btn btn-sm btn-bg btn-dark weekview" data-target="@responsable">
+                                                        <input type="radio" name="options">Semana
+                                                    </label>
+                                                    <label class="btn btn-sm btn-bg btn-dark dayview btn-rounded" data-target="@responsable">
+                                                        <input type="radio" name="options">Día
+                                                    </label>
+                                                </div>
+                                                @foreach (var user in ViewBag.ResponsablesDTO)
+                                                {
+                                                    if (user.IdUsuario == responsable)
+                                                    {
+                                                        <span class="m-t-xs inline"><strong>@user.Nombre</strong></span>
+                                                    }
+                                                }
+                                            </div>
+                                            <div class="form-horizontal">
+                                                <div class="line line-dashed line-lg pull-in"></div>
+                                                <div class="calendar" id="calendar-@responsable" data-target="@responsable"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+
+                        </div>
+
+
+
+                    </div>
+                </section>
+            </section>
+        </section>
+    </aside>
+</section>

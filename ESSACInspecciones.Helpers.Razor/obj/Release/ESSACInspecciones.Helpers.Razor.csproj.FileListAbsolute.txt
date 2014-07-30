@@ -1,0 +1,14 @@
+C:\Apps\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\bin\Release\ESSACInspecciones.Helpers.Razor.dll
+C:\Apps\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\bin\Release\ESSACInspecciones.Helpers.Razor.pdb
+C:\Apps\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\bin\Release\ESSACInspecciones.Helpers.dll
+C:\Apps\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\bin\Release\ESSACInspecciones.Helpers.pdb
+C:\Apps\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\obj\Release\ESSACInspecciones.Helpers.Razor.csprojResolveAssemblyReference.cache
+C:\Apps\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\obj\Release\ESSACInspecciones.Helpers.Razor.dll
+C:\Apps\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\obj\Release\ESSACInspecciones.Helpers.Razor.pdb
+D:\Proyectos\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\bin\Release\ESSACInspecciones.Helpers.Razor.dll
+D:\Proyectos\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\bin\Release\ESSACInspecciones.Helpers.Razor.pdb
+D:\Proyectos\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\bin\Release\ESSACInspecciones.Helpers.dll
+D:\Proyectos\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\bin\Release\ESSACInspecciones.Helpers.pdb
+D:\Proyectos\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\obj\Release\ESSACInspecciones.Helpers.Razor.csprojResolveAssemblyReference.cache
+D:\Proyectos\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\obj\Release\ESSACInspecciones.Helpers.Razor.dll
+D:\Proyectos\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\obj\Release\ESSACInspecciones.Helpers.Razor.pdb

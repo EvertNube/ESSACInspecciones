@@ -1,0 +1,101 @@
+﻿@using ESSACInspecciones.Core.DTO
+@model ClienteDTO
+
+@{
+    if (Model == null || Model.IdCliente == 0)
+    {
+        ViewBag.Title = "Cliente";
+    }
+    else { ViewBag.Title = Model.NombreEmpresa; }
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<section class="vbox">
+    <section class="scrollable padder">
+        <div class="row m-b">
+            <div class="col-xs-12 col-md-10 col-md-offset-1">
+                @if (Model == null || Model.IdCliente == 0)
+                {
+                    <h2>Nuevo Cliente</h2>
+                }
+                else
+                {<h2>Actualizar Cliente</h2>}
+
+                @using (Html.BeginForm("AddCliente", "Admin", FormMethod.Post))
+                {
+                    @Html.ValidationSummary(true)
+                    <div class="row m-b">
+                        <div class="col-xs-12 col-md-6">
+                            @Html.Partial("_showAlertMessages")
+
+                            <section class="panel panel-default">
+                                <header class="panel-heading font-bold">Formulario de Registro</header>
+                                <div class="panel-body">
+                                    <h4>Información de la Empresa</h4>
+                                    <div class="line line-dashed line-lg pull-in"></div>
+                                    <div class="form-group">
+                                        <label>Nombre Empresa</label>
+                                        @Html.TextBoxFor(u => u.NombreEmpresa, new { @class = "form-control", @placeholder = "Ingrese el nombre de la empresa", @type = "text" })
+                                        @Html.ValidationMessageFor(u => u.NombreEmpresa)
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Teléfono de la Empresa</label>
+                                        @Html.TextBoxFor(u => u.Telefono1, new { @class = "form-control", @placeholder = "Ingrese el teléfono de la empresa", @type = "text" })
+                                        @Html.ValidationMessageFor(u => u.Telefono1)
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Teléfono 2</label>
+                                        @Html.TextBoxFor(u => u.Telefono2, new { @class = "form-control", @placeholder = "Ingrese el teléfono de la empresa", @type = "text" })
+                                        @Html.ValidationMessageFor(u => u.Telefono2)
+                                    </div>
+
+                                    @if (ViewBag.EsAdmin && Model != null && Model.IdCliente > 0)
+                                    {
+                                        <div class="line line-dashed line-lg pull-in"></div>
+                                        <div class="checkbox">
+                                            <label>
+                                                @Html.CheckBoxFor(u => u.Active)
+                                                Activo
+                                            </label>
+                                            @Html.ValidationMessageFor(u => u.Active)
+                                        </div>}
+                                    else
+                                    {
+                                        @Html.TextBoxFor(u => u.Active, new { @value = Model != null ? Model.Active : false, @type = "hidden" })
+                                    }
+                                    <div class="line line-dashed line-lg pull-in"></div>
+                                    @Html.TextBoxFor(u => u.IdCliente, new { @value = Model != null ? Model.IdCliente.ToString() : "", @type = "hidden" })
+                                    @{var btnName = (Model != null && Model.IdCliente > 0) ? "Guardar Cambios" : "Crear";}
+                                    <button type="submit" class="btn btn-sm btn-primary btn-rounded">@btnName</button>
+                                    <a class="btn btn-sm btn-danger btn-rounded" href="@Url.Action("Clientes")">Salir</a>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                }
+
+                <div class="row m-b">
+                    <div class="col-xs-12">
+                        @if (Model != null)
+                        {
+                            @Html.Partial("_Contactos", (IList<ContactoDTO>)ViewBag.Contactos)
+                        }
+                    </div>
+                    <div class="col-xs-12">
+                        @if (Model != null)
+                        {
+                            @Html.Partial("_Inmuebles", (IList<InmuebleDTO>)ViewBag.Inmuebles)
+                        }
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        
+
+    </section>
+</section>
+
+
+

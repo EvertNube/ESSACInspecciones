@@ -1,0 +1,105 @@
+﻿@model ESSACInspecciones.Core.DTO.ServicioDTO
+@{
+    if (Model == null || Model.IdServicio == 0)
+    {
+        ViewBag.Title = "Servicio";
+    }
+    else { ViewBag.Title = Model.NombreServicio; }
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+@section styles{
+    @Styles.Render("~/Content/themes/admin/js/colpick/colpick.css")
+}
+<section class="vbox">
+    <section class="scrollable padder">
+        <div class="row m-b">
+            <div class="col-xs-12 col-md-10 col-md-offset-1">
+                @if (Model == null || Model.IdServicio == 0)
+                {
+                    <h2>Nuevo Servicio</h2>
+                }
+                else
+                {<h2>Actualizar Servicio</h2>}
+
+                @using (Html.BeginForm("AddServicio", "Admin", FormMethod.Post))
+                {
+                    @Html.ValidationSummary(true)
+                    <div class="row m-b">
+                        <div class="col-xs-12 col-md-6">
+                            @Html.Partial("_showAlertMessages")
+
+                            <section class="panel panel-default">
+                                <header class="panel-heading font-bold">Formulario de Registro</header>
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <label>Nombre</label>
+                                        @Html.TextBoxFor(u => u.NombreServicio, new { @class = "form-control", @placeholder = "Ingrese el nombre del servicio", @type = "text" })
+                                        @Html.ValidationMessageFor(u => u.NombreServicio)
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Nombre Corto</label>
+                                        @Html.TextBoxFor(u => u.NombreCorto, new { @class = "form-control", @placeholder = "Ingrese el nombre corto", @type = "text" })
+                                        @Html.ValidationMessageFor(u => u.NombreCorto)
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Descripción</label>
+                                        @Html.TextAreaFor(u => u.Descripcion, new { @class = "form-control", @placeholder = "Ingrese la descripción" })
+                                        @Html.ValidationMessageFor(u => u.Descripcion)
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Color</label>
+                                        @*# <input type="text" id="ColorServicio" name="ColorServicio" />*@
+                                        @Html.TextBoxFor(u => u.ColorServicio, new { @id = "picker", @class = "form-control", @type = "text", @placeholder = "#000000" })
+                                    </div>
+                                    @if (ViewBag.EsAdmin && Model != null && Model.IdServicio > 0)
+                                    {
+                                        <div class="line line-dashed line-lg pull-in"></div>
+                                        <div class="checkbox">
+                                            <label>
+                                                @Html.CheckBoxFor(u => u.Active)
+                                                Activo
+                                            </label>
+                                            @Html.ValidationMessageFor(u => u.Active)
+                                        </div>}
+                                    else
+                                    {
+                                        @Html.TextBoxFor(u => u.Active, new { @value = Model != null ? Model.Active : false, @type = "hidden" })
+                                    }
+                                    <div class="line line-dashed line-lg pull-in"></div>
+                                    @Html.TextBoxFor(u => u.IdServicio, new { @value = Model != null ? Model.IdServicio.ToString() : "", @type = "hidden" })
+                                    @{var btnName = (Model != null && Model.IdServicio > 0) ? "Guardar Cambios" : "Crear";}
+                                    <button type="submit" class="btn btn-sm btn-primary btn-rounded">@btnName</button>
+                                    <a class="btn btn-sm btn-danger btn-rounded" href="@Url.Action("Servicios")">Salir</a>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+    </section>
+</section>
+@section scripts{
+    @Scripts.Render("~/Content/themes/admin/js/colpick/colpick.js")
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#picker').colpick({
+                layout: 'hex',
+                submit: 0,
+                //colorScheme: 'dark',
+                onChange: function (hsb, hex, rgb, el, bySetColor) {
+                    $(el).css('border-color', '#' + hex);
+                    // Fill the text box just if the color was set using the picker, and not the colpickSetColor function.
+                    if (!bySetColor) $(el).val(hex);
+                }
+            }).keyup(function () {
+                $(this).colpickSetColor(this.value);
+            });
+
+            @{ var selectedColor = Model != null ? Model.ColorServicio : "";}
+            $('#picker').colpickSetColor("@selectedColor");
+        });
+        
+    </script>
+}

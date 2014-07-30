@@ -1,0 +1,164 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{92266EC8-4D80-478C-90B9-1EDFD7961DF0}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ESSACInspecciones.Data</RootNamespace>
+    <AssemblyName>ESSACInspecciones.Data</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Cliente.cs">
+      <DependentUpon>ESSACInspeccionesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ContactoCliente.cs">
+      <DependentUpon>ESSACInspeccionesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ESSACInspeccionesModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ESSACInspeccionesModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ESSACInspeccionesModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ESSACInspeccionesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ESSACInspeccionesModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ESSACInspeccionesModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Estado.cs">
+      <DependentUpon>ESSACInspeccionesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EstadoProtocolo.cs">
+      <DependentUpon>ESSACInspeccionesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Inmueble.cs">
+      <DependentUpon>ESSACInspeccionesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Plantilla.cs">
+      <DependentUpon>ESSACInspeccionesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Protocolo.cs">
+      <DependentUpon>ESSACInspeccionesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Respuesta.cs">
+      <DependentUpon>ESSACInspeccionesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Rol.cs">
+      <DependentUpon>ESSACInspeccionesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Seccion.cs">
+      <DependentUpon>ESSACInspeccionesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SeccionBody.cs">
+      <DependentUpon>ESSACInspeccionesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Servicio.cs">
+      <DependentUpon>ESSACInspeccionesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ServicioEstado.cs">
+      <DependentUpon>ESSACInspeccionesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_CountEstados_Result.cs">
+      <DependentUpon>ESSACInspeccionesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_GetPlantillas_Result.cs">
+      <DependentUpon>ESSACInspeccionesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_GetTareasResponsables_Result.cs">
+      <DependentUpon>ESSACInspeccionesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_GetTareas_Result.cs">
+      <DependentUpon>ESSACInspeccionesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tarea.cs">
+      <DependentUpon>ESSACInspeccionesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TipoCelda.cs">
+      <DependentUpon>ESSACInspeccionesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TipoTag.cs">
+      <DependentUpon>ESSACInspeccionesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Usuario.cs">
+      <DependentUpon>ESSACInspeccionesModel.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EntityDeploy Include="ESSACInspeccionesModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>ESSACInspeccionesModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.Config" />
+    <None Include="ESSACInspeccionesModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>ESSACInspeccionesModel.edmx</DependentUpon>
+      <LastGenOutput>ESSACInspeccionesModel.Context.cs</LastGenOutput>
+    </None>
+    <None Include="ESSACInspeccionesModel.edmx.diagram">
+      <DependentUpon>ESSACInspeccionesModel.edmx</DependentUpon>
+    </None>
+    <None Include="ESSACInspeccionesModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>ESSACInspeccionesModel.edmx</DependentUpon>
+      <LastGenOutput>ESSACInspeccionesModel.cs</LastGenOutput>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

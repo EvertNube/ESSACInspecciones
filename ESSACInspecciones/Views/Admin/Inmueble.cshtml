@@ -1,0 +1,72 @@
+﻿@model ESSACInspecciones.Core.DTO.InmuebleDTO
+
+@{
+    if (Model == null || Model.IdInmueble == 0)
+    {
+        ViewBag.Title = "Inmueble";
+    }
+    else { ViewBag.Title = Model.NombreInmueble; }
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<section class="vbox">
+    <section class="scrollable padder">
+        <div class="row m-b">
+            <div class="col-xs-12 col-md-10 col-md-offset-1">
+                @if (Model == null || Model.IdInmueble == 0)
+                {
+                    <h2>Nuevo Inmueble</h2>
+                }
+                else
+                {<h2>Actualizar Inmueble</h2>}
+
+                @using (Html.BeginForm("AddInmueble", "Admin", FormMethod.Post))
+                {
+                    @Html.ValidationSummary(true)
+                    <div class="row m-b">
+                        <div class="col-xs-12 col-md-6">
+                            @Html.Partial("_showAlertMessages")
+
+                            <section class="panel panel-default">
+                                <header class="panel-heading font-bold">Formulario de Registro</header>
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <label>Nombre</label>
+                                        @Html.TextBoxFor(u => u.NombreInmueble, new { @class = "form-control", @placeholder = "Ingrese el nombre del inmueble", @type = "text" })
+                                        @Html.ValidationMessageFor(u => u.NombreInmueble)
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Dirección</label>
+                                        @Html.TextBoxFor(u => u.Direccion, new { @class = "form-control", @placeholder = "Ingrese la dirección del inmueble", @type = "text" })
+                                        @Html.ValidationMessageFor(u => u.Direccion)
+                                    </div>
+                                    @if (ViewBag.EsAdmin && Model != null && Model.IdInmueble > 0)
+                                    {
+                                        <div class="line line-dashed line-lg pull-in"></div>
+                                        <div class="checkbox">
+                                            <label>
+                                                @Html.CheckBoxFor(u => u.Active)
+                                                Activo
+                                            </label>
+                                            @Html.ValidationMessageFor(u => u.Active)
+                                        </div>}
+                                    else
+                                    {
+                                        @Html.TextBoxFor(u => u.Active, new { @value = Model != null ? Model.Active : false, @type = "hidden" })
+                                    }
+                                    <div class="line line-dashed line-lg pull-in"></div>
+                                    @Html.TextBoxFor(u => u.IdInmueble, new { @value = Model != null ? Model.IdInmueble.ToString() : "", @type = "hidden" })
+                                    @Html.TextBoxFor(u => u.IdCliente, new { @value = Model != null ? ViewBag.IdCliente : "", @type = "hidden" })
+                                    @{var btnName = (Model != null && Model.IdInmueble > 0) ? "Guardar Cambios" : "Crear";}
+                                    <button type="submit" class="btn btn-sm btn-primary btn-rounded">@btnName</button>
+                                    <a class="btn btn-sm btn-danger btn-rounded" href="@Url.Action("Cliente", new { id = ViewBag.IdCliente })">Salir</a>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+    </section>
+</section>

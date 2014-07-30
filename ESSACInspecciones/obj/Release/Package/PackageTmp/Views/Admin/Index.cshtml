@@ -1,0 +1,958 @@
+﻿@using ESSACInspecciones.Helpers
+@using ESSACInspecciones.Core.DTO
+@{
+    ViewBag.Title = "Calendario";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+@section styles{
+    @Styles.Render("~/Content/themes/admin/js/fullcalendar/fullcalendar.css")
+    @Styles.Render("~/Content/themes/admin/js/fullcalendar/theme.css")
+}
+@section scripts{
+    @Scripts.Render("~/Content/themes/admin/js/jquery-ui-1.10.3.custom.min.js")
+    @Scripts.Render("~/Content/themes/admin/js/jquery.ui.touch-punch.min.js")
+    @Scripts.Render("~/Content/themes/admin/js/fullcalendar/resourceview/fullcalendar.min.js")
+    <script type="text/javascript">
+        var selectedDate = {};
+        var listaTareas = [];
+        $(document).ready(function () {
+            $("#popup-link").hide();
+
+            var responsables = [];
+            if ("@ViewBag.IdResponsable" == "0") {
+                responsables = getResponsablesCalendario();
+            } else {
+                responsables = [{ "name": "@ViewBag.Nombre", "id": parseInt("@ViewBag.IdResponsable") }];
+            }
+            //var tareasCalendario = getTareasResponsables();
+
+            var calendar = $('#calendar').fullCalendar({
+                header: {
+                    left: 'prev,next',
+                    center: 'title',
+                    right: 'prev,next'
+                },
+                //weekends: false,
+                defaultView: 'resourceWeek',
+                dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+                dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+                monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Setiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Set', 'Oct', 'Nov', 'Dic'],
+                titleFormat: {
+                    month: 'MMMM yyyy',                             // September 2009
+                    week: "MMMM d[ yyyy]{ '-'[ MMMM] d', ' yyyy}", // Sep 7 - 13 2009
+                    day: 'dddd, MMM d, yyyy'                  // Tuesday, Sep 8, 2009
+                },
+                columnFormat: {
+                    month: 'ddd',    // Mon
+                    week: 'ddd d/M', // Mon 9/7
+                    day: 'dddd d/M'  // Monday 9/7
+                },
+                firstDay: 1,
+                editable: true,
+                selectable: true,
+                selectHelper: true,
+                resources: responsables, //[{ "name": "Resource 2", "id": "resource2" }, { "name": "Resource 1", "id": "resource1" }],
+                events: function (start, end, callback) {
+                    var endDate = new Date(end); endDate.setDate(end.getDate() - 1);
+                    var starDate = $.fullCalendar.formatDate(start, "dd/MM/yyyy");
+                    endDate = $.fullCalendar.formatDate(endDate, "dd/MM/yyyy");
+                    $("#dpd1").val(starDate); $("#dpd2").val(endDate);
+                    countEstadoByDateRange();
+                    callback(getTareasResponsables(starDate, endDate));
+                },
+                select: function (start, end, allDay, jsEvent, view, resource) {//NUEVO
+                    cleanPopUp();
+                    selectedDate = {
+                        title: '',
+                        start: start,
+                        end: end,
+                        allDay: allDay,
+                        idTarea: 0
+                    };
+                    var startDate = $.fullCalendar.formatDate(start, "dd-MM-yyyy");
+                    var endDate = $.fullCalendar.formatDate(end, "dd-MM-yyyy");
+                    getServicios('0');
+                    getResponsables(resource.id);
+                    getClientes('0');
+                    $("#fechaIniTarea").val(startDate);
+                    $("#fechaFinTarea").val(endDate);
+                    $(".edicion").hide();
+                    $('#popup-link').click();
+                    calendar.fullCalendar('unselect');
+                },
+                droppable: true,
+                drop: function (date, allDay, event, ui, resource) {
+                    var originalEventObject = $(this).data('eventObject');
+                    // we need to copy it, so that multiple events don't have a reference to the same object
+                    var copiedEventObject = $.extend({}, originalEventObject);
+                    // assign it the date that was reported
+                    copiedEventObject.start = date;
+                    copiedEventObject.allDay = allDay;
+                    copiedEventObject.resource = resource.id;
+                    copiedEventObject.idTarea = parseInt(copiedEventObject.idTarea);
+                    var idTarea = copiedEventObject.idTarea;
+                    $(this).remove();// is the "remove after drop" checkbox checked?
+                    calendar.fullCalendar('renderEvent', copiedEventObject, false);
+                    updateTareaResponsable(1, idTarea, resource.id, date, date, true);
+                },
+                resourceRender: function (resource, element, view) {
+                    // this is triggered when the resource is rendered, just like eventRender
+                },
+                eventDrop: function (event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view) {
+                    revertFunc();
+                    //var resourceId = event.resource;
+                    //if (resourceId instanceof Array) {
+                    //    resourceId = resourceId[0];
+                    //}
+                    //updateTareaResponsable(0, event.idTarea, resourceId, event.start, event.end)
+                },
+                eventResize: function (event, dayDelta, minuteDelta, revertFunc, jsEvent, ui, view) {
+                    var startDate = $.fullCalendar.formatDate(event.start, "yyyy-MM-dd");
+                    var endDate = $.fullCalendar.formatDate(event.end, "yyyy-MM-dd");
+                    updateTareaResponsable(0, event.idTarea, event.resource, startDate, endDate, false);
+                },
+                eventClick: function (event, jsEvent, view) {//EDITAR
+                    cleanPopUp();
+                    selectedDate = event;
+                    //divElement = $(this);//set to the event's <div> element.
+                    getTarea(event.idTarea);
+                    //$("#responsableTarea").prop("disabled", true);
+                    calendar.fullCalendar('unselect');
+                    $(".edicion").show();
+                    $('#popup-link').click();
+                },
+                //eventRender: function (event, element, view) { },
+                windowResize: function (view) {
+                    calendar.fullCalendar('option', 'height', $(window).height() - 40);
+                }
+            });
+
+            addDependentDisablingDates();
+
+            PaintTareasInBolsaTareas();
+
+            $("#servicioTarea").on("change", function () {
+                var ServicioId = $(this).val();
+                getEstados(ServicioId, 0);
+            });
+            $("#clienteTarea").on("change", function () {
+                var ClienteId = $(this).val();
+                getInmueble(ClienteId, 0);
+            });
+            $("#guardarTarea").on("click", function () {
+                var validar = validate();
+                if (!validar) {
+                    $('#modal-form').modal('hide');
+                    var _responsables = [], _resource = [], mensaje;
+                    $("#loading").show();
+                    $('#responsablesTarea option').each(function () {
+                        var obj = { IdUsuario: $(this).val() };
+                        _responsables.push(obj);
+                        _resource.push(parseInt($(this).val()));
+                    });
+                    var _tarea = {
+                        IdTarea: selectedDate.idTarea,
+                        IdServicio: $("#servicioTarea").val(),
+                        IdCliente: $("#clienteTarea").val(),
+                        IdInmueble: $("#inmuebleTarea").val(),
+                        IdEstado: $("#estadoTarea").val() ? $("#estadoTarea").val() : 0,
+                        NombreTarea: $("#nombreTarea").val(),
+                        Descripcion: $("#descripcionTarea").val(),
+                        StrFechaInicio: $("#fechaIniTarea").val(),
+                        HoraInicio: $("#horaIniTarea").val(),
+                        MinutoInicio: $("#minutoIniTarea").val(),
+                        StrFechaFin: $("#fechaFinTarea").val(),
+                        HoraFin: $("#horaFinTarea").val(),
+                        MinutoFin: $("#minutoFinTarea").val(),
+                        Observaciones: $("#observacionesTarea").val(),
+                        Responsables: _responsables,
+                        Active: true
+                    };
+                    $.post("/Admin/AddTareaCalendario", { tarea: JSON.stringify(_tarea) }, function (data) {
+                    }).done(function (data) {
+                        $("#loading").hide();
+                        selectedDate.title = _tarea.NombreTarea;
+                        selectedDate.color = "#" + data.ColorServicio;
+                        selectedDate.resource = _resource;
+                        if (data.Response != 0) {//NUEVO
+                            selectedDate.idTarea = data.Response;
+                            paintTareaCalendario(selectedDate);
+                            mensaje = "La Tarea se creó correctamente.";
+                        } else {//EDITAR
+                            var endString = $("#fechaFinTarea").val(), startString = $("#fechaIniTarea").val();
+                            var endDate = new Date(endString.substr(6, 4), endString.substr(3, 2) - 1, endString.substr(0, 2), 00, 01)
+                            var startDate = new Date(startString.substr(6, 4), startString.substr(3, 2) - 1, startString.substr(0, 2), 00, 01)
+                            selectedDate.start = startDate;
+                            selectedDate.end = endDate;
+                            $('#calendar').fullCalendar('updateEvent', selectedDate);
+                            mensaje = "La Tarea se actualizó correctamente.";
+                        }
+                        alert(mensaje);
+                        return true;
+                    }).fail(function () {
+                        alert("Error al intentar guardar la tarea. Por favor, actualice la página o presione F5.");
+                        return false;
+                    });
+                }
+            });
+
+            $("#BuscarTareas").click(function () {
+                var texto = $("#search-note").val().trim();
+                if ($(this).data("lastval") != texto) {
+                    $(this).data("lastval", texto);
+                    if (texto.length > 1 || texto == "") searchTareas(texto);
+                };
+            });
+            $("#search-note").keydown(function (event) {
+                var texto = $("#search-note").val().trim();
+                if (event.which == 13 || texto == "") $("#BuscarTareas").click();
+            });
+            //$('#search-note').on('input', function (e) { //Busqueda sensitiva
+            //    var texto = $(this).val().trim();
+            //    if ($(this).data("lastval") != texto) {
+            //        $(this).data("lastval", texto);
+            //        if (texto == "" || texto.length > 1) searchTareas(texto);
+            //    };
+            //});
+            $("#btnContadorEstado").on("click", function () {
+                var strFechaInicio = $('#dpd1').val();
+                var strFechaFin = $("#dpd2").val();
+                var fechaInicio = new Date(strFechaInicio.substr(6, 4), strFechaInicio.substr(3, 2) - 1, strFechaInicio.substr(0, 2));
+                var fechaFin = new Date(strFechaFin.substr(6, 4), strFechaFin.substr(3, 2) - 1, strFechaFin.substr(0, 2));
+                $('#contadorTable td').remove();
+                if (!moment(fechaInicio).isValid()) {
+                    alert("La fecha de inicio es inválida. Por favor, ingrese un rango válido.");
+                    return false;
+                }
+                if (!moment(fechaFin).isValid()) {
+                    alert("La fecha de fin es inválida. Por favor, ingrese un rango válido.");
+                    return false;
+                }
+                if (fechaInicio > fechaFin) {
+                    alert("El rango de fechas es inválido. Por favor, ingrese un rango válido.");
+                    return false;
+                }
+                countEstadoByDateRange();
+            });
+            $("#eliminarTarea").click(function () {
+                var tareaId = selectedDate.idTarea;
+                var eventId = selectedDate._id;
+                DeleteTareaCalendario(tareaId, eventId);
+            });
+            $("#add-responsable").click(function () {
+                var existe = false;
+                var valueResponsable = $('#responsableTarea :selected').val();
+                if (valueResponsable > 0) {
+                    var textResponsable = $('#responsableTarea :selected').text();
+                    $('#responsablesTarea option').each(function () {
+                        if ($(this).val() == valueResponsable) existe = true;
+                    });
+                    if (!existe) {
+                        $('#responsablesTarea').append($('<option>', {
+                            value: valueResponsable,
+                            text: textResponsable
+                        }));
+                        $('#responsableTarea :selected').remove();
+                    } else {
+                        alert("No se puede agregar al responsable " + textResponsable + ", porque ya se encuentra agregado.");
+                    }
+                } else {
+                    alert("Por favor, seleccione un responsable válido.");
+                }
+
+            });
+            $("#remove-responsable").click(function () {
+                var val = $('#responsablesTarea :selected').val();
+                var text = $('#responsablesTarea :selected').text();
+                $('#responsableTarea').append($('<option>', {
+                    value: val,
+                    text: text
+                }));
+                $("select#responsableTarea").html($("select#responsableTarea option").sort(function (a, b) {
+                    return a.text == b.text ? 0 : a.value > b.value ? 1 : -1;
+                }));
+                $('#responsablesTarea :selected').remove();
+            });
+        });
+
+        var addDragEvent = function ($this) {
+            // create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
+            var eventObject = {
+                title: $.trim($this.find(".tarea-nombre").text()), // use the element's text as the event title
+                className: $this.attr('class').replace('list-group-item hover active', ''),
+                idTarea: $this.find(".tarea").attr("id"),
+                color: "#" + $this.find(".tarea").data("serv-color")
+            };
+            // store the Event Object in the DOM element so we can get to it later
+            $this.data('eventObject', eventObject);
+            // make the event draggable using jQuery UI
+            $this.draggable({
+                appendTo: 'body',
+                helper: 'clone',
+                zIndex: 999,
+                revert: true,      // will cause the event to go back to its
+                revertDuration: 0  //  original position after the drag
+            });
+        };
+        function getResponsablesCalendario() {
+            var result = [];
+            $.ajax({
+                async: false,
+                url: "/Admin/GetResponsablesCalendario",
+                cache: false,
+                dataType: "json"
+            }).done(function (data) {
+                result = data;
+            }).fail(function () {
+                alert('Error al intentar obtener los Responsables del Calendario. Por favor, actualice la página o presione F5.');
+            });
+            return result;
+        }
+        function getTareasResponsables(starDate, endDate) {
+            var result = [];
+            $.ajax({
+                async: false,
+                url: "/Admin/GetTareasResponsables",
+                cache: false,
+                data: { fechaInicio: starDate, fechaFin: endDate },
+                dataType: "json"
+            }).done(function (data) {
+                //console.log("hecho");
+                $.each(data, function (x, itemData) {
+                    if (itemData.start != null) {
+                        var dateInicio = new Date(parseInt(itemData.start.substr(6)));
+                        itemData.start = new Date(dateInicio.getFullYear(), dateInicio.getMonth(), dateInicio.getDate(), 00, 01);//dateInicio.getHours(), dateInicio.getMinutes());
+                    }
+                    if (itemData.end != null) {
+                        var dateFin = new Date(parseInt(itemData.end.substr(6)));
+                        itemData.end = new Date(dateFin.getFullYear(), dateFin.getMonth(), dateFin.getDate(), 00, 01);//dateFin.getHours(), dateFin.getMinutes());//00, 01)
+                    }
+                });
+                result = data;
+            }).fail(function () {
+                alert('Error al intentar obtener las Tareas del Calendario. Por favor, actualice la página o presione F5.');
+            });
+            return result;
+        }
+        function getTarea(TareaId) {
+            $.ajax({
+                url: "/Admin/GetTarea",
+                cache: false,
+                data: { id: TareaId },
+                dataType: "json"
+            }).done(function (data) {
+                $(".modal-title").text(data.NombreTarea);
+                $("#nombreTarea").val(data.NombreTarea);
+                $("#descripcionTarea").val(data.Descripcion);
+                $("#fechaIniTarea").val(moment(formatDate(data.FechaInicio)).format("DD/MM/YYYY"));
+                $("#horaIniTarea").val(data.HoraInicio);
+                $("#minutoIniTarea").val(data.MinutoInicio);
+                $("#fechaFinTarea").val(moment(formatDate(data.FechaFin)).format("DD/MM/YYYY"));
+                $("#horaFinTarea").val(data.HoraFin);
+                $("#minutoFinTarea").val(data.MinutoFin);
+                $("#observacionesTarea").val(data.Observaciones);
+                getServicios(data.IdServicio);
+                getResponsables(data.Responsables);//data.IdResponsable
+                getClientes(data.IdCliente);
+                getInmueble(data.IdCliente, data.IdInmueble);
+                getEstados(data.IdServicio, data.IdEstado);
+            }).fail(function () {
+                alert('Error al intentar obtener los datos de la Tarea. Por favor, actualice la página o presione F5.');
+            });
+        }
+        function PaintTareasInBolsaTareas() {
+            var lista = $('#BolsaTareas');
+            lista.empty();
+            $.ajax({
+                url: "/Admin/GetBolsaTareas",
+                type: "GET",
+                cache: false,
+            }).done(function (data) {
+                listaTareas = data;
+                $.each(data, function (index, itemData) {
+                    var stringHtml = '<li class="list-group-item hover active"><div class="tarea" id="' + itemData.IdTarea + '" data-serv-color="' + itemData.Servicio.ColorServicio + '"><div class="view" id="note-1">' +
+                                        '<button class="destroy close hover-action delTarea" onclick="DeleteTareaBolsa(' + itemData.IdTarea + ')">×</button>' +
+                                        '<div class="note-name tarea-nombre"> <strong>' + itemData.NombreTarea + '</strong> </div>' +
+                                        //'<div class="note-desc tarea-desc">' + itemData.Descripcion + '</div>' +
+                                        '<span class="text-xs text-muted" tarea-serv>' + itemData.Servicio.NombreServicio + '</span>' +
+                                        //'<div>&nbsp;</div>' +
+                                    '</div></div></li>';
+                    lista.append(stringHtml);
+                });
+                $('#BolsaTareas li').each(function () {
+                    addDragEvent($(this));
+                });
+                $('#ContadorTareas').text("(" + listaTareas.length + ")");
+            });
+        }
+        function paintTareaCalendario(SelectedDate) {
+            $('#calendar').fullCalendar('renderEvent', SelectedDate, false);//the false makes the event "unsticky" (which is default behaviour; you can also just drop the true) and will allow the event to disappear when the calendar refetches events
+        }
+        function cleanPopUp() {
+            $(".modal-title").text('Nueva Tarea');
+            $("#nombreTarea").val('');
+            $("#descripcionTarea").val('');
+            $("#fechaIniTarea").val('');
+            $("#fechaFinTarea").val('');
+            $("#observacionesTarea").val('');
+            $("#horaIniTarea").val('0'); $("#minutoIniTarea").val('0');
+            $("#horaFinTarea").val('0'); $("#minutoFinTarea").val('0');
+            $('#responsablesTarea').empty();
+            //$("#servicioTarea").val(0);
+            //$("#clienteTarea").val(0);
+            $("#inmuebleTarea").empty();
+            //selectedDate = {};
+        }
+        function getServicios(ServicioId) {
+            $.ajax({
+                url: "/Admin/GetServicios",
+                type: "GET",
+                cache: false,
+                dataType: "json"
+            }).done(function (data) {
+                var select = $("#servicioTarea");
+                select.empty();
+                $.each(data, function (index, itemData) {
+                    select.append($('<option />', {
+                        value: itemData.IdServicio,
+                        text: itemData.NombreServicio
+                    }));
+                });
+                $("#servicioTarea").val(ServicioId);
+            }).fail(function () {
+                alert('Error al intentar obtener la lista de Servicios. Por favor, actualice la página o presione F5.');
+            });
+        }
+        function getResponsables(resource) {
+            $.ajax({
+                url: "/Admin/GetResponsables",
+                type: "GET",
+                cache: false,
+                dataType: "json"
+            }).done(function (data) {
+                var select = $("#responsableTarea");
+                select.empty();
+                var responsablesLeft = data.slice(0);
+                var responsablesAdded = [];
+                $.each(data, function (i, v) {
+                    if (resource instanceof Array) {
+                        $.each(resource, function (j, w) {
+                            if (v.IdUsuario > 0 && v.IdUsuario == w.IdUsuario) {
+                                responsablesAdded.push(v);
+                                var indexToRemove = responsablesLeft.indexOf(v)
+                                responsablesLeft.splice(indexToRemove, 1);
+                            }
+                        });
+                    } else {
+                        if (resource > 0 && v.IdUsuario == resource) {
+                            responsablesAdded.push(v);
+                            var indexToRemove = responsablesLeft.indexOf(v)
+                            responsablesLeft.splice(indexToRemove, 1);
+                        }
+                    }
+                });
+                $.each(responsablesLeft, function (index, itemData) {
+                    select.append($('<option />', {
+                        value: itemData.IdUsuario,
+                        text: itemData.Nombre
+                    }));
+                });
+
+                $.each(responsablesAdded, function (index, item) {
+                    $('#responsablesTarea').append($('<option>', {
+                        value: item.IdUsuario,
+                        text: item.Nombre
+                    }));
+                });
+
+                //console.log(Responsables.length);
+                //$("#responsableTarea").val(ResponsableId);
+            }).fail(function () {
+                alert('Error al intentar obtener la lista de Responsables. Por favor, actualice la página o presione F5.');
+            });
+        }
+        function getClientes(ClienteId) {
+            $.ajax({
+                url: "/Admin/GetClientes",
+                type: "GET",
+                cache: false,
+                dataType: "json"
+            }).done(function (data) {
+                var select = $("#clienteTarea");
+                select.empty();
+                $.each(data, function (index, itemData) {
+                    select.append($('<option />', {
+                        value: itemData.IdCliente,
+                        text: itemData.NombreEmpresa
+                    }));
+                });
+                $("#clienteTarea").val(ClienteId);
+            }).fail(function () {
+                alert('Error al intentar obtener la lista de Clientes. Por favor, actualice la página o presione F5.');
+            });
+        }
+        function getInmueble(ClienteId, InmuebleId) {
+            $.ajax({
+                url: "/Admin/GetListInmueblesByClienteId",
+                type: "GET",
+                cache: false,
+                data: { id: ClienteId },
+                dataType: "json"
+            }).done(function (data) {
+                var select = $("#inmuebleTarea");
+                select.empty();
+                $.each(data, function (index, itemData) {
+                    select.append($('<option />', {
+                        value: itemData.IdInmueble,
+                        text: itemData.NombreInmueble
+                    }));
+                });
+                $("#inmuebleTarea").val(InmuebleId);
+            }).fail(function () {
+                alert('Error al intentar obtener la lista de Clientes. Por favor, actualice la página o presione F5.');
+            });
+        }
+        function getEstados(ServicioId, EstadoId) {
+            $.ajax({
+                url: "/Admin/GetEstadosByServicioId",
+                type: "GET",
+                cache: false,
+                data: { id: ServicioId },
+                dataType: "json"
+            }).done(function (data) {
+                var select = $("#estadoTarea");
+                select.empty();
+                $.each(data, function (index, itemData) {
+                    select.append($('<option />', {
+                        value: itemData.IdEstado,
+                        text: itemData.NombreEstado
+                    }));
+                });
+                $("#estadoTarea").val(EstadoId);
+            }).fail(function () {
+                alert('Error al intentar obtener la lista de Estados. Por favor, actualice la página o presione F5.');
+            });
+        }
+        function countEstadoByDateRange() {
+            var objTarea = {
+                StrFechaInicio: $('#dpd1').val(),
+                StrFechaFin: $("#dpd2").val(),
+                IdResponsable: $("#SearchResponsable").val()
+            };
+            $('#contadorTable td').remove();
+            getContadorEstados(objTarea);
+        }
+        function getContadorEstados(objTarea) {
+            $.ajax({
+                url: "/Admin/GetContadorEstados",
+                type: "GET",
+                cache: false,
+                data: { tarea: JSON.stringify(objTarea) },
+                dataType: "json"
+            }).done(function (data) {
+                $('#contadorTable td').remove();
+                $.each(data, function (index, itemData) {
+                    $('#contadorTable > tbody:last').append(
+                        '<tr><td>' + itemData.NombreEstado + '</td>' +
+                        '<td>' + itemData.CuentaEstado + '</td></tr>');
+                });
+            }).fail(function () {
+                alert('Error al intentar obtener el Contador de Estados. Por favor, actualice la página o presione F5.');
+            });
+        }
+        function searchTareas(texto) {
+            var count = listaTareas.length;
+            var stringHtml = "";
+            var countTareas = 0;
+            //for (var index = 0; index < count; index++) { var idTarea = $("div.tarea")[index].attributes["id"].textContent; var nombreTarea = $("div.tarea-nombre").find("strong")[index].textContent; var nombreServicio = $("span.text-muted")[index].textContent; var objeto = { IdTarea: idTarea, NombreTarea: nombreTarea, NombreServicio: nombreServicio }; lista.push(objeto); }
+            for (var index = 0; index < count; index++) {
+                if (listaTareas[index].NombreTarea.toUpperCase().indexOf(texto.toUpperCase()) > -1 || listaTareas[index].Servicio.NombreServicio.toUpperCase().indexOf(texto.toUpperCase()) > -1) {
+                    stringHtml += '<li class="list-group-item hover active"><div class="tarea" id="' + listaTareas[index].IdTarea + '"><div class="view" id="note-1">' +
+                                '<button class="destroy close hover-action delTarea" onclick="DeleteTareaBolsa(' + listaTareas[index].IdTarea + ')">×</button>' +
+                                '<div class="note-name tarea-nombre"> <strong>' + listaTareas[index].NombreTarea + '</strong> </div>' +
+                                '<span class="text-xs text-muted">' + listaTareas[index].Servicio.NombreServicio + '</span>' +
+                            '</div></div></li>';
+                    countTareas++;
+                }
+            }
+            $('#BolsaTareas').empty();
+            $('#BolsaTareas').append(stringHtml);
+            $('#BolsaTareas li').each(function () {
+                addDragEvent($(this));
+            });
+            $('#ContadorTareas').text("(" + countTareas + ")");
+        }
+        function updateTareaResponsable(TipoCorreo, TareaId, Resource, FechaInicio, FechaFin, updateContador) {
+            var _responsables = [];
+            if (Resource instanceof Array) {
+                $.each(Resource, function (index, value) {
+                    var obj = { IdUsuario: value };
+                    _responsables.push(obj);
+                });
+            } else {
+                var obj = { IdUsuario: Resource };
+                _responsables.push(obj);
+            }
+            var _tarea = { IdTarea: TareaId, StrFechaInicio: FechaInicio, StrFechaFin: FechaFin, Responsables: _responsables };
+            $.post("/Admin/UpdateTareaResponsable", { tipoCorreo: TipoCorreo, tarea: JSON.stringify(_tarea) }, function (data) {
+            }).done(function (data) {
+                if (updateContador) countEstadoByDateRange();
+                //PaintTareasInBolsaTareas();
+            }).fail(function () {
+                alert("Error al intentar actualizar la Tarea.");
+            });
+        }
+        function DeleteTareaBolsa(TareaId) {
+            if (confirm("¿Está seguro que desea eliminar la Tarea de la Bolsa de Tareas?")) {
+                $.post("/Admin/DeleteTareaBolsa", { id: TareaId }, function (data) {
+                }).done(function (data) {
+                    PaintTareasInBolsaTareas();
+                }).fail(function () {
+                    alert("Error al intentar eliminar la tarea de la Bolsa de Tareas.");
+                });
+            }
+        }
+        function DeleteTareaCalendario(TareaId, EventId) {
+            if (confirm("¿Está seguro que desea eliminar la Tarea del Calendario?")) {
+                $.post("/Admin/DeleteTareaCalendario", { id: TareaId }, function (data) {
+                }).done(function (data) {
+                    $("#calendar").fullCalendar('removeEvents', EventId);
+                    countEstadoByDateRange();
+                    PaintTareasInBolsaTareas();
+                }).fail(function () {
+                    alert("Error al intentar eliminar la tarea del Calendario.");
+                });
+            }
+        }
+        function validate() {
+            var message = "", validate = false, resources = [];
+            if ($("#nombreTarea").val().trim() == "") message = "Ingrese un Nombre.";
+            //if ($("#descripcionTarea").val().trim() == "") message += "\nIngrese una Descripción.";
+            if ($("#servicioTarea").val() == 0) message += "\nSeleccione un Servicio.";
+            if ($("#clienteTarea").val() == 0) message += "\nSeleccione un Cliente.";
+            if ($("#inmuebleTarea").val() && $("#inmuebleTarea").val() == 0) message += "\nSeleccione un Inmueble.";
+            //if ($("#fechaIniTarea").val() == 0) message += "\nIngrese Fecha de Inicio.";
+            //if ($("#fechaFinTarea").val() == 0) message += "\nIngrese Fecha de Fin.";
+            //if ($("#observacionesTarea").val().trim() == "") message += "\nIngrese una Observación.";
+            //$('#responsablesTarea option').each(function () { resources.push($(this).val()); });
+            //if (resources.length == 0) message += "\nSeleccione Responsables.";
+            if (message.length > 0) { alert(message); validate = true; }
+            return validate;
+        }
+        //function getDatesDisplayed(objTarea) {
+        //    var strAnno = $("#calendar .fc-header-title h2").text();
+        //    strAnno = strAnno.substr(strAnno.length - 4);
+        //    strFechaInicio = $("#calendar .fc-first.fc-last").find(".fc-first").text().substr(4);
+        //    strFechaFin = $("#calendar .fc-first.fc-last").find(".fc-last").text().substr(4);
+        //    var strMesInicio = strFechaInicio.substr(0, 1);
+        //    var strDiaInicio = strFechaInicio.substr(2);
+        //    var strMesFin = strFechaFin.substr(0, 1);
+        //    var strDiaFin = strFechaFin.substr(2);
+        //    objTarea.StrFechaInicio = strDiaInicio + "/" + strMesInicio + "/" + strAnno;
+        //    objTarea.StrFechaFin = strDiaFin + "/" + strMesFin + "/" + strAnno;
+        //}
+        //Utilitarios
+        function addDependentDisablingDates() {
+            var checkin = $('#dpd1').datepicker()
+                .on('changeDate', function (ev) {
+                    //if (ev.date.valueOf() > checkout.date.valueOf()) {
+                    //    var newDate = new Date(ev.date)
+                    //    newDate.setDate(newDate.getDate() + 1);
+                    //    checkout.setValue(newDate);
+                    //}
+                    checkin.hide();
+                    $('#dpd2')[0].focus();
+                }).data('datepicker');
+            var checkout = $('#dpd2').datepicker().on('changeDate', function (ev) { checkout.hide(); }).data('datepicker');
+        }
+        function formatDate(stringDate) {
+            var date = new Date(parseInt(stringDate.substr(6)));
+            return new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes())
+        }
+    </script>
+}
+@model IList<UsuarioDTO>
+<section class="hbox stretch">
+    <aside>
+        <section class="vbox">
+            <section class="scrollable wrapper">
+                <section class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="panel-header">
+                            @using (Html.BeginForm("Index", "Admin", FormMethod.Get, new { @class = "form-inline pull-left" }))
+                            {
+                                <div class="form-group">
+                                    @Html.DropDownList("SearchResponsable", new SelectList(Model, "IdUsuario", "Nombre", ViewBag.IdResponsable), new { @class = "parsley-validated form-control btn-rounded" })
+                                </div>
+                                <button type="submit" class="btn btn-default btn-rounded">Buscar</button>
+                            }
+                            @if (ViewBag.EsAdmin)
+                            {
+                                <a href="@Url.Action("Responsables", "Admin")" class="btn btn-dark pull-right btn-rounded">Vista por Mes</a>
+                            }
+                        </div>
+                        <div class="form-horizontal">
+                            <div class="line line-dashed line-lg pull-in"></div>
+                            <div class="calendar" id="calendar"></div>
+
+                            <div class="line line-dashed line-lg pull-in"></div>
+                            <section class="panel panel-default">
+                                <header class="panel-heading font-bold">Contador Estado</header>
+                                <div class="panel-body">
+                                    <div class="form-inline">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control btn-rounded" value="" id="dpd1">
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control btn-rounded" value="" id="dpd2">
+                                        </div>
+                                        <button type="button" id="btnContadorEstado" class="btn btn-default  btn-rounded"><i class="fa fa-search"></i></button>
+                                    </div>
+                                    <div class="form-horizontal">
+                                        <div class="line line-dashed line-lg pull-in"></div>
+                                        <div class="panel panel-default wrapper" style="padding-top: 0; padding-bottom:0;">
+                                            <div class="form-group table-responsive">
+                                                <table id="contadorTable" class="table table-striped b-t b-light">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>ESTADO</th>
+                                                            <th>CUENTA</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody></tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </section>
+
+            </section>
+        </section>
+    </aside>
+    <!-- /.aside -->
+    <!-- .aside -->
+    <aside class="aside-lg b-l" id="note-list">
+        <div class="padder">
+            <header class="header clearfix no-border no-padder">
+                <span class="pull-right m-t"></span>
+                <p class="h3">Bolsa de Tareas</p>&nbsp;&nbsp;<span id="ContadorTareas" class="">(0)</span>
+                <div class="input-group m-t-sm m-b-sm">
+                    <span class="input-group-addon input-sm" id="BuscarTareas"><i class="fa fa-search"></i></span>
+                    <input type="text" class="form-control input-sm" id="search-note" placeholder="Buscar...">
+                </div>
+                <a href="#modal-form" id="popup-link" class="btn btn-success" data-toggle="modal" style="display:none;">Registrar Tarea</a>
+            </header>
+            <div class="clearfix m-b no-border no-padder">
+                <div class="slim-scroll" data-height="540" data-disable-fade-out="true" data-distance="0" data-size="5px" data-color="#333333">
+                    <ul id="BolsaTareas" class="list-group list-group-sp"></ul> <!-- templates -->
+                </div>
+            </div>
+        </div>
+    </aside> <!-- /.aside -->
+
+</section>
+
+<div class="modal fade modal-task" id="modal-form">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Nueva Tarea</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div id="registro" class="col-sm-12 form-horizontal">
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">Nombre</label>
+                            <div class="col-lg-9">
+                                <input type="text" id="nombreTarea" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">Descripción</label>
+                            <div class="col-lg-9">
+                                <input type="text" id="descripcionTarea" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">Servicio</label>
+                            <div class="col-lg-9">
+                                <select id="servicioTarea" class="form-control"></select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">Responsable</label>
+                            <div class="col-lg-8">
+                                <select id="responsableTarea" class="form-control"></select>
+                            </div>
+                            <div class="col-lg-1">
+                                <span class="pull-right">
+                                    <button class="btn btn-dark btn-sm btn-icon btn-rounded" id="add-responsable" data-toggle="tooltip" data-placement="right" title="" data-original-title="Agregar Responsable">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label"></label>
+                            <div class="col-lg-8">
+                                <select multiple="" class="form-control" id="responsablesTarea"></select>
+                            </div>
+                            <div class="col-lg-1">
+                                <span class="pull-right">
+                                    <button class="btn btn-dark btn-sm btn-icon btn-rounded" id="remove-responsable" data-toggle="tooltip" data-placement="right" title="" data-original-title="Quitar Responsable">
+                                        <i class="fa fa-minus-circle"></i>
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">Cliente</label>
+                            <div class="col-lg-9">
+                                <select id="clienteTarea" class="form-control"></select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">Inmueble</label>
+                            <div class="col-lg-9">
+                                <select id="inmuebleTarea" class="form-control"></select>
+                            </div>
+                        </div>
+                        <div class="line line-dashed line-lg pull-in"></div>
+                        <div class=" form-horizontal">
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">Fecha Inicio</label>
+                                <div class="input-group col-lg-4">
+                                    <input type="text" id="fechaIniTarea" class="datepicker-input form-control" />
+                                    @*<label class="control-label">Hora Inicio</label>*@
+                                </div>
+                                <div class="input-group col-lg-5">
+                                    <select id="horaIniTarea" class="hour form-control" style="width: auto;">
+                                        <option value="0">00</option>
+                                        <option value="1">01</option>
+                                        <option value="2">02</option>
+                                        <option value="3">03</option>
+                                        <option value="4">04</option>
+                                        <option value="5">05</option>
+                                        <option value="6">06</option>
+                                        <option value="7">07</option>
+                                        <option value="8">08</option>
+                                        <option value="9">09</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                        <option value="13">13</option>
+                                        <option value="14">14</option>
+                                        <option value="15">15</option>
+                                        <option value="16">16</option>
+                                        <option value="17">17</option>
+                                        <option value="18">18</option>
+                                        <option value="19">19</option>
+                                        <option value="20">20</option>
+                                        <option value="21">21</option>
+                                        <option value="22">22</option>
+                                        <option value="23">23</option>
+                                    </select>
+                                    &nbsp;:&nbsp;
+                                    <select id="minutoIniTarea" class="minute form-control" style="width: auto;">
+                                        <option value="0">00</option>
+                                        <option value="5">05</option>
+                                        <option value="10">10</option>
+                                        <option value="15">15</option>
+                                        <option value="20">20</option>
+                                        <option value="25">25</option>
+                                        <option value="30">30</option>
+                                        <option value="35">35</option>
+                                        <option value="40">40</option>
+                                        <option value="45">45</option>
+                                        <option value="50">50</option>
+                                        <option value="55">55</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">Fecha Fin</label>
+                                <div class="input-group col-lg-4">
+                                    <input type="text" id="fechaFinTarea" class="datepicker-input form-control" />
+                                </div>
+                                <div class="input-group col-lg-5">
+                                    <select id="horaFinTarea" class="hour form-control" style="width: auto;">
+                                        <option value="0">00</option>
+                                        <option value="1">01</option>
+                                        <option value="2">02</option>
+                                        <option value="3">03</option>
+                                        <option value="4">04</option>
+                                        <option value="5">05</option>
+                                        <option value="6">06</option>
+                                        <option value="7">07</option>
+                                        <option value="8">08</option>
+                                        <option value="9">09</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                        <option value="13">13</option>
+                                        <option value="14">14</option>
+                                        <option value="15">15</option>
+                                        <option value="16">16</option>
+                                        <option value="17">17</option>
+                                        <option value="18">18</option>
+                                        <option value="19">19</option>
+                                        <option value="20">20</option>
+                                        <option value="21">21</option>
+                                        <option value="22">22</option>
+                                        <option value="23">23</option>
+                                    </select>
+                                    &nbsp;:&nbsp;
+                                    <select id="minutoFinTarea" class="minute form-control" style="width: auto;">
+                                        <option value="0">00</option>
+                                        <option value="5">05</option>
+                                        <option value="10">10</option>
+                                        <option value="15">15</option>
+                                        <option value="20">20</option>
+                                        <option value="25">25</option>
+                                        <option value="30">30</option>
+                                        <option value="35">35</option>
+                                        <option value="40">40</option>
+                                        <option value="45">45</option>
+                                        <option value="50">50</option>
+                                        <option value="55">55</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="line line-dashed line-lg pull-in"></div>
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">Observaciones</label>
+                            <div class="col-lg-9">
+                                <textarea id="observacionesTarea" class="form-control"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group edicion">
+                            <label class="col-lg-3 control-label">Estado</label>
+                            <div class="col-lg-9">
+                                <select id="estadoTarea" class="form-control"></select>
+                            </div>
+                        </div>
+                        <div class="line line-dashed line-lg pull-in"></div>
+                        <div class="form-group ">
+                            <div class="col-lg-12">
+                                <button type="button" class="btn btn-primary btn-rounded pull-right" id="guardarTarea">Guardar</button>
+                                <button type="button" class="btn btn-default btn-rounded pull-right" data-dismiss="modal">Cancelar</button>
+                                <button type="button" class="btn btn-danger btn-rounded" id="eliminarTarea" data-dismiss="modal">Eliminar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div id="loading" style="display:none;">
+    <img id="loading-image" src="../../Content/themes/views/images/loading.gif" alt="Loading..." />
+</div>

@@ -1,0 +1,208 @@
+﻿@model PagedList.IPagedList<ESSACInspecciones.Core.DTO.TareaDTO>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+@{
+    ViewBag.Title = "Tareas";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+@*@model IList<ESSACInspecciones.Core.DTO.TareaDTO>*@
+
+<section class="hbox stretch">
+    <aside>
+        <section class="vbox">
+            <section class="scrollable padder">
+                <div class="row m-b">
+                    <div class="col-xs-12 col-md-12">
+                        <h2>Tareas</h2>
+                        @Html.Partial("_showAlertMessages")
+                        <section class="panel panel-default">
+                            <div class="row wrapper">
+                                <div class="col-sm-4 m-b-xs">
+                                    @using (Html.BeginForm("Tareas", "Admin", FormMethod.Get))
+                                    {
+                                        @Html.DropDownList("SearchResponsable", new SelectList(ViewBag.Responsables, "IdUsuario", "Nombre", ViewBag.IdResponsable), new { @class = "input-sm form-control input-s-sm inline v-middle btn-rounded" })
+                                        <button type="submit" class="btn btn-sm btn-default btn-rounded">Buscar</button>
+                                    }
+                                </div>
+                                <div class="col-sm-4 m-b-xs">
+                                    @if (ViewBag.EsAdmin)
+                                    {
+                                        <label class="text-sm"><input type="checkbox" id="btn-showInactive" /> Mostrar Inactivos</label>
+                                    }
+                                </div>
+                                <div class="col-sm-4">
+                                    <a class="btn btn-sm btn-success pull-right btn-rounded" href="@Url.Action("Tarea")"><i class="fa fa-plus"></i> Crear nueva Tarea</a>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-striped b-t b-light">
+                                    <thead>
+                                        <tr>
+                                            <th width="10%">ID</th>
+                                            <th width="30%">Nombre</th>
+                                            <th width="30%">Inmueble</th>
+                                            <th width="20%">Estado</th>
+                                            @if (ViewBag.EsAdmin)
+                                            {
+                                                <th width="10%">Opciones</th>
+                                            }
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (Model != null)
+                                        {
+
+                                            int cont = 1;
+                                            foreach (var obj in Model)
+                                            {
+                                                var classInactive = (ViewBag.EsAdmin && !obj.Active) ? "class='inactive'" : "";
+                                                <tr @Html.Raw(classInactive)>
+
+                                                    <td align="center">
+                                                        @if (ViewBag.EsAdmin && !obj.Active)
+                                                        { <span class="badge bg-danger" data-toggle="tooltip" data-placement="left" data-original-title="Inactivo">@cont</span>}
+                                                        else
+                                                        {@cont}
+                                                    </td>
+                                                    <td>@obj.NombreTarea</td>
+                                                    <td>@obj.Inmueble.NombreInmueble <br />@obj.Cliente.NombreEmpresa</td>
+                                                    <td>@obj.Estado.NombreEstado</td>
+                                                    @if (ViewBag.EsAdmin)
+                                                    {
+                                                        <td align="center">
+                                                            <a href="@Url.Action("Tarea", new { id = obj.IdTarea })"><i class="fa fa-pencil"></i></a>
+                                                            @*<a href="#@obj.IdTarea" class="AddTaskToBagTasks"><i class="fa fa-plus"></i></a>*@
+                                                        </td>
+                                                    }
+                                                </tr>
+                                                    cont++;
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            <footer class="panel-footer">
+                                <div class="row">
+                                    <div class="col-sm-4"></div>
+                                    <div class="col-sm-4 text-center">
+                                        <small class="text-muted inline m-t-sm m-b-sm">Página @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) de @Model.PageCount</small>
+                                    </div>
+                                    <div class="col-sm-4 text-right text-center-xs">
+                                        @Html.PagedListPager(Model, page => Url.Action("Tareas", new { searchResponsable = ViewBag.IdResponsable, page }), new PagedListRenderOptions { UlElementClasses = new[] { "m-b-none", "m-t-none", "pagination-sm", "pagination" }, ContainerDivClasses = new[] { "" } })
+                                    </div>
+                                </div>
+                            </footer>
+                        </section>
+                    </div>
+                </div>
+
+            </section>
+        </section>
+    </aside>
+
+    <!-- .aside -->
+    <aside class="aside-lg b-l" id="note-list">
+        <div class="padder">
+            <header class="header clearfix no-border no-padder">
+                <p class="h3">Bolsa de Tareas</p> <p id="ContadorTareas" class="h3">(0)</p>
+                <div class="row m-b">
+                    <div class="col-xs-12 col-md-8">
+                        @Html.Partial("_showAlertMessages")
+                    </div>
+                </div>
+                <div class="input-group m-t-sm m-b-sm">
+                    <span class="input-group-addon input-sm" id="BuscarTareas"><i class="fa fa-search"></i></span>
+                    <input type="text" class="form-control input-sm" id="search-note" placeholder="Buscar...">
+                </div>
+            </header>
+            <div class="clearfix m-b no-border no-padder">
+                <div class="slim-scroll" data-height="540" data-disable-fade-out="true" data-distance="0" data-size="5px" data-color="#333333">
+                    <ul id="BolsaTareas" class="list-group list-group-sp"></ul> <!-- templates -->
+                </div>
+            </div>
+        </div>
+    </aside> <!-- /.aside -->
+</section>
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var listaTareas = [];
+            PaintTareasInBolsaTareas();
+
+            $("#BuscarTareas").click(function () {
+                var texto = $("#search-note").val().trim();
+                if ($(this).data("lastval") != texto) {
+                    $(this).data("lastval", texto);
+                    if (texto.length > 1 || texto == "") searchTareas(texto);
+                };
+            });
+            //$('#search-note').on('input', function (e) {
+            //    var texto = $(this).val().trim();
+            //    if ($(this).data("lastval") != texto) {
+            //        $(this).data("lastval", texto);
+            //        if (texto == "" || texto.length > 1) searchTareas(texto);
+            //    };
+            //});
+            $("#search-note").keydown(function (event) {
+                var texto = $("#search-note").val().trim();
+                if (event.which == 13 || texto == "") {
+                    $("#BuscarTareas").click();
+                }
+            });
+
+        });
+        //Funciones
+        function searchTareas(texto) {
+            var count = listaTareas.length;
+            var stringHtml = "";
+            var countTareas = 0;
+            //for (var index = 0; index < count; index++) { var idTarea = $("div.tarea")[index].attributes["id"].textContent; var nombreTarea = $("div.tarea-nombre").find("strong")[index].textContent; var nombreServicio = $("span.text-muted")[index].textContent; var objeto = { IdTarea: idTarea, NombreTarea: nombreTarea, NombreServicio: nombreServicio }; lista.push(objeto); }
+            for (var index = 0; index < count; index++) {
+                if (listaTareas[index].NombreTarea.toUpperCase().indexOf(texto.toUpperCase()) > -1 || listaTareas[index].Servicio.NombreServicio.toUpperCase().indexOf(texto.toUpperCase()) > -1) {
+                    stringHtml += '<li class="list-group-item hover active"><div class="tarea" id="' + listaTareas[index].IdTarea + '"><div class="view" id="note-1">' +
+                                '<button class="destroy close hover-action delTarea" onclick="DeleteTareaBolsa(' + listaTareas[index].IdTarea + ')">×</button>' +
+                                '<div class="note-name tarea-nombre"> <strong>' + listaTareas[index].NombreTarea + '</strong> </div>' +
+                                '<span class="text-xs text-muted">' + listaTareas[index].Servicio.NombreServicio + '</span>' +
+                            '</div></div></li>';
+                    countTareas++;
+                }
+            }
+            $('#BolsaTareas').empty();
+            $('#BolsaTareas').append(stringHtml);
+            $('#ContadorTareas').text("(" + countTareas + ")");
+        }
+        function DeleteTareaBolsa(TareaId) {
+            if (confirm("Está seguro que desea eliminar la Tarea de la Bolsa de Tareas?")) {
+                $.post("/Admin/DeleteTareaBolsa", { id: TareaId }, function (data) {
+                }).done(function (data) {
+                    PaintTareasInBolsaTareas();
+                }).fail(function () {
+                    alert("Error al intentar eliminar la tarea de la Bolsa de Tareas.");
+                });
+            }
+        }
+  
+        function PaintTareasInBolsaTareas() {
+            var lista = $('#BolsaTareas');
+            lista.empty();
+            $.ajax({
+                url: "/Admin/GetBolsaTareas",
+                type: "GET",
+                cache: false,
+            }).done(function (data) {
+                listaTareas = data;
+                $.each(data, function (index, itemData) {
+                    var stringHtml = '<li class="list-group-item hover active"><div class="tarea" id="' + itemData.IdTarea + '" data-serv-color="' + itemData.Servicio.ColorServicio + '"><div class="view" id="note-1">' +
+                                        '<button class="destroy close hover-action delTarea" onclick="DeleteTareaBolsa(' + itemData.IdTarea + ')">×</button>' +
+                                        '<div class="note-name tarea-nombre"> <strong>' + itemData.NombreTarea + '</strong> </div>' +
+                                        //'<div class="note-desc tarea-desc">' + itemData.Descripcion + '</div>' +
+                                        '<span class="text-xs text-muted" tarea-serv>' + itemData.Servicio.NombreServicio + '</span>' +
+                                        //'<div>&nbsp;</div>' +
+                                    '</div></div></li>';
+                    lista.append(stringHtml);
+                });
+                $('#ContadorTareas').text("(" + listaTareas.length + ")");
+            });
+        }
+    </script>
+}

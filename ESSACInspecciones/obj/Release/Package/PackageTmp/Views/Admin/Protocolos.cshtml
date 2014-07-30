@@ -1,0 +1,113 @@
+﻿@using PagedList.Mvc;
+@model PagedList.IPagedList<ESSACInspecciones.Core.DTO.ProtocoloDTO>
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+@{
+    ViewBag.Title = "Tareas";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<section class="hbox stretch">
+    <aside>
+        <section class="vbox">
+            <section class="scrollable padder">
+                <div class="row m-b">
+                    <div class="col-xs-12 col-md-12">
+                        <h2>Protocolos</h2>
+                        @Html.Partial("_showAlertMessages")
+                        <section class="panel panel-default">
+                            <div class="row wrapper">
+                                <div class="col-sm-4 m-b-xs">
+                                    @using (Html.BeginForm("Protocolos", "Admin", FormMethod.Get))
+                                    {
+                                        @Html.DropDownList("Cliente", new SelectList(ViewBag.Clientes, "IdCliente", "NombreEmpresa"), new { @class = "form-control input-sm input-s-sm inline v-middle rounded" })
+                                        @Html.DropDownList("Inmueble", new SelectList(new List<ESSACInspecciones.Core.DTO.InmuebleDTO>(), "IdInmueble", "NombreInmueble"), new { @class = "form-control input-sm input-s-sm inline v-middle rounded" })
+                                        <button type="submit" class="btn btn-sm btn-default btn-rounded">Buscar</button>
+                                    }
+                                </div>
+                                <div class="col-sm-4 m-b-xs">
+                                    @if (ViewBag.EsAdmin)
+                                    {
+                                        <label class="text-sm"><input type="checkbox" id="btn-showInactive" /> Mostrar Inactivos</label>
+                                    }
+                                </div>
+                                <div class="col-sm-4">
+                                    @*<a class="btn btn-sm btn-success pull-right btn-rounded" href="@Url.Action("Tarea")"><i class="fa fa-plus"></i> Crear nueva Tarea</a>*@
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-striped b-t b-light">
+                                    <thead>
+                                        <tr>
+                                            <th width="10%">ID</th>
+                                            <th width="60%">Nombre</th>
+                                            <th width="20%">Estado</th>
+                                            <th width="10%">Opciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (Model != null)
+                                        {
+
+                                            int cont = 1;
+                                            foreach (var obj in Model)
+                                            {
+                                                var classInactive = (ViewBag.EsAdmin && !obj.Active) ? "class='inactive'" : "";
+                                                <tr @Html.Raw(classInactive)>
+
+                                                    <td align="center">
+                                                        @if (ViewBag.EsAdmin && !obj.Active)
+                                                        { <span class="badge bg-danger" data-toggle="tooltip" data-placement="left" data-original-title="Inactivo">@cont</span> }
+                                                        else
+                                                        { @cont }
+                                                    </td>
+                                                    <td>@obj.Plantilla.Nombre</td>
+                                                    <td>@obj.Estado.NombreEstado</td>
+                                                    <td align="center">
+                                                        <a href="@Url.Action("Protocolo_053", new { idProtocolo = obj.IdProtocolo, idPlantilla = obj.IdPlantilla, idInmueble = obj.IdInmueble })"><i class="fa fa-pencil"></i></a>
+                                                        @*<a href="#@obj.IdTarea" class="AddTaskToBagTasks"><i class="fa fa-plus"></i></a>*@
+                                                    </td>
+                                                </tr>
+                                                    cont++;
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            <footer class="panel-footer">
+                                <div class="row">
+                                    <div class="col-sm-4"></div>
+                                    <div class="col-sm-4 text-center">
+                                        <small class="text-muted inline m-t-sm m-b-sm">Página @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) de @Model.PageCount</small>
+                                    </div>
+                                    <div class="col-sm-4 text-right text-center-xs">
+                                        @Html.PagedListPager(Model, page => Url.Action("Protocolos", new { page }), new PagedListRenderOptions { UlElementClasses = new[] { "m-b-none", "m-t-none", "pagination-sm", "pagination" }, ContainerDivClasses = new[] { "" } })
+                                    </div>
+                                </div>
+                            </footer>
+                        </section>
+                    </div>
+                </div>
+
+            </section>
+        </section>
+    </aside>
+</section>
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#Cliente").on("change", function () {
+                var ClienteId = $(this).val();
+                $.getJSON("/Admin/GetListInmueblesByClienteId", { id: ClienteId }, function (data) {
+                }).done(function (data) {
+                    var select = $("#Inmueble");
+                    select.empty();
+                    $.each(data, function (index, itemData) {
+                        select.append($('<option />', {
+                            value: itemData.IdInmueble,
+                            text: itemData.NombreInmueble
+                        }));
+                    });
+                });
+            });
+        });
+    </script>
+}
