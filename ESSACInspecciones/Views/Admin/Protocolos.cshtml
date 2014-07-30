@@ -1,8 +1,8 @@
-﻿@using PagedList.Mvc;
-@model PagedList.IPagedList<ESSACInspecciones.Core.DTO.ProtocoloDTO>
-<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+﻿@*@using PagedList.Mvc;
+    @model PagedList.IPagedList<ESSACInspecciones.Core.DTO.ProtocoloDTO>
+    <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />*@
 @{
-    ViewBag.Title = "Tareas";
+    ViewBag.Title = "Protocolos";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 <section class="hbox stretch">
@@ -16,13 +16,9 @@
                         <section class="panel panel-default">
                             <div class="row wrapper">
                                 <div class="col-sm-4 m-b-xs">
-                                    @using (Html.BeginForm("Protocolos", "Admin", FormMethod.Get))
-                                    {
-                                        @Html.DropDownList("Cliente", new SelectList(ViewBag.Clientes, "IdCliente", "NombreEmpresa"), new { @class = "form-control input-sm input-s-sm inline v-middle rounded" })
-                                        @Html.DropDownList("Inmueble", new SelectList(new List<ESSACInspecciones.Core.DTO.InmuebleDTO>(), "IdInmueble", "NombreInmueble"), new { @class = "form-control input-sm input-s-sm inline v-middle rounded" })
-                                        <button type="submit" class="btn btn-sm btn-default btn-rounded">Buscar</button>
-                                    }
-                                    @*<button type="button" class="btn btn-sm btn-default btn-rounded" id="GetJson">Buscar</button>*@
+                                    @Html.DropDownList("Cliente", new SelectList(ViewBag.Clientes, "IdCliente", "NombreEmpresa"), new { @class = "form-control input-sm input-s-sm inline v-middle rounded" })
+                                    @Html.DropDownList("Inmueble", new SelectList(new List<ESSACInspecciones.Core.DTO.InmuebleDTO>(), "IdInmueble", "NombreInmueble"), new { @class = "form-control input-sm input-s-sm inline v-middle rounded" })
+                                    <button type="button" class="btn btn-sm btn-default btn-rounded" id="BuscarProtocolos">Buscar</button>
                                 </div>
                                 <div class="col-sm-4 m-b-xs">
                                     @if (ViewBag.EsAdmin)
@@ -35,7 +31,7 @@
                                 </div>
                             </div>
                             <div class="table-responsive">
-                                <table class="table table-striped b-t b-light">
+                                <table class="table table-striped b-t b-light" id="tableProtocolo">
                                     <thead>
                                         <tr>
                                             <th width="10%">ID</th>
@@ -45,45 +41,44 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @if (Model != null)
-                                        {
-
-                                            int cont = 1;
-                                            foreach (var obj in Model)
+                                        @*@if (Model != null)
                                             {
-                                                var classInactive = (ViewBag.EsAdmin && !obj.Active) ? "class='inactive'" : "";
-                                                <tr @Html.Raw(classInactive)>
 
-                                                    <td align="center">
-                                                        @if (ViewBag.EsAdmin && !obj.Active)
-                                                        { <span class="badge bg-danger" data-toggle="tooltip" data-placement="left" data-original-title="Inactivo">@cont</span> }
-                                                        else
-                                                        { @cont }
-                                                    </td>
-                                                    <td>@obj.Plantilla.Nombre</td>
-                                                    <td>@obj.Estado.NombreEstado</td>
-                                                    <td align="center">
-                                                        <a href="@Url.Action("Protocolo_053", new { idProtocolo = obj.IdProtocolo, idPlantilla = obj.IdPlantilla, idInmueble = obj.IdInmueble })"><i class="fa fa-pencil"></i></a>
-                                                        @*<a href="#@obj.IdTarea" class="AddTaskToBagTasks"><i class="fa fa-plus"></i></a>*@
-                                                    </td>
-                                                </tr>
-                                                    cont++;
-                                            }
-                                        }
+                                                int cont = 1;
+                                                foreach (var obj in Model)
+                                                {
+                                                    var classInactive = (ViewBag.EsAdmin && !obj.Active) ? "class='inactive'" : "";
+                                                    <tr @Html.Raw(classInactive)>
+
+                                                        <td align="center">
+                                                            @if (ViewBag.EsAdmin && !obj.Active)
+                                                            { <span class="badge bg-danger" data-toggle="tooltip" data-placement="left" data-original-title="Inactivo">@cont</span> }
+                                                            else
+                                                            { @cont }
+                                                        </td>
+                                                        <td>@obj.Plantilla.Nombre</td>
+                                                        <td>@obj.Estado.NombreEstado</td>
+                                                        <td align="center">
+                                                            <a href="@Url.Action("Protocolo_server", new { idProtocolo = obj.IdProtocolo, idPlantilla = obj.IdPlantilla, idInmueble = obj.IdInmueble })"><i class="fa fa-pencil"></i></a>
+                                                        </td>
+                                                    </tr>
+                                                        cont++;
+                                                }
+                                            }*@
                                     </tbody>
                                 </table>
                             </div>
-                            <footer class="panel-footer">
-                                <div class="row">
-                                    <div class="col-sm-4"></div>
-                                    <div class="col-sm-4 text-center">
-                                        <small class="text-muted inline m-t-sm m-b-sm">Página @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) de @Model.PageCount</small>
+                            @*<footer class="panel-footer">
+                                    <div class="row">
+                                        <div class="col-sm-4"></div>
+                                        <div class="col-sm-4 text-center">
+                                            <small class="text-muted inline m-t-sm m-b-sm">Página @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) de @Model.PageCount</small>
+                                        </div>
+                                        <div class="col-sm-4 text-right text-center-xs">
+                                            @Html.PagedListPager(Model, page => Url.Action("Protocolos", new { page }), new PagedListRenderOptions { UlElementClasses = new[] { "m-b-none", "m-t-none", "pagination-sm", "pagination" }, ContainerDivClasses = new[] { "" } })
+                                        </div>
                                     </div>
-                                    <div class="col-sm-4 text-right text-center-xs">
-                                        @Html.PagedListPager(Model, page => Url.Action("Protocolos", new { page }), new PagedListRenderOptions { UlElementClasses = new[] { "m-b-none", "m-t-none", "pagination-sm", "pagination" }, ContainerDivClasses = new[] { "" } })
-                                    </div>
-                                </div>
-                            </footer>
+                                </footer>*@
                         </section>
                     </div>
                 </div>
@@ -94,11 +89,14 @@
 </section>
 @section scripts{
     <script type="text/javascript">
+        var conexion = hostReachable();
         $(document).ready(function () {
             $("#Cliente").on("change", function () {
                 var ClienteId = $(this).val();
                 $.getJSON("/Admin/GetListInmueblesByClienteId", { id: ClienteId }, function (data) {
                 }).done(function (data) {
+                    //inmuebles = data.slice(0);
+                    //inmuebles.splice(0, 1);
                     var select = $("#Inmueble");
                     select.empty();
                     $.each(data, function (index, itemData) {
@@ -109,10 +107,143 @@
                     });
                 });
             });
+            $("#BuscarProtocolos").click(function () {
+                var ClienteId = $("#Cliente").val();
+                var InmuebleId = $("#Inmueble").val();
+                if (conexion) {
+                    listarProtocolos(ClienteId, InmuebleId);
+                    //var clienteSession = sessionStorage.getItem("Cliente");
+                    //if (ClienteId != clienteSession) {
+                    //    sessionStorage.clear();
+                    //    $.each(inmuebles, function (index, item) {
+                    //        $.ajax({
+                    //            url: "/Admin/GetProtocolos",
+                    //            type: "GET",
+                    //            cache: false,
+                    //            data: { inmueble: item.IdInmueble },
+                    //            dataType: "json"
+                    //        }).done(function (dataPros) {
+                    //            $.each(dataPros, function (index, itemPros) {
+                    //                $.ajax({
+                    //                    url: "/Admin/GetProtocolo",
+                    //                    type: "GET",
+                    //                    cache: false,
+                    //                    data: { idInmueble: item.IdInmueble, idProtocolo: itemPros.IdProtocolo, idPlantilla: itemPros.IdPlantilla },
+                    //                    dataType: "json"
+                    //                }).done(function (dataPro) {
+                    //                    sessionStorage.setItem("Cliente", item.IdCliente);
+                    //                    sessionStorage.setItem(itemPros.Plantilla.Nombre + item.IdInmueble, JSON.stringify(dataPro));//Agregar Plantilla{} al linq
+                    //                }).fail(function () {
+                    //                    alert('Error Protocolos!. Por favor, actualice la página o presione F5.');
+                    //                });
+                    //            });
+                    //        }).fail(function () {
+                    //            alert('Error Inmuebles!. Por favor, actualice la página o presione F5.');
+                    //        });
+                    //    });
+                    //}
+                } else {
+                    if (sessionStorage.getItem("Protocolos")) {
+                        var protocolos = {}; protocolos = JSON.parse(sessionStorage.getItem("Protocolos"));
+                        var protocolosSel = [];
+                        $.each(protocolos, function (index, item) {
+                            if (item.IdInmueble == InmuebleId) { protocolosSel.push(item); }
+                        });
+                        console.log('pintando por cliente');
+                        drawProtocolos(protocolosSel);//JSON.parse(protocolos)
+                    }
+                }
+            });
 
-            $("#GetJson").click({
-
-            })
         });
+
+        function listarProtocolos(ClienteId, InmuebleId) {
+            $.ajax({
+                url: "/Admin/GetProtocolos",
+                type: "GET",
+                cache: false,
+                data: { cliente: ClienteId },
+                dataType: "json"
+            }).done(function (data) {
+                var protocolosInmueble = [];
+                $.each(data, function (index, item) {
+                    if (item.IdInmueble == InmuebleId) { protocolosInmueble.push(item); }
+                });
+                drawProtocolos(protocolosInmueble);
+                //
+                sessionStorage.clear();
+                //saveSession("Cliente", ClienteId);
+                saveSession("Protocolos", data);
+                $.each(data, function (index, itemPros) {
+                    $.ajax({
+                        url: "/Admin/GetProtocolo",
+                        type: "GET",
+                        cache: false,
+                        data: { idInmueble: itemPros.IdInmueble, idProtocolo: itemPros.IdProtocolo, idPlantilla: itemPros.IdPlantilla },
+                        dataType: "json"
+                    }).done(function (dataPro) {
+                        saveSession(itemPros.Plantilla.Nombre + '_' + itemPros.IdInmueble, dataPro);//Agregar Plantilla{} al linq
+                    }).fail(function () {
+                        alert('Error al crear las variables temporales. Por favor, actualice la página o presione F5.');
+                    });
+                });
+            }).fail(function () {
+                alert('Error al intentar obtener los Protocolos. Por favor, actualice la página o presione F5.');
+            });
+        }
+        //////////////////////////////////////////77
+        //function listarProtocolos(InmuebleId) {
+        //    $.ajax({
+        //        url: "/Admin/GetProtocolos",
+        //        type: "GET",
+        //        cache: false,
+        //        data: { inmueble: InmuebleId },
+        //        dataType: "json"
+        //    }).done(function (data) {
+        //        saveSession("Protocolos", data);//sessionStorage.setItem("Protocolos", data);
+        //        drawProtocolos(data);
+        //    }).fail(function () {
+        //        alert('Error al intentar obtener los Protocolos. Por favor, actualice la página o presione F5.');
+        //    });
+        //}
+        function drawProtocolos(data) {
+            $('#tableProtocolo td').remove();
+            $.each(data, function (index, itemData) {
+                var url = '@Url.Action("Protocolo", "Admin")?idProtocolo=' + itemData.IdProtocolo + '&idPlantilla=' + itemData.IdPlantilla + '&idInmueble=' + itemData.IdInmueble + '&conexion=' + conexion;
+                $('#tableProtocolo > tbody:last').append(
+                    '<tr><td>' + (index + 1) + '</td>' +
+                    '<td>' + itemData.Plantilla.Nombre + '</td>' +
+                    '<td>' + itemData.Estado.NombreEstado + '</td>' +
+                    '<td>' + '<a href="' + url + '" onclick="return setProtocolo(\'' + itemData.Plantilla.Nombre + '_' + itemData.IdInmueble + '\')"><i class="fa fa-pencil"></i></a>' + '</td></tr>');
+            });
+        }
+        function setProtocolo(value) {
+            sessionStorage.setItem("protocolo", value);
+            console.log('set name');
+            return true;
+        }
+        function saveSession(key, value) {
+            var oStorage = {};
+            oStorage = JSON.stringify(value);
+            sessionStorage.setItem(key, oStorage);
+        }
+        function hostReachable() {
+            // Handle IE and more capable browsers
+            var xhr = new (window.ActiveXObject || XMLHttpRequest)("Microsoft.XMLHTTP");
+            var status;
+            var server = window.location.hostname;
+            if (window.location.port != '') {
+                server += ':' + window.location.port;
+            }
+            // Open new request as a HEAD to the root hostname with a random param to bust the cache
+            xhr.open("HEAD", "//" + server + "/?rand=" + Math.floor((1 + Math.random()) * 0x10000), false);
+            // Issue request and handle response
+            try {
+                xhr.send();
+                return (xhr.status >= 200 && xhr.status < 300 || xhr.status === 304);
+            } catch (error) {
+                return false;
+            }
+        }
     </script>
 }

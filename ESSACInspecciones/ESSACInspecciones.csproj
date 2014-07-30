@@ -794,10 +794,10 @@
     <Content Include="Views\Admin\RecuperaContrasena.cshtml" />
     <Content Include="Views\Admin\Responsables.cshtml" />
     <Content Include="Views\Admin\ReporteMes.cshtml" />
-    <Content Include="Views\Admin\Protocolo_053.cshtml" />
+    <Content Include="Views\Admin\Protocolo_server.cshtml" />
     <Content Include="Views\Admin\Formulario.cshtml" />
     <Content Include="Views\Admin\Protocolos.cshtml" />
-    <Content Include="Views\Admin\Protocolo_Cliente.cshtml" />
+    <Content Include="Views\Admin\Protocolo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

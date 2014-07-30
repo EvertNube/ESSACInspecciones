@@ -16,19 +16,19 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>04/25/2014 11:57:48</publishTime>
     </File>
     <File Include="bin/ESSACInspecciones.Core.dll">
-      <publishTime>07/11/2014 10:32:52</publishTime>
+      <publishTime>07/22/2014 15:30:50</publishTime>
     </File>
     <File Include="bin/ESSACInspecciones.Data.dll">
       <publishTime>07/11/2014 10:32:51</publishTime>
     </File>
     <File Include="bin/ESSACInspecciones.dll">
-      <publishTime>07/11/2014 10:32:52</publishTime>
+      <publishTime>07/22/2014 15:30:51</publishTime>
     </File>
     <File Include="bin/ESSACInspecciones.Helpers.dll">
       <publishTime>06/11/2014 10:48:40</publishTime>
     </File>
     <File Include="bin/ESSACInspecciones.Helpers.Razor.dll">
-      <publishTime>06/11/2014 10:48:40</publishTime>
+      <publishTime>07/22/2014 15:30:50</publishTime>
     </File>
     <File Include="bin/Microsoft.Web.Infrastructure.dll">
       <publishTime>04/25/2014 11:57:54</publishTime>
@@ -1960,10 +1960,16 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>05/22/2014 23:46:00</publishTime>
     </File>
     <File Include="Views/Admin/Protocolos.cshtml">
-      <publishTime>07/09/2014 17:17:51</publishTime>
+      <publishTime>07/22/2014 13:15:25</publishTime>
     </File>
     <File Include="Views/Admin/Protocolo_053.cshtml">
       <publishTime>07/11/2014 11:44:02</publishTime>
+    </File>
+    <File Include="Views/Admin/Protocolo_client.cshtml">
+      <publishTime>07/22/2014 12:51:00</publishTime>
+    </File>
+    <File Include="Views/Admin/Protocolo_server.cshtml">
+      <publishTime>07/22/2014 11:51:01</publishTime>
     </File>
     <File Include="Views/Admin/RecuperaContrasena.cshtml">
       <publishTime>05/30/2014 16:09:05</publishTime>
@@ -2029,7 +2035,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>04/25/2014 11:57:46</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>07/11/2014 10:32:53</publishTime>
+      <publishTime>07/25/2014 15:16:53</publishTime>
     </File>
   </ItemGroup>
 </Project>

@@ -11,7 +11,6 @@ using System.Net.Http;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
-using System.ComponentModel.DataAnnotations;
 using PagedList;
 
 namespace ESSACInspecciones.Controllers
@@ -518,7 +517,7 @@ namespace ESSACInspecciones.Controllers
                 }
             }
             catch
-            {                
+            {
                 if (dto.IdTarea != 0)
                     createResponseMessage(CONSTANTES.ERROR, CONSTANTES.ERROR_UPDATE_MESSAGE);
                 else createResponseMessage(CONSTANTES.ERROR, CONSTANTES.ERROR_INSERT_MESSAGE);
@@ -624,33 +623,34 @@ namespace ESSACInspecciones.Controllers
             }
         }
 
-        public ActionResult Protocolos(int? inmueble, int? page)
+        public ActionResult Protocolos(int? inmueble)
         {
             if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
-            List<ProtocoloDTO> model = new List<ProtocoloDTO>();
+            //List<ProtocoloDTO> model = new List<ProtocoloDTO>();
             ProtocoloBL objBL = new ProtocoloBL();
             int idUsuario = getCurrentUser().IdUsuario;
             ViewBag.Clientes = objBL.getClientesTarea(idUsuario);
-            //var lista = objBL.getClientesInmuebles(getCurrentUser().IdUsuario);
-            //ViewBag.Clientes = lista.Select(x => new ClienteDTO { IdCliente = x.IdCliente, NombreEmpresa = x.Cliente.NombreEmpresa }).GroupBy(x => x.IdCliente).Select(x => x.First());
-            //ViewBag.Inmuebles = lista.Select(x => new InmuebleDTO { IdInmueble = x.IdInmueble, NombreInmueble = x.Inmueble.NombreInmueble }).GroupBy(x => x.IdInmueble).Select(x => x.First());
-            if (inmueble != 0 && inmueble != null)
-            {
-                model = objBL.getProtocolos(idUsuario, (int)inmueble);
-            }
-            //var responsables = objBL.getResponsables(true);
-            //responsables[0].Nombre = "Todos los responsables";
-            //ViewBag.Responsables = responsables;
-            //ViewBag.IdResponsable = searchResponsable ?? 0;
-            int pageSize = 10;
-            int pageNumber = (page ?? 1);
-            //if (searchResponsable != null && searchResponsable != 0)
-            //    model = model.Where(x => x.Responsables.Any(y => y.IdUsuario == searchResponsable)).ToList();
-
-            return View(model.ToPagedList(pageNumber, pageSize));
+            //if (inmueble != 0 && inmueble != null)
+            //{
+            //    model = objBL.getProtocolos(idUsuario, (int)inmueble);
+            //}
+            ////int pageSize = 10;
+            ////int pageNumber = (page ?? 1);
+            //return View(model.ToPagedList(pageNumber, pageSize));
+            return View();
         }
-
-        public ActionResult Protocolo_053(int idInmueble, int? idProtocolo = null, int? idPlantilla = null)
+        public ActionResult Protocolo(bool conexion, int idInmueble, int? idProtocolo = null, int? idPlantilla = null)
+        {
+            if (conexion)
+            {
+                return RedirectToAction("Protocolo_server", new { idInmueble = idInmueble, idProtocolo = idProtocolo, idPlantilla = idPlantilla });
+            }
+            else
+            {
+                return RedirectToAction("Protocolo_client");
+            }
+        }
+        public ActionResult Protocolo_server(int idInmueble, int? idProtocolo = null, int? idPlantilla = null)
         {
             ViewBag.Horas = new BaseDTO().fillHoras();
             ViewBag.Minutos = new BaseDTO().fillMinutos();
@@ -662,15 +662,19 @@ namespace ESSACInspecciones.Controllers
             ProtocoloBL objBL = new ProtocoloBL();
             ProtocoloDTO obj = objBL.getProtocolo_053(idInmueble, idProtocolo, idPlantilla);
             return View(obj);
-            //if (idProtocolo != null)
-            //{
-            //    ProtocoloDTO obj = objBL.getProtocolo_053((int)id);
-            //    return View(obj);
-            //}
-            //return View();
         }
-        
-        public ActionResult AddProtocolo_053(ProtocoloDTO dto)
+        public ActionResult Protocolo_client()
+        {
+            ViewBag.Horas = new BaseDTO().fillHoras().ToJSON();
+            ViewBag.Minutos = new BaseDTO().fillMinutos().ToJSON();
+            ViewBag.Items_SelectSINO = new BaseDTO().fillSelectSINO().ToJSON();
+            ViewBag.Items_SelectBomba = new BaseDTO().fillSelectBomba().ToJSON();
+            ViewBag.Items_SelectNivelTanque = new BaseDTO().fillSelectNivelTanque().ToJSON();
+            ViewBag.Items_SelectAccesorios = new BaseDTO().fillSelectAccesorios().ToJSON();
+            ViewBag.Items_SelectPresiones = new BaseDTO().fillSelectPresiones().ToJSON();
+            return View();
+        }
+        public ActionResult AddProtocolo(ProtocoloDTO dto)
         {
             //if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
             try
@@ -710,28 +714,39 @@ namespace ESSACInspecciones.Controllers
                     createResponseMessage(CONSTANTES.ERROR, CONSTANTES.ERROR_UPDATE_MESSAGE);
                 else createResponseMessage(CONSTANTES.ERROR, CONSTANTES.ERROR_INSERT_MESSAGE);
             }
-            TempData["Protocolo_053"] = dto;
-            return RedirectToAction("Protocolo_053");
+            TempData["Protocolo"] = dto;
+            return RedirectToAction("Protocolo_server");
         }
 
         #region APIS
-        public ActionResult Protocolo_Cliente()
+        [HttpGet]
+        public ActionResult GetProtocolos(int cliente)
         {
-            //ViewBag.Horas = new BaseDTO().fillHoras().ToJSON();
-            //ViewBag.Minutos = new BaseDTO().fillMinutos().ToJSON();
-            //ViewBag.Items_SelectSINO = new BaseDTO().fillSelectSINO().ToJSON();
-            //ViewBag.Items_SelectBomba = new BaseDTO().fillSelectBomba().ToJSON();
-            //ViewBag.Items_SelectNivelTanque = new BaseDTO().fillSelectNivelTanque().ToJSON();
-            //ViewBag.Items_SelectAccesorios = new BaseDTO().fillSelectAccesorios().ToJSON();
-            //ViewBag.Items_SelectPresiones = new BaseDTO().fillSelectPresiones().ToJSON();
-            return View();
-        }
-        /*public ActionResult GetProtocolo()
-        {
+            //if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
             ProtocoloBL objBL = new ProtocoloBL();
-            ProtocoloDTO obj = objBL.getProtocolo_053(idInmueble, idProtocolo, idPlantilla);
-            return Json(new { Protocolo = obj,  }, JsonRequestBehavior.AllowGet);
-        }*/
+            int idUsuario = getCurrentUser().IdUsuario;
+            var model = objBL.getProtocolos(idUsuario, cliente);
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+        //[HttpGet]
+        //public ActionResult GetProtocolos(int inmueble)
+        //{
+        //    //if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
+        //    ProtocoloBL objBL = new ProtocoloBL();
+        //    int idUsuario = getCurrentUser().IdUsuario;
+        //    var model = objBL.getProtocolos(idUsuario, inmueble);
+        //    return Json(model, JsonRequestBehavior.AllowGet);
+        //}
+        [HttpGet]
+        public ActionResult GetProtocolo(int idInmueble, int? idProtocolo = null, int? idPlantilla = null)
+        {
+            //if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
+            ProtocoloBL objBL = new ProtocoloBL();
+            //int idUsuario = getCurrentUser().IdUsuario;
+            var model = objBL.getProtocolo_053(idInmueble, idProtocolo, idPlantilla);
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
         [HttpPost]
         public ActionResult AddTareaCalendario(string tarea)
         {

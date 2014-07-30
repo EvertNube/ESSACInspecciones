@@ -425,8 +425,9 @@ namespace ESSACInspecciones.Core.BL
             }
         }
 
-        public int add(TareaDTO TareaDTO)   
+        public int add(TareaDTO TareaDTO)
         {
+
             using (var context = getContext())
             {
                 try

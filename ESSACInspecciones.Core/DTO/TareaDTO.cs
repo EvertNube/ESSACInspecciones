@@ -14,7 +14,6 @@ namespace ESSACInspecciones.Core.DTO
         //[StringLength(100)]
         public string NombreTarea { get; set; }
         //[StringLength(500)]
-        [Required]
         public string Descripcion { get; set; }
         //[Required]
         public int IdServicio { get; set; }
@@ -22,16 +21,13 @@ namespace ESSACInspecciones.Core.DTO
         public int IdCliente { get; set; }
         //[Required]
         public int IdInmueble { get; set; }
-        [Required]
-        [DataType(DataType.Date)]
+        //[DataType(DataType.Date)]
         public DateTime? FechaInicio { get; set; }
-        [Required]
-        [DataType(DataType.Date)]
+        //[DataType(DataType.Date)]
         public DateTime? FechaFin { get; set; }
         public int IdEstado { get; set; }
         //public bool EnAgenda { get; set; }
-        [Required]
-        [StringLength(2000)]
+        //[StringLength(2000)]
         public string Observaciones { get; set; }
         //public int IdTareaPadre { get; set; }
         //public bool EnCalendario { get; set; }

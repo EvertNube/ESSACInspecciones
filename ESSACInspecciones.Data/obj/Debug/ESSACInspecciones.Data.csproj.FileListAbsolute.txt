@@ -5,11 +5,4 @@ D:\Proyectos\ESSACInspecciones\ESSACInspecciones.Data\obj\Debug\ESSACInspeccione
 D:\Proyectos\ESSACInspecciones\ESSACInspecciones.Data\bin\Debug\ESSACInspecciones.Data.dll.config
 D:\Proyectos\ESSACInspecciones\ESSACInspecciones.Data\bin\Debug\ESSACInspecciones.Data.dll
 D:\Proyectos\ESSACInspecciones\ESSACInspecciones.Data\bin\Debug\ESSACInspecciones.Data.pdb
-D:\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Data\bin\Debug\ESSACInspecciones.Data.dll.config
-D:\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Data\bin\Debug\ESSACInspecciones.Data.dll
-D:\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Data\bin\Debug\ESSACInspecciones.Data.pdb
-D:\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Data\bin\Debug\EntityFramework.dll
-D:\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Data\bin\Debug\EntityFramework.xml
-D:\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Data\obj\Debug\ESSACInspecciones.Data.csprojResolveAssemblyReference.cache
-D:\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Data\obj\Debug\ESSACInspecciones.Data.dll
-D:\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Data\obj\Debug\ESSACInspecciones.Data.pdb
+D:\Proyectos\ESSACInspecciones\ESSACInspecciones.Data\obj\Debug\ESSACInspecciones.Data.csprojResolveAssemblyReference.cache

@@ -33,12 +33,12 @@
                                     <div class="form-group">
                                         <label>Nombre</label>
                                         @Html.TextBoxFor(u => u.NombreTarea, new { @class = "form-control", @placeholder = "Ingrese el nombre de la tarea", @type = "text" })
-                                        @Html.ValidationMessageFor(u => u.NombreTarea)                                      
+                                        @Html.ValidationMessageFor(u => u.NombreTarea)
                                     </div>
                                     <div class="form-group">
                                         <label>Descripción</label>
                                         @Html.TextAreaFor(u => u.Descripcion, new { @class = "form-control", @placeholder = "Ingrese la descripción de la tarea", @type = "text" })
-                                        @Html.ValidationMessage("Descripción")
+                                        @Html.ValidationMessageFor(u => u.Descripcion)
                                     </div>
                                     <div class="line line-dashed line-lg pull-in"></div>
                                     <div class="form-group">

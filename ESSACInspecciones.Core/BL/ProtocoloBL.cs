@@ -13,24 +13,15 @@ namespace ESSACInspecciones.Core.BL
     public class ProtocoloBL : Base
     {
         #region CRUD Tarea
-        public List<ProtocoloDTO> getProtocolos(int idUsuario, int idInmueble)
+        public List<ProtocoloDTO> getProtocolos(int idUsuario, int idCliente)//, int idInmueble)
         {
             using (var context = getContext())
             {
-                //var LeftJoin = from emp in ListOfEmployees
-                //join dept in ListOfDepartment
-                //on emp.DeptID equals dept.ID into JoinedEmpDept 
-                //from dept in JoinedEmpDept.DefaultIfEmpty()
-
-                //var result = context.Protocolo
-                //    .Join(context.EstadoProtocolo, a => a.IdEstado, b => b.IdEstado, (a, b) => new {a,b }).DefaultIfEmpty()
-                //    .Select(r => new ProtocoloDTO
-                //    {
-                //        IdProtocolo = r.a.IdProtocolo,
-                //        Active = r.a.Active,
-                //        IdEstado = r.a != null ? r.a.IdEstado : 1
-                //    }).ToList();
-                var result = context.SP_GetPlantillas(idUsuario, idInmueble)
+                var Inmuebles = context.Inmueble.Where(x => x.IdCliente == idCliente);
+                List<ProtocoloDTO> listaProtocolos = new List<ProtocoloDTO>();
+                foreach (var item in Inmuebles)
+                {
+                    var result = context.SP_GetPlantillas(idUsuario, item.IdInmueble)
                     .Select(x => new ProtocoloDTO
                     {
                         IdProtocolo = x.IdProtocolo,
@@ -40,26 +31,12 @@ namespace ESSACInspecciones.Core.BL
                         Estado = new EstadoDTO { NombreEstado = x.NombreEstado },
                         Active = x.Active
                     }).ToList();
-                //var result = (from a in context.Plantilla
-                //              join b in context.Protocolo on a.IdPlantilla equals b.IdPlantilla into a_b
-                //              from b in a_b.DefaultIfEmpty()
-                //              join c in context.EstadoProtocolo on b.IdEstado equals c.IdEstado into b_c
-                //              from c in b_c.DefaultIfEmpty()
-                //              select new ProtocoloDTO
-                //              {
-                //                  IdProtocolo = b != null ? b.IdProtocolo : 0,
-                //                  IdPlantilla = a.IdPlantilla,
-                //                  Plantilla = new PlantillaDTO { Nombre = a.Nombre },
-                //                  Estado = new EstadoDTO { NombreEstado = c != null ? c.NombreEstado : "Pendiente" },
-                //                  IdEstado = b != null ? b.IdEstado : 1,
-                //                  Active = true
-                //              }).ToList();
-                //var result = (from A in context.Plantilla
-                //              join P in context.Protocolo on A.IdPlantilla equals P.IdPlantilla
-                //              join E in context.EstadoProtocolo on P.IdEstado equals E.IdEstado
-                //              select new ProtocoloDTO { })
-                //              .Union().ToList();
-                return result;
+                    foreach (var protocolo in result)
+                    {
+                        listaProtocolos.Add(protocolo);
+                    }
+                }
+                return listaProtocolos;
             }
         }
 
@@ -81,6 +58,7 @@ namespace ESSACInspecciones.Core.BL
                         MinutoInicio = Convert.ToInt32(r.Fecha.Value.ToString("mm")),
                         Active = r.Active,
                         TotalPaginas = r.Plantilla.Seccion.GroupBy(x => x.Pagina).Count(),
+                        Plantilla = new PlantillaDTO { Nombre = r.Plantilla.Nombre },
                         Secciones = r.Plantilla.Seccion.Where(y => y.IdSeccionPadre == null).Select(y => new SeccionDTO
                         {
                             IdSeccion = y.IdSeccion,
@@ -137,7 +115,8 @@ namespace ESSACInspecciones.Core.BL
                             HoraInicio = 0,
                             MinutoInicio = 0,
                             Active = true,
-                            TotalPaginas = x.Seccion.GroupBy(t => t.Pagina).Count()
+                            TotalPaginas = x.Seccion.GroupBy(t => t.Pagina).Count(),
+                            Plantilla = new PlantillaDTO { Nombre = x.Nombre },
                         }).SingleOrDefault();
                     result.Secciones = context.Seccion.Where(y => y.IdPlantilla == idPlantilla && y.IdSeccionPadre == null)
                         .Select(y => new SeccionDTO

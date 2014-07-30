@@ -4,6 +4,50 @@
 }
 @section scripts{
     @Scripts.Render("~/Content/themes/admin/js/fuelux/fuelux.js")
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#btnGuardar").on("click", function () {
+            var status = hostReachable();
+            var array_Descrip = []; $('.GroupDescripcion').each(function (index, item) { var value = $(".GroupDescripcion")[index].value; array_Descrip.push(value); });//Tag: Select
+            var array_Id = []; $('.GroupIdTableBody').each(function (index, item) { var value = $(".GroupIdTableBody")[index].value; array_Id.push(value); });
+
+            var protocolo = {
+                GroupIdTableBody: array_Id,
+                GroupDescripcion: array_Descrip
+            };
+            //localStorage.setItem('protocolo', JSON.stringify(protocolo));
+            //var obj = localStorage.getItem("protocolo"); JSON.parse(obj);
+            //return false;
+            //var conexion = hostReachable();
+            //if (conexion)
+            //{
+            //    return true;//Servidor
+            //} else {
+            //    localStorage.setItem('protocolo', JSON.stringify(protocolo));
+            //    return false;
+            //}
+        });
+    });
+    function hostReachable() {
+        // Handle IE and more capable browsers
+        var xhr = new (window.ActiveXObject || XMLHttpRequest)("Microsoft.XMLHTTP");
+        var status;
+        var server = window.location.hostname;
+        if (window.location.port != '') {
+            server += ':' + window.location.port;
+        }
+        // Open new request as a HEAD to the root hostname with a random param to bust the cache
+        xhr.open("HEAD", "//" + server + "/?rand=" + Math.floor((1 + Math.random()) * 0x10000), false);
+        // Issue request and handle response
+        try {
+            xhr.send();
+            return (xhr.status >= 200 && xhr.status < 300 || xhr.status === 304);
+        } catch (error) {
+            return false;
+        }
+    }
+</script>
+
 }
 @model ESSACInspecciones.Core.DTO.ProtocoloDTO
 @{
@@ -25,7 +69,7 @@
                 else
                 {<h2>Actualizar Protocolo</h2>}
 
-                @using (Html.BeginForm("AddProtocolo_053", "Admin", FormMethod.Post))
+                @using (Html.BeginForm("AddProtocolo", "Admin", FormMethod.Post))
                 {
                     @Html.ValidationSummary(true)
                     <div class="row m-b">
@@ -151,37 +195,37 @@
                                                                                                      {
                                                                                                          case 2:
                                                                                                             <td rowspan='@seccion.SeccionBodys[s].Rowspan' colspan='@seccion.SeccionBodys[s].Colspan'>
-                                                                                                                @Html.TextBoxFor(u => u.GroupDescripcion, new { @Value = seccion.SeccionBodys[s].Respuesta, @class = "form-control input-sm", @placeholder = "", @type = "text" })
+                                                                                                                @Html.TextBoxFor(u => u.GroupDescripcion, new { @Value = seccion.SeccionBodys[s].Respuesta, @class = "form-control input-sm GroupDescripcion", @placeholder = "", @type = "text" })
                                                                                                             </td>
                                                                                                              break;
                                                                                                          case 3:
                                                                                                         <td rowspan='@seccion.SeccionBodys[s].Rowspan' colspan='@seccion.SeccionBodys[s].Colspan'>
-                                                                                                            @Html.DropDownListFor(u => u.GroupDescripcion, new SelectList(ViewBag.Items_SelectSINO, "id", "name", seccion.SeccionBodys[s].Respuesta != null ? Convert.ToInt32(seccion.SeccionBodys[s].Respuesta) : 0), new { @class = "input-sm parsley-validated", @style = "width: auto;" })
+                                                                                                            @Html.DropDownListFor(u => u.GroupDescripcion, new SelectList(ViewBag.Items_SelectSINO, "id", "name", seccion.SeccionBodys[s].Respuesta != null ? Convert.ToInt32(seccion.SeccionBodys[s].Respuesta) : 0), new { @class = "input-sm parsley-validated GroupDescripcion", @style = "width: auto;" })
                                                                                                             @*Model.Respuestas.Where(x => x.IdSeccionBody == subSeccion.SeccionBodys[s].IdSeccionBody) subSeccion.SeccionBodys[s].Descripcion *@
                                                                                                         </td>
                                                                                                              break;
                                                                                                          case 4:
                                                                                                         <td rowspan='@seccion.SeccionBodys[s].Rowspan' colspan='@seccion.SeccionBodys[s].Colspan'>
-                                                                                                            @Html.DropDownListFor(u => u.GroupDescripcion, new SelectList(ViewBag.Items_SelectBomba, "id", "name", seccion.SeccionBodys[s].Respuesta != null ? Convert.ToInt32(seccion.SeccionBodys[s].Respuesta) : 0), new { @class = "input-sm parsley-validated", @style = "width: auto;" })
+                                                                                                            @Html.DropDownListFor(u => u.GroupDescripcion, new SelectList(ViewBag.Items_SelectBomba, "id", "name", seccion.SeccionBodys[s].Respuesta != null ? Convert.ToInt32(seccion.SeccionBodys[s].Respuesta) : 0), new { @class = "input-sm parsley-validated GroupDescripcion", @style = "width: auto;" })
                                                                                                         </td>
                                                                                                              break;
                                                                                                          case 5:
                                                                                                         <td rowspan='@seccion.SeccionBodys[s].Rowspan' colspan='@seccion.SeccionBodys[s].Colspan'>
-                                                                                                            @Html.DropDownListFor(u => u.GroupDescripcion, new SelectList(ViewBag.Items_SelectNivelTanque, "id", "name", seccion.SeccionBodys[s].Respuesta != null ? Convert.ToInt32(seccion.SeccionBodys[s].Respuesta) : 0), new { @class = "input-sm parsley-validated", @style = "width: auto;" })
+                                                                                                            @Html.DropDownListFor(u => u.GroupDescripcion, new SelectList(ViewBag.Items_SelectNivelTanque, "id", "name", seccion.SeccionBodys[s].Respuesta != null ? Convert.ToInt32(seccion.SeccionBodys[s].Respuesta) : 0), new { @class = "input-sm parsley-validated GroupDescripcion", @style = "width: auto;" })
                                                                                                         </td>
                                                                                                              break;
                                                                                                          case 6:
                                                                                                         <td rowspan='@seccion.SeccionBodys[s].Rowspan' colspan='@seccion.SeccionBodys[s].Colspan'>
-                                                                                                            @Html.DropDownListFor(u => u.GroupDescripcion, new SelectList(ViewBag.Items_SelectAccesorios, "id", "name", seccion.SeccionBodys[s].Respuesta != null ? Convert.ToInt32(seccion.SeccionBodys[s].Respuesta) : 0), new { @class = "input-sm parsley-validated", @style = "width: auto;" })
+                                                                                                            @Html.DropDownListFor(u => u.GroupDescripcion, new SelectList(ViewBag.Items_SelectAccesorios, "id", "name", seccion.SeccionBodys[s].Respuesta != null ? Convert.ToInt32(seccion.SeccionBodys[s].Respuesta) : 0), new { @class = "input-sm parsley-validated GroupDescripcion", @style = "width: auto;" })
                                                                                                         </td>
                                                                                                              break;
                                                                                                          case 7:
                                                                                                         <td rowspan='@seccion.SeccionBodys[s].Rowspan' colspan='@seccion.SeccionBodys[s].Colspan'>
-                                                                                                            @Html.DropDownListFor(u => u.GroupDescripcion, new SelectList(ViewBag.Items_SelectPresiones, "id", "name", seccion.SeccionBodys[s].Respuesta != null ? Convert.ToInt32(seccion.SeccionBodys[s].Respuesta) : 0), new { @class = "input-sm parsley-validated", @style = "width: auto;" })
+                                                                                                            @Html.DropDownListFor(u => u.GroupDescripcion, new SelectList(ViewBag.Items_SelectPresiones, "id", "name", seccion.SeccionBodys[s].Respuesta != null ? Convert.ToInt32(seccion.SeccionBodys[s].Respuesta) : 0), new { @class = "input-sm parsley-validated GroupDescripcion", @style = "width: auto;" })
                                                                                                         </td>
                                                                                                              break;
                                                                                                      }
-                                                                                                    @Html.HiddenFor(u => u.GroupIdTableBody, new { @Value = seccion.SeccionBodys[s].IdSeccionBody })
+                                                                                                    @Html.HiddenFor(u => u.GroupIdTableBody, new { @Value = seccion.SeccionBodys[s].IdSeccionBody, @class = "GroupIdTableBody" })
                                                                                                  }
                                                                                                  if (s == (totalItems - 1) || filaItem != seccion.SeccionBodys[s + 1].NumeroFila)
                                                                                                  {
@@ -240,36 +284,36 @@
                                                                                                                              {
                                                                                                                                  case 2:
                                                                                                                 <td rowspan='@subSeccion.SeccionBodys[s].Rowspan' colspan='@subSeccion.SeccionBodys[s].Colspan'>
-                                                                                                                    @Html.TextBoxFor(u => u.GroupDescripcion, new { @Value = subSeccion.SeccionBodys[s].Respuesta, @class = "form-control input-sm", @placeholder = "", @type = "text" })
+                                                                                                                    @Html.TextBoxFor(u => u.GroupDescripcion, new { @Value = subSeccion.SeccionBodys[s].Respuesta, @class = "form-control input-sm GroupDescripcion", @placeholder = "", @type = "text" })
                                                                                                                 </td>
                                                                                                                                      break;
                                                                                                                                  case 3:
                                                                                                                 <td rowspan='@subSeccion.SeccionBodys[s].Rowspan' colspan='@subSeccion.SeccionBodys[s].Colspan'>
-                                                                                                                    @Html.DropDownListFor(u => u.GroupDescripcion, new SelectList(ViewBag.Items_SelectSINO, "id", "name", subSeccion.SeccionBodys[s].Respuesta != null ? Convert.ToInt32(subSeccion.SeccionBodys[s].Respuesta) : 0), new { @class = "input-sm parsley-validated", @style = "width: auto;" })
+                                                                                                                    @Html.DropDownListFor(u => u.GroupDescripcion, new SelectList(ViewBag.Items_SelectSINO, "id", "name", subSeccion.SeccionBodys[s].Respuesta != null ? Convert.ToInt32(subSeccion.SeccionBodys[s].Respuesta) : 0), new { @class = "input-sm parsley-validated GroupDescripcion", @style = "width: auto;" })
                                                                                                                 </td>
                                                                                                                                      break;
                                                                                                                                  case 4:
                                                                                                                 <td rowspan='@subSeccion.SeccionBodys[s].Rowspan' colspan='@subSeccion.SeccionBodys[s].Colspan'>
-                                                                                                                    @Html.DropDownListFor(u => u.GroupDescripcion, new SelectList(ViewBag.Items_SelectBomba, "id", "name", subSeccion.SeccionBodys[s].Respuesta != null ? Convert.ToInt32(subSeccion.SeccionBodys[s].Respuesta) : 0), new { @class = "input-sm parsley-validated", @style = "width: auto;" })
+                                                                                                                    @Html.DropDownListFor(u => u.GroupDescripcion, new SelectList(ViewBag.Items_SelectBomba, "id", "name", subSeccion.SeccionBodys[s].Respuesta != null ? Convert.ToInt32(subSeccion.SeccionBodys[s].Respuesta) : 0), new { @class = "input-sm parsley-validated GroupDescripcion", @style = "width: auto;" })
                                                                                                                 </td>
                                                                                                                                      break;
                                                                                                                                  case 5:
                                                                                                                 <td rowspan='@subSeccion.SeccionBodys[s].Rowspan' colspan='@subSeccion.SeccionBodys[s].Colspan'>
-                                                                                                                    @Html.DropDownListFor(u => u.GroupDescripcion, new SelectList(ViewBag.Items_SelectNivelTanque, "id", "name", subSeccion.SeccionBodys[s].Respuesta != null ? Convert.ToInt32(subSeccion.SeccionBodys[s].Respuesta) : 0), new { @class = "input-sm parsley-validated", @style = "width: auto;" })
+                                                                                                                    @Html.DropDownListFor(u => u.GroupDescripcion, new SelectList(ViewBag.Items_SelectNivelTanque, "id", "name", subSeccion.SeccionBodys[s].Respuesta != null ? Convert.ToInt32(subSeccion.SeccionBodys[s].Respuesta) : 0), new { @class = "input-sm parsley-validated GroupDescripcion", @style = "width: auto;" })
                                                                                                                 </td>
                                                                                                                                      break;
                                                                                                                                  case 6:
                                                                                                                 <td rowspan='@subSeccion.SeccionBodys[s].Rowspan' colspan='@subSeccion.SeccionBodys[s].Colspan'>
-                                                                                                                    @Html.DropDownListFor(u => u.GroupDescripcion, new SelectList(ViewBag.Items_SelectAccesorios, "id", "name", subSeccion.SeccionBodys[s].Respuesta != null ? Convert.ToInt32(subSeccion.SeccionBodys[s].Respuesta) : 0), new { @class = "input-sm parsley-validated", @style = "width: auto;" })
+                                                                                                                    @Html.DropDownListFor(u => u.GroupDescripcion, new SelectList(ViewBag.Items_SelectAccesorios, "id", "name", subSeccion.SeccionBodys[s].Respuesta != null ? Convert.ToInt32(subSeccion.SeccionBodys[s].Respuesta) : 0), new { @class = "input-sm parsley-validated GroupDescripcion", @style = "width: auto;" })
                                                                                                                 </td>
                                                                                                                                      break;
                                                                                                                                  case 7:
                                                                                                                 <td rowspan='@subSeccion.SeccionBodys[s].Rowspan' colspan='@subSeccion.SeccionBodys[s].Colspan'>
-                                                                                                                    @Html.DropDownListFor(u => u.GroupDescripcion, new SelectList(ViewBag.Items_SelectPresiones, "id", "name", subSeccion.SeccionBodys[s].Respuesta != null ? Convert.ToInt32(subSeccion.SeccionBodys[s].Respuesta) : 0), new { @class = "input-sm parsley-validated", @style = "width: auto;" })
+                                                                                                                    @Html.DropDownListFor(u => u.GroupDescripcion, new SelectList(ViewBag.Items_SelectPresiones, "id", "name", subSeccion.SeccionBodys[s].Respuesta != null ? Convert.ToInt32(subSeccion.SeccionBodys[s].Respuesta) : 0), new { @class = "input-sm parsley-validated GroupDescripcion", @style = "width: auto;" })
                                                                                                                 </td>
                                                                                                                                      break;
                                                                                                                              }
-                                                                                                                @Html.HiddenFor(u => u.GroupIdTableBody, new { @Value = subSeccion.SeccionBodys[s].IdSeccionBody })
+                                                                                                                @Html.HiddenFor(u => u.GroupIdTableBody, new { @Value = subSeccion.SeccionBodys[s].IdSeccionBody, @class = "GroupIdTableBody" })
                                                                                                                          }
                                                                                                                          if (s == (totalItems - 1) || filaItem != subSeccion.SeccionBodys[s + 1].NumeroFila)
                                                                                                                          {
