@@ -12,3 +12,10 @@ D:\Personal_Pro\NubeLabs\Barbas\Will\ESSACInspecciones\ESSACInspecciones.Helpers
 D:\Personal_Pro\NubeLabs\Barbas\Will\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\obj\Debug\ESSACInspecciones.Helpers.Razor.csprojResolveAssemblyReference.cache
 D:\Personal_Pro\NubeLabs\Barbas\Will\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\obj\Debug\ESSACInspecciones.Helpers.Razor.dll
 D:\Personal_Pro\NubeLabs\Barbas\Will\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\obj\Debug\ESSACInspecciones.Helpers.Razor.pdb
+D:\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\bin\Debug\ESSACInspecciones.Helpers.Razor.dll
+D:\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\bin\Debug\ESSACInspecciones.Helpers.Razor.pdb
+D:\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\bin\Debug\ESSACInspecciones.Helpers.dll
+D:\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\bin\Debug\ESSACInspecciones.Helpers.pdb
+D:\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\obj\Debug\ESSACInspecciones.Helpers.Razor.csprojResolveAssemblyReference.cache
+D:\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\obj\Debug\ESSACInspecciones.Helpers.Razor.dll
+D:\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\obj\Debug\ESSACInspecciones.Helpers.Razor.pdb

@@ -157,11 +157,13 @@
                                                             @foreach (var seccion in Secciones)
                                                             {
                                                                 <div class="panel panel-default">
-                                                                    <div class="panel-heading">
-                                                                        <h4 class="panel-title">
-                                                                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#@firstLevelName" href="#@seccion.IdSeccion"> @seccion.Nombre </a>
-                                                                        </h4>
-                                                                    </div>
+                                                                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#@firstLevelName" href="#@seccion.IdSeccion">
+                                                                        <div class="panel-heading">
+                                                                            <h4 class="panel-title">
+                                                                                @seccion.Nombre
+                                                                            </h4>
+                                                                        </div>
+                                                                    </a>
                                                                     <div id="@seccion.IdSeccion" class="panel-collapse collapse">
                                                                         <div class="panel-body">
 
@@ -246,11 +248,13 @@
                                                                                     @foreach (var subSeccion in seccion.SubSecciones)
                                                                                     {
                                                                                         <div class="panel panel-default">
-                                                                                            <div class="panel-heading">
-                                                                                                <h6 class="panel-title">
-                                                                                                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#@secondtLevelName" href="#@subSeccion.IdSeccion"> @subSeccion.Nombre </a>
-                                                                                                </h6>
-                                                                                            </div>
+                                                                                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#@secondtLevelName" href="#@subSeccion.IdSeccion">
+                                                                                                <div class="panel-heading">
+                                                                                                    <h6 class="panel-title">
+                                                                                                        @subSeccion.Nombre
+                                                                                                    </h6>
+                                                                                                </div>
+                                                                                            </a>
                                                                                             <div id="@subSeccion.IdSeccion" class="panel-collapse collapse">
                                                                                                 <div class="panel-body text-sm">
 

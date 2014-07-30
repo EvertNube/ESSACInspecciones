@@ -157,11 +157,13 @@
                             }
 
                             strHtmlSubSeccion += '<div class="panel panel-default">' +
+                                                    '<a class="accordion-toggle" data-toggle="collapse" data-parent="#' + secondtLevelName + '" href="#' + subSeccion.IdSeccion + '">' +
                                                     '<div class="panel-heading">' +
                                                         '<h6 class="panel-title">' +
-                                                            '<a class="accordion-toggle" data-toggle="collapse" data-parent="#' + secondtLevelName + '" href="#' + subSeccion.IdSeccion + '">' + subSeccion.Nombre + '</a>' +
+                                                            subSeccion.Nombre + 
                                                         '</h6>' +
                                                     '</div>' +
+                                                    '</a>' +
                                                     '<div id="' + subSeccion.IdSeccion + '" class="panel-collapse collapse">' +
                                                         '<div class="panel-body text-sm">' +
                                                             strHtmlSubSeccionBodys +
@@ -173,11 +175,13 @@
                     }
 
                     strHtmlSeccion += '<div class="panel panel-default">' +
+                                        '<a class="accordion-toggle" data-toggle="collapse" data-parent="#' + firstLevelName + '" href="#' + seccion.IdSeccion + '">' +
                                         '<div class="panel-heading">' +
                                             '<h4 class="panel-title">' +
-                                                '<a class="accordion-toggle" data-toggle="collapse" data-parent="#' + firstLevelName + '" href="#' + seccion.IdSeccion + '">' + seccion.Nombre + '</a>' +
+                                                seccion.Nombre +
                                             '</h4>' +
                                         '</div>' +
+                                        '</a>' +
                                         '<div id="' + seccion.IdSeccion + '" class="panel-collapse collapse">' +
                                             '<div class="panel-body">' +
                                                 strHtmlSeccionBodys +
