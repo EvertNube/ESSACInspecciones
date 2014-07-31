@@ -292,9 +292,6 @@ a:hover .caret-white {
 }
 .panel-heading {
   border-radius: 2px 2px 0 0;
-  color: #333333;
-  background-color: #f5f5f5;
-  border-color: #e8e8e8;
 }
 .panel-heading.no-border {
   margin: -1px -1px 0 -1px;

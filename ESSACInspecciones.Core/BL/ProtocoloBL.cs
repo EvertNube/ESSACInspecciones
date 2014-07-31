@@ -13,15 +13,38 @@ namespace ESSACInspecciones.Core.BL
     public class ProtocoloBL : Base
     {
         #region CRUD Tarea
-        public List<ProtocoloDTO> getProtocolos(int idUsuario, int idCliente)//, int idInmueble)
+        //public List<ProtocoloDTO> getProtocolos(int idUsuario, int idCliente)//, int idInmueble)
+        //{
+        //    using (var context = getContext())
+        //    {
+        //        var Inmuebles = context.Inmueble.Where(x => x.IdCliente == idCliente);
+        //        List<ProtocoloDTO> listaProtocolos = new List<ProtocoloDTO>();
+        //        foreach (var item in Inmuebles)
+        //        {
+        //            var result = context.SP_GetPlantillas(idUsuario, item.IdInmueble)
+        //            .Select(x => new ProtocoloDTO
+        //            {
+        //                IdProtocolo = x.IdProtocolo,
+        //                IdPlantilla = x.IdPlantilla,
+        //                IdInmueble = x.IdInmueble,
+        //                Plantilla = new PlantillaDTO { Nombre = x.Nombre },
+        //                Estado = new EstadoDTO { NombreEstado = x.NombreEstado },
+        //                Active = x.Active
+        //            }).ToList();
+        //            foreach (var protocolo in result)
+        //            {
+        //                listaProtocolos.Add(protocolo);
+        //            }
+        //        }
+        //        return listaProtocolos;
+        //    }
+        //}
+
+        public List<ProtocoloDTO> getProtocolos(int idUsuario, int idInmueble)
         {
             using (var context = getContext())
             {
-                var Inmuebles = context.Inmueble.Where(x => x.IdCliente == idCliente);
-                List<ProtocoloDTO> listaProtocolos = new List<ProtocoloDTO>();
-                foreach (var item in Inmuebles)
-                {
-                    var result = context.SP_GetPlantillas(idUsuario, item.IdInmueble)
+                var result = context.SP_GetPlantillas(idUsuario, idInmueble)
                     .Select(x => new ProtocoloDTO
                     {
                         IdProtocolo = x.IdProtocolo,
@@ -31,16 +54,11 @@ namespace ESSACInspecciones.Core.BL
                         Estado = new EstadoDTO { NombreEstado = x.NombreEstado },
                         Active = x.Active
                     }).ToList();
-                    foreach (var protocolo in result)
-                    {
-                        listaProtocolos.Add(protocolo);
-                    }
-                }
-                return listaProtocolos;
+                return result;
             }
         }
 
-        public ProtocoloDTO getProtocolo_053(int idInmueble, int? idProtocolo, int? idPlantilla)
+        public ProtocoloDTO getProtocolo(int idInmueble, int? idProtocolo, int? idPlantilla)
         {
             using (var context = getContext())
             {
@@ -235,7 +253,7 @@ namespace ESSACInspecciones.Core.BL
         //    }
         //}
 
-        public bool add_053(ProtocoloDTO oProtocoloDTO)
+        public bool add(ProtocoloDTO oProtocoloDTO)
         {
 
             using (var context = getContext())
@@ -306,7 +324,7 @@ namespace ESSACInspecciones.Core.BL
         //    }
         //}
 
-        public bool update_053(ProtocoloDTO oProtocoloDTO)
+        public bool update(ProtocoloDTO oProtocoloDTO)
         {
             using (var context = getContext())
             {

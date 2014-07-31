@@ -5,5 +5,6 @@ D:\Proyectos\ESSACInspecciones\ESSACInspecciones.Helpers\obj\Debug\ESSACInspecci
 D:\Proyectos\ESSACInspecciones\ESSACInspecciones.Helpers\obj\Debug\ESSACInspecciones.Helpers.csprojResolveAssemblyReference.cache
 D:\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\ESSACInspecciones.Helpers\bin\Debug\ESSACInspecciones.Helpers.dll
 D:\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\ESSACInspecciones.Helpers\bin\Debug\ESSACInspecciones.Helpers.pdb
+D:\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\ESSACInspecciones.Helpers\obj\Debug\ESSACInspecciones.Helpers.csprojResolveAssemblyReference.cache
 D:\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\ESSACInspecciones.Helpers\obj\Debug\ESSACInspecciones.Helpers.dll
 D:\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\ESSACInspecciones.Helpers\obj\Debug\ESSACInspecciones.Helpers.pdb

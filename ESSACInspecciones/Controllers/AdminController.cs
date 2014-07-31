@@ -623,33 +623,33 @@ namespace ESSACInspecciones.Controllers
             }
         }
 
-        public ActionResult Protocolos(int? inmueble)
+        public ActionResult Protocolos(int? inmueble, int? page)
         {
             if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
-            //List<ProtocoloDTO> model = new List<ProtocoloDTO>();
+            List<ProtocoloDTO> model = new List<ProtocoloDTO>();
             ProtocoloBL objBL = new ProtocoloBL();
             int idUsuario = getCurrentUser().IdUsuario;
             ViewBag.Clientes = objBL.getClientesTarea(idUsuario);
-            //if (inmueble != 0 && inmueble != null)
-            //{
-            //    model = objBL.getProtocolos(idUsuario, (int)inmueble);
-            //}
-            ////int pageSize = 10;
-            ////int pageNumber = (page ?? 1);
-            //return View(model.ToPagedList(pageNumber, pageSize));
-            return View();
-        }
-        public ActionResult Protocolo(bool conexion, int idInmueble, int? idProtocolo = null, int? idPlantilla = null)
-        {
-            if (conexion)
+            if (inmueble != 0 && inmueble != null)
             {
-                return RedirectToAction("Protocolo_server", new { idInmueble = idInmueble, idProtocolo = idProtocolo, idPlantilla = idPlantilla });
+                model = objBL.getProtocolos(idUsuario, (int)inmueble);
             }
-            else
-            {
-                return RedirectToAction("Protocolo_client");
-            }
+            int pageSize = 10;
+            int pageNumber = (page ?? 1);
+            return View(model.ToPagedList(pageNumber, pageSize));
+            //return View();
         }
+        //public ActionResult Protocolo(bool conexion, int idInmueble, int? idProtocolo = null, int? idPlantilla = null)
+        //{
+        //    if (conexion)
+        //    {
+        //        return RedirectToAction("Protocolo_server", new { idInmueble = idInmueble, idProtocolo = idProtocolo, idPlantilla = idPlantilla });
+        //    }
+        //    else
+        //    {
+        //        return RedirectToAction("Protocolo_client");
+        //    }
+        //}
         public ActionResult Protocolo_server(int idInmueble, int? idProtocolo = null, int? idPlantilla = null)
         {
             ViewBag.Horas = new BaseDTO().fillHoras();
@@ -660,10 +660,10 @@ namespace ESSACInspecciones.Controllers
             ViewBag.Items_SelectAccesorios = new BaseDTO().fillSelectAccesorios();
             ViewBag.Items_SelectPresiones = new BaseDTO().fillSelectPresiones();
             ProtocoloBL objBL = new ProtocoloBL();
-            ProtocoloDTO obj = objBL.getProtocolo_053(idInmueble, idProtocolo, idPlantilla);
+            ProtocoloDTO obj = objBL.getProtocolo(idInmueble, idProtocolo, idPlantilla);
             return View(obj);
         }
-        public ActionResult Protocolo_client()
+        public ActionResult Protocolo()
         {
             ViewBag.Horas = new BaseDTO().fillHoras().ToJSON();
             ViewBag.Minutos = new BaseDTO().fillMinutos().ToJSON();
@@ -684,7 +684,7 @@ namespace ESSACInspecciones.Controllers
                 if (dto.IdProtocolo == 0)
                 {
                     //int idProtocolo = objBL.add_053(dto);
-                    if (objBL.add_053(dto))
+                    if (objBL.add(dto))
                     {
                         //dto.IdProtocolo = idProtocolo;
                         createResponseMessage(CONSTANTES.SUCCESS);
@@ -693,7 +693,7 @@ namespace ESSACInspecciones.Controllers
                 }
                 else if (dto.IdProtocolo != 0)
                 {
-                    if (objBL.update_053(dto))
+                    if (objBL.update(dto))
                     {
                         createResponseMessage(CONSTANTES.SUCCESS);
                         return RedirectToAction("Protocolos");
@@ -719,31 +719,31 @@ namespace ESSACInspecciones.Controllers
         }
 
         #region APIS
-        [HttpGet]
-        public ActionResult GetProtocolos(int cliente)
-        {
-            //if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
-            ProtocoloBL objBL = new ProtocoloBL();
-            int idUsuario = getCurrentUser().IdUsuario;
-            var model = objBL.getProtocolos(idUsuario, cliente);
-            return Json(model, JsonRequestBehavior.AllowGet);
-        }
         //[HttpGet]
-        //public ActionResult GetProtocolos(int inmueble)
+        //public ActionResult GetProtocolos(int cliente)
         //{
         //    //if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
         //    ProtocoloBL objBL = new ProtocoloBL();
         //    int idUsuario = getCurrentUser().IdUsuario;
-        //    var model = objBL.getProtocolos(idUsuario, inmueble);
+        //    var model = objBL.getProtocolos(idUsuario, cliente);
         //    return Json(model, JsonRequestBehavior.AllowGet);
         //}
+        [HttpGet]
+        public ActionResult GetProtocolos(int inmueble)
+        {
+            //if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
+            ProtocoloBL objBL = new ProtocoloBL();
+            int idUsuario = getCurrentUser().IdUsuario;
+            var model = objBL.getProtocolos(idUsuario, inmueble);
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
         [HttpGet]
         public ActionResult GetProtocolo(int idInmueble, int? idProtocolo = null, int? idPlantilla = null)
         {
             //if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
             ProtocoloBL objBL = new ProtocoloBL();
             //int idUsuario = getCurrentUser().IdUsuario;
-            var model = objBL.getProtocolo_053(idInmueble, idProtocolo, idPlantilla);
+            var model = objBL.getProtocolo(idInmueble, idProtocolo, idPlantilla);
             return Json(model, JsonRequestBehavior.AllowGet);
         }
 
