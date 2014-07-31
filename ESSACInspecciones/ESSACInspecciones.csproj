@@ -156,6 +156,10 @@
     <Content Include="Content\themes\admin\images\avatar.jpg" />
     <Content Include="Content\themes\admin\images\avatar_default.jpg" />
     <Content Include="Content\themes\admin\images\avatar_default_female.jpg" />
+    <Content Include="Content\themes\views\images\circle_Blue.png" />
+    <Content Include="Content\themes\views\images\circle_Green.png" />
+    <Content Include="Content\themes\views\images\circle_Orange.png" />
+    <Content Include="Content\themes\views\images\circle_Red.png" />
     <Content Include="Content\themes\admin\images\logo-essac.png" />
     <Content Include="Content\themes\admin\images\Logo-rpd.png" />
     <Content Include="Content\themes\admin\images\logo.png" />
