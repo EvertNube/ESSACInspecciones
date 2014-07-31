@@ -20,3 +20,14 @@ D:\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\ESSACInspecc
 D:\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\ESSACInspecciones.Core\obj\Debug\ESSACInspecciones.Core.csprojResolveAssemblyReference.cache
 D:\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\ESSACInspecciones.Core\obj\Debug\ESSACInspecciones.Core.dll
 D:\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\ESSACInspecciones.Core\obj\Debug\ESSACInspecciones.Core.pdb
+D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones.Core\bin\Debug\ESSACInspecciones.Core.dll
+D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones.Core\bin\Debug\ESSACInspecciones.Core.pdb
+D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones.Core\bin\Debug\EntityFramework.dll
+D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones.Core\bin\Debug\ESSACInspecciones.Data.dll
+D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones.Core\bin\Debug\ESSACInspecciones.Helpers.dll
+D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones.Core\bin\Debug\ESSACInspecciones.Data.pdb
+D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones.Core\bin\Debug\ESSACInspecciones.Helpers.pdb
+D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones.Core\bin\Debug\EntityFramework.xml
+D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones.Core\obj\Debug\ESSACInspecciones.Core.csprojResolveAssemblyReference.cache
+D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones.Core\obj\Debug\ESSACInspecciones.Core.dll
+D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones.Core\obj\Debug\ESSACInspecciones.Core.pdb
