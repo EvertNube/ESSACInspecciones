@@ -171,7 +171,7 @@
         Amarillo -> Temporal (LocalStorage)
         Verde -> Servidor
         */
-        var strImg = "", ruta = "../Content/themes/admin/images/";
+        var strImg = "", ruta = "../Content/themes/views/images/";
         //$("#2").attr("src", "../Content/themes/views/images/loading.gif");
         /*
         1 - Pendiente (No tocado)
@@ -180,12 +180,12 @@
         4 - Completo
         */
         switch (estado) {
-            case 1: ruta += "circle_Red.png"; break;
+            case 1: ruta += "circle_red.jpg"; break;
             case 2:
-                if (localStorage.getItem("respuestas_" + id)) ruta += "circle_Orange.png";
-                else ruta += "circle_Blue.png";
+                if (localStorage.getItem("respuestas_" + id)) ruta += "circle_yellow.jpg";
+                else ruta += "circle_green.jpg";
                 break;
-            case 3: ruta += "circle_Green.png"; break;
+            case 3: ruta += "circle_green.jpg"; break;
             default: break;
         }
         strImg = '<img src="' + ruta + '" />';
