@@ -728,6 +728,18 @@ namespace ESSACInspecciones.Controllers
         //    var model = objBL.getProtocolos(idUsuario, cliente);
         //    return Json(model, JsonRequestBehavior.AllowGet);
         //}
+        public ActionResult SaveProtocolo(string protocolo)
+        {
+            if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
+            var objProtocolo = new JavaScriptSerializer().Deserialize<ProtocoloDTO>(protocolo);
+            if (!string.IsNullOrEmpty(objProtocolo.StrFecha)) objProtocolo.Fecha = Convert.ToDateTime(objProtocolo.StrFecha);
+            ProtocoloBL objBL = new ProtocoloBL();
+            bool response = false;
+            if (objProtocolo.IdProtocolo == 0) response = objBL.add(objProtocolo);
+            else response = objBL.update(objProtocolo);
+            return Json(response, JsonRequestBehavior.AllowGet);
+            //return Json(new { Response = response }, JsonRequestBehavior.AllowGet);
+        }
         [HttpGet]
         public ActionResult GetProtocolos(int inmueble)
         {
