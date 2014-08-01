@@ -30,6 +30,7 @@ namespace ESSACInspecciones.Core.DTO
         public List<int> GroupIdTableBody { get; set; }
         public EstadoDTO Estado { get; set; }
         public PlantillaDTO Plantilla { get; set; }
+        public string StrFecha { get; set; }
         //public List<string> GroupTextBox { get; set; }
         //public List<int> GroupSelect { get; set; }
         //public List<int> GroupIdTableBody { get; set; }

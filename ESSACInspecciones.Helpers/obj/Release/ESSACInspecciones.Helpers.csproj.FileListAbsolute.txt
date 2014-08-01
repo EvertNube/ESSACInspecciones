@@ -8,3 +8,8 @@ D:\Proyectos\ESSACInspecciones\ESSACInspecciones.Helpers\bin\Release\ESSACInspec
 D:\Proyectos\ESSACInspecciones\ESSACInspecciones.Helpers\obj\Release\ESSACInspecciones.Helpers.csprojResolveAssemblyReference.cache
 D:\Proyectos\ESSACInspecciones\ESSACInspecciones.Helpers\obj\Release\ESSACInspecciones.Helpers.dll
 D:\Proyectos\ESSACInspecciones\ESSACInspecciones.Helpers\obj\Release\ESSACInspecciones.Helpers.pdb
+D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones.Helpers\bin\Release\ESSACInspecciones.Helpers.dll
+D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones.Helpers\bin\Release\ESSACInspecciones.Helpers.pdb
+D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones.Helpers\obj\Release\ESSACInspecciones.Helpers.csprojResolveAssemblyReference.cache
+D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones.Helpers\obj\Release\ESSACInspecciones.Helpers.dll
+D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones.Helpers\obj\Release\ESSACInspecciones.Helpers.pdb

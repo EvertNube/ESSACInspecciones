@@ -14,3 +14,11 @@ D:\Proyectos\ESSACInspecciones\ESSACInspecciones.Data\bin\Release\EntityFramewor
 D:\Proyectos\ESSACInspecciones\ESSACInspecciones.Data\obj\Release\ESSACInspecciones.Data.csprojResolveAssemblyReference.cache
 D:\Proyectos\ESSACInspecciones\ESSACInspecciones.Data\obj\Release\ESSACInspecciones.Data.dll
 D:\Proyectos\ESSACInspecciones\ESSACInspecciones.Data\obj\Release\ESSACInspecciones.Data.pdb
+D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones.Data\bin\Release\ESSACInspecciones.Data.dll.config
+D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones.Data\bin\Release\ESSACInspecciones.Data.dll
+D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones.Data\bin\Release\ESSACInspecciones.Data.pdb
+D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones.Data\bin\Release\EntityFramework.dll
+D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones.Data\bin\Release\EntityFramework.xml
+D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones.Data\obj\Release\ESSACInspecciones.Data.csprojResolveAssemblyReference.cache
+D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones.Data\obj\Release\ESSACInspecciones.Data.dll
+D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones.Data\obj\Release\ESSACInspecciones.Data.pdb
