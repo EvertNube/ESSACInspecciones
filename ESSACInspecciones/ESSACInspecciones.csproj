@@ -662,6 +662,9 @@
     <Content Include="Content\themes\base\minified\jquery.ui.tabs.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
     <Content Include="Content\themes\views\css\comunes.css" />
+    <Content Include="Content\themes\views\images\circle_green.jpg" />
+    <Content Include="Content\themes\views\images\circle_red.jpg" />
+    <Content Include="Content\themes\views\images\circle_yellow.jpg" />
     <Content Include="Content\themes\views\images\loading-blue.gif" />
     <Content Include="Content\themes\views\images\loading.gif" />
     <Content Include="Content\themes\views\js\comunes.js" />
