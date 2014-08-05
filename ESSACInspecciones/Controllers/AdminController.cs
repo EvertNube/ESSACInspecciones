@@ -732,6 +732,7 @@ namespace ESSACInspecciones.Controllers
         {
             if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
             var objProtocolo = new JavaScriptSerializer().Deserialize<ProtocoloDTO>(protocolo);
+            objProtocolo.IdUsuario = getCurrentUser().IdUsuario;
             if (!string.IsNullOrEmpty(objProtocolo.StrFecha)) objProtocolo.Fecha = Convert.ToDateTime(objProtocolo.StrFecha);
             ProtocoloBL objBL = new ProtocoloBL();
             bool response = false;

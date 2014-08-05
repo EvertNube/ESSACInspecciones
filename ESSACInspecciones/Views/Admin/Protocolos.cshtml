@@ -38,8 +38,8 @@
                                     <thead>
                                         <tr>
                                             <th width="10%">ID</th>
-                                            <th width="60%">Nombre</th>
-                                            <th width="20%">Estado</th>
+                                            <th width="70%">Nombre</th>
+                                            <th width="10%" colspan="2">Estado</th>
                                             <th width="10%">Opciones</th>
                                         </tr>
                                     </thead>
@@ -156,10 +156,9 @@
             $('#tableProtocolo > tbody:last').append(
                 '<tr><td>' + (index + 1) + '</td>' +
                 '<td>' + itemData.Plantilla.Nombre + '</td>' +
-                '<td>' + itemData.Estado.NombreEstado + '</td>' +
-                '<td>' +
-                    setImage(itemData.IdProtocolo, itemData.IdPlantilla, itemData.IdInmueble, itemData.IdEstado) +
-                    '<a href="' + url + '" onclick="return getProtocolo(' + itemData.IdInmueble + ', ' + itemData.IdProtocolo + ', ' + itemData.IdPlantilla + ')" ><i class="fa fa-pencil"></i></a>' +
+                '<td>' + itemData.Estado.NombreEstado  + '</td>' + //+ "\t"
+                '<td>' + setImage(itemData.IdProtocolo, itemData.IdPlantilla, itemData.IdInmueble, itemData.IdEstado) + '</td>' +
+                '<td>' + '<a href="' + url + '" onclick="return getProtocolo(' + itemData.IdInmueble + ', ' + itemData.IdProtocolo + ', ' + itemData.IdPlantilla + ')" ><i class="fa fa-pencil"></i></a>' +
                 '</td></tr>');
         });
         //'<a href="' + url + '" onclick="return setProtocolo(\'' + itemData.Plantilla.Nombre + '_' + itemData.IdInmueble + '\')"><i class="fa fa-pencil"></i></a>'
@@ -171,20 +170,21 @@
         3 - Completo -> Icono Verde : Datos guardados en Servidor
     */
     function setImage(idProtocolo, idPlantilla, idInmueble, estado) {
-        var strImg = "", ruta = "../Content/themes/views/images/"; //$("#2").attr("src", "../Content/themes/views/images/loading.gif");
+        var strImg = "", ruta = "../Content/themes/views/images/", titulo = ""; //$("#2").attr("src", "../Content/themes/views/images/loading.gif");
+        var title1 = "Plantilla vacía", title2 = "Guardado temporalmente", title3 = "Guardado en el servidor";
         switch (estado) {
             case 1:
-                if (localStorage.getItem("respuestas_" + idProtocolo + idPlantilla + idInmueble)) ruta += "circle_yellow.jpg";
-                else ruta += "circle_red.jpg";
+                if (localStorage.getItem("respuestas_" + idProtocolo + idPlantilla + idInmueble)) { ruta += "circle_yellow.png"; titulo = title2; }
+                else { ruta += "circle_red.png"; titulo = title1; }
                 break;
             case 2:
-                if (localStorage.getItem("respuestas_" + idProtocolo + idPlantilla + idInmueble)) ruta += "circle_yellow.jpg";
-                else ruta += "circle_green.jpg";
+                if (localStorage.getItem("respuestas_" + idProtocolo + idPlantilla + idInmueble)) { ruta += "circle_yellow.png"; titulo = title2; }
+                else { ruta += "circle_green.png"; titulo = title3; }
                 break;
-            case 3: ruta += "circle_green.jpg"; break;
+            case 3: ruta += "circle_green.png"; titulo = title3; break;
             default: break;
         }
-        strImg = '<img src="' + ruta + '" />';
+        strImg = '<img src="' + ruta + '" title="' + titulo + '" />';
         return strImg;
     }
     function saveStorage(key, value) {
