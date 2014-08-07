@@ -11,7 +11,6 @@
         <EntityTypeShape EntityType="ESSAC.InspeccionesDbModel.EstadoProtocolo" Width="1.5" PointX="3" PointY="12.5" IsExpanded="true" />
         <EntityTypeShape EntityType="ESSAC.InspeccionesDbModel.Inmueble" Width="1.5" PointX="3" PointY="8.5" IsExpanded="true" />
         <EntityTypeShape EntityType="ESSAC.InspeccionesDbModel.Plantilla" Width="1.5" PointX="3" PointY="15.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="ESSAC.InspeccionesDbModel.Protocolo" Width="1.5" PointX="5.25" PointY="8" IsExpanded="true" />
         <EntityTypeShape EntityType="ESSAC.InspeccionesDbModel.Respuesta" Width="1.5" PointX="7.5" PointY="11.75" IsExpanded="true" />
         <EntityTypeShape EntityType="ESSAC.InspeccionesDbModel.Rol" Width="1.5" PointX="8.25" PointY="3.875" IsExpanded="true" />
         <EntityTypeShape EntityType="ESSAC.InspeccionesDbModel.Seccion" Width="1.5" PointX="3" PointY="18.875" IsExpanded="true" />
@@ -27,13 +26,8 @@
         <AssociationConnector Association="ESSAC.InspeccionesDbModel.FK_Tarea_Cliente" ManuallyRouted="false" />
         <AssociationConnector Association="ESSAC.InspeccionesDbModel.FK_ServicioEstado_Estado" ManuallyRouted="false" />
         <AssociationConnector Association="ESSAC.InspeccionesDbModel.FK_Tarea_Estado" ManuallyRouted="false" />
-        <AssociationConnector Association="ESSAC.InspeccionesDbModel.FK_Protocolo_EstadoProtocolo" ManuallyRouted="false" />
-        <AssociationConnector Association="ESSAC.InspeccionesDbModel.FK_Protocolo_Inmueble" ManuallyRouted="false" />
         <AssociationConnector Association="ESSAC.InspeccionesDbModel.FK_Tarea_Inmueble" ManuallyRouted="false" />
-        <AssociationConnector Association="ESSAC.InspeccionesDbModel.FK_Protocolo_Plantilla" ManuallyRouted="false" />
         <AssociationConnector Association="ESSAC.InspeccionesDbModel.FK_Seccion_Plantilla" ManuallyRouted="false" />
-        <AssociationConnector Association="ESSAC.InspeccionesDbModel.FK_Protocolo_Usuario" ManuallyRouted="false" />
-        <AssociationConnector Association="ESSAC.InspeccionesDbModel.FK_Respuesta_Protocolo" ManuallyRouted="false" />
         <AssociationConnector Association="ESSAC.InspeccionesDbModel.FK_Respuesta_TableBody" ManuallyRouted="false" />
         <AssociationConnector Association="ESSAC.InspeccionesDbModel.FK_Usuario_Rol" ManuallyRouted="false" />
         <AssociationConnector Association="ESSAC.InspeccionesDbModel.FK_TableBody_Seccion" ManuallyRouted="false" />
@@ -42,6 +36,14 @@
         <AssociationConnector Association="ESSAC.InspeccionesDbModel.FK_ServicioEstado_Servicio" ManuallyRouted="false" />
         <AssociationConnector Association="ESSAC.InspeccionesDbModel.FK_Tarea_Servicio" ManuallyRouted="false" />
         <AssociationConnector Association="ESSAC.InspeccionesDbModel.Responsables_Tarea" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="ESSAC.InspeccionesDbModel.OpcionRespuesta" Width="1.5" PointX="5.25" PointY="25.625" />
+        <AssociationConnector Association="ESSAC.InspeccionesDbModel.FK_OpcionRespuesta_TipoTag" />
+        <EntityTypeShape EntityType="ESSAC.InspeccionesDbModel.Protocolo" Width="1.5" PointX="12.75" PointY="10.25" />
+        <AssociationConnector Association="ESSAC.InspeccionesDbModel.FK_Protocolo_EstadoProtocolo" />
+        <AssociationConnector Association="ESSAC.InspeccionesDbModel.FK_Protocolo_Inmueble" />
+        <AssociationConnector Association="ESSAC.InspeccionesDbModel.FK_Protocolo_Plantilla" />
+        <AssociationConnector Association="ESSAC.InspeccionesDbModel.FK_Protocolo_Usuario" />
+        <AssociationConnector Association="ESSAC.InspeccionesDbModel.FK_Respuesta_Protocolo" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

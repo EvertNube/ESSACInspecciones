@@ -17,6 +17,7 @@ namespace ESSACInspecciones.Data
         public TipoTag()
         {
             this.SeccionBody = new HashSet<SeccionBody>();
+            this.OpcionRespuesta = new HashSet<OpcionRespuesta>();
         }
     
         public int IdTipoTag { get; set; }
@@ -24,5 +25,6 @@ namespace ESSACInspecciones.Data
         public bool Active { get; set; }
     
         public virtual ICollection<SeccionBody> SeccionBody { get; set; }
+        public virtual ICollection<OpcionRespuesta> OpcionRespuesta { get; set; }
     }
 }

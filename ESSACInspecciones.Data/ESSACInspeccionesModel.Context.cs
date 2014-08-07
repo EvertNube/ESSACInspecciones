@@ -34,7 +34,6 @@ namespace ESSACInspecciones.Data
         public DbSet<EstadoProtocolo> EstadoProtocolo { get; set; }
         public DbSet<Inmueble> Inmueble { get; set; }
         public DbSet<Plantilla> Plantilla { get; set; }
-        public DbSet<Protocolo> Protocolo { get; set; }
         public DbSet<Respuesta> Respuesta { get; set; }
         public DbSet<Rol> Rol { get; set; }
         public DbSet<Seccion> Seccion { get; set; }
@@ -45,6 +44,8 @@ namespace ESSACInspecciones.Data
         public DbSet<TipoCelda> TipoCelda { get; set; }
         public DbSet<TipoTag> TipoTag { get; set; }
         public DbSet<Usuario> Usuario { get; set; }
+        public DbSet<OpcionRespuesta> OpcionRespuesta { get; set; }
+        public DbSet<Protocolo> Protocolo { get; set; }
     
         public virtual ObjectResult<SP_CountEstados_Result> SP_CountEstados(Nullable<System.DateTime> fechaInicio, Nullable<System.DateTime> fechaFin, Nullable<int> idResponsable)
         {
