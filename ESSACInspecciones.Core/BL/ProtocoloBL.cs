@@ -71,6 +71,8 @@ namespace ESSACInspecciones.Core.BL
                     .Select(r => new ProtocoloDTO
                     {
                         IdProtocolo = r.IdProtocolo,
+                        IdPlantilla = r.IdPlantilla,
+                        IdInmueble = r.IdInmueble,
                         NombreAreaProtegida = r.NombreAreaProtegida,
                         Fecha = r.Fecha,
                         HoraInicio = Convert.ToInt32(r.Fecha.Value.ToString("HH")),

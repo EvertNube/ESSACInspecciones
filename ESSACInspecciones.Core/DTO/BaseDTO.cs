@@ -9,52 +9,52 @@ namespace ESSACInspecciones.Core.DTO
 {
     public class BaseDTO
     {
-        public IList<ItemDTO> fillHoras()
+        public IList<OpcionDTO> fillHoras()
         {
-            var lista = new List<ItemDTO>();
+            var lista = new List<OpcionDTO>();
             //lista.Insert(0, new ItemDTO() { id = -1, name = "" });
-            lista.Insert(0, new ItemDTO() { id = 0, name = "00" });
-            lista.Insert(1, new ItemDTO() { id = 1, name = "01" });
-            lista.Insert(2, new ItemDTO() { id = 2, name = "02" });
-            lista.Insert(3, new ItemDTO() { id = 3, name = "03" });
-            lista.Insert(4, new ItemDTO() { id = 4, name = "04" });
-            lista.Insert(5, new ItemDTO() { id = 5, name = "05" });
-            lista.Insert(6, new ItemDTO() { id = 6, name = "06" });
-            lista.Insert(7, new ItemDTO() { id = 7, name = "07" });
-            lista.Insert(8, new ItemDTO() { id = 8, name = "08" });
-            lista.Insert(9, new ItemDTO() { id = 9, name = "09" });
-            lista.Insert(10, new ItemDTO() { id = 10, name = "10" });
-            lista.Insert(11, new ItemDTO() { id = 11, name = "11" });
-            lista.Insert(12, new ItemDTO() { id = 12, name = "12" });
-            lista.Insert(13, new ItemDTO() { id = 13, name = "13" });
-            lista.Insert(14, new ItemDTO() { id = 14, name = "14" });
-            lista.Insert(15, new ItemDTO() { id = 15, name = "15" });
-            lista.Insert(16, new ItemDTO() { id = 16, name = "16" });
-            lista.Insert(17, new ItemDTO() { id = 17, name = "17" });
-            lista.Insert(18, new ItemDTO() { id = 18, name = "18" });
-            lista.Insert(19, new ItemDTO() { id = 19, name = "19" });
-            lista.Insert(20, new ItemDTO() { id = 20, name = "20" });
-            lista.Insert(21, new ItemDTO() { id = 21, name = "21" });
-            lista.Insert(22, new ItemDTO() { id = 22, name = "22" });
-            lista.Insert(23, new ItemDTO() { id = 23, name = "23" });
+            lista.Insert(0, new OpcionDTO() { IdOpcion = 0, NombreOpcion = "00" });
+            lista.Insert(1, new OpcionDTO() { IdOpcion = 1, NombreOpcion = "01" });
+            lista.Insert(2, new OpcionDTO() { IdOpcion = 2, NombreOpcion = "02" });
+            lista.Insert(3, new OpcionDTO() { IdOpcion = 3, NombreOpcion = "03" });
+            lista.Insert(4, new OpcionDTO() { IdOpcion = 4, NombreOpcion = "04" });
+            lista.Insert(5, new OpcionDTO() { IdOpcion = 5, NombreOpcion = "05" });
+            lista.Insert(6, new OpcionDTO() { IdOpcion = 6, NombreOpcion = "06" });
+            lista.Insert(7, new OpcionDTO() { IdOpcion = 7, NombreOpcion = "07" });
+            lista.Insert(8, new OpcionDTO() { IdOpcion = 8, NombreOpcion = "08" });
+            lista.Insert(9, new OpcionDTO() { IdOpcion = 9, NombreOpcion = "09" });
+            lista.Insert(10, new OpcionDTO() { IdOpcion = 10, NombreOpcion = "10" });
+            lista.Insert(11, new OpcionDTO() { IdOpcion = 11, NombreOpcion = "11" });
+            lista.Insert(12, new OpcionDTO() { IdOpcion = 12, NombreOpcion = "12" });
+            lista.Insert(13, new OpcionDTO() { IdOpcion = 13, NombreOpcion = "13" });
+            lista.Insert(14, new OpcionDTO() { IdOpcion = 14, NombreOpcion = "14" });
+            lista.Insert(15, new OpcionDTO() { IdOpcion = 15, NombreOpcion = "15" });
+            lista.Insert(16, new OpcionDTO() { IdOpcion = 16, NombreOpcion = "16" });
+            lista.Insert(17, new OpcionDTO() { IdOpcion = 17, NombreOpcion = "17" });
+            lista.Insert(18, new OpcionDTO() { IdOpcion = 18, NombreOpcion = "18" });
+            lista.Insert(19, new OpcionDTO() { IdOpcion = 19, NombreOpcion = "19" });
+            lista.Insert(20, new OpcionDTO() { IdOpcion = 20, NombreOpcion = "20" });
+            lista.Insert(21, new OpcionDTO() { IdOpcion = 21, NombreOpcion = "21" });
+            lista.Insert(22, new OpcionDTO() { IdOpcion = 22, NombreOpcion = "22" });
+            lista.Insert(23, new OpcionDTO() { IdOpcion = 23, NombreOpcion = "23" });
             return lista;
         }
-        public IList<ItemDTO> fillMinutos()
+        public IList<OpcionDTO> fillMinutos()
         {
-            var lista = new List<ItemDTO>();
+            var lista = new List<OpcionDTO>();
             //lista.Insert(0, new ItemDTO() { id = -1, name = "" });
-            lista.Insert(0, new ItemDTO() { id = 0, name = "00" });
-            lista.Insert(1, new ItemDTO() { id = 5, name = "05" });
-            lista.Insert(2, new ItemDTO() { id = 10, name = "10" });
-            lista.Insert(3, new ItemDTO() { id = 15, name = "15" });
-            lista.Insert(4, new ItemDTO() { id = 20, name = "20" });
-            lista.Insert(5, new ItemDTO() { id = 25, name = "25" });
-            lista.Insert(6, new ItemDTO() { id = 30, name = "30" });
-            lista.Insert(7, new ItemDTO() { id = 35, name = "35" });
-            lista.Insert(8, new ItemDTO() { id = 40, name = "40" });
-            lista.Insert(9, new ItemDTO() { id = 45, name = "45" });
-            lista.Insert(10, new ItemDTO() { id = 50, name = "50" });
-            lista.Insert(11, new ItemDTO() { id = 55, name = "55" });
+            lista.Insert(0, new OpcionDTO() { IdOpcion = 0, NombreOpcion = "00" });
+            lista.Insert(1, new OpcionDTO() { IdOpcion = 5, NombreOpcion = "05" });
+            lista.Insert(2, new OpcionDTO() { IdOpcion = 10, NombreOpcion = "10" });
+            lista.Insert(3, new OpcionDTO() { IdOpcion = 15, NombreOpcion = "15" });
+            lista.Insert(4, new OpcionDTO() { IdOpcion = 20, NombreOpcion = "20" });
+            lista.Insert(5, new OpcionDTO() { IdOpcion = 25, NombreOpcion = "25" });
+            lista.Insert(6, new OpcionDTO() { IdOpcion = 30, NombreOpcion = "30" });
+            lista.Insert(7, new OpcionDTO() { IdOpcion = 35, NombreOpcion = "35" });
+            lista.Insert(8, new OpcionDTO() { IdOpcion = 40, NombreOpcion = "40" });
+            lista.Insert(9, new OpcionDTO() { IdOpcion = 45, NombreOpcion = "45" });
+            lista.Insert(10, new OpcionDTO() { IdOpcion = 50, NombreOpcion = "50" });
+            lista.Insert(11, new OpcionDTO() { IdOpcion = 55, NombreOpcion = "55" });
             return lista;
         }
         public IList<ItemDTO> fillSelectSINO()
