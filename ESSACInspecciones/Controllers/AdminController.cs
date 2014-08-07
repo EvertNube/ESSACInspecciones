@@ -665,13 +665,14 @@ namespace ESSACInspecciones.Controllers
         }
         public ActionResult Protocolo()
         {
+            OpcionRespuestaBL obj = new OpcionRespuestaBL();
             ViewBag.Horas = new BaseDTO().fillHoras().ToJSON();
             ViewBag.Minutos = new BaseDTO().fillMinutos().ToJSON();
-            ViewBag.Items_SelectSINO = new BaseDTO().fillSelectSINO().ToJSON();
-            ViewBag.Items_SelectBomba = new BaseDTO().fillSelectBomba().ToJSON();
-            ViewBag.Items_SelectNivelTanque = new BaseDTO().fillSelectNivelTanque().ToJSON();
-            ViewBag.Items_SelectAccesorios = new BaseDTO().fillSelectAccesorios().ToJSON();
-            ViewBag.Items_SelectPresiones = new BaseDTO().fillSelectPresiones().ToJSON();
+            ViewBag.Items_SelectSINO = obj.getOpcionRespuesta(3).ToJSON();//new BaseDTO().fillSelectSINO().ToJSON();
+            ViewBag.Items_SelectBomba = obj.getOpcionRespuesta(4).ToJSON(); //new BaseDTO().fillSelectBomba().ToJSON();
+            ViewBag.Items_SelectNivelTanque = obj.getOpcionRespuesta(5).ToJSON(); //new BaseDTO().fillSelectNivelTanque().ToJSON();
+            ViewBag.Items_SelectAccesorios = obj.getOpcionRespuesta(6).ToJSON(); //new BaseDTO().fillSelectAccesorios().ToJSON();
+            ViewBag.Items_SelectPresiones = obj.getOpcionRespuesta(7).ToJSON(); //new BaseDTO().fillSelectPresiones().ToJSON();
             return View();
         }
         public ActionResult AddProtocolo(ProtocoloDTO dto)

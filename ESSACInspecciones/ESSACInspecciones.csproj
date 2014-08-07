@@ -662,7 +662,6 @@
     <Content Include="Content\themes\base\minified\jquery.ui.tabs.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
     <Content Include="Content\themes\views\css\comunes.css" />
-    <Content Include="Content\themes\views\images\arrow_left.png" />
     <Content Include="Content\themes\views\images\circle_green.png" />
     <Content Include="Content\themes\views\images\circle_red.png" />
     <Content Include="Content\themes\views\images\circle_yellow.png" />
