@@ -42,7 +42,7 @@
                                                     '<input type="text" id="NombreAreaProtegida" class = "form-control" placeholder = "Ingrese el nombre" value="' + removeNull(protocolo.NombreAreaProtegida) + '" />' +
                                                 '</td>' +
                                                 '<td colspan="6">' +
-                                                    '<input type="text" id="Fecha" class = "form-control datepicker-input" data-provide = "datepicker" value="' + moment(formatDate(protocolo.Fecha)).format("DD/MM/YYYY") + '" />' +
+                                                    '<input type="text" id="Fecha" class = "form-control datepicker-input" data-provide = "datepicker" value="' + (protocolo.Fecha != null ? moment(formatDate(protocolo.Fecha)).format("DD/MM/YYYY") : "") + '" />' +
                                                 '</td>' +
                                             '</tr>' +
                                             '<tr>' +
@@ -195,7 +195,7 @@
 
             $(".step-content").append(strHtmlStepContent);
 
-            setRespuestas(protocolo.IdProtocolo);
+            setRespuestas(protocolo.IdProtocolo, protocolo.IdPlantilla, protocolo.IdInmueble);
             $("#IdProtocolo").val(protocolo.IdProtocolo);
             $("#IdPlantilla").val(protocolo.IdPlantilla);
             $("#IdInmueble").val(protocolo.IdInmueble);
@@ -206,9 +206,22 @@
                 var array_Descrip = []; $('.GroupDescripcion').each(function (index, item) { var value = $(".GroupDescripcion")[index].value; array_Descrip.push(value); });//Tag: Select
                 var array_Id = []; $('.GroupIdTableBody').each(function (index, item) { var value = $(".GroupIdTableBody")[index].value; array_Id.push(value); });
                 var IdProtocolo = $("#IdProtocolo").val();
-                //localStorage.setItem("respuestas_" + id, JSON.stringify(respuestas));
-                //return true;
-
+                var IdPlantilla = $("#IdPlantilla").val();
+                var IdInmueble = $("#IdInmueble").val();
+                /*
+                Descomentar para pruebas
+                var respuestas = {
+                    NombreAreaProtegida: $("#NombreAreaProtegida").val(),
+                    Direccion: $("#Direccion").val(),
+                    StrFecha: $("#Fecha").val(),
+                    HoraInicio: $("#HoraInicio").val(),
+                    MinutoInicio: $("#MinutoInicio").val(),
+                    GroupIdTableBody: array_Id,
+                    GroupDescripcion: array_Descrip
+                };
+                localStorage.setItem("respuestas_" + IdProtocolo + IdPlantilla + IdInmueble, JSON.stringify(respuestas));
+                return false;
+                */
                 if (conexion) {
                     var protocolo = {
                         IdProtocolo: IdProtocolo,
@@ -216,7 +229,7 @@
                         IdInmueble: $("#IdInmueble").val(),
                         NombreAreaProtegida: $("#NombreAreaProtegida").val(),
                         Direccion: $("#Direccion").val(),
-                        strFecha: $("#Fecha").val(),
+                        StrFecha: $("#Fecha").val(),
                         HoraInicio: $("#HoraInicio").val(),
                         MinutoInicio: $("#MinutoInicio").val(),
                         GroupIdTableBody: array_Id,
@@ -226,7 +239,7 @@
                     $.post("/Admin/SaveProtocolo", { protocolo: JSON.stringify(protocolo) }, function (data) {
                     }).done(function (data) {
                         if (data) {
-                            localStorage.removeItem("respuestas_" + IdProtocolo);
+                            localStorage.removeItem("respuestas_" + IdProtocolo + IdPlantilla + IdInmueble);
                             window.location = "/Admin/Protocolos";
                         } else {
                             console.log('Error al intentar guardar los datos.');
@@ -237,17 +250,27 @@
                     });
                 } else {
                     var respuestas = {
+                        NombreAreaProtegida: $("#NombreAreaProtegida").val(),
+                        Direccion: $("#Direccion").val(),
+                        StrFecha: $("#Fecha").val(),
+                        HoraInicio: $("#HoraInicio").val(),
+                        MinutoInicio: $("#MinutoInicio").val(),
                         GroupIdTableBody: array_Id,
                         GroupDescripcion: array_Descrip
                     };
-                    localStorage.setItem("respuestas_" + IdProtocolo, JSON.stringify(respuestas));
+                    localStorage.setItem("respuestas_" + IdProtocolo + IdPlantilla + IdInmueble, JSON.stringify(respuestas));
                     alert("El protocolo se ha guardado temporalmente. Por favor, conectese a Internet para que lo datos sean guardados.");
                 }
             });
         });
-        function setRespuestas(id) {
-            if (localStorage.getItem("respuestas_" + id)) {
-                var respuestas = {}; respuestas = JSON.parse(localStorage.getItem("respuestas_" + id));
+        function setRespuestas(idProtocolo, idPlantilla, idInmueble) {
+            if (localStorage.getItem("respuestas_" + idProtocolo + idPlantilla + idInmueble)) {
+                var respuestas = {}; respuestas = JSON.parse(localStorage.getItem("respuestas_" + idProtocolo + idPlantilla + idInmueble));
+                $("#NombreAreaProtegida").val(respuestas.NombreAreaProtegida);
+                $("#Direccion").val(respuestas.Direccion);
+                $("#Fecha").val(respuestas.StrFecha);
+                $("#HoraInicio").val(respuestas.HoraInicio);
+                $("#MinutoInicio").val(respuestas.MinutoInicio);
                 for (var i = 0; i < respuestas.GroupIdTableBody.length; i++) {
                     $("#tag" + respuestas.GroupIdTableBody[i]).val(respuestas.GroupDescripcion[i]);
                 }

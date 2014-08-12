@@ -67,21 +67,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Protocolo">
-      <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.Protocolo">
-        <MappingFragment StoreEntitySet="Protocolo">
-          <ScalarProperty Name="IdProtocolo" ColumnName="IdProtocolo" />
-          <ScalarProperty Name="IdPlantilla" ColumnName="IdPlantilla" />
-          <ScalarProperty Name="IdInmueble" ColumnName="IdInmueble" />
-          <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
-          <ScalarProperty Name="IdEstado" ColumnName="IdEstado" />
-          <ScalarProperty Name="NombreAreaProtegida" ColumnName="NombreAreaProtegida" />
-          <ScalarProperty Name="Fecha" ColumnName="Fecha" />
-          <ScalarProperty Name="Direccion" ColumnName="Direccion" />
-          <ScalarProperty Name="Active" ColumnName="Active" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="Respuesta">
       <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.Respuesta">
         <MappingFragment StoreEntitySet="Respuesta">
@@ -257,5 +242,32 @@
         </ComplexTypeMapping>
       </ResultMapping>
     </FunctionImportMapping>
+    <EntitySetMapping Name="OpcionRespuesta">
+      <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.OpcionRespuesta">
+        <MappingFragment StoreEntitySet="OpcionRespuesta">
+          <ScalarProperty Name="Active" ColumnName="Active" />
+          <ScalarProperty Name="Orden" ColumnName="Orden" />
+          <ScalarProperty Name="Puntaje" ColumnName="Puntaje" />
+          <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+          <ScalarProperty Name="IdTipoRespuesta" ColumnName="IdTipoRespuesta" />
+          <ScalarProperty Name="IdOpcion" ColumnName="IdOpcion" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Protocolo">
+      <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.Protocolo">
+        <MappingFragment StoreEntitySet="Protocolo">
+          <ScalarProperty Name="Active" ColumnName="Active" />
+          <ScalarProperty Name="Direccion" ColumnName="Direccion" />
+          <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+          <ScalarProperty Name="NombreAreaProtegida" ColumnName="NombreAreaProtegida" />
+          <ScalarProperty Name="IdEstado" ColumnName="IdEstado" />
+          <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+          <ScalarProperty Name="IdInmueble" ColumnName="IdInmueble" />
+          <ScalarProperty Name="IdPlantilla" ColumnName="IdPlantilla" />
+          <ScalarProperty Name="IdProtocolo" ColumnName="IdProtocolo" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

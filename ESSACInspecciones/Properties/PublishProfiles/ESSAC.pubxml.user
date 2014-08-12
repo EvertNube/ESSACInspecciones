@@ -16,13 +16,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/31/2014 12:55:01</publishTime>
     </File>
     <File Include="bin/ESSACInspecciones.Core.dll">
-      <publishTime>07/31/2014 18:15:28</publishTime>
+      <publishTime>08/05/2014 12:05:10</publishTime>
     </File>
     <File Include="bin/ESSACInspecciones.Data.dll">
       <publishTime>07/31/2014 18:15:26</publishTime>
     </File>
     <File Include="bin/ESSACInspecciones.dll">
-      <publishTime>07/31/2014 18:15:29</publishTime>
+      <publishTime>08/05/2014 14:46:46</publishTime>
     </File>
     <File Include="bin/ESSACInspecciones.Helpers.dll">
       <publishTime>07/31/2014 18:15:26</publishTime>
@@ -1866,14 +1866,26 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="Content/themes/views/css/comunes.css">
       <publishTime>07/31/2014 12:54:55</publishTime>
     </File>
+    <File Include="Content/themes/views/images/arrow_left.png">
+      <publishTime>07/31/2014 12:54:55</publishTime>
+    </File>
     <File Include="Content/themes/views/images/circle_green.jpg">
       <publishTime>07/31/2014 17:58:56</publishTime>
+    </File>
+    <File Include="Content/themes/views/images/circle_green.png">
+      <publishTime>08/05/2014 12:16:10</publishTime>
     </File>
     <File Include="Content/themes/views/images/circle_red.jpg">
       <publishTime>07/31/2014 17:58:46</publishTime>
     </File>
+    <File Include="Content/themes/views/images/circle_red.png">
+      <publishTime>08/05/2014 12:16:14</publishTime>
+    </File>
     <File Include="Content/themes/views/images/circle_yellow.jpg">
       <publishTime>07/31/2014 17:59:08</publishTime>
+    </File>
+    <File Include="Content/themes/views/images/circle_yellow.png">
+      <publishTime>08/05/2014 12:08:34</publishTime>
     </File>
     <File Include="Content/themes/views/images/loading-blue.gif">
       <publishTime>07/31/2014 12:54:55</publishTime>
@@ -1969,10 +1981,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/31/2014 12:54:56</publishTime>
     </File>
     <File Include="Views/Admin/Protocolo.cshtml">
-      <publishTime>08/01/2014 14:37:13</publishTime>
+      <publishTime>08/05/2014 12:00:57</publishTime>
     </File>
     <File Include="Views/Admin/Protocolos.cshtml">
-      <publishTime>07/31/2014 18:13:35</publishTime>
+      <publishTime>08/05/2014 14:42:46</publishTime>
     </File>
     <File Include="Views/Admin/Protocolo_053.cshtml">
       <publishTime>07/11/2014 11:44:02</publishTime>
@@ -2047,7 +2059,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/31/2014 12:54:56</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>07/31/2014 18:17:08</publishTime>
+      <publishTime>08/05/2014 14:46:47</publishTime>
     </File>
   </ItemGroup>
 </Project>

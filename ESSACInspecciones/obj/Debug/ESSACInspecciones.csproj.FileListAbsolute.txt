@@ -86,6 +86,7 @@ D:\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\ESSACInspecc
 D:\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\ESSACInspecciones\obj\Debug\ESSACInspecciones.csprojResolveAssemblyReference.cache
 D:\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\ESSACInspecciones\obj\Debug\ESSACInspecciones.dll
 D:\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\ESSACInspecciones\obj\Debug\ESSACInspecciones.pdb
+D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones\obj\Debug\ESSACInspecciones.csprojResolveAssemblyReference.cache
 D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones\bin\ESSACInspecciones.dll.config
 D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones\bin\ESSACInspecciones.dll
 D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones\bin\ESSACInspecciones.pdb
@@ -127,6 +128,5 @@ D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones\bin\System.We
 D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones\bin\System.Web.WebPages.Deployment.xml
 D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones\bin\System.Web.WebPages.Razor.xml
 D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones\bin\ESSACInspecciones.Data.pdb
-D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones\obj\Debug\ESSACInspecciones.csprojResolveAssemblyReference.cache
 D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones\obj\Debug\ESSACInspecciones.dll
 D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones\obj\Debug\ESSACInspecciones.pdb
