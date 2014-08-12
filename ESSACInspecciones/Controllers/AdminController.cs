@@ -179,7 +179,7 @@ namespace ESSACInspecciones.Controllers
         public ActionResult Cliente(int? id = null)
         {
             if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
-            if (!this.isAdministrator()) { return RedirectToAction("Index"); }
+            //if (!this.isAdministrator()) { return RedirectToAction("Index"); }
             ClienteBL objBL = new ClienteBL();
             ViewBag.IdCliente = id;
             var objSent = TempData["Cliente"];
