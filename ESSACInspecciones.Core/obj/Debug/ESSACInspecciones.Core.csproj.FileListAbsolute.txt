@@ -31,3 +31,14 @@ D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones.Core\bin\Debu
 D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones.Core\bin\Debug\EntityFramework.xml
 D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones.Core\obj\Debug\ESSACInspecciones.Core.dll
 D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones.Core\obj\Debug\ESSACInspecciones.Core.pdb
+D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Core\bin\Debug\ESSACInspecciones.Core.dll
+D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Core\bin\Debug\ESSACInspecciones.Core.pdb
+D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Core\bin\Debug\EntityFramework.dll
+D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Core\bin\Debug\ESSACInspecciones.Data.dll
+D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Core\bin\Debug\ESSACInspecciones.Helpers.dll
+D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Core\bin\Debug\ESSACInspecciones.Data.pdb
+D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Core\bin\Debug\ESSACInspecciones.Helpers.pdb
+D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Core\bin\Debug\EntityFramework.xml
+D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Core\obj\Debug\ESSACInspecciones.Core.csprojResolveAssemblyReference.cache
+D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Core\obj\Debug\ESSACInspecciones.Core.dll
+D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Core\obj\Debug\ESSACInspecciones.Core.pdb

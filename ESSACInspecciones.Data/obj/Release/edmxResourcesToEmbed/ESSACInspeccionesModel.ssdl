@@ -52,6 +52,17 @@
     <Property Name="Direccion" Type="nvarchar" MaxLength="500" />
     <Property Name="Active" Type="bit" Nullable="false" />
   </EntityType>
+  <EntityType Name="OpcionRespuesta">
+    <Key>
+      <PropertyRef Name="IdOpcion" />
+    </Key>
+    <Property Name="IdOpcion" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="IdTipoRespuesta" Type="int" Nullable="false" />
+    <Property Name="Nombre" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="Puntaje" Type="int" Nullable="false" />
+    <Property Name="Orden" Type="int" Nullable="false" />
+    <Property Name="Active" Type="bit" Nullable="false" />
+  </EntityType>
   <EntityType Name="Plantilla">
     <Key>
       <PropertyRef Name="IdPlantilla" />
@@ -216,6 +227,18 @@
       </Principal>
       <Dependent Role="Inmueble">
         <PropertyRef Name="IdCliente" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_OpcionRespuesta_TipoTag">
+    <End Role="TipoTag" Type="Self.TipoTag" Multiplicity="1" />
+    <End Role="OpcionRespuesta" Type="Self.OpcionRespuesta" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TipoTag">
+        <PropertyRef Name="IdTipoTag" />
+      </Principal>
+      <Dependent Role="OpcionRespuesta">
+        <PropertyRef Name="IdTipoRespuesta" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -470,6 +493,7 @@
     <EntitySet Name="Estado" EntityType="Self.Estado" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="EstadoProtocolo" EntityType="Self.EstadoProtocolo" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Inmueble" EntityType="Self.Inmueble" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="OpcionRespuesta" EntityType="Self.OpcionRespuesta" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Plantilla" EntityType="Self.Plantilla" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Protocolo" EntityType="Self.Protocolo" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Responsables_Tarea" EntityType="Self.Responsables_Tarea" Schema="dbo" store:Type="Tables" />
@@ -490,6 +514,10 @@
     <AssociationSet Name="FK_Inmueble_Cliente" Association="Self.FK_Inmueble_Cliente">
       <End Role="Cliente" EntitySet="Cliente" />
       <End Role="Inmueble" EntitySet="Inmueble" />
+    </AssociationSet>
+    <AssociationSet Name="FK_OpcionRespuesta_TipoTag" Association="Self.FK_OpcionRespuesta_TipoTag">
+      <End Role="TipoTag" EntitySet="TipoTag" />
+      <End Role="OpcionRespuesta" EntitySet="OpcionRespuesta" />
     </AssociationSet>
     <AssociationSet Name="FK_Protocolo_EstadoProtocolo" Association="Self.FK_Protocolo_EstadoProtocolo">
       <End Role="EstadoProtocolo" EntitySet="EstadoProtocolo" />

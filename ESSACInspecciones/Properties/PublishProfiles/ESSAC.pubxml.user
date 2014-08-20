@@ -16,13 +16,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/31/2014 12:55:01</publishTime>
     </File>
     <File Include="bin/ESSACInspecciones.Core.dll">
-      <publishTime>08/05/2014 12:05:10</publishTime>
+      <publishTime>08/12/2014 15:49:52</publishTime>
     </File>
     <File Include="bin/ESSACInspecciones.Data.dll">
-      <publishTime>07/31/2014 18:15:26</publishTime>
+      <publishTime>08/12/2014 15:49:51</publishTime>
     </File>
     <File Include="bin/ESSACInspecciones.dll">
-      <publishTime>08/05/2014 14:46:46</publishTime>
+      <publishTime>08/12/2014 15:49:53</publishTime>
     </File>
     <File Include="bin/ESSACInspecciones.Helpers.dll">
       <publishTime>07/31/2014 18:15:26</publishTime>
@@ -1981,7 +1981,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/31/2014 12:54:56</publishTime>
     </File>
     <File Include="Views/Admin/Protocolo.cshtml">
-      <publishTime>08/05/2014 12:00:57</publishTime>
+      <publishTime>08/07/2014 17:17:33</publishTime>
     </File>
     <File Include="Views/Admin/Protocolos.cshtml">
       <publishTime>08/05/2014 14:42:46</publishTime>
@@ -2059,7 +2059,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/31/2014 12:54:56</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>08/05/2014 14:46:47</publishTime>
+      <publishTime>08/12/2014 16:45:04</publishTime>
     </File>
   </ItemGroup>
 </Project>

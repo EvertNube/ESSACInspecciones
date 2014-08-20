@@ -12,3 +12,7 @@ D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones.Helpers\bin\D
 D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones.Helpers\bin\Debug\ESSACInspecciones.Helpers.pdb
 D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones.Helpers\obj\Debug\ESSACInspecciones.Helpers.dll
 D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones.Helpers\obj\Debug\ESSACInspecciones.Helpers.pdb
+D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Helpers\bin\Debug\ESSACInspecciones.Helpers.dll
+D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Helpers\bin\Debug\ESSACInspecciones.Helpers.pdb
+D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Helpers\obj\Debug\ESSACInspecciones.Helpers.dll
+D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Helpers\obj\Debug\ESSACInspecciones.Helpers.pdb

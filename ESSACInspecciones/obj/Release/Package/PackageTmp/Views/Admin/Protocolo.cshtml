@@ -200,6 +200,7 @@
             $("#IdPlantilla").val(protocolo.IdPlantilla);
             $("#IdInmueble").val(protocolo.IdInmueble);
 
+            calcularPuntaje();
             ///////////////////////////////////////////////////
             $("#btnGuardar").on("click", function () {
                 var conexion = hostReachable();
@@ -262,6 +263,9 @@
                     alert("El protocolo se ha guardado temporalmente. Por favor, conectese a Internet para que lo datos sean guardados.");
                 }
             });
+            $(".GroupDescripcion").not("input").on("change", function () {
+                calcularPuntaje();
+            });
         });
         function setRespuestas(idProtocolo, idPlantilla, idInmueble) {
             if (localStorage.getItem("respuestas_" + idProtocolo + idPlantilla + idInmueble)) {
@@ -303,8 +307,8 @@
             }
             select = '<select id="' + id + '" class = "' + clase + '" style = "width: auto;">';
             $.each(lista, function (x, item) {
-                if (item.id == respuesta) selected = "selected"; else selected = "";
-                select += '<option value="' + item.id + '" ' + selected + '>' + item.name + '</option>';
+                if (item.IdOpcion == respuesta) selected = "selected"; else selected = "";
+                select += '<option value="' + item.IdOpcion + '" data-puntaje="' + item.Puntaje + '" ' + selected + '>' + item.NombreOpcion + '</option>';
             });
             select += '</select>';
             return select;
@@ -316,6 +320,14 @@
         function formatDate(stringDate) {
             var date = new Date(parseInt(stringDate.substr(6)));
             return new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes())
+        }
+        function calcularPuntaje() {
+            var elements = $(".GroupDescripcion").not("input").toArray();//$("#tag5 option:selected").data("puntos")
+            var score = 0;
+            $.each(elements, function (x, item) {
+                score += $(item).find("option:selected").data("puntaje");
+            });
+            $("#puntuacion").val(score);
         }
     </script>
 
@@ -361,6 +373,17 @@
                                         </div>
                                         <div class="step-content">
 
+                                        </div>
+                                    </section>
+                                    <section class="panel panel-default">
+                                        <header class="panel-heading font-bold">Puntuación</header>
+                                        <div class="panel-body">
+                                            <div class="form-inline">
+                                                <div class="form-group">
+                                                    <input type="text" id="puntuacion" class="form-control btn-rounded" value="" />
+                                                </div>
+                                                @*<button type="button" id="btnContadorEstado" class="btn btn-default  btn-rounded"><i class="fa fa-search"></i></button>*@
+                                            </div>
                                         </div>
                                     </section>
                                     @*@if (ViewBag.EsAdmin && Model != null && Model.IdProtocolo > 0)

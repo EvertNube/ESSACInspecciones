@@ -21,3 +21,11 @@ D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones.Data\bin\Debu
 D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones.Data\bin\Debug\EntityFramework.xml
 D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones.Data\obj\Debug\ESSACInspecciones.Data.dll
 D:\Proyectos\ESSAC_Repositorio\ESSACInspecciones\ESSACInspecciones.Data\obj\Debug\ESSACInspecciones.Data.pdb
+D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Data\bin\Debug\ESSACInspecciones.Data.dll.config
+D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Data\bin\Debug\ESSACInspecciones.Data.dll
+D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Data\bin\Debug\ESSACInspecciones.Data.pdb
+D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Data\bin\Debug\EntityFramework.dll
+D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Data\bin\Debug\EntityFramework.xml
+D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Data\obj\Debug\ESSACInspecciones.Data.csprojResolveAssemblyReference.cache
+D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Data\obj\Debug\ESSACInspecciones.Data.dll
+D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Data\obj\Debug\ESSACInspecciones.Data.pdb
