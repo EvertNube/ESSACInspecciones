@@ -47,6 +47,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cargo.cs">
+      <DependentUpon>ESSACInspeccionesModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Cliente.cs">
       <DependentUpon>ESSACInspeccionesModel.tt</DependentUpon>
     </Compile>
@@ -117,10 +120,16 @@
     <Compile Include="SP_GetTareas_Result.cs">
       <DependentUpon>ESSACInspeccionesModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="TableHeader.cs">
+      <DependentUpon>ESSACInspeccionesModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Tarea.cs">
       <DependentUpon>ESSACInspeccionesModel.tt</DependentUpon>
     </Compile>
     <Compile Include="TipoCelda.cs">
+      <DependentUpon>ESSACInspeccionesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TipoSeccion.cs">
       <DependentUpon>ESSACInspeccionesModel.tt</DependentUpon>
     </Compile>
     <Compile Include="TipoTag.cs">

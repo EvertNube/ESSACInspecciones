@@ -16,15 +16,15 @@ namespace ESSACInspecciones.Data
     {
         public Plantilla()
         {
-            this.Seccion = new HashSet<Seccion>();
             this.Protocolo = new HashSet<Protocolo>();
+            this.Seccion = new HashSet<Seccion>();
         }
     
         public int IdPlantilla { get; set; }
         public string Nombre { get; set; }
         public bool Active { get; set; }
     
-        public virtual ICollection<Seccion> Seccion { get; set; }
         public virtual ICollection<Protocolo> Protocolo { get; set; }
+        public virtual ICollection<Seccion> Seccion { get; set; }
     }
 }

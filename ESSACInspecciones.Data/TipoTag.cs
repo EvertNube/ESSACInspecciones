@@ -16,15 +16,15 @@ namespace ESSACInspecciones.Data
     {
         public TipoTag()
         {
-            this.SeccionBody = new HashSet<SeccionBody>();
             this.OpcionRespuesta = new HashSet<OpcionRespuesta>();
+            this.SeccionBody = new HashSet<SeccionBody>();
         }
     
         public int IdTipoTag { get; set; }
         public string Nombre { get; set; }
         public bool Active { get; set; }
     
-        public virtual ICollection<SeccionBody> SeccionBody { get; set; }
         public virtual ICollection<OpcionRespuesta> OpcionRespuesta { get; set; }
+        public virtual ICollection<SeccionBody> SeccionBody { get; set; }
     }
 }

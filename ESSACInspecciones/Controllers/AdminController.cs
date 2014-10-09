@@ -105,11 +105,10 @@ namespace ESSACInspecciones.Controllers
             if (!this.isAdministrator() && id != currentUser.IdUsuario) { return RedirectToAction("Index"); }
             if (id == 1 && !this.isSuperAdministrator()) { return RedirectToAction("Index"); }
             UsuariosBL usuariosBL = new UsuariosBL();
-            IEnumerable<RolDTO> roles = usuariosBL.getRoles();
-            var rolesList = roles.ToList();
-            rolesList.Insert(0, new RolDTO() { IdRol = 0, Nombre = "Seleccione un Rol" });
-            ViewBag.Roles = rolesList.AsEnumerable();
-            //ViewBag.Cargos = usuariosBL.getCargos();
+            IList<RolDTO> roles = usuariosBL.getRoles();
+            //var rolesList = roles.ToList();
+            roles.Insert(0, new RolDTO() { IdRol = 0, Nombre = "Seleccione un Rol" });
+            ViewBag.Roles = roles;//.AsEnumerable();
             var objSent = TempData["Usuario"];
             if (objSent != null) { TempData["Usuario"] = null; return View(objSent); }
             if (id != null)

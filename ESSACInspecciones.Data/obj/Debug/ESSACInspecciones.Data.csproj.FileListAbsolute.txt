@@ -26,6 +26,5 @@ D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Data\bin\Debug\ESSA
 D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Data\bin\Debug\ESSACInspecciones.Data.pdb
 D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Data\bin\Debug\EntityFramework.dll
 D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Data\bin\Debug\EntityFramework.xml
-D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Data\obj\Debug\ESSACInspecciones.Data.csprojResolveAssemblyReference.cache
 D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Data\obj\Debug\ESSACInspecciones.Data.dll
 D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Data\obj\Debug\ESSACInspecciones.Data.pdb

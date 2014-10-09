@@ -28,5 +28,6 @@ namespace ESSACInspecciones.Core.DTO
         //[Required]
         public int IdRol { get; set; }
         public int? IdCargo { get; set; }
+        public int IdRolUsuario { get; set; }
     }
 }

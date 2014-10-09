@@ -12,22 +12,17 @@ namespace ESSACInspecciones.Data
     using System;
     using System.Collections.Generic;
     
-    public partial class Inmueble
+    public partial class Cargo
     {
-        public Inmueble()
+        public Cargo()
         {
-            this.Protocolo = new HashSet<Protocolo>();
-            this.Tarea = new HashSet<Tarea>();
+            this.Usuario = new HashSet<Usuario>();
         }
     
-        public int IdInmueble { get; set; }
-        public int IdCliente { get; set; }
+        public int IdCargo { get; set; }
         public string Nombre { get; set; }
-        public string Direccion { get; set; }
         public bool Active { get; set; }
     
-        public virtual Cliente Cliente { get; set; }
-        public virtual ICollection<Protocolo> Protocolo { get; set; }
-        public virtual ICollection<Tarea> Tarea { get; set; }
+        public virtual ICollection<Usuario> Usuario { get; set; }
     }
 }

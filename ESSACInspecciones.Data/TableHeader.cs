@@ -12,22 +12,15 @@ namespace ESSACInspecciones.Data
     using System;
     using System.Collections.Generic;
     
-    public partial class Inmueble
+    public partial class TableHeader
     {
-        public Inmueble()
-        {
-            this.Protocolo = new HashSet<Protocolo>();
-            this.Tarea = new HashSet<Tarea>();
-        }
-    
-        public int IdInmueble { get; set; }
-        public int IdCliente { get; set; }
-        public string Nombre { get; set; }
-        public string Direccion { get; set; }
+        public int IdTableHeader { get; set; }
+        public int IdSeccion { get; set; }
+        public string Descripcion { get; set; }
+        public int Rowspan { get; set; }
+        public int Colspan { get; set; }
+        public int NumeroFila { get; set; }
+        public int Orden { get; set; }
         public bool Active { get; set; }
-    
-        public virtual Cliente Cliente { get; set; }
-        public virtual ICollection<Protocolo> Protocolo { get; set; }
-        public virtual ICollection<Tarea> Tarea { get; set; }
     }
 }

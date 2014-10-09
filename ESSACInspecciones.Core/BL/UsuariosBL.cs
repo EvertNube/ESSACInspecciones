@@ -106,7 +106,7 @@ namespace ESSACInspecciones.Core.BL
                     usuario.Email = user.Email;
                     usuario.Cuenta = user.Cuenta;
                     usuario.Pass = Encrypt.GetCrypt(user.Pass);
-                    usuario.IdRol = user.IdRol;//>= 2 ? user.IdRol : 3;
+                    usuario.IdRol = user.IdRolUsuario;//>= 2 ? user.IdRol : 3;
                     //usuario.IdCargo = user.IdCargo;
                     usuario.Estado = true;
                     usuario.FechaRegistro = DateTime.Now;
@@ -137,12 +137,26 @@ namespace ESSACInspecciones.Core.BL
                 return false;
             }
         }
-        public IEnumerable<RolDTO> getRoles()
+        //public IEnumerable<RolDTO> getRoles()
+        //{
+        //    using (var context = getContext())
+        //    {
+        //        var result = from r in context.Rol
+        //                     where r.IdRol != CONSTANTES.SUPER_ADMIN_ROL
+        //                     select new RolDTO
+        //                     {
+        //                         IdRol = r.IdRol,
+        //                         Nombre = r.Nombre
+        //                     };
+        //        return result.ToList<RolDTO>();
+        //    }
+        //}
+        public IList<RolDTO> getRoles()
         {
             using (var context = getContext())
             {
                 var result = from r in context.Rol
-                             where r.IdRol != CONSTANTES.SUPER_ADMIN_ROL
+                             //where r.Activo == true//r.IdRol != CONSTANTES.SUPER_ADMIN_ROL
                              select new RolDTO
                              {
                                  IdRol = r.IdRol,
@@ -204,6 +218,27 @@ namespace ESSACInspecciones.Core.BL
             return false;
         }
 
+        //public UsuarioDTO getUsuario(int id)
+        //{
+        //    using (var context = getContext())
+        //    {
+        //        var result = from r in context.Usuario
+        //                     where r.IdUsuario == id
+        //                     select new UsuarioDTO
+        //                     {
+        //                         Cuenta = r.Cuenta,
+        //                         Email = r.Email,
+        //                         Active = r.Estado,
+        //                         IdRol = r.IdRol,// ?? 0,
+        //                         IdCargo = r.IdCargo ?? 0,
+        //                         IdUsuario = r.IdUsuario,
+        //                         Nombre = r.Nombre,
+        //                         InicialesNombre = r.InicialesNombre,
+        //                         Pass = r.Pass
+        //                     };
+        //        return result.SingleOrDefault();
+        //    }
+        //}
         public UsuarioDTO getUsuario(int id)
         {
             using (var context = getContext())
@@ -216,7 +251,7 @@ namespace ESSACInspecciones.Core.BL
                                  Email = r.Email,
                                  Active = r.Estado,
                                  IdRol = r.IdRol,// ?? 0,
-                                 IdCargo = r.IdCargo ?? 0,
+                                 IdRolUsuario = r.IdRol,
                                  IdUsuario = r.IdUsuario,
                                  Nombre = r.Nombre,
                                  InicialesNombre = r.InicialesNombre,
@@ -238,13 +273,13 @@ namespace ESSACInspecciones.Core.BL
                         usuario.Nombre = user.Nombre;
                         usuario.InicialesNombre = user.InicialesNombre;
                         usuario.Email = user.Email;
-                        usuario.IdRol = user.IdRol;// >= 2 ? user.IdRol : 3;
+                        usuario.IdRol = user.IdRolUsuario;// >= 2 ? user.IdRol : 3;
                         //usuario.IdCargo = user.IdCargo;
                         usuario.Cuenta = user.Cuenta;
                         usuario.Estado = user.Active;
                         if (!String.IsNullOrWhiteSpace(passUser) && !String.IsNullOrWhiteSpace(passChange))
                         {
-                            if ((currentUser.IdRol <= 2 || currentUser.IdUsuario == user.IdUsuario)
+                            if ((currentUser.IdRolUsuario <= 2 || currentUser.IdUsuario == user.IdUsuario)
                                 && Encrypt.comparetoCrypt(passUser, currentUser.Pass))
                             {
                                 usuario.Pass = Encrypt.GetCrypt(passChange);

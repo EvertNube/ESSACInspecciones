@@ -1,5 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Schema Namespace="ESSAC.InspeccionesDbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Cargo">
+    <Key>
+      <PropertyRef Name="IdCargo" />
+    </Key>
+    <Property Name="IdCargo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Nombre" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="Active" Type="bit" Nullable="false" />
+  </EntityType>
   <EntityType Name="Cliente">
     <Key>
       <PropertyRef Name="IdCliente" />
@@ -159,6 +167,19 @@
     <Property Name="IdEstado" Type="int" Nullable="false" />
     <Property Name="Active" Type="bit" Nullable="false" />
   </EntityType>
+  <EntityType Name="TableHeader">
+    <Key>
+      <PropertyRef Name="IdTableHeader" />
+    </Key>
+    <Property Name="IdTableHeader" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="IdSeccion" Type="int" Nullable="false" />
+    <Property Name="Descripcion" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="Rowspan" Type="int" Nullable="false" />
+    <Property Name="Colspan" Type="int" Nullable="false" />
+    <Property Name="NumeroFila" Type="int" Nullable="false" />
+    <Property Name="Orden" Type="int" Nullable="false" />
+    <Property Name="Active" Type="bit" Nullable="false" />
+  </EntityType>
   <EntityType Name="Tarea">
     <Key>
       <PropertyRef Name="IdTarea" />
@@ -181,6 +202,14 @@
     </Key>
     <Property Name="IdTipoCelda" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="Nombre" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Active" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="TipoSeccion">
+    <Key>
+      <PropertyRef Name="IdTipoSeccion" />
+    </Key>
+    <Property Name="IdTipoSeccion" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Nombre" Type="nvarchar" MaxLength="100" Nullable="false" />
     <Property Name="Active" Type="bit" Nullable="false" />
   </EntityType>
   <EntityType Name="TipoTag">
@@ -458,6 +487,18 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_Usuario_Cargo">
+    <End Role="Cargo" Type="Self.Cargo" Multiplicity="0..1" />
+    <End Role="Usuario" Type="Self.Usuario" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Cargo">
+        <PropertyRef Name="IdCargo" />
+      </Principal>
+      <Dependent Role="Usuario">
+        <PropertyRef Name="IdCargo" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_Usuario_Rol">
     <End Role="Rol" Type="Self.Rol" Multiplicity="1" />
     <End Role="Usuario" Type="Self.Usuario" Multiplicity="*" />
@@ -488,6 +529,7 @@
     <Parameter Name="FechaFin" Type="date" Mode="In" />
   </Function>
   <EntityContainer Name="ESSACInspeccionesDbModelStoreContainer">
+    <EntitySet Name="Cargo" EntityType="Self.Cargo" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Cliente" EntityType="Self.Cliente" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="ContactoCliente" EntityType="Self.ContactoCliente" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Estado" EntityType="Self.Estado" Schema="dbo" store:Type="Tables" />
@@ -503,8 +545,10 @@
     <EntitySet Name="SeccionBody" EntityType="Self.SeccionBody" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Servicio" EntityType="Self.Servicio" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="ServicioEstado" EntityType="Self.ServicioEstado" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="TableHeader" EntityType="Self.TableHeader" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Tarea" EntityType="Self.Tarea" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="TipoCelda" EntityType="Self.TipoCelda" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="TipoSeccion" EntityType="Self.TipoSeccion" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="TipoTag" EntityType="Self.TipoTag" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Usuario" EntityType="Self.Usuario" Schema="dbo" store:Type="Tables" />
     <AssociationSet Name="FK_ContactoCliente_Cliente" Association="Self.FK_ContactoCliente_Cliente">
@@ -590,6 +634,10 @@
     <AssociationSet Name="FK_Tarea_Servicio" Association="Self.FK_Tarea_Servicio">
       <End Role="Servicio" EntitySet="Servicio" />
       <End Role="Tarea" EntitySet="Tarea" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Usuario_Cargo" Association="Self.FK_Usuario_Cargo">
+      <End Role="Cargo" EntitySet="Cargo" />
+      <End Role="Usuario" EntitySet="Usuario" />
     </AssociationSet>
     <AssociationSet Name="FK_Usuario_Rol" Association="Self.FK_Usuario_Rol">
       <End Role="Rol" EntitySet="Rol" />
