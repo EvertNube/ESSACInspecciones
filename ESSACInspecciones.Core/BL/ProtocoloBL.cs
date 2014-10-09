@@ -13,32 +13,31 @@ namespace ESSACInspecciones.Core.BL
     public class ProtocoloBL : Base
     {
         #region CRUD Tarea
-        //public List<ProtocoloDTO> getProtocolos(int idUsuario, int idCliente)//, int idInmueble)
-        //{
-        //    using (var context = getContext())
-        //    {
-        //        var Inmuebles = context.Inmueble.Where(x => x.IdCliente == idCliente);
-        //        List<ProtocoloDTO> listaProtocolos = new List<ProtocoloDTO>();
-        //        foreach (var item in Inmuebles)
-        //        {
-        //            var result = context.SP_GetPlantillas(idUsuario, item.IdInmueble)
-        //            .Select(x => new ProtocoloDTO
-        //            {
-        //                IdProtocolo = x.IdProtocolo,
-        //                IdPlantilla = x.IdPlantilla,
-        //                IdInmueble = x.IdInmueble,
-        //                Plantilla = new PlantillaDTO { Nombre = x.Nombre },
-        //                Estado = new EstadoDTO { NombreEstado = x.NombreEstado },
-        //                Active = x.Active
-        //            }).ToList();
-        //            foreach (var protocolo in result)
-        //            {
-        //                listaProtocolos.Add(protocolo);
-        //            }
-        //        }
-        //        return listaProtocolos;
-        //    }
-        //}
+        public ProtocoloDTO getInfoProtocolo(int idInmueble, int? idProtocolo, int? idPlantilla)
+        {
+            using (var context = getContext())
+            {
+                ProtocoloDTO result = new ProtocoloDTO();
+                if (idProtocolo != null && idProtocolo != 0)
+                {
+                    result = (context.Protocolo.Where(x => x.IdProtocolo == idProtocolo).AsEnumerable()
+                    .Select(r => new ProtocoloDTO
+                    {
+                        IdProtocolo = r.IdProtocolo,
+                        IdPlantilla = r.IdPlantilla,
+                        IdInmueble = r.IdInmueble,
+                        NombreAreaProtegida = r.NombreAreaProtegida,
+                        Fecha = r.Fecha,
+                        HoraInicio = Convert.ToInt32(r.Fecha.Value.ToString("HH")),
+                        MinutoInicio = Convert.ToInt32(r.Fecha.Value.ToString("mm")),
+                        Active = r.Active,
+                        TotalPaginas = r.Plantilla.Seccion.GroupBy(x => x.Pagina).Count(),
+                        Plantilla = new PlantillaDTO { Nombre = r.Plantilla.Nombre },
+                    })).SingleOrDefault();
+                }
+                return result;
+            }
+        }
 
         public List<ProtocoloDTO> getProtocolos(int idUsuario, int idInmueble)
         {

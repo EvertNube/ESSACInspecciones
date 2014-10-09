@@ -672,6 +672,7 @@ namespace ESSACInspecciones.Controllers
             ViewBag.Items_SelectNivelTanque = obj.getOpcionRespuesta(5).ToJSON(); //new BaseDTO().fillSelectNivelTanque().ToJSON();
             ViewBag.Items_SelectAccesorios = obj.getOpcionRespuesta(6).ToJSON(); //new BaseDTO().fillSelectAccesorios().ToJSON();
             ViewBag.Items_SelectPresiones = obj.getOpcionRespuesta(7).ToJSON(); //new BaseDTO().fillSelectPresiones().ToJSON();
+
             return View();
         }
         public ActionResult AddProtocolo(ProtocoloDTO dto)
