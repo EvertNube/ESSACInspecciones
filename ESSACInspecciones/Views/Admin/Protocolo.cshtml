@@ -10,8 +10,8 @@
             //var nombre = sessionStorage.getItem("protocolo");
             var protocolo = JSON.parse(localStorage.getItem("protocolo"));
             //Imrimir titulo del protocolo
-            var strHtmlTitle = "<h2>Protocolo de Pruebas<br /></h2><h4>"+ protocolo.NombreAreaProtegida + " según NFPA 20 - Motobomba de agua Contra Incendio</h4>";
-            
+            var strHtmlTitle = "<h2>Protocolo de Pruebas<br /></h2><h4>" + protocolo.NombreAreaProtegida + " según NFPA 20 - Motobomba de agua Contra Incendio</h4>";
+
 
             $(".prototitle").append(strHtmlTitle);
 
@@ -163,11 +163,11 @@
                                 }
 
                                 strHtmlSubSeccion += '<div class="panel panel-default">' +
+                                    '<a class="accordion-toggle panel-default" data-toggle="collapse" data-parent="#' + secondtLevelName + '" href="#' + subSeccion.IdSeccion + '">' +
                                                         '<div class="panel-heading">' +
-                                                            '<h6 class="panel-title">' +
-                                                                '<a class="accordion-toggle" data-toggle="collapse" data-parent="#' + secondtLevelName + '" href="#' + subSeccion.IdSeccion + '">' + subSeccion.Nombre + '</a>' +
-                                                            '</h6>' +
+                                                            subSeccion.Nombre +
                                                         '</div>' +
+                                                        '</a>' +
                                                         '<div id="' + subSeccion.IdSeccion + '" class="panel-collapse collapse">' +
                                                             '<div class="panel-body text-sm">' +
                                                                 strHtmlSubSeccionBodys +
@@ -179,11 +179,13 @@
                         }
 
                         strHtmlSeccion += '<div class="panel panel-default">' +
+                            '<a class="accordion-toggle panel-default" data-toggle="collapse" data-parent="#' + firstLevelName + '" href="#' + seccion.IdSeccion + '">' +
                                             '<div class="panel-heading">' +
                                                 '<h4 class="panel-title">' +
-                                                    '<a class="accordion-toggle" data-toggle="collapse" data-parent="#' + firstLevelName + '" href="#' + seccion.IdSeccion + '">' + seccion.Nombre + '</a>' +
+                                                    seccion.Nombre +
                                                 '</h4>' +
                                             '</div>' +
+                                            '</a>' +
                                             '<div id="' + seccion.IdSeccion + '" class="panel-collapse collapse">' +
                                                 '<div class="panel-body">' +
                                                     strHtmlSeccionBodys +
@@ -346,49 +348,48 @@
     <section class="scrollable padder">
         <div class="row m-b">
             <div class="col-xs-12 col-md-10 col-md-offset-1">
-                    @Html.ValidationSummary(true)
-                    <div class="row m-b">
-                        <div class="col-xs-12 col-md-12">
-                            @Html.Partial("_showAlertMessages")
+                @Html.ValidationSummary(true)
+                <div class="row m-b">
+                    <div class="col-xs-12 col-md-12">
+                        @Html.Partial("_showAlertMessages")
 
-                            <section class="panel panel-default">
-                                <header class="panel-heading font-bold text-right prototitle">
-                                </header>
-                                <div class="panel-body">
-                                    <section class="panel panel-default scrollable padder wizard">
-                                        <div class="clearfix wizard-steps">
-                                            <ul class="steps"></ul>
-                                            <div class="actions">
-                                                <button type="button" class="btn btn-default btn-sm btn-prev" disabled="disabled"><i class="glyphicon glyphicon-chevron-left"></i> Anterior</button>
-                                                <button type="button" class="btn btn-default btn-sm btn-next" data-last="Último">Siguiente <i class="glyphicon glyphicon-chevron-right"></i></button>
+                        <section class="panel panel-default">
+                            <header class="panel-heading font-bold text-right prototitle"></header>
+                            <div class="panel-body">
+                                <section class="panel panel-default scrollable padder wizard">
+                                    <div class="clearfix wizard-steps">
+                                        <ul class="steps"></ul>
+                                        <div class="actions">
+                                            <button type="button" class="btn btn-default btn-sm btn-prev" disabled="disabled"><i class="glyphicon glyphicon-chevron-left"></i> Anterior</button>
+                                            <button type="button" class="btn btn-default btn-sm btn-next" data-last="Último">Siguiente <i class="glyphicon glyphicon-chevron-right"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="step-content">
+
+                                    </div>
+                                </section>
+                                <section class="panel panel-default">
+                                    <header class="panel-heading font-bold">Puntuación</header>
+                                    <div class="panel-body">
+                                        <div class="form-inline">
+                                            <div class="form-group">
+                                                <input type="text" id="puntuacion" class="form-control btn-rounded" value="" />
                                             </div>
                                         </div>
-                                        <div class="step-content">
+                                    </div>
+                                </section>
+                                <div class="line line-dashed line-lg pull-in"></div>
+                                <input type="hidden" id="IdProtocolo" />
+                                <input type="hidden" id="IdPlantilla" />
+                                <input type="hidden" id="IdInmueble" />
+                                @*@{var btnName = (Model != null && Model.IdProtocolo > 0) ? "Guardar Cambios" : "Crear";}*@
+                                <button type="button" id="btnGuardar" class="btn btn-sm btn-primary btn-rounded">Guardar</button>
+                                <a class="btn btn-sm btn-danger btn-rounded" href="@Url.Action("Protocolos")">Salir</a>
+                            </div>
 
-                                        </div>
-                                    </section>
-                                    <section class="panel panel-default">
-                                        <header class="panel-heading font-bold">Puntuación</header>
-                                        <div class="panel-body">
-                                            <div class="form-inline">
-                                                <div class="form-group">
-                                                    <input type="text" id="puntuacion" class="form-control btn-rounded" value="" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </section>
-                                    <div class="line line-dashed line-lg pull-in"></div>
-                                    <input type="hidden" id="IdProtocolo" />
-                                    <input type="hidden" id="IdPlantilla" />
-                                    <input type="hidden" id="IdInmueble" />
-                                    @*@{var btnName = (Model != null && Model.IdProtocolo > 0) ? "Guardar Cambios" : "Crear";}*@
-                                    <button type="button" id="btnGuardar" class="btn btn-sm btn-primary btn-rounded">Guardar</button>
-                                    <a class="btn btn-sm btn-danger btn-rounded" href="@Url.Action("Protocolos")">Salir</a>
-                                </div>
-
-                            </section>
-                        </div>
+                        </section>
                     </div>
+                </div>
                 @*}*@
             </div>
         </div>
