@@ -403,9 +403,12 @@
                                 <input type="hidden" id="IdPlantilla" />
                                 <input type="hidden" id="IdInmueble" />
                                 @*@{var btnName = (Model != null && Model.IdProtocolo > 0) ? "Guardar Cambios" : "Crear";}*@
-                                <button type="button" id="btnGuardar" class="btn btn-sm btn-primary btn-rounded">Guardar</button>
-                                <a class="btn btn-sm btn-danger btn-rounded" href="@Url.Action("Protocolos")">Salir</a>
                             </div>
+                            <footer class="panel-footer text-right bg-light lter">
+                                <button type="button" id="btnGuardar" class="btn btn-s-xs btn-success btn-rounded">Guardar</button>
+                                <button type="button" id="btnFinalizar" class="btn btn-s-xs btn-info btn-rounded">Finalizar</button>
+                                <a class="btn btn-s-xs btn-danger btn-rounded" href="@Url.Action("Protocolos")">Salir</a>
+                            </footer>
                         </section>
                     </div>
                 </div>
