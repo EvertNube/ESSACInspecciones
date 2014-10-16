@@ -206,7 +206,8 @@
             $("#IdPlantilla").val(protocolo.IdPlantilla);
             $("#IdInmueble").val(protocolo.IdInmueble);
 
-            calcularPuntaje();
+            actualizarEstadoRespuestas();
+            //calcularPuntaje();
             ///////////////////////////////////////////////////
             $("#btnGuardar").on("click", function () {
                 var conexion = hostReachable();
@@ -269,11 +270,14 @@
                     alert("El protocolo se ha guardado temporalmente. Por favor, conectese a Internet para que lo datos sean guardados.");
                 }
             });
-            $(".GroupDescripcion").not("input").on("change", function () {
-                calcularPuntaje();
+            //$(".GroupDescripcion").not("input").on("change", function () {
+            //    calcularPuntaje();
+            //});
+            $(".GroupDescripcion").change(function () {
+                actualizarEstadoRespuestas();
             });
         });
-        function setCambioRespuestas() {
+        function actualizarEstadoRespuestas() {
             var totalTabs = $("#tabProtocolo").children().length;
             for (var i = 1; i <= totalTabs; i++) {
                 var totalito = $('.step' + i).length; var conta = 0;
@@ -343,6 +347,10 @@
             var date = new Date(parseInt(stringDate.substr(6)));
             return new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes())
         }
+        function trim(cadena) {
+            cadena = cadena.replace(/^\s+/, '').replace(/\s+$/, '');
+            return (cadena);
+        }
         function calcularPuntaje() {
             var elements = $(".GroupDescripcion").not("input").toArray();//$("#tag5 option:selected").data("puntos")
             var score = 0;
@@ -350,10 +358,6 @@
                 score += $(item).find("option:selected").data("puntaje");
             });
             $("#puntuacion").val(score);
-        }
-        function trim(cadena) {
-            cadena = cadena.replace(/^\s+/, '').replace(/\s+$/, '');
-            return (cadena);
         }
     </script>
 
@@ -384,7 +388,7 @@
                                         </div>
                                     </div>
                                 </section>
-                                <section class="panel panel-default">
+                                @*<section class="panel panel-default">
                                     <header class="panel-heading font-bold">Puntuación</header>
                                     <div class="panel-body">
                                         <div class="form-inline">
@@ -393,7 +397,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </section>
+                                </section>*@
                                 <div class="line line-dashed line-lg pull-in"></div>
                                 <input type="hidden" id="IdProtocolo" />
                                 <input type="hidden" id="IdPlantilla" />
