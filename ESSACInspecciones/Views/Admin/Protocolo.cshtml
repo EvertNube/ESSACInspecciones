@@ -9,15 +9,13 @@
             var protocolo = JSON.parse(localStorage.getItem("protocolo"));
             //Imrimir titulo del protocolo
             var strHtmlTitle = "<h2>Protocolo de Pruebas<br /></h2><h4>" + protocolo.NombreAreaProtegida + " según NFPA 20 - Motobomba de agua Contra Incendio</h4>";
-
-
             $(".prototitle").append(strHtmlTitle);
 
             var strHtmlStep = "";
             for (var i = 1; i <= protocolo.TotalPaginas; i++) {
-                var stepName = "step" + i, activeStep = "", badgeStep = "", pagina = "Paso "+i;
+                var stepName = "step" + i, activeStep = "", badgeStep = "", pagina = "Paso " + i;
                 if (i == 1) { activeStep = "active"; badgeStep = "badge-info"; }
-                strHtmlStep += '<li class="' + activeStep + '">' + '<a href="#' + stepName + '" data-toggle="tab">' + pagina + '</a>' + '</li>';
+                strHtmlStep += '<li class="' + activeStep + '">' + '<a href="#' + stepName + '" data-toggle="tab">' + pagina + ' <b class="badge dot" id="bg_tab' + i + '"></b></a>' + '</li>';
             }
             $(".nav-tabs").append(strHtmlStep);
             //
@@ -91,13 +89,14 @@
                                     if (seccion.SeccionBodys[s].BackgroundColor == true) { styleItem = 'style="background-color:#c2c0c2;"'; } else { styleItem = ''; }
                                     strHtmlSecRow += '<th rowspan="' + seccion.SeccionBodys[s].Rowspan + '" colspan="' + seccion.SeccionBodys[s].Colspan + '" ' + styleItem + '>' + seccion.SeccionBodys[s].Descripcion + '</th>';
                                 } else {
+                                    var classTextBox = "form-control input-sm GroupDescripcion " + stepname;
                                     switch (seccion.SeccionBodys[s].IdTipoTag) {
-                                        case 2: strHtmlTag = '<input type="text" id="tag' + seccion.SeccionBodys[s].IdSeccionBody + '" class="form-control input-sm GroupDescripcion" value="' + removeNull(seccion.SeccionBodys[s].Respuesta) + '"/>'; break;
-                                        case 3: strHtmlTag = drawSelect("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectSINO, seccion.SeccionBodys[s].Respuesta, 2); break;
-                                        case 4: strHtmlTag = drawSelect("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectBomba, seccion.SeccionBodys[s].Respuesta, 2); break;
-                                        case 5: strHtmlTag = drawSelect("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectNivelTanque, seccion.SeccionBodys[s].Respuesta, 2); break;
-                                        case 6: strHtmlTag = drawSelect("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectAccesorios, seccion.SeccionBodys[s].Respuesta, 2); break;
-                                        case 7: strHtmlTag = drawSelect("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectPresiones, seccion.SeccionBodys[s].Respuesta, 2); break;
+                                        case 2: strHtmlTag = '<input type="text" id="tag' + seccion.SeccionBodys[s].IdSeccionBody + '" class="' + classTextBox + '" value="' + removeNull(seccion.SeccionBodys[s].Respuesta) + '"/>'; break;
+                                        case 3: strHtmlTag = drawSelect("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectSINO, seccion.SeccionBodys[s].Respuesta, 2, stepname); break;
+                                        case 4: strHtmlTag = drawSelect("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectBomba, seccion.SeccionBodys[s].Respuesta, 2, stepname); break;
+                                        case 5: strHtmlTag = drawSelect("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectNivelTanque, seccion.SeccionBodys[s].Respuesta, 2, stepname); break;
+                                        case 6: strHtmlTag = drawSelect("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectAccesorios, seccion.SeccionBodys[s].Respuesta, 2, stepname); break;
+                                        case 7: strHtmlTag = drawSelect("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectPresiones, seccion.SeccionBodys[s].Respuesta, 2, stepname); break;
                                     }
                                     strHtmlSecRow += '<td rowspan="' + seccion.SeccionBodys[s].Rowspan + '" colspan="' + seccion.SeccionBodys[s].Colspan + '">' + strHtmlTag + '</td>';
                                     strHtmlSecRow += '<input type="hidden" name="GroupIdTableBody" class="GroupIdTableBody" value="' + seccion.SeccionBodys[s].IdSeccionBody + '" />';
@@ -134,13 +133,14 @@
                                             if (subSeccion.SeccionBodys[s].BackgroundColor == true) { styleItem = 'style="background-color:#c2c0c2;"'; } else { styleItem = ''; }
                                             strHtmlSubSecRow += '<th rowspan="' + subSeccion.SeccionBodys[s].Rowspan + '" colspan="' + subSeccion.SeccionBodys[s].Colspan + '" ' + styleItem + '>' + subSeccion.SeccionBodys[s].Descripcion + '</th>';
                                         } else {
+                                            var classTextBox = "form-control input-sm GroupDescripcion " + stepname;
                                             switch (subSeccion.SeccionBodys[s].IdTipoTag) {
-                                                case 2: strHtmlTag = '<input type="text" id=tag"' + subSeccion.SeccionBodys[s].IdSeccionBody + '" class="form-control input-sm GroupDescripcion" value="' + removeNull(subSeccion.SeccionBodys[s].Respuesta) + '"/>'; break;
-                                                case 3: strHtmlTag = drawSelect("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectSINO, subSeccion.SeccionBodys[s].Respuesta, 2); break;
-                                                case 4: strHtmlTag = drawSelect("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectBomba, subSeccion.SeccionBodys[s].Respuesta, 2); break;
-                                                case 5: strHtmlTag = drawSelect("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectNivelTanque, subSeccion.SeccionBodys[s].Respuesta, 2); break;
-                                                case 6: strHtmlTag = drawSelect("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectAccesorios, subSeccion.SeccionBodys[s].Respuesta, 2); break;
-                                                case 7: strHtmlTag = drawSelect("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectPresiones, subSeccion.SeccionBodys[s].Respuesta, 2); break;
+                                                case 2: strHtmlTag = '<input type="text" id=tag"' + subSeccion.SeccionBodys[s].IdSeccionBody + '" class="' + classTextBox + '" value="' + removeNull(subSeccion.SeccionBodys[s].Respuesta) + '"/>'; break;
+                                                case 3: strHtmlTag = drawSelect("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectSINO, subSeccion.SeccionBodys[s].Respuesta, 2, stepname); break;
+                                                case 4: strHtmlTag = drawSelect("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectBomba, subSeccion.SeccionBodys[s].Respuesta, 2, stepname); break;
+                                                case 5: strHtmlTag = drawSelect("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectNivelTanque, subSeccion.SeccionBodys[s].Respuesta, 2, stepname); break;
+                                                case 6: strHtmlTag = drawSelect("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectAccesorios, subSeccion.SeccionBodys[s].Respuesta, 2, stepname); break;
+                                                case 7: strHtmlTag = drawSelect("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectPresiones, subSeccion.SeccionBodys[s].Respuesta, 2, stepname); break;
                                             }
                                             strHtmlSubSecRow += '<td rowspan="' + subSeccion.SeccionBodys[s].Rowspan + '" colspan="' + subSeccion.SeccionBodys[s].Colspan + '">' + strHtmlTag + '</td>';
                                             strHtmlSubSecRow += '<input type="hidden" name="GroupIdTableBody" class="GroupIdTableBody" value="' + subSeccion.SeccionBodys[s].IdSeccionBody + '" />';
@@ -273,6 +273,23 @@
                 calcularPuntaje();
             });
         });
+        function setCompletas() {
+            //GroupDescripcion
+            var totalTabs = $("#tabProtocolo").children().length;
+            for (var i = 1; i <= totalTabs; i++) {
+                var totalito = $('.step' + i).length; var conta = 0;
+                $('.step'+i).each(function (index, element) {
+                    var val = trim($(element).val()); //if (val == '0' || val == '')
+                    if (val == '0' || val == '') conta++; //if (val.indexOf("0") > -1 || val.indexOf("") > -1) conta++;
+                });
+                var clase = "red";
+                if (totalito == conta) clase = "red";
+                else if (conta == 0) clase = "";
+                else if (conta > 0) clase = "warning";
+                $("#bg_tab" + i).removeClass("red warning");
+                $("#bg_tab" + i).addClass(clase);
+            }
+        }
         function setRespuestas(idProtocolo, idPlantilla, idInmueble) {
             if (localStorage.getItem("respuestas_" + idProtocolo + idPlantilla + idInmueble)) {
                 var respuestas = {}; respuestas = JSON.parse(localStorage.getItem("respuestas_" + idProtocolo + idPlantilla + idInmueble));
@@ -304,12 +321,12 @@
                 return false;
             }
         }
-        function drawSelect(id, lista, respuesta, tipoClase) {
+        function drawSelect(id, lista, respuesta, tipoClase, stepName) {
             var select = "", selected = "", clase = "";
             switch (tipoClase) {
                 case 1: clase = "form-control hour parsley-validated"; break;
-                case 2: clase = "form-control input-sm parsley-validated GroupDescripcion"; break;
-                default: clase = "form-control parsley-validated GroupDescripcion"; break;
+                case 2: clase = "form-control input-sm parsley-validated GroupDescripcion " + stepName; break;
+                default: clase = "form-control parsley-validated GroupDescripcion " + stepName; break;
             }
             select = '<select id="' + id + '" class = "' + clase + '" style = "width: auto;">';
             $.each(lista, function (x, item) {
@@ -335,6 +352,10 @@
             });
             $("#puntuacion").val(score);
         }
+        function trim(cadena) {
+            cadena = cadena.replace(/^\s+/, '').replace(/\s+$/, '');
+            return (cadena);
+        }
     </script>
 
 }
@@ -356,9 +377,7 @@
                             <div class="panel-body">
                                 <section class="panel panel-default">
                                     <header class="panel-heading bg-light">
-                                        <ul class="nav nav-tabs nav-justified">
-
-                                        </ul>
+                                        <ul class="nav nav-tabs nav-justified" id="tabProtocolo"></ul>
                                     </header>
                                     <div class="panel-body">
                                         <div class="tab-content">
