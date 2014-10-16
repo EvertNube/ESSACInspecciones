@@ -273,13 +273,12 @@
                 calcularPuntaje();
             });
         });
-        function setCompletas() {
-            //GroupDescripcion
+        function setCambioRespuestas() {
             var totalTabs = $("#tabProtocolo").children().length;
             for (var i = 1; i <= totalTabs; i++) {
                 var totalito = $('.step' + i).length; var conta = 0;
                 $('.step'+i).each(function (index, element) {
-                    var val = trim($(element).val()); //if (val == '0' || val == '')
+                    var val = trim($(element).val());
                     if (val == '0' || val == '') conta++; //if (val.indexOf("0") > -1 || val.indexOf("") > -1) conta++;
                 });
                 var clase = "red";
