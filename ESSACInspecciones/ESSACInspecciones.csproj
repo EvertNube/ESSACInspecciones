@@ -801,6 +801,7 @@
     <Content Include="Views\Admin\Formulario.cshtml" />
     <Content Include="Views\Admin\Protocolos.cshtml" />
     <Content Include="Views\Admin\Protocolo.cshtml" />
+    <Content Include="Views\Admin\ProtocoloReporte.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

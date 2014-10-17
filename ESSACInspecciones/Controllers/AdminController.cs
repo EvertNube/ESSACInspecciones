@@ -675,6 +675,21 @@ namespace ESSACInspecciones.Controllers
 
             return View();
         }
+
+        public ActionResult ProtocoloReporte()
+        {
+            OpcionRespuestaBL obj = new OpcionRespuestaBL();
+            ViewBag.Horas = new BaseDTO().fillHoras().ToJSON();
+            ViewBag.Minutos = new BaseDTO().fillMinutos().ToJSON();
+            ViewBag.Items_SelectSINO = obj.getOpcionRespuesta(3).ToJSON();//new BaseDTO().fillSelectSINO().ToJSON();
+            ViewBag.Items_SelectBomba = obj.getOpcionRespuesta(4).ToJSON(); //new BaseDTO().fillSelectBomba().ToJSON();
+            ViewBag.Items_SelectNivelTanque = obj.getOpcionRespuesta(5).ToJSON(); //new BaseDTO().fillSelectNivelTanque().ToJSON();
+            ViewBag.Items_SelectAccesorios = obj.getOpcionRespuesta(6).ToJSON(); //new BaseDTO().fillSelectAccesorios().ToJSON();
+            ViewBag.Items_SelectPresiones = obj.getOpcionRespuesta(7).ToJSON(); //new BaseDTO().fillSelectPresiones().ToJSON();
+
+            return View();
+        }
+
         public ActionResult AddProtocolo(ProtocoloDTO dto)
         {
             //if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
@@ -755,6 +770,15 @@ namespace ESSACInspecciones.Controllers
         public ActionResult GetProtocolo(int idInmueble, int? idProtocolo = null, int? idPlantilla = null)
         {
             //if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
+            ProtocoloBL objBL = new ProtocoloBL();
+            //int idUsuario = getCurrentUser().IdUsuario;
+            var model = objBL.getProtocolo(idInmueble, idProtocolo, idPlantilla);
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public ActionResult GetProtocoloReporte(int idInmueble, int? idProtocolo = null, int? idPlantilla = null)
+        {
             ProtocoloBL objBL = new ProtocoloBL();
             //int idUsuario = getCurrentUser().IdUsuario;
             var model = objBL.getProtocolo(idInmueble, idProtocolo, idPlantilla);

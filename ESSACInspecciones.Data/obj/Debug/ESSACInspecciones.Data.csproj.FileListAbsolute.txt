@@ -28,3 +28,10 @@ D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Data\bin\Debug\Enti
 D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Data\bin\Debug\EntityFramework.xml
 D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Data\obj\Debug\ESSACInspecciones.Data.dll
 D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Data\obj\Debug\ESSACInspecciones.Data.pdb
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Data\bin\Debug\ESSACInspecciones.Data.dll.config
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Data\bin\Debug\ESSACInspecciones.Data.dll
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Data\bin\Debug\ESSACInspecciones.Data.pdb
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Data\bin\Debug\EntityFramework.dll
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Data\bin\Debug\EntityFramework.xml
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Data\obj\Debug\ESSACInspecciones.Data.dll
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Data\obj\Debug\ESSACInspecciones.Data.pdb

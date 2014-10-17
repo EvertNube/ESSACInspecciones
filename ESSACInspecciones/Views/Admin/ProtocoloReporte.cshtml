@@ -1,0 +1,421 @@
+﻿@using ESSACInspecciones.Core.DTO;
+@section styles{
+    @Styles.Render("~/Content/themes/admin/js/fuelux/fuelux.css")
+}
+@section scripts{
+    @Scripts.Render("~/Content/themes/admin/js/fuelux/fuelux.js")
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var protocolo = JSON.parse(localStorage.getItem("protocolo"));
+            //Imrimir titulo del protocolo
+            var strHtmlTitle = "<h2>Protocolo de Pruebas<br /></h2><h4>" + protocolo.NombreAreaProtegida + " según NFPA 20 - Motobomba de agua Contra Incendio</h4>";
+            $(".prototitle").append(strHtmlTitle);
+
+            var strHtmlStep = "";
+            for (var i = 1; i <= protocolo.TotalPaginas; i++) {
+                var stepName = "step" + i, activeStep = "", badgeStep = "", pagina = "Paso " + i;
+                if (i == 1) { activeStep = "active"; badgeStep = "badge-info"; }
+                strHtmlStep += '<li class="' + activeStep + '">' + '<a href="#' + stepName + '" data-toggle="tab">' + pagina + ' <b class="badge dot" id="bg_tab' + i + '"></b></a>' + '</li>';
+            }
+            $(".nav-tabs").append(strHtmlStep);
+            //
+            var jsonHoras = '@Html.Raw(ViewBag.Horas)'; var listaHoras = JSON.parse(jsonHoras);
+            var jsonMinutos = '@Html.Raw(ViewBag.Minutos)'; var listaMinutos = JSON.parse(jsonMinutos);
+            var jsonSelectSINO = '@Html.Raw(ViewBag.Items_SelectSINO)'; var Items_SelectSINO = JSON.parse(jsonSelectSINO);
+            var jsonSelectBomba = '@Html.Raw(ViewBag.Items_SelectBomba)'; var Items_SelectBomba = JSON.parse(jsonSelectBomba);
+            var jsonSelectNivelTanque = '@Html.Raw(ViewBag.Items_SelectNivelTanque)'; var Items_SelectNivelTanque = JSON.parse(jsonSelectNivelTanque);
+            var jsonSelectAccesorios = '@Html.Raw(ViewBag.Items_SelectAccesorios)'; var Items_SelectAccesorios = JSON.parse(jsonSelectAccesorios);
+            var jsonSelectPresiones = '@Html.Raw(ViewBag.Items_SelectPresiones)'; var Items_SelectPresiones = JSON.parse(jsonSelectPresiones);
+
+            var strHtmlStepContent = "";
+            for (var i = 1; i <= protocolo.TotalPaginas; i++) {
+                var stepname = "step" + i; activeStep = "";
+                if (i == 1) { activeStep = "active"; }
+
+                var strHtmlHeader = "";
+                if (i == 1) {
+                    strHtmlHeader = '<table class="table table-bordered"><tbody>' +
+                                            '<tr>' +
+                                                '<td colspan="6" style="background-color: #c2c0c2;"><label><strong> Nombre del Área Protegida: </strong></label></td>' +
+                                                '<td colspan="6" style="background-color: #c2c0c2;"><label><strong> Fecha: </strong></label></td>' +
+                                            '</tr>' +
+                                            '<tr>' +
+                                                '<td colspan="6">' +
+                                                    '<input type="text" id="NombreAreaProtegida" class = "form-control" placeholder = "Ingrese el nombre" value="' + removeNull(protocolo.NombreAreaProtegida) + '" />' +
+                                                '</td>' +
+                                                '<td colspan="6">' +
+                                                    '<input type="text" id="Fecha" class = "form-control datepicker-input" data-provide = "datepicker" placeholder="DD/MM/YYYY" value="' + (protocolo.Fecha != null ? moment(formatDate(protocolo.Fecha)).format("DD/MM/YYYY") : "") + '" />' +
+                                                '</td>' +
+                                            '</tr>' +
+                                            '<tr>' +
+                                                '<td colspan="6" style="background-color: #c2c0c2;"><label><strong> Dirección: </strong></label></td>' +
+                                                '<td colspan="6" style="background-color: #c2c0c2;"><label><strong> Hora de Inicio: </strong></label></td>' +
+                                            '</tr>' +
+                                            '<tr>' +
+                                                '<td colspan="6">' +
+                                                    '<input type="text" id="Direccion" class = "form-control" placeholder = "Ingrese la dirección" value="' + removeNull(protocolo.Direccion) + '" />' +
+                                                '</td>' +
+                                                '<td colspan="6">' +
+                                                    '<div class="input-group">' +
+                                                        drawSelect("HoraInicio", listaHoras, protocolo.HoraInicio, 1) + ' : ' + drawSelect("MinutoInicio", listaMinutos, protocolo.MinutoInicio, 1) +
+                                                    '</div>' +
+                                                '</td>' +
+                                            '</tr>' +
+                                        '</tbody></table>';
+                }
+
+                var panelGroupPadre = "";
+                if (protocolo.Secciones.length > 0) {
+                    var firstLevelName = "accordionN1_" + stepname;
+
+                    var Secciones = [];
+                    $.each(protocolo.Secciones, function (x, item) {
+                        if (item.Pagina == i) {
+                            Secciones.push(item);
+                        }
+                    });
+
+                    var strHtmlSeccion = ""; var strHtmlSeccionBodys = "", strHtmlSecRow = "";
+                    $.each(Secciones, function (x, seccion) {
+                        strHtmlSecRow = "";
+                        if (seccion.SeccionBodys.length > 0) {
+                            var tmpFilaItem = 1, totalItems = seccion.SeccionBodys.length; var styleItem = "";
+                            for (var s = 0; s < totalItems; s++) {
+                                var filaItem = seccion.SeccionBodys[s].NumeroFila;
+                                if (s == 0 || tmpFilaItem != filaItem) {
+                                    strHtmlSecRow += "<tr>";
+                                }
+                                if (seccion.SeccionBodys[s].IdTipoCelda == 1) {
+                                    if (seccion.SeccionBodys[s].BackgroundColor == true) { styleItem = 'style="background-color:#c2c0c2;"'; } else { styleItem = ''; }
+                                    strHtmlSecRow += '<th rowspan="' + seccion.SeccionBodys[s].Rowspan + '" colspan="' + seccion.SeccionBodys[s].Colspan + '" ' + styleItem + '>' + seccion.SeccionBodys[s].Descripcion + '</th>';
+                                } else {
+                                    var classTextBox = "form-control input-sm GroupDescripcion " + stepname;
+                                    switch (seccion.SeccionBodys[s].IdTipoTag) {
+                                        case 2: strHtmlTag = '<input type="text" id="tag' + seccion.SeccionBodys[s].IdSeccionBody + '" class="' + classTextBox + '" value="' + removeNull(seccion.SeccionBodys[s].Respuesta) + '" disabled="disabled"/>'; break;
+                                        case 3: strHtmlTag = drawSelect("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectSINO, seccion.SeccionBodys[s].Respuesta, 2, stepname); break;
+                                        case 4: strHtmlTag = drawSelect("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectBomba, seccion.SeccionBodys[s].Respuesta, 2, stepname); break;
+                                        case 5: strHtmlTag = drawSelect("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectNivelTanque, seccion.SeccionBodys[s].Respuesta, 2, stepname); break;
+                                        case 6: strHtmlTag = drawSelect("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectAccesorios, seccion.SeccionBodys[s].Respuesta, 2, stepname); break;
+                                        case 7: strHtmlTag = drawSelect("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectPresiones, seccion.SeccionBodys[s].Respuesta, 2, stepname); break;
+                                    }
+                                    strHtmlSecRow += '<td rowspan="' + seccion.SeccionBodys[s].Rowspan + '" colspan="' + seccion.SeccionBodys[s].Colspan + '">' + strHtmlTag + '</td>';
+                                    strHtmlSecRow += '<input type="hidden" name="GroupIdTableBody" class="GroupIdTableBody" value="' + seccion.SeccionBodys[s].IdSeccionBody + '" />';
+                                }
+                                if (s == (totalItems - 1) || filaItem != seccion.SeccionBodys[s + 1].NumeroFila) {
+                                    strHtmlSecRow += "</tr>";
+                                }
+                                tmpFilaItem = seccion.SeccionBodys[s].NumeroFila;
+                            }
+
+                            strHtmlSeccionBodys = '<div class="table-responsive">' +
+                                                '<table class="table table-bordered">' +
+                                                    '<tbody>' +
+                                                    strHtmlSecRow +
+                                                    '</tbody>' +
+                                                '</table>' +
+                                            '</div>';
+                        }
+                        //
+                        var panelGroupSubSec = "";
+                        if (seccion.SubSecciones.length > 0) {
+                            var secondtLevelName = "accordionN2_" + stepname;
+                            var strHtmlSubSeccion = "", strHtmlSubSeccionBodys = "", strHtmlSubSecRow = "";
+                            $.each(seccion.SubSecciones, function (x, subSeccion) {
+                                strHtmlSubSecRow = "";
+                                if (subSeccion.SeccionBodys.length > 0) {
+                                    var tmpFilaItem = 1, totalItems = subSeccion.SeccionBodys.length; var styleItem = "";
+                                    for (var s = 0; s < totalItems; s++) {
+                                        var filaItem = subSeccion.SeccionBodys[s].NumeroFila;
+                                        if (s == 0 || tmpFilaItem != filaItem) {
+                                            strHtmlSubSecRow += "<tr>";
+                                        }
+                                        if (subSeccion.SeccionBodys[s].IdTipoCelda == 1) {
+                                            if (subSeccion.SeccionBodys[s].BackgroundColor == true) { styleItem = 'style="background-color:#c2c0c2;"'; } else { styleItem = ''; }
+                                            strHtmlSubSecRow += '<th rowspan="' + subSeccion.SeccionBodys[s].Rowspan + '" colspan="' + subSeccion.SeccionBodys[s].Colspan + '" ' + styleItem + '>' + subSeccion.SeccionBodys[s].Descripcion + '</th>';
+                                        } else {
+                                            var classTextBox = "form-control input-sm GroupDescripcion " + stepname;
+                                            switch (subSeccion.SeccionBodys[s].IdTipoTag) {
+                                                case 2: strHtmlTag = '<input type="text" id=tag"' + subSeccion.SeccionBodys[s].IdSeccionBody + '" class="' + classTextBox + '" value="' + removeNull(subSeccion.SeccionBodys[s].Respuesta) + '" disabled="disabled" />'; break;
+                                                case 3: strHtmlTag = drawSelect("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectSINO, subSeccion.SeccionBodys[s].Respuesta, 2, stepname); break;
+                                                case 4: strHtmlTag = drawSelect("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectBomba, subSeccion.SeccionBodys[s].Respuesta, 2, stepname); break;
+                                                case 5: strHtmlTag = drawSelect("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectNivelTanque, subSeccion.SeccionBodys[s].Respuesta, 2, stepname); break;
+                                                case 6: strHtmlTag = drawSelect("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectAccesorios, subSeccion.SeccionBodys[s].Respuesta, 2, stepname); break;
+                                                case 7: strHtmlTag = drawSelect("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectPresiones, subSeccion.SeccionBodys[s].Respuesta, 2, stepname); break;
+                                            }
+                                            strHtmlSubSecRow += '<td rowspan="' + subSeccion.SeccionBodys[s].Rowspan + '" colspan="' + subSeccion.SeccionBodys[s].Colspan + '">' + strHtmlTag + '</td>';
+                                            strHtmlSubSecRow += '<input type="hidden" name="GroupIdTableBody" class="GroupIdTableBody" value="' + subSeccion.SeccionBodys[s].IdSeccionBody + '" />';
+                                        }
+                                        if (s == (totalItems - 1) || filaItem != subSeccion.SeccionBodys[s + 1].NumeroFila) {
+                                            strHtmlSubSecRow += "</tr>";
+                                        }
+                                        tmpFilaItem = subSeccion.SeccionBodys[s].NumeroFila;
+                                    }
+
+                                    strHtmlSubSeccionBodys = '<div class="table-responsive">' +
+                                                '<table class="table table-bordered">' +
+                                                    '<tbody>' +
+                                                    strHtmlSubSecRow +
+                                                    '</tbody>' +
+                                                '</table>' +
+                                            '</div>';
+                                }
+
+                                strHtmlSubSeccion += '<div class="panel panel-default">' +
+                                    '<a class="accordion-toggle panel-default" data-toggle="collapse" data-parent="#' + secondtLevelName + '" href="#' + subSeccion.IdSeccion + '">' +
+                                                        '<div class="panel-heading">' +
+                                                            subSeccion.Nombre +
+                                                        '</div>' +
+                                                        '</a>' +
+                                                        '<div id="' + subSeccion.IdSeccion + '" class="panel-collapse collapse">' +
+                                                            '<div class="panel-body text-sm">' +
+                                                                strHtmlSubSeccionBodys +
+                                                            '</div>' +
+                                                        '</div>' +
+                                                    '</div>';
+                            });
+                            panelGroupSubSec = '<div class="panel-group m-b" id="' + secondtLevelName + '">' + strHtmlSubSeccion + '</div>';
+                        }
+
+                        strHtmlSeccion += '<div class="panel panel-default">' +
+                            '<a class="accordion-toggle panel-default" data-toggle="collapse" data-parent="#' + firstLevelName + '" href="#' + seccion.IdSeccion + '">' +
+                                            '<div class="panel-heading">' +
+                                                '<h4 class="panel-title">' +
+                                                    seccion.Nombre +
+                                                '</h4>' +
+                                            '</div>' +
+                                            '</a>' +
+                                            '<div id="' + seccion.IdSeccion + '" class="panel-collapse collapse">' +
+                                                '<div class="panel-body">' +
+                                                    strHtmlSeccionBodys +
+                                                    panelGroupSubSec +
+                                                '</div>' +
+                                            '</div>' +
+                                        '</div>';
+                    });
+
+                    panelGroupPadre = '<div class="panel-group m-b" id="' + firstLevelName + '">' + strHtmlSeccion + '</div>';
+                }
+
+                strHtmlStepContent += '<div class="tab-pane ' + activeStep + '" id="' + stepname + '">' + strHtmlHeader + panelGroupPadre + '</div>';
+            }
+
+            $(".tab-content").append(strHtmlStepContent);
+
+            setRespuestas(protocolo.IdProtocolo, protocolo.IdPlantilla, protocolo.IdInmueble);
+            $("#IdProtocolo").val(protocolo.IdProtocolo);
+            $("#IdPlantilla").val(protocolo.IdPlantilla);
+            $("#IdInmueble").val(protocolo.IdInmueble);
+
+            actualizarEstadoRespuestas();
+            //calcularPuntaje();
+            ///////////////////////////////////////////////////
+            $("#btnGuardar").on("click", function () {
+                var conexion = hostReachable();
+                var array_Descrip = []; $('.GroupDescripcion').each(function (index, item) { var value = $(".GroupDescripcion")[index].value; array_Descrip.push(value); });//Tag: Select
+                var array_Id = []; $('.GroupIdTableBody').each(function (index, item) { var value = $(".GroupIdTableBody")[index].value; array_Id.push(value); });
+                var IdProtocolo = $("#IdProtocolo").val();
+                var IdPlantilla = $("#IdPlantilla").val();
+                var IdInmueble = $("#IdInmueble").val();
+                /*
+                Descomentar para pruebas
+                var respuestas = {
+                    NombreAreaProtegida: $("#NombreAreaProtegida").val(),
+                    Direccion: $("#Direccion").val(),
+                    StrFecha: $("#Fecha").val(),
+                    HoraInicio: $("#HoraInicio").val(),
+                    MinutoInicio: $("#MinutoInicio").val(),
+                    GroupIdTableBody: array_Id,
+                    GroupDescripcion: array_Descrip
+                };
+                localStorage.setItem("respuestas_" + IdProtocolo + IdPlantilla + IdInmueble, JSON.stringify(respuestas));
+                return false;
+                */
+                if (conexion) {
+                    var protocolo = {
+                        IdProtocolo: IdProtocolo,
+                        IdPlantilla: $("#IdPlantilla").val(),
+                        IdInmueble: $("#IdInmueble").val(),
+                        NombreAreaProtegida: $("#NombreAreaProtegida").val(),
+                        Direccion: $("#Direccion").val(),
+                        StrFecha: $("#Fecha").val(),
+                        HoraInicio: $("#HoraInicio").val(),
+                        MinutoInicio: $("#MinutoInicio").val(),
+                        GroupIdTableBody: array_Id,
+                        GroupDescripcion: array_Descrip,
+                        Active: true
+                    };
+                    $.post("/Admin/SaveProtocolo", { protocolo: JSON.stringify(protocolo) }, function (data) {
+                    }).done(function (data) {
+                        if (data) {
+                            localStorage.removeItem("respuestas_" + IdProtocolo + IdPlantilla + IdInmueble);
+                            window.location = "/Admin/Protocolos";
+                        } else {
+                            console.log('Error al intentar guardar los datos.');
+                            alert("Error al intentar guardar el protocolo. Por favor, actualice la página o presione F5.");
+                        }
+                    }).fail(function () {
+                        alert("Error al intentar guardar el protocolo. Por favor, actualice la página o presione F5.");
+                    });
+                } else {
+                    var respuestas = {
+                        NombreAreaProtegida: $("#NombreAreaProtegida").val(),
+                        Direccion: $("#Direccion").val(),
+                        StrFecha: $("#Fecha").val(),
+                        HoraInicio: $("#HoraInicio").val(),
+                        MinutoInicio: $("#MinutoInicio").val(),
+                        GroupIdTableBody: array_Id,
+                        GroupDescripcion: array_Descrip
+                    };
+                    localStorage.setItem("respuestas_" + IdProtocolo + IdPlantilla + IdInmueble, JSON.stringify(respuestas));
+                    alert("El protocolo se ha guardado temporalmente. Por favor, conectese a Internet para que lo datos sean guardados.");
+                }
+            });
+            //$(".GroupDescripcion").not("input").on("change", function () {
+            //    calcularPuntaje();
+            //});
+            $(".GroupDescripcion").change(function () {
+                actualizarEstadoRespuestas();
+            });
+
+            $(".Desabilitar").prop('disabled', 'disabled');
+        });
+        function actualizarEstadoRespuestas() {
+            var totalTabs = $("#tabProtocolo").children().length;
+            for (var i = 1; i <= totalTabs; i++) {
+                var totalito = $('.step' + i).length; var conta = 0;
+                $('.step'+i).each(function (index, element) {
+                    var val = trim($(element).val());
+                    if (val == '0' || val == '') conta++; //if (val.indexOf("0") > -1 || val.indexOf("") > -1) conta++;
+                });
+                var clase = "red";
+                if (totalito == conta) clase = "red";
+                else if (conta == 0) clase = "";
+                else if (conta > 0) clase = "warning";
+                $("#bg_tab" + i).removeClass("red warning");
+                $("#bg_tab" + i).addClass(clase);
+            }
+        }
+        function setRespuestas(idProtocolo, idPlantilla, idInmueble) {
+            if (localStorage.getItem("respuestas_" + idProtocolo + idPlantilla + idInmueble)) {
+                var respuestas = {}; respuestas = JSON.parse(localStorage.getItem("respuestas_" + idProtocolo + idPlantilla + idInmueble));
+                $("#NombreAreaProtegida").val(respuestas.NombreAreaProtegida);
+                $("#Direccion").val(respuestas.Direccion);
+                $("#Fecha").val(respuestas.StrFecha);
+                $("#HoraInicio").val(respuestas.HoraInicio);
+                $("#MinutoInicio").val(respuestas.MinutoInicio);
+                for (var i = 0; i < respuestas.GroupIdTableBody.length; i++) {
+                    $("#tag" + respuestas.GroupIdTableBody[i]).val(respuestas.GroupDescripcion[i]);
+                }
+            }
+        }
+        function hostReachable() {
+            // Handle IE and more capable browsers
+            var xhr = new (window.ActiveXObject || XMLHttpRequest)("Microsoft.XMLHTTP");
+            var status;
+            var server = window.location.hostname;
+            if (window.location.port != '') {
+                server += ':' + window.location.port;
+            }
+            // Open new request as a HEAD to the root hostname with a random param to bust the cache
+            xhr.open("HEAD", "//" + server + "/?rand=" + Math.floor((1 + Math.random()) * 0x10000), false);
+            // Issue request and handle response
+            try {
+                xhr.send();
+                return (xhr.status >= 200 && xhr.status < 300 || xhr.status === 304);
+            } catch (error) {
+                return false;
+            }
+        }
+        function drawSelect(id, lista, respuesta, tipoClase, stepName) {
+            var select = "", selected = "", clase = "";
+            switch (tipoClase) {
+                case 1: clase = "form-control hour parsley-validated"; break;
+                case 2: clase = "form-control input-sm parsley-validated GroupDescripcion Desabilitar " + stepName; break;
+                default: clase = "form-control parsley-validated GroupDescripcion Desabilitar " + stepName; break;
+            }
+            select = '<select id="' + id + '" class = "' + clase + '" style = "width: auto;">';
+            $.each(lista, function (x, item) {
+                if (item.IdOpcion == respuesta) selected = "selected"; else selected = "";
+                select += '<option value="' + item.IdOpcion + '" data-puntaje="' + item.Puntaje + '" ' + selected + '>' + item.NombreOpcion + '</option>';
+            });
+            select += '</select>';
+            return select;
+        }
+        function removeNull(value) {
+            var valor = (value == null) ? "" : value;
+            return valor;
+        }
+        function formatDate(stringDate) {
+            var date = new Date(parseInt(stringDate.substr(6)));
+            return new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes())
+        }
+        function trim(cadena) {
+            cadena = cadena.replace(/^\s+/, '').replace(/\s+$/, '');
+            return (cadena);
+        }
+        function calcularPuntaje() {
+            var elements = $(".GroupDescripcion").not("input").toArray();//$("#tag5 option:selected").data("puntos")
+            var score = 0;
+            $.each(elements, function (x, item) {
+                score += $(item).find("option:selected").data("puntaje");
+            });
+            $("#puntuacion").val(score);
+        }
+    </script>
+}
+@{
+    ViewBag.Title = "ProtocoloReporte";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<section class="vbox">
+    <section class="scrollable padder">
+        <div class="row m-b">
+            <div class="col-xs-12 col-md-10 col-md-offset-1">
+                @Html.ValidationSummary(true)
+                <div class="row m-b">
+                    <div class="col-xs-12 col-md-12">
+                        @Html.Partial("_showAlertMessages")
+
+                        <section class="panel panel-default">
+                            <header class="panel-heading font-bold text-right prototitle"></header>
+                            <div class="panel-body">
+                                <section class="panel panel-default">
+                                    <header class="panel-heading bg-light">
+                                        <ul class="nav nav-tabs nav-justified" id="tabProtocolo"></ul>
+                                    </header>
+                                    <div class="panel-body">
+                                        <div class="tab-content">
+
+                                        </div>
+                                    </div>
+                                </section>
+                                @*<section class="panel panel-default">
+                                        <header class="panel-heading font-bold">Puntuación</header>
+                                        <div class="panel-body">
+                                            <div class="form-inline">
+                                                <div class="form-group">
+                                                    <input type="text" id="puntuacion" class="form-control btn-rounded" value="" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>*@
+                                <div class="line line-dashed line-lg pull-in"></div>
+                                <input type="hidden" id="IdProtocolo" />
+                                <input type="hidden" id="IdPlantilla" />
+                                <input type="hidden" id="IdInmueble" />
+                                @*@{var btnName = (Model != null && Model.IdProtocolo > 0) ? "Guardar Cambios" : "Crear";}*@
+                            </div>
+                            @*<footer class="panel-footer text-right bg-light lter">
+                                <button type="button" id="btnGuardar" class="btn btn-s-xs btn-success btn-rounded">Guardar</button>
+                                <button type="button" id="btnFinalizar" class="btn btn-s-xs btn-info btn-rounded">Finalizar</button>
+                                <a class="btn btn-s-xs btn-danger btn-rounded" href="@Url.Action("Protocolos")">Salir</a>
+                            </footer>*@
+                        </section>
+                    </div>
+                </div>
+                @*}*@
+            </div>
+        </div>
+
+    </section>
+</section>

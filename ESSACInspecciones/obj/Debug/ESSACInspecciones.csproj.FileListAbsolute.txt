@@ -174,6 +174,7 @@ D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones\bin\System.Web.WebP
 D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones\bin\ESSACInspecciones.Data.pdb
 D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones\obj\Debug\ESSACInspecciones.dll
 D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones\obj\Debug\ESSACInspecciones.pdb
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\obj\Debug\ESSACInspecciones.csprojResolveAssemblyReference.cache
 C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\bin\ESSACInspecciones.dll.config
 C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\bin\ESSACInspecciones.dll
 C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\bin\ESSACInspecciones.pdb
@@ -187,9 +188,6 @@ C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\bin
 C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\bin\Newtonsoft.Json.dll
 C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\bin\PagedList.dll
 C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\bin\PagedList.Mvc.dll
-C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\bin\System.Net.Http.Formatting.dll
-C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\bin\System.Web.Http.dll
-C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\bin\System.Web.Http.WebHost.dll
 C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\bin\System.Web.Mvc.dll
 C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\bin\System.Web.Optimization.dll
 C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\bin\System.Web.Providers.dll
@@ -206,15 +204,11 @@ C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\bin
 C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\bin\PagedList.Mvc.xml
 C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\bin\EntityFramework.xml
 C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\bin\Newtonsoft.Json.xml
-C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\bin\System.Net.Http.Formatting.xml
-C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\bin\System.Web.Http.xml
-C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\bin\System.Web.Http.WebHost.xml
 C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\bin\System.Web.Mvc.xml
 C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\bin\System.Web.Razor.xml
 C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\bin\System.Web.WebPages.xml
 C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\bin\System.Web.WebPages.Deployment.xml
 C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\bin\System.Web.WebPages.Razor.xml
 C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\bin\ESSACInspecciones.Data.pdb
-C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\obj\Debug\ESSACInspecciones.csprojResolveAssemblyReference.cache
 C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\obj\Debug\ESSACInspecciones.dll
 C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones\obj\Debug\ESSACInspecciones.pdb

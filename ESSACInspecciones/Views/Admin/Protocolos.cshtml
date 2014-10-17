@@ -1,7 +1,4 @@
-﻿@*@using PagedList.Mvc;
-@model PagedList.IPagedList<ESSACInspecciones.Core.DTO.ProtocoloDTO>
-<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />*@
-@{
+﻿@{
     ViewBag.Title = "Protocolos";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
@@ -44,30 +41,6 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @*@if (Model != null)
-                                        {
-                                            int cont = 1;
-                                            foreach (var obj in Model)
-                                            {
-                                                var classInactive = (ViewBag.EsAdmin && !obj.Active) ? "class='inactive'" : "";
-                                                <tr @Html.Raw(classInactive)>
-
-                                                    <td align="center">
-                                                        @if (ViewBag.EsAdmin && !obj.Active)
-                                                        { <span class="badge bg-danger" data-toggle="tooltip" data-placement="left" data-original-title="Inactivo">@cont</span> }
-                                                        else
-                                                        { @cont }
-                                                    </td>
-                                                    <td>@obj.Plantilla.Nombre</td>
-                                                    <td>@obj.Estado.NombreEstado</td>
-                                                    <td align="center">
-                                                        <img id="@obj.IdProtocolo" src="" />
-                                                        <a href="@Url.Action("Protocolo")" onclick="return getProtocolo(@obj.IdInmueble, @obj.IdProtocolo, @obj.IdPlantilla)"><i class="fa fa-pencil"></i></a>
-                                                    </td>
-                                                </tr>
-                                                        cont++;
-                                            }
-                                        }*@
                                     </tbody>
                                 </table>
                             </div>
@@ -133,6 +106,23 @@
         });
         return true;
     }
+
+    function getProtocoloReporte(idInmueble, idProtocolo, idPlantilla) {
+        $.ajax({
+            async: false,
+            url: "/Admin/GetProtocoloReporte",
+            type: "GET",
+            cache: false,
+            data: { idInmueble: idInmueble, idProtocolo: idProtocolo, idPlantilla: idPlantilla },
+            dataType: "json"
+        }).done(function (data) {
+            saveStorage("protocolo", data);
+        }).fail(function () {
+            alert('Error al crear las variables temporales. Por favor, actualice la página o presione F5.');
+        });
+        return true;
+    }
+
     //////////////////////////////////////////
     function listarProtocolos(InmuebleId) {
         $.ajax({
@@ -153,16 +143,16 @@
         $.each(data, function (index, itemData) {
             @*var url = '@Url.Action("Protocolo", "Admin")?idProtocolo=' + itemData.IdProtocolo + '&idPlantilla=' + itemData.IdPlantilla + '&idInmueble=' + itemData.IdInmueble;*@
             var url = '@Url.Action("Protocolo", "Admin")';
+            var urlReporte = '@Url.Action("ProtocoloReporte", "Admin")';
             $('#tableProtocolo > tbody:last').append(
                 '<tr><td>' + (index + 1) + '</td>' +
                 '<td>' + itemData.Plantilla.Nombre + '</td>' +
                 '<td>' + itemData.Estado.NombreEstado  + '</td>' + //+ "\t"
                 '<td>' + setImage(itemData.IdProtocolo, itemData.IdPlantilla, itemData.IdInmueble, itemData.IdEstado) + '</td>' +
-                '<td>' + '<a href="' + url + '" onclick="return getProtocolo(' + itemData.IdInmueble + ', ' + itemData.IdProtocolo + ', ' + itemData.IdPlantilla + ')" ><i class="fa fa-pencil"></i></a>' +
+                '<td>' + '<a href="' + url + '" onclick="return getProtocolo(' + itemData.IdInmueble + ', ' + itemData.IdProtocolo + ', ' + itemData.IdPlantilla + ')" title="Editar" ><i class="fa fa-pencil"></i></a>' +
+                '<a href="' + urlReporte + '" onclick="return getProtocoloReporte(' + itemData.IdInmueble + ', ' + itemData.IdProtocolo + ', ' + itemData.IdPlantilla + ')" title="Reporte" ><i class="fa fa-file-text-o"></i></a>' +
                 '</td></tr>');
         });
-        //'<a href="' + url + '" onclick="return setProtocolo(\'' + itemData.Plantilla.Nombre + '_' + itemData.IdInmueble + '\')"><i class="fa fa-pencil"></i></a>'
-        //onclick="return getProtocolo(itemData.IdInmueble, itemData.IdProtocolo, itemData.IdPlantilla)"
     }
     /*
         1 - Pendiente -> Icono rojo : Plantilla vacía
@@ -210,85 +200,5 @@
             return false;
         }
     }
-    //function listarProtocolos(ClienteId, InmuebleId) {
-    //    $.ajax({
-    //        url: "/Admin/GetProtocolos",
-    //        type: "GET",
-    //        cache: false,
-    //        data: { cliente: ClienteId },
-    //        dataType: "json"
-    //    }).done(function (data) {
-    //        var protocolosInmueble = [];
-    //        $.each(data, function (index, item) {
-    //            if (item.IdInmueble == InmuebleId) { protocolosInmueble.push(item); }
-    //        });
-    //        drawProtocolos(protocolosInmueble);
-    //        //
-    //        sessionStorage.clear();
-    //        saveSession("Protocolos", data);
-    //        $.each(data, function (index, itemPros) {
-    //            $.ajax({
-    //                url: "/Admin/GetProtocolo",
-    //                type: "GET",
-    //                cache: false,
-    //                data: { idInmueble: itemPros.IdInmueble, idProtocolo: itemPros.IdProtocolo, idPlantilla: itemPros.IdPlantilla },
-    //                dataType: "json"
-    //            }).done(function (dataPro) {
-    //                saveSession(itemPros.Plantilla.Nombre + '_' + itemPros.IdInmueble, dataPro);//Agregar Plantilla{} al linq
-    //            }).fail(function () {
-    //                alert('Error al crear las variables temporales. Por favor, actualice la página o presione F5.');
-    //            });
-    //        });
-    //    }).fail(function () {
-    //        alert('Error al intentar obtener los Protocolos. Por favor, actualice la página o presione F5.');
-    //    });
-    //}
-    //$("#BuscarProtocolos").click(function () {
-    //    var ClienteId = $("#Cliente").val();
-    //    var InmuebleId = $("#Inmueble").val();
-    //    if (conexion) {
-    //        listarProtocolos(ClienteId, InmuebleId);
-    //        //var clienteSession = sessionStorage.getItem("Cliente");
-    //        //if (ClienteId != clienteSession) {
-    //        //    sessionStorage.clear();
-    //        //    $.each(inmuebles, function (index, item) {
-    //        //        $.ajax({
-    //        //            url: "/Admin/GetProtocolos",
-    //        //            type: "GET",
-    //        //            cache: false,
-    //        //            data: { inmueble: item.IdInmueble },
-    //        //            dataType: "json"
-    //        //        }).done(function (dataPros) {
-    //        //            $.each(dataPros, function (index, itemPros) {
-    //        //                $.ajax({
-    //        //                    url: "/Admin/GetProtocolo",
-    //        //                    type: "GET",
-    //        //                    cache: false,
-    //        //                    data: { idInmueble: item.IdInmueble, idProtocolo: itemPros.IdProtocolo, idPlantilla: itemPros.IdPlantilla },
-    //        //                    dataType: "json"
-    //        //                }).done(function (dataPro) {
-    //        //                    sessionStorage.setItem("Cliente", item.IdCliente);
-    //        //                    sessionStorage.setItem(itemPros.Plantilla.Nombre + item.IdInmueble, JSON.stringify(dataPro));//Agregar Plantilla{} al linq
-    //        //                }).fail(function () {
-    //        //                    alert('Error Protocolos!. Por favor, actualice la página o presione F5.');
-    //        //                });
-    //        //            });
-    //        //        }).fail(function () {
-    //        //            alert('Error Inmuebles!. Por favor, actualice la página o presione F5.');
-    //        //        });
-    //        //    });
-    //        //}
-    //    } else {
-    //        if (sessionStorage.getItem("Protocolos")) {
-    //            var protocolos = {}; protocolos = JSON.parse(sessionStorage.getItem("Protocolos"));
-    //            var protocolosSel = [];
-    //            $.each(protocolos, function (index, item) {
-    //                if (item.IdInmueble == InmuebleId) { protocolosSel.push(item); }
-    //            });
-    //            console.log('pintando por cliente');
-    //            drawProtocolos(protocolosSel);//JSON.parse(protocolos)
-    //        }
-    //    }
-    //});
 </script>
 }
