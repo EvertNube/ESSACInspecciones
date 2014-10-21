@@ -1,6 +1,11 @@
 ﻿@using ESSACInspecciones.Core.DTO;
 @section styles{
     @Styles.Render("~/Content/themes/admin/js/fuelux/fuelux.css")
+    <style>
+        .selectedItem {
+            border: 2px dashed #ff0000;
+        }
+    </style>
 }
 @section scripts{
     @Scripts.Render("~/Content/themes/admin/js/fuelux/fuelux.js")
@@ -275,6 +280,63 @@
             //});
             $(".GroupDescripcion").change(function () {
                 actualizarEstadoRespuestas();
+                var val = $(this).val();
+                AddRemoveValidation(val, $(this));
+            });
+            $("#btnFinalizar").click(function () {
+                var conexion = hostReachable();
+                if (conexion) {
+                    var array_Descrip = []; $('.GroupDescripcion').each(function (index, item) { var value = trim(item.value); array_Descrip.push(value); });//Tag: Select
+                    var array_Id = []; $('.GroupIdTableBody').each(function (index, item) { var value = item.value; array_Id.push(value); });
+                    var contaIncompletos = false;
+                    if (array_Descrip.indexOf("0") > -1 || array_Descrip.indexOf("") > -1) contaIncompletos = true;
+                    var mensaje = contaIncompletos ? confirm("No ha completado todo el protocolo. ¿Desea finalizarlo de todas maneras?") : confirm("¿Está seguro que desea enviar la encuesta?");
+                    if (mensaje) {
+                        var IdProtocolo = $("#IdProtocolo").val();
+                        var IdPlantilla = $("#IdPlantilla").val();
+                        var IdInmueble = $("#IdInmueble").val();
+                        var protocolo = {
+                            IdProtocolo: IdProtocolo,
+                            IdPlantilla: $("#IdPlantilla").val(),
+                            IdInmueble: $("#IdInmueble").val(),
+                            NombreAreaProtegida: $("#NombreAreaProtegida").val(),
+                            Direccion: $("#Direccion").val(),
+                            StrFecha: $("#Fecha").val(),
+                            HoraInicio: $("#HoraInicio").val(),
+                            MinutoInicio: $("#MinutoInicio").val(),
+                            GroupIdTableBody: array_Id,
+                            GroupDescripcion: array_Descrip,
+                            IdEstado: 4,
+                            Active: true
+                        };
+                        $.ajax({
+                            url: "/Admin/SaveProtocolo",
+                            type: "POST",
+                            cache: false,
+                            data: { protocolo: JSON.stringify(protocolo) },
+                            dataType: "json"
+                        }).done(function (data) {
+                            if (data) {
+                                localStorage.removeItem("respuestas_" + IdProtocolo + IdPlantilla + IdInmueble);
+                                window.location = "/Admin/Protocolos";
+                            } else {
+                                console.log('Error al intentar guardar los datos.');
+                                alert("Error al intentar finalizar el protocolo. Por favor, actualice la página o presione F5.");
+                            }
+                        }).fail(function () {
+                            alert('Error al intentar finalizar el protocolo. Por favor, actualice la página o presione F5.');
+                        });
+                    } else {
+                        $('.GroupDescripcion').each(function (index, element) {
+                            var val = $(element).val();
+                            AddRemoveValidation(val, $(element));
+                        });
+                    }
+                    
+                } else {
+                    alert("No hay conexión a Internet para realizar esta acción. Por favor conectese a Internet.");
+                }
+                
             });
         });
         function actualizarEstadoRespuestas() {
@@ -350,6 +412,10 @@
         function trim(cadena) {
             cadena = cadena.replace(/^\s+/, '').replace(/\s+$/, '');
             return (cadena);
+        }
+        function AddRemoveValidation(value, element) {
+            if (value === '0' || value === '') element.addClass("selectedItem");
+            else element.removeClass("selectedItem");
         }
         function calcularPuntaje() {
             var elements = $(".GroupDescripcion").not("input").toArray();//$("#tag5 option:selected").data("puntos")

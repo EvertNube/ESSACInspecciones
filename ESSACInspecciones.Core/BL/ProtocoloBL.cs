@@ -262,12 +262,12 @@ namespace ESSACInspecciones.Core.BL
             {
                 try
                 {
-                    int conta = oProtocoloDTO.GroupDescripcion.Where(x => x == null || x == "0").FirstOrDefault().Count();
+                    int contaEstado = oProtocoloDTO.GroupDescripcion.Where(x => x == null || x == "0").FirstOrDefault().Count();
                     Protocolo protocolo = new Protocolo();
                     protocolo.IdPlantilla = oProtocoloDTO.IdPlantilla;
                     protocolo.IdInmueble = oProtocoloDTO.IdInmueble;
                     protocolo.IdUsuario = oProtocoloDTO.IdUsuario;
-                    protocolo.IdEstado = conta != 0 ? 2 : 3;    // 2: Incompleto, 3: Completo
+                    protocolo.IdEstado = (oProtocoloDTO.IdEstado != 0 ? oProtocoloDTO.IdEstado : (contaEstado != 0 ? 2 : 3));    // 2: Incompleto, 3: Completo, 4: Finalizado
                     protocolo.NombreAreaProtegida = oProtocoloDTO.NombreAreaProtegida;
                     protocolo.Direccion = oProtocoloDTO.Direccion;
                     protocolo.Fecha = (oProtocoloDTO.Fecha != null ? Convert.ToDateTime(oProtocoloDTO.Fecha.Value.ToString("dd/MM/yyyy") + " " + oProtocoloDTO.HoraInicio + ":" + oProtocoloDTO.MinutoInicio) : oProtocoloDTO.Fecha);
@@ -334,7 +334,7 @@ namespace ESSACInspecciones.Core.BL
                 {
                     int contaEstado = oProtocoloDTO.GroupDescripcion.Where(x => x == null || x == "0").FirstOrDefault().Count();
                     var protocolo = context.Protocolo.Where(x => x.IdProtocolo == oProtocoloDTO.IdProtocolo).SingleOrDefault();
-                    protocolo.IdEstado = contaEstado != 0 ? 2 : 3;    // 2: Incompleto, 3: Completo
+                    protocolo.IdEstado = (oProtocoloDTO.IdEstado != 0 ? oProtocoloDTO.IdEstado : (contaEstado != 0 ? 2 : 3));    // 2: Incompleto, 3: Completo, 4: Finalizado
                     protocolo.NombreAreaProtegida = oProtocoloDTO.NombreAreaProtegida;
                     protocolo.Direccion = oProtocoloDTO.Direccion;
                     protocolo.Fecha = (oProtocoloDTO.Fecha != null ? Convert.ToDateTime(oProtocoloDTO.Fecha.Value.ToString("dd/MM/yyyy") + " " + oProtocoloDTO.HoraInicio + ":" + oProtocoloDTO.MinutoInicio) : oProtocoloDTO.Fecha);
