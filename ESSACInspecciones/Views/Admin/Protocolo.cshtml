@@ -211,6 +211,17 @@
             $("#IdPlantilla").val(protocolo.IdPlantilla);
             $("#IdInmueble").val(protocolo.IdInmueble);
 
+            if (protocolo.IdEstado == 4) {
+                $("#NombreAreaProtegida").prop('disabled', 'disabled');
+                $("#Fecha").prop('disabled', 'disabled');
+                $("#Direccion").prop('disabled', 'disabled');
+                $("#HoraInicio").prop('disabled', 'disabled');
+                $("#MinutoInicio").prop('disabled', 'disabled');
+                $(".GroupDescripcion").prop('disabled', 'disabled');
+                $("#btnGuardar").hide();
+                $("#btnFinalizar").hide();
+            }
+
             actualizarEstadoRespuestas();
             //calcularPuntaje();
             ///////////////////////////////////////////////////

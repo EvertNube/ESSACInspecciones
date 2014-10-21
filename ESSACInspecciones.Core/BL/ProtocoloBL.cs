@@ -72,6 +72,7 @@ namespace ESSACInspecciones.Core.BL
                         IdProtocolo = r.IdProtocolo,
                         IdPlantilla = r.IdPlantilla,
                         IdInmueble = r.IdInmueble,
+                        IdEstado = r.IdEstado,
                         NombreAreaProtegida = r.NombreAreaProtegida,
                         Fecha = r.Fecha,
                         HoraInicio = r.Fecha != null ? Convert.ToInt32(r.Fecha.Value.ToString("HH")) : 0,
