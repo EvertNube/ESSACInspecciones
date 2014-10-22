@@ -36,3 +36,4 @@ C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Dat
 C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Data\obj\Debug\ESSACInspecciones.Data.dll
 C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Data\obj\Debug\ESSACInspecciones.Data.pdb
 D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Data\obj\Debug\ESSACInspecciones.Data.csprojResolveAssemblyReference.cache
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Data\obj\Debug\ESSACInspecciones.Data.csprojResolveAssemblyReference.cache

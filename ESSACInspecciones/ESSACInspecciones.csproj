@@ -418,6 +418,8 @@
     <Content Include="Content\themes\admin\js\datatables\jquery.dataTables.min.js" />
     <Content Include="Content\themes\admin\js\datepicker\bootstrap-datepicker.js" />
     <Content Include="Content\themes\admin\js\datepicker\datepicker.css" />
+    <Content Include="Content\themes\admin\js\file-input\bootstrap-filestyle.min.js" />
+    <Content Include="Content\themes\admin\js\file-input\bootstrap.file-input.js" />
     <Content Include="Content\themes\admin\js\fuelux\fuelux.css" />
     <Content Include="Content\themes\admin\js\fuelux\fuelux.js" />
     <Content Include="Content\themes\admin\js\fullcalendar\ReporteMes.js" />
@@ -806,6 +808,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\images\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>

@@ -51,3 +51,4 @@ D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Helpers\bin\Debug\S
 D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Helpers\bin\Debug\System.Web.WebPages.Deployment.xml
 D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Helpers\bin\Debug\System.Web.WebPages.Razor.xml
 D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Helpers\obj\Debug\ESSACInspecciones.Helpers.csprojResolveAssemblyReference.cache
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Helpers\obj\Debug\ESSACInspecciones.Helpers.csprojResolveAssemblyReference.cache
