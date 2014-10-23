@@ -368,7 +368,11 @@
             });
             $(".btnPopupCliente").click(function () {
                 //alert('wiii');
-                $("#modal-clienteform").modal("show");
+                $("#modal-usuarioform").modal("show");
+            });
+            $("#btnBuscarUsuarios").click(function () {
+                var descripcion = $("#searchUsuario").val();
+                getUsuarios(descripcion);
             });
         });
         function getUsuarios(descripcion) {
@@ -386,8 +390,11 @@
                         '<td><button type="button" onclick="agregarFirma(' + item.Nombre + ', \'' + item.RutaFirma + '\')" data-dismiss="modal"><i class="fa fa-check"></i></button></td></tr>');
                 });
             }).fail(function () {
-                alert('Error al intentar obtener el listado de Productos. Por favor, actualice la página o presione F5.');
+                alert('Error al intentar obtener el listado de Usuarios. Por favor, actualice la página o presione F5.');
             });
+        }
+        function agregarFirma(nombre, ruta) {
+
         }
         function eliminarFilaFirma(index) {
             $("#firma" + index).remove();//eliminino una fila con el indice: producto1
@@ -540,7 +547,7 @@
     </section>
 </section>
 
-<div class="modal fade" id="modal-clienteform">
+<div class="modal fade" id="modal-usuarioform">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -550,8 +557,8 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-sm-12 m-b-xs">
-                        <input type="text" id="searchEmpresa" class="input-sm input-s-lg inline form-control" />
-                        <button type="button" class="btn btn-sm btn-default btn-rounded inline" id="btnBuscarEmpresa">Buscar</button>
+                        <input type="text" id="searchUsuario" class="input-sm input-s-lg inline form-control" />
+                        <button type="button" class="btn btn-sm btn-default btn-rounded inline" id="btnBuscarUsuarios">Buscar</button>
                     </div>
                     <div id="registro" class="col-sm-12 form-horizontal">
                         <div class="slim-scroll" data-height="540" data-disable-fade-out="true" data-distance="0" data-size="5px" data-color="#333333">

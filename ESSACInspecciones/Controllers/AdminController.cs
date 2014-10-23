@@ -761,7 +761,7 @@ namespace ESSACInspecciones.Controllers
         {
             UsuariosBL objBL = new UsuariosBL();
             var lista = objBL.getUsuarios();
-            if (string.IsNullOrEmpty(descripcion.Trim()))
+            if (!string.IsNullOrEmpty(descripcion))
             {
                 lista = lista.Where(x => x.Nombre.Contains(descripcion.Trim())).ToList();
             }
