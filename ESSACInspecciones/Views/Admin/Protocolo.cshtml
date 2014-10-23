@@ -10,7 +10,7 @@
 @section scripts{
     @Scripts.Render("~/Content/themes/admin/js/fuelux/fuelux.js")
     <script type="text/javascript">
-        var contaFirma = 0;
+        //var contaFirma = 0;
         $(document).ready(function () {
             var protocolo = JSON.parse(localStorage.getItem("protocolo"));
             //Imrimir titulo del protocolo
@@ -99,7 +99,7 @@
                                     //if (seccion.SeccionBodys[s].IdSeccionBody = 410) {
                                     //    debugger;
                                     //}
-                                    var classTextBox = "form-control input-sm GroupDescripcion " + stepname;
+                                    var classTextBox = "form-control input-sm GroupDescripcion " + stepname; var strHtmlTag = '';
                                     switch (seccion.SeccionBodys[s].IdTipoTag) {
                                         case 2: strHtmlTag = '<input type="text" id="tag' + seccion.SeccionBodys[s].IdSeccionBody + '" class="' + classTextBox + '" value="' + removeNull(seccion.SeccionBodys[s].Respuesta) + '"/>'; break;
                                         case 3: strHtmlTag = drawSelect("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectSINO, seccion.SeccionBodys[s].Respuesta, 2, stepname); break;
@@ -108,10 +108,11 @@
                                         case 6: strHtmlTag = drawSelect("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectAccesorios, seccion.SeccionBodys[s].Respuesta, 2, stepname); break;
                                         case 7: strHtmlTag = drawSelect("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectPresiones, seccion.SeccionBodys[s].Respuesta, 2, stepname); break;
                                         case 8: strHtmlTag = '<div class="input-group m-t-sm m-b-sm"><input type="text" id="tag' + seccion.SeccionBodys[s].IdSeccionBody + '" class="' + classTextBox + '" value="' + removeNull(seccion.SeccionBodys[s].Respuesta) + '">' +
-                                                    '<span class="input-group-btn"><button class="btn btn-sm btn-default" type="button"><i class="fa fa-search"></i></button></span></div>';
+                                                    '<span class="input-group-btn"><button class="btn btn-sm btn-default btnPopupCliente" type="button"><i class="fa fa-search"></i></button></span></div>';
+                                        default: break;
                                     }
-                                    strHtmlSecRow += '<td rowspan="' + seccion.SeccionBodys[s].Rowspan + '" colspan="' + seccion.SeccionBodys[s].Colspan + '">' + strHtmlTag + '</td>';
-                                    strHtmlSecRow += '<input type="hidden" name="GroupIdTableBody" class="GroupIdTableBody" value="' + seccion.SeccionBodys[s].IdSeccionBody + '" />';
+                                    strHtmlSecRow += '<td rowspan="' + seccion.SeccionBodys[s].Rowspan + '" colspan="' + seccion.SeccionBodys[s].Colspan + '">' + strHtmlTag + '<input type="hidden" name="GroupIdTableBody" class="GroupIdTableBody" value="' + seccion.SeccionBodys[s].IdSeccionBody + '" />' + '</td>';
+                                    //strHtmlSecRow += '<input type="hidden" name="GroupIdTableBody" class="GroupIdTableBody" value="' + seccion.SeccionBodys[s].IdSeccionBody + '" />';
                                     if (seccion.SeccionBodys[s].IdSeccionBody == 452 || seccion.SeccionBodys[s].IdSeccionBody == 453) strHtmlSecRow += '<td></td>';
                                 }
                                 if (s == (totalItems - 1) || filaItem != seccion.SeccionBodys[s + 1].NumeroFila) {
@@ -351,29 +352,53 @@
                             AddRemoveValidation(val, $(element));
                         });
                     }
-                    
+
                 } else {
                     alert("No hay conexión a Internet para realizar esta acción. Por favor conectese a Internet.");
                 }
-                
+
             });
-            //var contaFirma = 0;
+            var contaFirma = 0; var indexFirma = 0;
             $("#btnAddFilaFirma").click(function () {
-                contaFirma++;
-                if (contaFirma < 7) {
-                    $("#tblFirmas").append("<tr id='firma" + contaFirma + "'><td colspan='3'></td> <td colspan='3'></td> <td colspan='2'></td> <td colspan='2'></td> <td colspan='2'></td> <td><a href=\"javascript:eliminarFilaFirma('" + contaFirma + "')\"><i class='fa fa-times text-danger'></i></a></td></tr>");
+                if (contaFirma < 6) {
+                    contaFirma++;
+                    $("#tblFirmas").append("<tr id='firma" + indexFirma + "'><td colspan='3'></td> <td colspan='3'></td> <td colspan='2'></td> <td colspan='2'></td> <td colspan='2'></td> <td><a href=\"javascript:eliminarFilaFirma('" + indexFirma + "')\"><i class='fa fa-times text-danger'></i></a></td></tr>");
+                    indexFirma++;
                 }
             });
+            $(".btnPopupCliente").click(function () {
+                //alert('wiii');
+                $("#modal-clienteform").modal("show");
+            });
         });
+        function getUsuarios(descripcion) {
+            $.ajax({
+                url: "/Admin/GetUsuarios",
+                type: "GET",
+                cache: false,
+                data: { descripcion: descripcion },
+                dataType: "json"
+            }).done(function (data) {
+                $('#usuariosTable td').remove();
+                $.each(data, function (index, item) {
+                    $('#usuariosTable > tbody:last').append(
+                        '<tr><td>' + item.Nombre + '</td>' +
+                        '<td><button type="button" onclick="agregarFirma(' + item.Nombre + ', \'' + item.RutaFirma + '\')" data-dismiss="modal"><i class="fa fa-check"></i></button></td></tr>');
+                });
+            }).fail(function () {
+                alert('Error al intentar obtener el listado de Productos. Por favor, actualice la página o presione F5.');
+            });
+        }
         function eliminarFilaFirma(index) {
             $("#firma" + index).remove();//eliminino una fila con el indice: producto1
             //facturaDetalle.splice(index - 1, 1);//eliminio del array el elemento en la posicion  index-1
+            contaFirma--;
         }
         function actualizarEstadoRespuestas() {
             var totalTabs = $("#tabProtocolo").children().length;
             for (var i = 1; i <= totalTabs; i++) {
                 var totalito = $('.step' + i).length; var conta = 0;
-                $('.step'+i).each(function (index, element) {
+                $('.step' + i).each(function (index, element) {
                     var val = trim($(element).val());
                     if (val == '0' || val == '') conta++; //if (val.indexOf("0") > -1 || val.indexOf("") > -1) conta++;
                 });
@@ -485,15 +510,15 @@
                                     </div>
                                 </section>
                                 @*<section class="panel panel-default">
-                                    <header class="panel-heading font-bold">Puntuación</header>
-                                    <div class="panel-body">
-                                        <div class="form-inline">
-                                            <div class="form-group">
-                                                <input type="text" id="puntuacion" class="form-control btn-rounded" value="" />
+                                        <header class="panel-heading font-bold">Puntuación</header>
+                                        <div class="panel-body">
+                                            <div class="form-inline">
+                                                <div class="form-group">
+                                                    <input type="text" id="puntuacion" class="form-control btn-rounded" value="" />
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </section>*@
+                                    </section>*@
                                 <div class="line line-dashed line-lg pull-in"></div>
                                 <input type="hidden" id="IdProtocolo" />
                                 <input type="hidden" id="IdPlantilla" />
@@ -514,3 +539,41 @@
 
     </section>
 </section>
+
+<div class="modal fade" id="modal-clienteform">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Busqueda Usuarios</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 m-b-xs">
+                        <input type="text" id="searchEmpresa" class="input-sm input-s-lg inline form-control" />
+                        <button type="button" class="btn btn-sm btn-default btn-rounded inline" id="btnBuscarEmpresa">Buscar</button>
+                    </div>
+                    <div id="registro" class="col-sm-12 form-horizontal">
+                        <div class="slim-scroll" data-height="540" data-disable-fade-out="true" data-distance="0" data-size="5px" data-color="#333333">
+                            <div class="table-responsive">
+                                <table class="table table-hover m-b-none" id="usuariosTable">
+                                    <thead>
+                                        <tr>
+                                            <th width="90%">Nombre</th>
+                                            <th width="10%">Seleccionar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-primary" id="btnSaveEncuesta">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
