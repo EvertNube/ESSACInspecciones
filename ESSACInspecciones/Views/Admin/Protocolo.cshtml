@@ -10,6 +10,7 @@
 @section scripts{
     @Scripts.Render("~/Content/themes/admin/js/fuelux/fuelux.js")
     <script type="text/javascript">
+        var contaFirma = 0;
         $(document).ready(function () {
             var protocolo = JSON.parse(localStorage.getItem("protocolo"));
             //Imrimir titulo del protocolo
@@ -93,10 +94,11 @@
                                 if (seccion.SeccionBodys[s].IdTipoCelda == 1) {
                                     if (seccion.SeccionBodys[s].BackgroundColor == true) { styleItem = 'style="background-color:#c2c0c2;"'; } else { styleItem = ''; }
                                     strHtmlSecRow += '<th rowspan="' + seccion.SeccionBodys[s].Rowspan + '" colspan="' + seccion.SeccionBodys[s].Colspan + '" ' + styleItem + '>' + seccion.SeccionBodys[s].Descripcion + '</th>';
+                                    if (seccion.SeccionBodys[s].IdSeccionBody == 451) strHtmlSecRow += '<th><a id="btnAddRow" class="btn btn-sm btn-success btn-rounded" title="Agregar"><i class="fa fa-plus"></i></a></th>';
                                 } else {
-                                    if (seccion.SeccionBodys[s].IdSeccionBody = 410) {
-                                        debugger;
-                                    }
+                                    //if (seccion.SeccionBodys[s].IdSeccionBody = 410) {
+                                    //    debugger;
+                                    //}
                                     var classTextBox = "form-control input-sm GroupDescripcion " + stepname;
                                     switch (seccion.SeccionBodys[s].IdTipoTag) {
                                         case 2: strHtmlTag = '<input type="text" id="tag' + seccion.SeccionBodys[s].IdSeccionBody + '" class="' + classTextBox + '" value="' + removeNull(seccion.SeccionBodys[s].Respuesta) + '"/>'; break;
@@ -110,16 +112,17 @@
                                     }
                                     strHtmlSecRow += '<td rowspan="' + seccion.SeccionBodys[s].Rowspan + '" colspan="' + seccion.SeccionBodys[s].Colspan + '">' + strHtmlTag + '</td>';
                                     strHtmlSecRow += '<input type="hidden" name="GroupIdTableBody" class="GroupIdTableBody" value="' + seccion.SeccionBodys[s].IdSeccionBody + '" />';
+                                    if (seccion.SeccionBodys[s].IdSeccionBody == 452 || seccion.SeccionBodys[s].IdSeccionBody == 453) strHtmlSecRow += '<td></td>';
                                 }
                                 if (s == (totalItems - 1) || filaItem != seccion.SeccionBodys[s + 1].NumeroFila) {
                                     strHtmlSecRow += "</tr>";
                                 }
                                 tmpFilaItem = seccion.SeccionBodys[s].NumeroFila;
                             }
-
+                            var id = seccion.IdSeccion == 48 ? 'id="tblFirmas"' : '';
                             strHtmlSeccionBodys = '<div class="table-responsive">' +
                                                 '<table class="table table-bordered">' +
-                                                    '<tbody>' +
+                                                    '<tbody ' + id + '>' +
                                                     strHtmlSecRow +
                                                     '</tbody>' +
                                                 '</table>' +
@@ -354,7 +357,18 @@
                 }
                 
             });
+            //var contaFirma = 0;
+            $("#btnAddRow").click(function () {
+                contaFirma++;
+                if (contaFirma < 7) {
+                    $("#tblFirmas").append("<tr id='firma" + contaFirma + "'><td colspan='3'></td> <td colspan='3'></td> <td colspan='2'></td> <td colspan='2'></td> <td colspan='2'></td> <td><a href=\"javascript:eliminarProducto('" + contaFirma + "')\"><i class='fa fa-times text-danger'></i></a></td></tr>");
+                }
+            });
         });
+        function addRowFirma() {
+            contaFirma++;
+            $("#tblFirmas").append("<tr id='firma" + contaFirma + "'><td></td> <td></td> <td></td> <td></td> <td></td> <td><a href=\"javascript:eliminarProducto('" + contaFirma + "')\"><i class='fa fa-times text-danger'></i></a></td></tr>");
+        }
         function actualizarEstadoRespuestas() {
             var totalTabs = $("#tabProtocolo").children().length;
             for (var i = 1; i <= totalTabs; i++) {
