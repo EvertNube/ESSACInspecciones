@@ -94,7 +94,7 @@
                                 if (seccion.SeccionBodys[s].IdTipoCelda == 1) {
                                     if (seccion.SeccionBodys[s].BackgroundColor == true) { styleItem = 'style="background-color:#c2c0c2;"'; } else { styleItem = ''; }
                                     strHtmlSecRow += '<th rowspan="' + seccion.SeccionBodys[s].Rowspan + '" colspan="' + seccion.SeccionBodys[s].Colspan + '" ' + styleItem + '>' + seccion.SeccionBodys[s].Descripcion + '</th>';
-                                    if (seccion.SeccionBodys[s].IdSeccionBody == 451) strHtmlSecRow += '<th><a id="btnAddRow" class="btn btn-sm btn-success btn-rounded" title="Agregar"><i class="fa fa-plus"></i></a></th>';
+                                    if (seccion.SeccionBodys[s].IdSeccionBody == 451) strHtmlSecRow += '<th><a id="btnAddFilaFirma" class="btn btn-sm btn-success btn-rounded" title="Agregar"><i class="fa fa-plus"></i></a></th>';
                                 } else {
                                     //if (seccion.SeccionBodys[s].IdSeccionBody = 410) {
                                     //    debugger;
@@ -358,16 +358,16 @@
                 
             });
             //var contaFirma = 0;
-            $("#btnAddRow").click(function () {
+            $("#btnAddFilaFirma").click(function () {
                 contaFirma++;
                 if (contaFirma < 7) {
-                    $("#tblFirmas").append("<tr id='firma" + contaFirma + "'><td colspan='3'></td> <td colspan='3'></td> <td colspan='2'></td> <td colspan='2'></td> <td colspan='2'></td> <td><a href=\"javascript:eliminarProducto('" + contaFirma + "')\"><i class='fa fa-times text-danger'></i></a></td></tr>");
+                    $("#tblFirmas").append("<tr id='firma" + contaFirma + "'><td colspan='3'></td> <td colspan='3'></td> <td colspan='2'></td> <td colspan='2'></td> <td colspan='2'></td> <td><a href=\"javascript:eliminarFilaFirma('" + contaFirma + "')\"><i class='fa fa-times text-danger'></i></a></td></tr>");
                 }
             });
         });
-        function addRowFirma() {
-            contaFirma++;
-            $("#tblFirmas").append("<tr id='firma" + contaFirma + "'><td></td> <td></td> <td></td> <td></td> <td></td> <td><a href=\"javascript:eliminarProducto('" + contaFirma + "')\"><i class='fa fa-times text-danger'></i></a></td></tr>");
+        function eliminarFilaFirma(index) {
+            $("#firma" + index).remove();//eliminino una fila con el indice: producto1
+            //facturaDetalle.splice(index - 1, 1);//eliminio del array el elemento en la posicion  index-1
         }
         function actualizarEstadoRespuestas() {
             var totalTabs = $("#tabProtocolo").children().length;
