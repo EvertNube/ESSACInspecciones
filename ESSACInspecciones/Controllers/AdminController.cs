@@ -756,6 +756,18 @@ namespace ESSACInspecciones.Controllers
         //    var model = objBL.getProtocolos(idUsuario, cliente);
         //    return Json(model, JsonRequestBehavior.AllowGet);
         //}
+        [HttpGet]
+        public ActionResult GetUsuarios(string descripcion)
+        {
+            UsuariosBL objBL = new UsuariosBL();
+            var lista = objBL.getUsuarios();
+            if (string.IsNullOrEmpty(descripcion.Trim()))
+            {
+                lista = lista.Where(x => x.Nombre.Contains(descripcion.Trim())).ToList();
+            }
+            return Json(lista, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
         public ActionResult SaveProtocolo(string protocolo)
         {
             if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
