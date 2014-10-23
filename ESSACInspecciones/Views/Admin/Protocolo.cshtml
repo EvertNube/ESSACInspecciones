@@ -94,6 +94,9 @@
                                     if (seccion.SeccionBodys[s].BackgroundColor == true) { styleItem = 'style="background-color:#c2c0c2;"'; } else { styleItem = ''; }
                                     strHtmlSecRow += '<th rowspan="' + seccion.SeccionBodys[s].Rowspan + '" colspan="' + seccion.SeccionBodys[s].Colspan + '" ' + styleItem + '>' + seccion.SeccionBodys[s].Descripcion + '</th>';
                                 } else {
+                                    if (seccion.SeccionBodys[s].IdSeccionBody = 410) {
+                                        debugger;
+                                    }
                                     var classTextBox = "form-control input-sm GroupDescripcion " + stepname;
                                     switch (seccion.SeccionBodys[s].IdTipoTag) {
                                         case 2: strHtmlTag = '<input type="text" id="tag' + seccion.SeccionBodys[s].IdSeccionBody + '" class="' + classTextBox + '" value="' + removeNull(seccion.SeccionBodys[s].Respuesta) + '"/>'; break;
@@ -102,6 +105,8 @@
                                         case 5: strHtmlTag = drawSelect("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectNivelTanque, seccion.SeccionBodys[s].Respuesta, 2, stepname); break;
                                         case 6: strHtmlTag = drawSelect("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectAccesorios, seccion.SeccionBodys[s].Respuesta, 2, stepname); break;
                                         case 7: strHtmlTag = drawSelect("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectPresiones, seccion.SeccionBodys[s].Respuesta, 2, stepname); break;
+                                        case 8: strHtmlTag = '<div class="input-group m-t-sm m-b-sm"><input type="text" id="tag' + seccion.SeccionBodys[s].IdSeccionBody + '" class="' + classTextBox + '" value="' + removeNull(seccion.SeccionBodys[s].Respuesta) + '">' +
+                                                    '<span class="input-group-btn"><button class="btn btn-sm btn-default" type="button"><i class="fa fa-search"></i></button></span></div>';
                                     }
                                     strHtmlSecRow += '<td rowspan="' + seccion.SeccionBodys[s].Rowspan + '" colspan="' + seccion.SeccionBodys[s].Colspan + '">' + strHtmlTag + '</td>';
                                     strHtmlSecRow += '<input type="hidden" name="GroupIdTableBody" class="GroupIdTableBody" value="' + seccion.SeccionBodys[s].IdSeccionBody + '" />';
