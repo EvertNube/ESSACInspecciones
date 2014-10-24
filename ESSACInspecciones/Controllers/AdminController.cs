@@ -12,6 +12,9 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using PagedList;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using System.Globalization;
 
 namespace ESSACInspecciones.Controllers
 {
@@ -747,15 +750,130 @@ namespace ESSACInspecciones.Controllers
         }
 
         #region APIS
-        //[HttpGet]
-        //public ActionResult GetProtocolos(int cliente)
-        //{
-        //    //if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
-        //    ProtocoloBL objBL = new ProtocoloBL();
-        //    int idUsuario = getCurrentUser().IdUsuario;
-        //    var model = objBL.getProtocolos(idUsuario, cliente);
-        //    return Json(model, JsonRequestBehavior.AllowGet);
-        //}
+        public void CrearPDF(ProtocoloDTO protocolo)
+        {
+            Document doc = new Document();
+
+            string path = Server.MapPath("~/Content/pdfs");
+            PdfWriter.GetInstance(doc, new FileStream(path + "/Doc1.pdf", FileMode.Create));
+
+            //Mis Fonts
+            Font myFontTitle18 = FontFactory.GetFont("Open Sans", 18);
+            Font myFontTitle18_B = FontFactory.GetFont("Open Sans", 18, Font.BOLD);
+            Font myFontTitle15 = FontFactory.GetFont("Open Sans", 15);
+            Font myFontTitle15_B = FontFactory.GetFont("Open Sans", 15, Font.BOLD);
+            Font myFontTextH12 = FontFactory.GetFont("Open Sans", 12);
+            Font myFontTextH12_B = FontFactory.GetFont("Open Sans", 12, Font.BOLD);
+            Font myFontText10 = FontFactory.GetFont("Open Sans", 10);
+            Font myFontText10_B = FontFactory.GetFont("Open Sans", 10, Font.BOLD);
+            int numColumns = 12;
+
+            doc.Open();
+            doc.Add(new Paragraph("Protocolo de Pruebas", myFontTitle18_B));
+            doc.Add(new Paragraph(protocolo.NombreAreaProtegida + " según NFPA 20 - Motobomba de agua Contra Incendio", myFontTitle15));
+            doc.Add(new Paragraph(" "));
+
+            //Cabecera del protocolo
+            PdfPTable tableHeader = new PdfPTable(numColumns);
+            PdfPCell cellHeader = new PdfPCell();
+            cellHeader.Colspan = 6;
+            cellHeader.Phrase = new Phrase("Nombre del Área Protegida:", myFontTextH12_B);
+            tableHeader.AddCell(cellHeader);
+            cellHeader.Phrase = new Phrase("Fecha:", myFontTextH12_B);
+            tableHeader.AddCell(cellHeader);
+            cellHeader.Phrase = new Phrase(protocolo.NombreAreaProtegida, myFontTextH12);
+            tableHeader.AddCell(cellHeader);
+            cellHeader.Phrase = new Phrase(protocolo.Fecha.ToString(), myFontTextH12);
+            tableHeader.AddCell(cellHeader);
+
+            cellHeader.Phrase = new Phrase("Dirección:", myFontTextH12_B);
+            tableHeader.AddCell(cellHeader);
+            cellHeader.Phrase = new Phrase("Hora de Inicio:", myFontTextH12_B);
+            tableHeader.AddCell(cellHeader);
+            cellHeader.Phrase = new Phrase(protocolo.Direccion, myFontTextH12);
+            tableHeader.AddCell(cellHeader);
+            cellHeader.Phrase = new Phrase(protocolo.HoraInicio + ":" + protocolo.MinutoInicio, myFontTextH12);
+            tableHeader.AddCell(cellHeader);
+            doc.Add(tableHeader);
+            //Fin de la cabecera del protocolo
+
+            doc.Add(new Paragraph(" "));
+
+            OpcionRespuestaBL obj = new OpcionRespuestaBL();
+            ViewBag.Horas = new BaseDTO().fillHoras().ToJSON();
+            ViewBag.Minutos = new BaseDTO().fillMinutos().ToJSON();
+            List<OpcionDTO> opciones3 = (List<OpcionDTO>)obj.getOpcionRespuesta(3);
+            List<OpcionDTO> opciones4 = (List<OpcionDTO>)obj.getOpcionRespuesta(4);
+            List<OpcionDTO> opciones5 = (List<OpcionDTO>)obj.getOpcionRespuesta(5);
+            List<OpcionDTO> opciones6 = (List<OpcionDTO>)obj.getOpcionRespuesta(6);
+            List<OpcionDTO> opciones7 = (List<OpcionDTO>)obj.getOpcionRespuesta(7);
+
+            //Inicio Tabla Reporte
+            PdfPTable tableSeccion = new PdfPTable(numColumns);
+            foreach(var Seccion in protocolo.Secciones)
+            {
+                PdfPCell cellSeccion = new PdfPCell();
+                cellSeccion.Colspan = numColumns;
+                cellSeccion.Phrase = new Phrase(Seccion.Nombre, myFontTextH12_B);
+                tableSeccion.AddCell(cellSeccion);
+
+                //PdfPTable tableSeccionBody = new PdfPTable(numColumns);
+                foreach (var SeccionBody in Seccion.SeccionBodys)
+                {
+                    PdfPCell cellSeccionBody = new PdfPCell();
+                    cellSeccionBody.Rowspan = SeccionBody.Rowspan;
+                    cellSeccionBody.Colspan = SeccionBody.Colspan;
+                    if (SeccionBody.IdTipoCelda == 1)
+                    {
+                        cellSeccionBody.Phrase = new Phrase(SeccionBody.Descripcion);
+                    }
+                    else
+                    {
+                        string rpta = "";
+                        List<OpcionDTO> auxOpc = new List<OpcionDTO>();
+                        switch(SeccionBody.IdTipoTag)
+                        {
+                            case 3: auxOpc = opciones3; break;
+                            case 4: auxOpc = opciones4; break;
+                            case 5: auxOpc = opciones5; break;
+                            case 6: auxOpc = opciones6; break;
+                            case 7: auxOpc = opciones7; break;
+                            default: auxOpc = null; break;
+                        }
+                        //NO HAY CASE 2 PORQUE ESTA CONTEMPLADO EN "ELSE" DE ABAJO
+                        if (auxOpc != null)
+                            rpta = auxOpc[Convert.ToInt32(SeccionBody.Respuesta)].NombreOpcion;
+                        else
+                            rpta = SeccionBody.Respuesta;
+                        
+                        cellSeccionBody.Phrase = new Phrase(rpta);
+                    }
+                    tableSeccion.AddCell(cellSeccionBody);
+                }
+                //tableSeccion.AddCell(tableSeccionBody);
+            }
+            doc.Add(tableSeccion);
+
+            doc.Add(new Paragraph(" "));
+
+            PdfPTable table = new PdfPTable(3);
+            PdfPCell cell = new PdfPCell(new Phrase("Header spanning 3 columns"));
+            cell.Colspan = 3;
+            cell.HorizontalAlignment = 1; //0=Left, 1=Centre, 2=Right
+            table.AddCell(cell);
+            table.AddCell("Col 1 Row 1");
+            table.AddCell("Col 2 Row 1");
+            table.AddCell("Col 3 Row 1");
+            table.AddCell("Col 1 Row 2");
+            table.AddCell("Col 2 Row 2");
+            table.AddCell("Col 3 Row 2");
+            doc.Add(table);
+
+
+            doc.Add(new Paragraph(" "));
+            doc.Close();
+        }
+
         [HttpGet]
         public ActionResult GetUsuarios(string descripcion)
         {
@@ -806,6 +924,8 @@ namespace ESSACInspecciones.Controllers
             ProtocoloBL objBL = new ProtocoloBL();
             //int idUsuario = getCurrentUser().IdUsuario;
             var model = objBL.getProtocolo(idInmueble, idProtocolo, idPlantilla);
+            CrearPDF((ProtocoloDTO)model);
+
             return Json(model, JsonRequestBehavior.AllowGet);
         }
 
