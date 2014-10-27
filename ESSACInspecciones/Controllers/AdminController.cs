@@ -817,7 +817,7 @@ namespace ESSACInspecciones.Controllers
                 cellSeccion.Phrase = new Phrase(Seccion.Nombre, myFontTextH12_B);
                 tableSeccion.AddCell(cellSeccion);
 
-                //PdfPTable tableSeccionBody = new PdfPTable(numColumns);
+                //Contenido de secciones
                 foreach (var SeccionBody in Seccion.SeccionBodys)
                 {
                     PdfPCell cellSeccionBody = new PdfPCell();
@@ -833,6 +833,7 @@ namespace ESSACInspecciones.Controllers
                         List<OpcionDTO> auxOpc = new List<OpcionDTO>();
                         switch(SeccionBody.IdTipoTag)
                         {
+                            case 2: auxOpc = null; break;
                             case 3: auxOpc = opciones3; break;
                             case 4: auxOpc = opciones4; break;
                             case 5: auxOpc = opciones5; break;
@@ -842,7 +843,11 @@ namespace ESSACInspecciones.Controllers
                         }
                         //NO HAY CASE 2 PORQUE ESTA CONTEMPLADO EN "ELSE" DE ABAJO
                         if (auxOpc != null)
-                            rpta = auxOpc[Convert.ToInt32(SeccionBody.Respuesta)].NombreOpcion;
+                            foreach(var itemAux in auxOpc)
+                            {
+                                if(itemAux.IdOpcion == Convert.ToInt32(SeccionBody.Respuesta))
+                                    rpta = itemAux.NombreOpcion;
+                            }
                         else
                             rpta = SeccionBody.Respuesta;
                         
@@ -850,27 +855,59 @@ namespace ESSACInspecciones.Controllers
                     }
                     tableSeccion.AddCell(cellSeccionBody);
                 }
-                //tableSeccion.AddCell(tableSeccionBody);
+
+                foreach(var SubSeccion in Seccion.SubSecciones)
+                {
+                    PdfPCell cellSubSeccion = new PdfPCell();
+                    cellSubSeccion.Colspan = numColumns;
+                    cellSubSeccion.Phrase = new Phrase(SubSeccion.Nombre, myFontTextH12_B);
+                    tableSeccion.AddCell(cellSubSeccion);
+
+                    //Contenido de secciones
+                    foreach (var SubSeccionBody in SubSeccion.SeccionBodys)
+                    {
+                        PdfPCell cellSubSeccionBody = new PdfPCell();
+                        cellSubSeccionBody.Rowspan = SubSeccionBody.Rowspan;
+                        cellSubSeccionBody.Colspan = SubSeccionBody.Colspan;
+                        if (SubSeccionBody.IdTipoCelda == 1)
+                        {
+                            cellSubSeccionBody.Phrase = new Phrase(SubSeccionBody.Descripcion);
+                        }
+                        else
+                        {
+                            string rpta = "";
+                            List<OpcionDTO> auxOpc = new List<OpcionDTO>();
+                            switch (SubSeccionBody.IdTipoTag)
+                            {
+                                case 2: auxOpc = null; break;
+                                case 3: auxOpc = opciones3; break;
+                                case 4: auxOpc = opciones4; break;
+                                case 5: auxOpc = opciones5; break;
+                                case 6: auxOpc = opciones6; break;
+                                case 7: auxOpc = opciones7; break;
+                                default: auxOpc = null; break;
+                            }
+                            //NO HAY CASE 2 PORQUE ESTA CONTEMPLADO EN "ELSE" DE ABAJO
+                            if (auxOpc != null)
+                                foreach (var itemAux in auxOpc)
+                                {
+                                    if (itemAux.IdOpcion == Convert.ToInt32(SubSeccionBody.Respuesta))
+                                        rpta = itemAux.NombreOpcion;
+                                }
+                            else
+                                rpta = SubSeccionBody.Respuesta;
+
+                            cellSubSeccionBody.Phrase = new Phrase(rpta);
+                        }
+                        tableSeccion.AddCell(cellSubSeccionBody);
+                    }
+                }
+                
             }
             doc.Add(tableSeccion);
 
             doc.Add(new Paragraph(" "));
 
-            PdfPTable table = new PdfPTable(3);
-            PdfPCell cell = new PdfPCell(new Phrase("Header spanning 3 columns"));
-            cell.Colspan = 3;
-            cell.HorizontalAlignment = 1; //0=Left, 1=Centre, 2=Right
-            table.AddCell(cell);
-            table.AddCell("Col 1 Row 1");
-            table.AddCell("Col 2 Row 1");
-            table.AddCell("Col 3 Row 1");
-            table.AddCell("Col 1 Row 2");
-            table.AddCell("Col 2 Row 2");
-            table.AddCell("Col 3 Row 2");
-            doc.Add(table);
-
-
-            doc.Add(new Paragraph(" "));
             doc.Close();
         }
 

@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="c:\program files (x86)\microsoft visual studio 12.0\team tools\static analysis tools\fxcop\Xml\CodeAnalysisReport.xsl"?>
+<FxCopReport Version="12.0">
+ <Targets>
+  <Target Name="C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Core\bin\Debug\ESSACInspecciones.Core.dll">
+   <Modules>
+    <Module Name="essacinspecciones.core.dll">
+     <Namespaces>
+      <Namespace Name="ESSACInspecciones.Core.BL">
+       <Types>
+        <Type Name="ClienteBL" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#add(ESSACInspecciones.Core.DTO.ClienteDTO)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="RethrowToPreserveStackDetails" Category="Microsoft.Usage" CheckId="CA2200" Status="Active" Created="2014-10-24 22:31:40Z" FixCategory="NonBreaking">
+             <Issue Certainty="95" Level="Error" Path="c:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Core\BL" File="ClienteBL.cs" Line="60">'ClienteBL.add(ClienteDTO)' rethrows a caught exception and specifies it explicitly as an argument. Use 'throw' without an argument instead, in order to preserve the stack location where the exception was initially raised.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#add(ESSACInspecciones.Core.DTO.ContactoDTO)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="RethrowToPreserveStackDetails" Category="Microsoft.Usage" CheckId="CA2200" Status="Active" Created="2014-10-24 22:31:40Z" FixCategory="NonBreaking">
+             <Issue Certainty="95" Level="Error" Path="c:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Core\BL" File="ClienteBL.cs" Line="179">'ClienteBL.add(ContactoDTO)' rethrows a caught exception and specifies it explicitly as an argument. Use 'throw' without an argument instead, in order to preserve the stack location where the exception was initially raised.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#add(ESSACInspecciones.Core.DTO.InmuebleDTO)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="RethrowToPreserveStackDetails" Category="Microsoft.Usage" CheckId="CA2200" Status="Active" Created="2014-10-24 22:31:40Z" FixCategory="NonBreaking">
+             <Issue Certainty="95" Level="Error" Path="c:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Core\BL" File="ClienteBL.cs" Line="285">'ClienteBL.add(InmuebleDTO)' rethrows a caught exception and specifies it explicitly as an argument. Use 'throw' without an argument instead, in order to preserve the stack location where the exception was initially raised.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="ServiciosBL" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#add(ESSACInspecciones.Core.DTO.ServicioDTO)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="RethrowToPreserveStackDetails" Category="Microsoft.Usage" CheckId="CA2200" Status="Active" Created="2014-10-24 22:31:40Z" FixCategory="NonBreaking">
+             <Issue Certainty="95" Level="Error" Path="c:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Core\BL" File="ServiciosBL.cs" Line="57">'ServiciosBL.add(ServicioDTO)' rethrows a caught exception and specifies it explicitly as an argument. Use 'throw' without an argument instead, in order to preserve the stack location where the exception was initially raised.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="TareaBL" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#add(ESSACInspecciones.Core.DTO.TareaDTO)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="RethrowToPreserveStackDetails" Category="Microsoft.Usage" CheckId="CA2200" Status="Active" Created="2014-10-24 22:31:40Z" FixCategory="NonBreaking">
+             <Issue Certainty="95" Level="Error" Path="c:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Core\BL" File="TareaBL.cs" Line="468">'TareaBL.add(TareaDTO)' rethrows a caught exception and specifies it explicitly as an argument. Use 'throw' without an argument instead, in order to preserve the stack location where the exception was initially raised.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="UsuariosBL" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#add(ESSACInspecciones.Core.DTO.UsuarioDTO)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="RethrowToPreserveStackDetails" Category="Microsoft.Usage" CheckId="CA2200" Status="Active" Created="2014-10-24 22:31:40Z" FixCategory="NonBreaking">
+             <Issue Certainty="95" Level="Error" Path="c:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Core\BL" File="UsuariosBL.cs" Line="117">'UsuariosBL.add(UsuarioDTO)' rethrows a caught exception and specifies it explicitly as an argument. Use 'throw' without an argument instead, in order to preserve the stack location where the exception was initially raised.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+       </Types>
+      </Namespace>
+     </Namespaces>
+    </Module>
+   </Modules>
+  </Target>
+ </Targets>
+ <Rules>
+  <Rule TypeName="RethrowToPreserveStackDetails" Category="Microsoft.Usage" CheckId="CA2200">
+   <Name>Rethrow to preserve stack details</Name>
+   <Description>Use the IL rethrow instruction to preserve original stack details when re-raising a caught exception.</Description>
+   <Resolution Name="Default">{0} rethrows a caught exception and specifies it explicitly as an argument. Use 'throw' without an argument instead, in order to preserve the stack location where the exception was initially raised.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/ms182363.aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="95">Error</MessageLevel>
+   <File Name="usagerules.dll" Version="12.0.0.0" />
+  </Rule>
+ </Rules>
+ <Localized>
+  <String Key="Category">Category</String>
+  <String Key="Certainty">Certainty</String>
+  <String Key="CollapseAll">Collapse All</String>
+  <String Key="CheckId">Check Id</String>
+  <String Key="Error">Error</String>
+  <String Key="Errors">error(s)</String>
+  <String Key="ExpandAll">Expand All</String>
+  <String Key="Help">Help</String>
+  <String Key="Line">Line</String>
+  <String Key="Messages">message(s)</String>
+  <String Key="LocationNotStoredInPdb">[Location not stored in Pdb]</String>
+  <String Key="Project">Project</String>
+  <String Key="Resolution">Resolution</String>
+  <String Key="Rule">Rule</String>
+  <String Key="RuleFile">Rule File</String>
+  <String Key="RuleDescription">Rule Description</String>
+  <String Key="Source">Source</String>
+  <String Key="Status">Status</String>
+  <String Key="Target">Target</String>
+  <String Key="Warning">Warning</String>
+  <String Key="Warnings">warning(s)</String>
+  <String Key="ReportTitle">Code Analysis Report</String>
+ </Localized>
+</FxCopReport>
