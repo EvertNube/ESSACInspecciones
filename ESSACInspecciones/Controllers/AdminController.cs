@@ -905,9 +905,7 @@ namespace ESSACInspecciones.Controllers
                 
             }
             doc.Add(tableSeccion);
-
             doc.Add(new Paragraph(" "));
-
             doc.Close();
         }
 
