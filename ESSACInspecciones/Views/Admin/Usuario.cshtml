@@ -63,65 +63,69 @@
                                         @Html.ValidationMessageFor(u => u.IdRol)
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-sm-2 control-label">File input</label>
+                                        <label>Firma digital</label>
+                                        <input id="fileUp" type="file" name="RutaFirma" class="filestyle" data-icon="false" data-classbutton="btn btn-default btn-rounded" data-classinput="form-control inline input-s">
+                                    </div>
+                                    <div class="line line-dashed line-lg pull-in"></div>
+                                    <div class="form-group">
+                                        <label>Cuenta</label>
+                                        @Html.TextBoxFor(u => u.Cuenta, new { @class = "form-control", @placeholder = "Ingrese el nombre de la cuenta", @type = "text" })
+                                        @Html.ValidationMessageFor(u => u.Cuenta)
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Password</label><br>
+                                        @if (Model != null && Model.IdUsuario > 0)
+                                        {
+                                            var user = (ESSACInspecciones.Core.DTO.UsuarioDTO)HttpContext.Current.Session["User"];
+                                            if (ViewBag.EsAdmin || Model.IdUsuario == user.IdUsuario)
+                                            {
+                                                <button type="button" class="btn btn-sm btn-info" id="btnChangePassword">Cambiar contraseña</button><br /><br />
+                                                <input type="password" class="form-control hide" name="passUser" id="passUser" placeholder="Contraseña actual" /><br />
+                                                <input type="password" class="form-control hide" name="passChange" id="passChange" placeholder="Nueva contraseña" />
+                                                @Html.TextBoxFor(u => u.Pass, new { @class = "form-control", @placeholder = "Ingrese su contraseña", @type = "hidden" })
+                                            }
+                                        }
+                                        else
+                                        {
+                                            @Html.TextBoxFor(u => u.Pass, new { @class = "form-control", @placeholder = "Ingrese su contraseña", @type = "password" })
+                                            @Html.ValidationMessageFor(u => u.Pass)
+                                        }
+                                    </div>
+
+                                    @*<label class="col-sm-2 control-label">File input</label>
                                         <div class="col-sm-10">
                                             <input id="fileUp" type="file" name="file" class="filestyle" data-icon="false" data-classbutton="btn btn-default btn-rounded" data-classinput="form-control inline input-s">
                                         </div>
                                         <br />
-                                        <br />
+                                        <br />*@
+
+                                    @if (ViewBag.EsAdmin && Model != null && Model.IdUsuario > 0)
+                                    {
                                         <div class="line line-dashed line-lg pull-in"></div>
-                                        <div class="form-group">
-                                            <label>Cuenta</label>
-                                            @Html.TextBoxFor(u => u.Cuenta, new { @class = "form-control", @placeholder = "Ingrese el nombre de la cuenta", @type = "text" })
-                                            @Html.ValidationMessageFor(u => u.Cuenta)
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Password</label><br>
-                                            @if (Model != null && Model.IdUsuario > 0)
-                                            {
-                                                var user = (ESSACInspecciones.Core.DTO.UsuarioDTO)HttpContext.Current.Session["User"];
-                                                if (ViewBag.EsAdmin || Model.IdUsuario == user.IdUsuario)
-                                                {
-                                                    <button type="button" class="btn btn-sm btn-info" id="btnChangePassword">Cambiar contraseña</button><br /><br />
-                                                    <input type="password" class="form-control hide" name="passUser" id="passUser" placeholder="Contraseña actual" /><br />
-                                                    <input type="password" class="form-control hide" name="passChange" id="passChange" placeholder="Nueva contraseña" />
-                                                    @Html.TextBoxFor(u => u.Pass, new { @class = "form-control", @placeholder = "Ingrese su contraseña", @type = "hidden" })
-                                                }
-                                            }
-                                            else
-                                            {
-                                                @Html.TextBoxFor(u => u.Pass, new { @class = "form-control", @placeholder = "Ingrese su contraseña", @type = "password" })
-                                                @Html.ValidationMessageFor(u => u.Pass)
-                                            }
-                                        </div>
-                                        @if (ViewBag.EsAdmin && Model != null && Model.IdUsuario > 0)
+                                        <div class="checkbox">
+                                            <label>
+                                                @Html.CheckBoxFor(u => u.Active)
+                                                Activo
+                                            </label>
+                                            @Html.ValidationMessageFor(u => u.Active)
+                                        </div>}
+                                    else
+                                    {
+                                        @Html.TextBoxFor(u => u.Active, new { @value = Model != null ? Model.Active : false, @type = "hidden" })
+                                    }
+                                    <div class="line line-dashed line-lg pull-in" style="margin-bottom:5px;"></div>
+                                    <div class="footer text-right">
+                                        @Html.TextBoxFor(u => u.IdUsuario, new { @value = Model != null ? Model.IdUsuario.ToString() : "", @type = "hidden" })
+                                        @{var btnName = (Model != null && Model.IdUsuario > 0) ? "Guardar Cambios" : "Crear";}
+                                        <button type="submit" class="btn btn-default btn-primary">@btnName</button>
+                                        @if (ViewBag.EsAdmin)
                                         {
-                                            <div class="line line-dashed line-lg pull-in"></div>
-                                            <div class="checkbox">
-                                                <label>
-                                                    @Html.CheckBoxFor(u => u.Active)
-                                                    Activo
-                                                </label>
-                                                @Html.ValidationMessageFor(u => u.Active)
-                                            </div>}
+                                            <a class="btn btn-default btn-danger" href="@Url.Action("Usuarios")">Salir</a>
+                                        }
                                         else
                                         {
-                                            @Html.TextBoxFor(u => u.Active, new { @value = Model != null ? Model.Active : false, @type = "hidden" })
+                                            <a class="btn btn-default btn-danger" href="@Url.Action("Index")">Salir</a>
                                         }
-                                        <div class="line line-dashed line-lg pull-in" style="margin-bottom:5px;"></div>
-                                        <div class="footer text-right">
-                                            @Html.TextBoxFor(u => u.IdUsuario, new { @value = Model != null ? Model.IdUsuario.ToString() : "", @type = "hidden" })
-                                            @{var btnName = (Model != null && Model.IdUsuario > 0) ? "Guardar Cambios" : "Crear";}
-                                            <button type="submit" class="btn btn-default btn-primary">@btnName</button>
-                                            @if (ViewBag.EsAdmin)
-                                            {
-                                                <a class="btn btn-default btn-danger" href="@Url.Action("Usuarios")">Salir</a>
-                                            }
-                                            else
-                                            {
-                                                <a class="btn btn-default btn-danger" href="@Url.Action("Index")">Salir</a>
-                                            }
-                                        </div>
                                     </div>
                             </section>
                         </div>

@@ -148,7 +148,7 @@
                 '<td>' + itemData.Plantilla.Nombre + '</td>' +
                 '<td>' + itemData.Estado.NombreEstado  + '</td>' + //+ "\t"
                 '<td>' + setImage(itemData.IdProtocolo, itemData.IdPlantilla, itemData.IdInmueble, itemData.IdEstado) + '</td>' +
-                '<td>' + '<a href="' + url + '" onclick="return getProtocolo(' + itemData.IdInmueble + ', ' + itemData.IdProtocolo + ', ' + itemData.IdPlantilla + ')" title="Editar" ><i class="fa fa-pencil"></i></a>' +
+                '<td>' + '<a href="' + url + '" onclick="return getProtocolo(' + itemData.IdInmueble + ', ' + itemData.IdProtocolo + ', ' + itemData.IdPlantilla + ')" title="Editar" ><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;' +
                 '<a onclick="return generarPdfProtocolo(' + itemData.IdInmueble + ', ' + itemData.IdProtocolo + ', ' + itemData.IdPlantilla + ')" title="Generar PDF" ><i class="fa fa-file-text-o"></i></a>' +
                 '</td></tr>');
         });

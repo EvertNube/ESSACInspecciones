@@ -124,25 +124,26 @@ namespace ESSACInspecciones.Controllers
 
         public ActionResult AddUser(UsuarioDTO user, string passUser = "", string passChange = "")
         {
-            if (Request.Files.Count > 0)
-            {
-                var file = Request.Files[0];
-
-                if (file != null && file.ContentLength > 0)
-                {
-                    string nomnbreImagen = user.Nombre + user.InicialesNombre;
-                    var fileName = Path.GetFileName(file.FileName);
-                    var fileExt = Path.GetExtension(file.FileName);
-                    var path = Path.Combine(Server.MapPath("~/Content/images/"), nomnbreImagen + fileExt);
-                    file.SaveAs(path);
-                }
-            }
             if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
             UsuarioDTO currentUser = getCurrentUser();
             if (!this.isAdministrator() && user.IdUsuario != currentUser.IdUsuario) { return RedirectToAction("Index"); }
             if (user.IdUsuario == 1 && !this.isSuperAdministrator()) { return RedirectToAction("Index"); }
             try
             {
+                if (Request.Files.Count > 0)
+                {
+                    var file = Request.Files[0];
+
+                    if (file != null && file.ContentLength > 0)
+                    {
+                        string nomnbreImagen = user.Nombre + user.InicialesNombre;
+                        var fileName = Path.GetFileName(file.FileName);
+                        var fileExt = Path.GetExtension(file.FileName);
+                        var path = Path.Combine(Server.MapPath("~/Content/images/"), nomnbreImagen + fileExt);
+                        file.SaveAs(path);
+                        user.RutaFirma = path;
+                    }
+                }
                 UsuariosBL usuariosBL = new UsuariosBL();
                 if (user.IdUsuario == 0 && usuariosBL.validateUsuario(user))
                 {

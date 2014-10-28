@@ -108,6 +108,7 @@ namespace ESSACInspecciones.Core.BL
                     usuario.Pass = Encrypt.GetCrypt(user.Pass);
                     usuario.IdRol = user.IdRolUsuario;//>= 2 ? user.IdRol : 3;
                     //usuario.IdCargo = user.IdCargo;
+                    usuario.RutaFirma = user.RutaFirma;
                     usuario.Estado = true;
                     usuario.FechaRegistro = DateTime.Now;
                     context.Usuario.Add(usuario);
@@ -277,6 +278,7 @@ namespace ESSACInspecciones.Core.BL
                         //usuario.IdCargo = user.IdCargo;
                         usuario.Cuenta = user.Cuenta;
                         usuario.Estado = user.Active;
+                        usuario.RutaFirma = user.RutaFirma;
                         if (!String.IsNullOrWhiteSpace(passUser) && !String.IsNullOrWhiteSpace(passChange))
                         {
                             if ((currentUser.IdRolUsuario <= 2 || currentUser.IdUsuario == user.IdUsuario)
