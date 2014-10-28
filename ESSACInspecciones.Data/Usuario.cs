@@ -30,6 +30,7 @@ namespace ESSACInspecciones.Data
         public Nullable<System.DateTime> FechaRegistro { get; set; }
         public int IdRol { get; set; }
         public Nullable<int> IdCargo { get; set; }
+        public string RutaFirma { get; set; }
     
         public virtual Cargo Cargo { get; set; }
         public virtual ICollection<Protocolo> Protocolo { get; set; }

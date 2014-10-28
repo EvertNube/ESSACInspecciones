@@ -44,10 +44,10 @@ namespace ESSACInspecciones.Data
         public DbSet<Servicio> Servicio { get; set; }
         public DbSet<ServicioEstado> ServicioEstado { get; set; }
         public DbSet<TableHeader> TableHeader { get; set; }
-        public DbSet<Tarea> Tarea { get; set; }
         public DbSet<TipoCelda> TipoCelda { get; set; }
         public DbSet<TipoSeccion> TipoSeccion { get; set; }
         public DbSet<TipoTag> TipoTag { get; set; }
+        public DbSet<Tarea> Tarea { get; set; }
         public DbSet<Usuario> Usuario { get; set; }
     
         public virtual ObjectResult<SP_CountEstados_Result> SP_CountEstados(Nullable<System.DateTime> fechaInicio, Nullable<System.DateTime> fechaFin, Nullable<int> idResponsable)

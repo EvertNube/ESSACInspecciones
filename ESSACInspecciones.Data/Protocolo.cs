@@ -32,7 +32,7 @@ namespace ESSACInspecciones.Data
         public virtual EstadoProtocolo EstadoProtocolo { get; set; }
         public virtual Inmueble Inmueble { get; set; }
         public virtual Plantilla Plantilla { get; set; }
-        public virtual Usuario Usuario { get; set; }
         public virtual ICollection<Respuesta> Respuesta { get; set; }
+        public virtual Usuario Usuario { get; set; }
     }
 }
