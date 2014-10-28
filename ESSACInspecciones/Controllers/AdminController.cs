@@ -691,19 +691,19 @@ namespace ESSACInspecciones.Controllers
             return View();
         }
 
-        public ActionResult ProtocoloReporte()
-        {
-            OpcionRespuestaBL obj = new OpcionRespuestaBL();
-            ViewBag.Horas = new BaseDTO().fillHoras().ToJSON();
-            ViewBag.Minutos = new BaseDTO().fillMinutos().ToJSON();
-            ViewBag.Items_SelectSINO = obj.getOpcionRespuesta(3).ToJSON();//new BaseDTO().fillSelectSINO().ToJSON();
-            ViewBag.Items_SelectBomba = obj.getOpcionRespuesta(4).ToJSON(); //new BaseDTO().fillSelectBomba().ToJSON();
-            ViewBag.Items_SelectNivelTanque = obj.getOpcionRespuesta(5).ToJSON(); //new BaseDTO().fillSelectNivelTanque().ToJSON();
-            ViewBag.Items_SelectAccesorios = obj.getOpcionRespuesta(6).ToJSON(); //new BaseDTO().fillSelectAccesorios().ToJSON();
-            ViewBag.Items_SelectPresiones = obj.getOpcionRespuesta(7).ToJSON(); //new BaseDTO().fillSelectPresiones().ToJSON();
+        //public ActionResult ProtocoloReporte()
+        //{
+        //    OpcionRespuestaBL obj = new OpcionRespuestaBL();
+        //    ViewBag.Horas = new BaseDTO().fillHoras().ToJSON();
+        //    ViewBag.Minutos = new BaseDTO().fillMinutos().ToJSON();
+        //    ViewBag.Items_SelectSINO = obj.getOpcionRespuesta(3).ToJSON();//new BaseDTO().fillSelectSINO().ToJSON();
+        //    ViewBag.Items_SelectBomba = obj.getOpcionRespuesta(4).ToJSON(); //new BaseDTO().fillSelectBomba().ToJSON();
+        //    ViewBag.Items_SelectNivelTanque = obj.getOpcionRespuesta(5).ToJSON(); //new BaseDTO().fillSelectNivelTanque().ToJSON();
+        //    ViewBag.Items_SelectAccesorios = obj.getOpcionRespuesta(6).ToJSON(); //new BaseDTO().fillSelectAccesorios().ToJSON();
+        //    ViewBag.Items_SelectPresiones = obj.getOpcionRespuesta(7).ToJSON(); //new BaseDTO().fillSelectPresiones().ToJSON();
 
-            return View();
-        }
+        //    return View();
+        //}
 
         public ActionResult AddProtocolo(ProtocoloDTO dto)
         {
@@ -749,8 +749,10 @@ namespace ESSACInspecciones.Controllers
             return RedirectToAction("Protocolo_server");
         }
 
+        
+
         #region APIS
-        public void CrearPDF(ProtocoloDTO protocolo)
+        private void CrearPDF(ProtocoloDTO protocolo)
         {
             Document doc = new Document();
 
@@ -907,6 +909,11 @@ namespace ESSACInspecciones.Controllers
             doc.Add(tableSeccion);
             doc.Add(new Paragraph(" "));
             doc.Close();
+
+            System.Diagnostics.Process process = new System.Diagnostics.Process();
+            process.StartInfo.UseShellExecute = true;
+            process.StartInfo.FileName = path + "/Doc1.pdf";
+            process.Start();
         }
 
         [HttpGet]
@@ -952,17 +959,26 @@ namespace ESSACInspecciones.Controllers
             var model = objBL.getProtocolo(idInmueble, idProtocolo, idPlantilla);
             return Json(model, JsonRequestBehavior.AllowGet);
         }
-
         [HttpGet]
-        public ActionResult GetProtocoloReporte(int idInmueble, int? idProtocolo = null, int? idPlantilla = null)
+        public ActionResult GenerarPdfProtocolo(int idInmueble, int? idProtocolo = null, int? idPlantilla = null)
         {
             ProtocoloBL objBL = new ProtocoloBL();
             //int idUsuario = getCurrentUser().IdUsuario;
             var model = objBL.getProtocolo(idInmueble, idProtocolo, idPlantilla);
-            CrearPDF((ProtocoloDTO)model);
-
-            return Json(model, JsonRequestBehavior.AllowGet);
+            CrearPDF(model);
+            return Json(true, JsonRequestBehavior.AllowGet);//return View("Protocolos");
         }
+
+        //[HttpGet]
+        //public ActionResult GetProtocoloReporte(int idInmueble, int? idProtocolo = null, int? idPlantilla = null)
+        //{
+        //    ProtocoloBL objBL = new ProtocoloBL();
+        //    //int idUsuario = getCurrentUser().IdUsuario;
+        //    var model = objBL.getProtocolo(idInmueble, idProtocolo, idPlantilla);
+        //    CrearPDF((ProtocoloDTO)model);
+
+        //    return Json(model, JsonRequestBehavior.AllowGet);
+        //}
 
         [HttpPost]
         public ActionResult AddTareaCalendario(string tarea)
