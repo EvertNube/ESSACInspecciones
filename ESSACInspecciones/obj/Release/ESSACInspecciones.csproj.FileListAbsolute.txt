@@ -174,3 +174,5 @@ D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones\bin\ESSACInspeccion
 D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones\obj\Release\ESSACInspecciones.csprojResolveAssemblyReference.cache
 D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones\obj\Release\ESSACInspecciones.dll
 D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones\obj\Release\ESSACInspecciones.pdb
+D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones\bin\itextsharp.dll
+D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones\bin\itextsharp.xml

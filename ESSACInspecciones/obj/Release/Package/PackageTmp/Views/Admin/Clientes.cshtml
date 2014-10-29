@@ -10,28 +10,31 @@
                 <h2>Clientes</h2>
                 @Html.Partial("_showAlertMessages")
                 <section class="panel panel-default">
-                    <div class="row text-sm wrapper">
-                        <div class="col-sm-8">
-                            <div class="btn-group">
-                                @if (ViewBag.EsAdmin)
-                                {
+                    @if (ViewBag.EsAdmin)
+                    {
+                        <div class="row text-sm wrapper">
+
+                            <div class="col-sm-8">
+                                <div class="btn-group">
+
                                     <label><input type="checkbox" id="btn-showInactive" /> Mostrar Inactivos</label>
-                                }
+
+                                </div>
                             </div>
+                            <div class="col-sm-4">
+                                <a class="btn btn-sm btn-success pull-right btn-rounded" href="@Url.Action("Cliente")"><i class="fa fa-plus"></i> Crear nuevo Cliente</a>
+                            </div>
+
                         </div>
-                        <div class="col-sm-4">
-                            <a class="btn btn-sm btn-success pull-right btn-rounded" href="@Url.Action("Cliente")"><i class="fa fa-plus"></i> Crear nuevo Cliente</a>
-                        </div>
-                    </div>
+                    }
                     <div class="table-responsive">
                         <table class="table table-striped m-b-none">
                             <thead>
                                 <tr>
-                                    <th width="10%">ID</th>
                                     <th width="20%">Empresa</th>
-                                    <th width="20%">Contacto</th>
-                                    <th width="15%">Telefono</th>
-                                    <th width="15%">Email</th>
+                                    <th class="text-center" width="20%">Contacto</th>
+                                    <th class="text-center" width="20%">Telefono</th>
+                                    <th width="20%">Email</th>
                                     @if (ViewBag.EsAdmin)
                                     {
                                         <th width="10%">Opciones</th>
@@ -39,40 +42,38 @@
                                 </tr>
                             </thead>
                             <tbody>
-                            @if (Model != null) {
-                                int cont = 1;
-                                foreach (var obj in Model)
+                                @if (Model != null)
                                 {
-                                    var classInactive = (ViewBag.EsAdmin && !obj.Active) ? "class='inactive'" : "";
-                                    <tr @Html.Raw(classInactive)>
-                                        <td align="center">
-                                            @if (ViewBag.EsAdmin && !obj.Active)
-                                            { <span class="badge bg-danger" data-toggle="tooltip" data-placement="left" data-original-title="Inactivo">@cont</span>}
+                                    foreach (var obj in Model)
+                                    {
+                                        var classInactive = (ViewBag.EsAdmin && !obj.Active) ? "class='inactive'" : "";
+                                        <tr @Html.Raw(classInactive)>
+                                            <td>@obj.NombreEmpresa</td>
+                                            @if (obj.contacto != null)
+                                            {
+                                                <td class="text-center">@obj.contacto.Nombre</td>
+                                                <td class="text-center">
+                                                    @obj.contacto.Telefono
+                                                    @if (!String.IsNullOrWhiteSpace(obj.contacto.Anexo))
+                                                    {
+                                                        <span>(@obj.contacto.Anexo)</span>
+                                                    } / @obj.contacto.Celular
+                                                </td>
+                                                <td>@obj.contacto.Email</td>
+                                            }
                                             else
-                                            {@cont}
-                                        </td>
-                                        <td>@obj.NombreEmpresa</td>
-                                        @if (obj.contacto != null) { 
-                                        <td>@obj.contacto.Nombre</td>
-                                        <td>@obj.contacto.Telefono 
-                                            @if (!String.IsNullOrWhiteSpace(obj.contacto.Anexo)){ 
-                                                <span>(@obj.contacto.Anexo)</span> 
-                                            } / @obj.contacto.Celular</td>
-                                        <td>@obj.contacto.Email</td>
-                                        }
-                                        else { 
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        }
-                                        @if (ViewBag.EsAdmin)
-                                        {
-                                            <td align="center"><a href="@Url.Action("Cliente", new { id = obj.IdCliente})"><i class="fa fa-pencil"></i></a></td>
-                                        }
-                                    </tr>
-                                        cont++;
+                                            {
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            }
+                                            @if (ViewBag.EsAdmin)
+                                            {
+                                                <td align="center"><a href="@Url.Action("Cliente", new { id = obj.IdCliente})"><i class="fa fa-pencil"></i></a></td>
+                                            }
+                                        </tr>
+                                    }
                                 }
-                            }
                             </tbody>
                         </table>
                     </div>

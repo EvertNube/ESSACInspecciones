@@ -168,6 +168,9 @@ a.btn-add i.fa{
 .badge.dot.red {
     background-color: #fb6b5b;
 }
+.badge.dot.warning {
+    background-color: #FFBC1A;
+}
 blockquote.leyend p{
     font-size: 1em;
 }

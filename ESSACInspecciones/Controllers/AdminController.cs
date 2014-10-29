@@ -753,12 +753,15 @@ namespace ESSACInspecciones.Controllers
         
 
         #region APIS
-        private void CrearPDF(ProtocoloDTO protocolo)
+        private MemoryStream CrearPDF(ProtocoloDTO protocolo)
         {
-            Document doc = new Document();
+            MemoryStream ms = new MemoryStream();
+            Document doc = new Document(PageSize.A4.Rotate());
+            PdfWriter writer = PdfWriter.GetInstance(doc, ms);
 
-            string path = Server.MapPath("~/Content/pdfs");
-            PdfWriter.GetInstance(doc, new FileStream(path + "/Doc1.pdf", FileMode.Create));
+            //Document doc = new Document();
+            //string path = Server.MapPath("~/Content/pdfs");
+            //PdfWriter.GetInstance(doc, new FileStream(path + "/Doc1.pdf", FileMode.Create));
 
             //Mis Fonts
             Font myFontTitle18 = FontFactory.GetFont("Open Sans", 18);
@@ -911,10 +914,12 @@ namespace ESSACInspecciones.Controllers
             doc.Add(new Paragraph(" "));
             doc.Close();
 
-            System.Diagnostics.Process process = new System.Diagnostics.Process();
-            process.StartInfo.UseShellExecute = true;
-            process.StartInfo.FileName = path + "/Doc1.pdf";
-            process.Start();
+            //System.Diagnostics.Process process = new System.Diagnostics.Process();
+            //process.StartInfo.UseShellExecute = true;
+            //process.StartInfo.FileName = path + "/Doc1.pdf";
+            //process.Start();
+
+            return ms;
         }
 
         [HttpGet]
@@ -960,15 +965,34 @@ namespace ESSACInspecciones.Controllers
             var model = objBL.getProtocolo(idInmueble, idProtocolo, idPlantilla);
             return Json(model, JsonRequestBehavior.AllowGet);
         }
-        [HttpGet]
+        
         public ActionResult GenerarPdfProtocolo(int idInmueble, int? idProtocolo = null, int? idPlantilla = null)
         {
             ProtocoloBL objBL = new ProtocoloBL();
             //int idUsuario = getCurrentUser().IdUsuario;
             var model = objBL.getProtocolo(idInmueble, idProtocolo, idPlantilla);
-            CrearPDF(model);
-            return Json(true, JsonRequestBehavior.AllowGet);//return View("Protocolos");
+            var ms = CrearPDF(model);
+            byte[] file = ms.ToArray();
+            MemoryStream output = new MemoryStream();
+            output.Write(file, 0, file.Length);
+            output.Position = 0;
+            HttpContext.Response.AppendHeader("Content-Disposition", "inline; filename=" + model.Plantilla.Nombre);
+            //HttpContext.Response.AddHeader("content-disposition", "attachment; filename=" + model.Plantilla.Nombre);
+            // Return the output stream
+            return File(output, "application/pdf"); //new FileStreamResult(output, "application/pdf");
+            //return Json(true, JsonRequestBehavior.AllowGet);
         }
+
+        //[HttpGet]
+        //public ActionResult GenerarPdfProtocolo(int idInmueble, int? idProtocolo = null, int? idPlantilla = null)
+        //{
+        //    ProtocoloBL objBL = new ProtocoloBL();
+        //    //int idUsuario = getCurrentUser().IdUsuario;
+        //    var model = objBL.getProtocolo(idInmueble, idProtocolo, idPlantilla);
+        //    CrearPDF(model);
+        //    HttpContext.Response.AppendHeader("Content-Disposition", "inline; filename=" + "Doc1.pdf");
+        //    return Json(true, JsonRequestBehavior.AllowGet);
+        //}
 
         //[HttpGet]
         //public ActionResult GetProtocoloReporte(int idInmueble, int? idProtocolo = null, int? idPlantilla = null)

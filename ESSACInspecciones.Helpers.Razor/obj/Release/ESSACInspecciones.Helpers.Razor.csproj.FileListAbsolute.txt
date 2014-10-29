@@ -26,3 +26,17 @@ D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\bin\R
 D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\obj\Release\ESSACInspecciones.Helpers.Razor.csprojResolveAssemblyReference.cache
 D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\obj\Release\ESSACInspecciones.Helpers.Razor.dll
 D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\obj\Release\ESSACInspecciones.Helpers.Razor.pdb
+D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\bin\Release\ESSACInspecciones.Helpers.Razor.dll.config
+D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\bin\Release\Microsoft.Web.Infrastructure.dll
+D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\bin\Release\System.Web.Helpers.dll
+D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\bin\Release\System.Web.Mvc.Extensions.dll
+D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\bin\Release\System.Web.Razor.dll
+D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\bin\Release\System.Web.WebPages.Deployment.dll
+D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\bin\Release\System.Web.WebPages.dll
+D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\bin\Release\System.Web.WebPages.Razor.dll
+D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\bin\Release\System.Web.Helpers.xml
+D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\bin\Release\System.Web.Mvc.Extensions.xml
+D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\bin\Release\System.Web.Razor.xml
+D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\bin\Release\System.Web.WebPages.xml
+D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\bin\Release\System.Web.WebPages.Deployment.xml
+D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\bin\Release\System.Web.WebPages.Razor.xml

@@ -42,3 +42,4 @@ D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Core\bin\Release\En
 D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Core\obj\Release\ESSACInspecciones.Core.csprojResolveAssemblyReference.cache
 D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Core\obj\Release\ESSACInspecciones.Core.dll
 D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Core\obj\Release\ESSACInspecciones.Core.pdb
+D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Core\bin\Release\ESSACInspecciones.Core.dll.config

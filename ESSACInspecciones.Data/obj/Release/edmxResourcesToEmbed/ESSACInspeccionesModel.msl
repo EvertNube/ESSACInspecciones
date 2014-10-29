@@ -233,23 +233,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Tarea">
-      <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.Tarea">
-        <MappingFragment StoreEntitySet="Tarea">
-          <ScalarProperty Name="IdEstado" ColumnName="IdEstado" />
-          <ScalarProperty Name="Active" ColumnName="Active" />
-          <ScalarProperty Name="Observaciones" ColumnName="Observaciones" />
-          <ScalarProperty Name="FechaFin" ColumnName="FechaFin" />
-          <ScalarProperty Name="FechaInicio" ColumnName="FechaInicio" />
-          <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
-          <ScalarProperty Name="Nombre" ColumnName="Nombre" />
-          <ScalarProperty Name="IdServicio" ColumnName="IdServicio" />
-          <ScalarProperty Name="IdInmueble" ColumnName="IdInmueble" />
-          <ScalarProperty Name="IdCliente" ColumnName="IdCliente" />
-          <ScalarProperty Name="IdTarea" ColumnName="IdTarea" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="TipoCelda">
       <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.TipoCelda">
         <MappingFragment StoreEntitySet="TipoCelda">
@@ -277,9 +260,27 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="Tarea">
+      <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.Tarea">
+        <MappingFragment StoreEntitySet="Tarea">
+          <ScalarProperty Name="IdEstado" ColumnName="IdEstado" />
+          <ScalarProperty Name="Active" ColumnName="Active" />
+          <ScalarProperty Name="Observaciones" ColumnName="Observaciones" />
+          <ScalarProperty Name="FechaFin" ColumnName="FechaFin" />
+          <ScalarProperty Name="FechaInicio" ColumnName="FechaInicio" />
+          <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+          <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+          <ScalarProperty Name="IdServicio" ColumnName="IdServicio" />
+          <ScalarProperty Name="IdInmueble" ColumnName="IdInmueble" />
+          <ScalarProperty Name="IdCliente" ColumnName="IdCliente" />
+          <ScalarProperty Name="IdTarea" ColumnName="IdTarea" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <EntitySetMapping Name="Usuario">
       <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.Usuario">
         <MappingFragment StoreEntitySet="Usuario">
+          <ScalarProperty Name="RutaFirma" ColumnName="RutaFirma" />
           <ScalarProperty Name="IdCargo" ColumnName="IdCargo" />
           <ScalarProperty Name="IdRol" ColumnName="IdRol" />
           <ScalarProperty Name="FechaRegistro" ColumnName="FechaRegistro" />

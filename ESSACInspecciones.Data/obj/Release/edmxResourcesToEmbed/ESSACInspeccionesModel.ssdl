@@ -234,6 +234,7 @@
     <Property Name="FechaRegistro" Type="datetime" />
     <Property Name="IdRol" Type="int" Nullable="false" />
     <Property Name="IdCargo" Type="int" />
+    <Property Name="RutaFirma" Type="varchar" MaxLength="100" />
   </EntityType>
   <Association Name="FK_ContactoCliente_Cliente">
     <End Role="Cliente" Type="Self.Cliente" Multiplicity="1" />
