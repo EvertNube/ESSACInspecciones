@@ -908,17 +908,10 @@ namespace ESSACInspecciones.Controllers
                         tableSeccion.AddCell(cellSubSeccionBody);
                     }
                 }
-                
             }
             doc.Add(tableSeccion);
             doc.Add(new Paragraph(" "));
             doc.Close();
-
-            //System.Diagnostics.Process process = new System.Diagnostics.Process();
-            //process.StartInfo.UseShellExecute = true;
-            //process.StartInfo.FileName = path + "/Doc1.pdf";
-            //process.Start();
-
             return ms;
         }
 
@@ -976,11 +969,8 @@ namespace ESSACInspecciones.Controllers
             MemoryStream output = new MemoryStream();
             output.Write(file, 0, file.Length);
             output.Position = 0;
-            HttpContext.Response.AppendHeader("Content-Disposition", "inline; filename=" + model.Plantilla.Nombre);
-            //HttpContext.Response.AddHeader("content-disposition", "attachment; filename=" + model.Plantilla.Nombre);
-            // Return the output stream
+            HttpContext.Response.AppendHeader("Content-Disposition", "inline; filename=" + model.Plantilla.Nombre);//HttpContext.Response.AddHeader("content-disposition", "attachment; filename=" + model.Plantilla.Nombre);
             return File(output, "application/pdf"); //new FileStreamResult(output, "application/pdf");
-            //return Json(true, JsonRequestBehavior.AllowGet);
         }
 
         //[HttpGet]
