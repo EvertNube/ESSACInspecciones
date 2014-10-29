@@ -812,7 +812,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\images\" />
-    <Folder Include="Content\pdfs\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
