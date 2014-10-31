@@ -92,6 +92,7 @@
     <Property Name="Fecha" Type="datetime" />
     <Property Name="Direccion" Type="nvarchar" MaxLength="150" />
     <Property Name="Active" Type="bit" Nullable="false" />
+    <Property Name="FechaCreacion" Type="datetime" Nullable="false" />
   </EntityType>
   <EntityType Name="Responsables_Tarea">
     <Key>

@@ -16,8 +16,8 @@ namespace ESSACInspecciones.Data
     {
         public Usuario()
         {
-            this.Protocolo = new HashSet<Protocolo>();
             this.Tarea = new HashSet<Tarea>();
+            this.Protocolo = new HashSet<Protocolo>();
         }
     
         public int IdUsuario { get; set; }
@@ -33,8 +33,8 @@ namespace ESSACInspecciones.Data
         public string RutaFirma { get; set; }
     
         public virtual Cargo Cargo { get; set; }
-        public virtual ICollection<Protocolo> Protocolo { get; set; }
         public virtual Rol Rol { get; set; }
         public virtual ICollection<Tarea> Tarea { get; set; }
+        public virtual ICollection<Protocolo> Protocolo { get; set; }
     }
 }

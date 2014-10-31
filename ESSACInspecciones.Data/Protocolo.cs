@@ -28,11 +28,12 @@ namespace ESSACInspecciones.Data
         public Nullable<System.DateTime> Fecha { get; set; }
         public string Direccion { get; set; }
         public bool Active { get; set; }
+        public System.DateTime FechaCreacion { get; set; }
     
         public virtual EstadoProtocolo EstadoProtocolo { get; set; }
         public virtual Inmueble Inmueble { get; set; }
         public virtual Plantilla Plantilla { get; set; }
-        public virtual ICollection<Respuesta> Respuesta { get; set; }
         public virtual Usuario Usuario { get; set; }
+        public virtual ICollection<Respuesta> Respuesta { get; set; }
     }
 }

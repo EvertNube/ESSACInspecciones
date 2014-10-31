@@ -134,21 +134,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Protocolo">
-      <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.Protocolo">
-        <MappingFragment StoreEntitySet="Protocolo">
-          <ScalarProperty Name="Active" ColumnName="Active" />
-          <ScalarProperty Name="Direccion" ColumnName="Direccion" />
-          <ScalarProperty Name="Fecha" ColumnName="Fecha" />
-          <ScalarProperty Name="NombreAreaProtegida" ColumnName="NombreAreaProtegida" />
-          <ScalarProperty Name="IdEstado" ColumnName="IdEstado" />
-          <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
-          <ScalarProperty Name="IdInmueble" ColumnName="IdInmueble" />
-          <ScalarProperty Name="IdPlantilla" ColumnName="IdPlantilla" />
-          <ScalarProperty Name="IdProtocolo" ColumnName="IdProtocolo" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="Respuesta">
       <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.Respuesta">
         <MappingFragment StoreEntitySet="Respuesta">
@@ -302,5 +287,21 @@
         <ScalarProperty Name="IdTarea" ColumnName="IdTarea" />
       </EndProperty>
     </AssociationSetMapping>
+    <EntitySetMapping Name="Protocolo">
+      <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.Protocolo">
+        <MappingFragment StoreEntitySet="Protocolo">
+          <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
+          <ScalarProperty Name="Active" ColumnName="Active" />
+          <ScalarProperty Name="Direccion" ColumnName="Direccion" />
+          <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+          <ScalarProperty Name="NombreAreaProtegida" ColumnName="NombreAreaProtegida" />
+          <ScalarProperty Name="IdEstado" ColumnName="IdEstado" />
+          <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+          <ScalarProperty Name="IdInmueble" ColumnName="IdInmueble" />
+          <ScalarProperty Name="IdPlantilla" ColumnName="IdPlantilla" />
+          <ScalarProperty Name="IdProtocolo" ColumnName="IdProtocolo" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

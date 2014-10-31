@@ -63,7 +63,7 @@ namespace ESSACInspecciones.Core.BL
             using (var context = getContext())
             {
                 ProtocoloDTO result = new ProtocoloDTO();
-
+                
                 if (idProtocolo != null && idProtocolo != 0)
                 {
                     result = (context.Protocolo.Where(x => x.IdProtocolo == idProtocolo).AsEnumerable()
@@ -103,6 +103,7 @@ namespace ESSACInspecciones.Core.BL
                                     IdTipoTag = w.IdTipoTag ?? 0,
                                     Orden = w.Orden,
                                     Respuesta = r.Respuesta.Where(a => a.IdSeccionBody == w.IdSeccionBody).Select(a => a.Descripcion).SingleOrDefault()
+                                    //Respuesta = context.Respuesta.Where(a => a.IdProtocolo == IdProtocoloAnterior && a.IdSeccionBody == w.IdSeccionBody).Select(a => a.Descripcion).SingleOrDefault()
                                 }).OrderBy(w => w.Orden).ToList()
                             }).OrderBy(z => z.Orden).ToList(),
                             SeccionBodys = y.SeccionBody.Select(w => new SeccionBodyDTO
@@ -117,6 +118,7 @@ namespace ESSACInspecciones.Core.BL
                                 IdTipoTag = w.IdTipoTag ?? 0,
                                 Orden = w.Orden,
                                 Respuesta = r.Respuesta.Where(a => a.IdSeccionBody == w.IdSeccionBody).Select(a => a.Descripcion).SingleOrDefault()
+                                //Respuesta = context.Respuesta.Where(a => a.IdProtocolo == IdProtocoloAnterior && a.IdSeccionBody == w.IdSeccionBody).Select(a => a.Descripcion).SingleOrDefault()
                             }).OrderBy(w => w.Orden).ToList()
                         }).OrderBy(y => y.Orden).ToList(),
                         ////Respuestas = r.Respuesta.Select(z => new RespuestaDTO { IdSeccionBody = z.IdSeccionBody, Respuesta = z.Descripcion }).ToList()
@@ -124,6 +126,7 @@ namespace ESSACInspecciones.Core.BL
                 }
                 else
                 {
+                    var IdProtocoloAnterior = context.Protocolo.Where(p => p.IdPlantilla == idPlantilla && p.IdInmueble == idInmueble).OrderByDescending(p => p.FechaCreacion).FirstOrDefault().IdProtocolo;
                     result = context.Plantilla.Where(x => x.IdPlantilla == idPlantilla)
                         .Select(x => new ProtocoloDTO
                         {
@@ -167,7 +170,8 @@ namespace ESSACInspecciones.Core.BL
                                             NumeroFila = w.NumeroFila,
                                             IdTipoCelda = w.IdTipoCelda,
                                             IdTipoTag = w.IdTipoTag ?? 0,
-                                            Orden = w.Orden
+                                            Orden = w.Orden,
+                                            Respuesta = context.Respuesta.Where(a => a.IdProtocolo == IdProtocoloAnterior && a.IdSeccionBody == w.IdSeccionBody).Select(a => a.Descripcion).FirstOrDefault()
                                         }).OrderBy(w => w.Orden).ToList();
                     }
                     foreach (var seccion in result.Secciones)
@@ -185,7 +189,8 @@ namespace ESSACInspecciones.Core.BL
                                             NumeroFila = w.NumeroFila,
                                             IdTipoCelda = w.IdTipoCelda,
                                             IdTipoTag = w.IdTipoTag ?? 0,
-                                            Orden = w.Orden
+                                            Orden = w.Orden,
+                                            Respuesta = context.Respuesta.Where(a => a.IdProtocolo == IdProtocoloAnterior && a.IdSeccionBody == w.IdSeccionBody).Select(a => a.Descripcion).FirstOrDefault()
                                         }).OrderBy(w => w.Orden).ToList();
                         }
                     }
