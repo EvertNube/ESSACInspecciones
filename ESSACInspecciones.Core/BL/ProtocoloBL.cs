@@ -66,7 +66,7 @@ namespace ESSACInspecciones.Core.BL
                 
                 if (idProtocolo != null && idProtocolo != 0)
                 {
-                    result = (context.Protocolo.Where(x => x.IdProtocolo == idProtocolo).AsEnumerable()
+                    result = context.Protocolo.Where(x => x.IdProtocolo == idProtocolo).AsEnumerable()
                     .Select(r => new ProtocoloDTO
                     {
                         IdProtocolo = r.IdProtocolo,
@@ -79,7 +79,7 @@ namespace ESSACInspecciones.Core.BL
                         MinutoInicio = r.Fecha != null ? Convert.ToInt32(r.Fecha.Value.ToString("mm")) : 0,
                         Active = r.Active,
                         TotalPaginas = r.Plantilla.Seccion.GroupBy(x => x.Pagina).Count(),
-                        Plantilla = new PlantillaDTO { Nombre = r.Plantilla.Nombre },
+                        Plantilla = new PlantillaDTO { Nombre = r.Plantilla.Nombre, Nombre2 = r.Plantilla.Nombre2 },
                         Secciones = r.Plantilla.Seccion.Where(y => y.IdSeccionPadre == null).Select(y => new SeccionDTO
                         {
                             IdSeccion = y.IdSeccion,
@@ -122,7 +122,7 @@ namespace ESSACInspecciones.Core.BL
                             }).OrderBy(w => w.Orden).ToList()
                         }).OrderBy(y => y.Orden).ToList(),
                         ////Respuestas = r.Respuesta.Select(z => new RespuestaDTO { IdSeccionBody = z.IdSeccionBody, Respuesta = z.Descripcion }).ToList()
-                    })).SingleOrDefault();
+                    }).SingleOrDefault();
                 }
                 else
                 {

@@ -77,6 +77,7 @@
     </Key>
     <Property Name="IdPlantilla" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="Nombre" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="Nombre2" Type="nchar" MaxLength="200" />
     <Property Name="Active" Type="bit" Nullable="false" />
   </EntityType>
   <EntityType Name="Protocolo">

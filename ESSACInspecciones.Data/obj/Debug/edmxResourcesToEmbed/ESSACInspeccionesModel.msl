@@ -125,15 +125,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Plantilla">
-      <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.Plantilla">
-        <MappingFragment StoreEntitySet="Plantilla">
-          <ScalarProperty Name="Active" ColumnName="Active" />
-          <ScalarProperty Name="Nombre" ColumnName="Nombre" />
-          <ScalarProperty Name="IdPlantilla" ColumnName="IdPlantilla" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="Respuesta">
       <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.Respuesta">
         <MappingFragment StoreEntitySet="Respuesta">
@@ -300,6 +291,16 @@
           <ScalarProperty Name="IdInmueble" ColumnName="IdInmueble" />
           <ScalarProperty Name="IdPlantilla" ColumnName="IdPlantilla" />
           <ScalarProperty Name="IdProtocolo" ColumnName="IdProtocolo" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Plantilla">
+      <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.Plantilla">
+        <MappingFragment StoreEntitySet="Plantilla">
+          <ScalarProperty Name="Active" ColumnName="Active" />
+          <ScalarProperty Name="Nombre2" ColumnName="Nombre2" />
+          <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+          <ScalarProperty Name="IdPlantilla" ColumnName="IdPlantilla" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

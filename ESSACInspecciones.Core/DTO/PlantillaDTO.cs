@@ -10,6 +10,7 @@ namespace ESSACInspecciones.Core.DTO
     {
         public int IdPlantilla { get; set; }
         public string Nombre { get; set; }
+        public string Nombre2 { get; set; }
         public bool Active { get; set; }
     }
 }
