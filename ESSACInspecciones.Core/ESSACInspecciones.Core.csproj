@@ -53,6 +53,7 @@
     <Compile Include="BL\TareaBL.cs" />
     <Compile Include="BL\UsuariosBL.cs" />
     <Compile Include="Class1.cs" />
+    <Compile Include="DTO\DefaultValueDTO.cs" />
     <Compile Include="DTO\ClienteDTO.cs" />
     <Compile Include="DTO\ContactoDTO.cs" />
     <Compile Include="DTO\OpcionDTO.cs" />

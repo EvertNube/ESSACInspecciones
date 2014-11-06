@@ -157,23 +157,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="SeccionBody">
-      <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.SeccionBody">
-        <MappingFragment StoreEntitySet="SeccionBody">
-          <ScalarProperty Name="Active" ColumnName="Active" />
-          <ScalarProperty Name="Orden" ColumnName="Orden" />
-          <ScalarProperty Name="NumeroFila" ColumnName="NumeroFila" />
-          <ScalarProperty Name="BackgroundColor" ColumnName="BackgroundColor" />
-          <ScalarProperty Name="Colspan" ColumnName="Colspan" />
-          <ScalarProperty Name="Rowspan" ColumnName="Rowspan" />
-          <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
-          <ScalarProperty Name="IdTipoTag" ColumnName="IdTipoTag" />
-          <ScalarProperty Name="IdTipoCelda" ColumnName="IdTipoCelda" />
-          <ScalarProperty Name="IdSeccion" ColumnName="IdSeccion" />
-          <ScalarProperty Name="IdSeccionBody" ColumnName="IdSeccionBody" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="Servicio">
       <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.Servicio">
         <MappingFragment StoreEntitySet="Servicio">
@@ -304,5 +287,38 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="SeccionBody">
+      <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.SeccionBody">
+        <MappingFragment StoreEntitySet="SeccionBody">
+          <ScalarProperty Name="Active" ColumnName="Active" />
+          <ScalarProperty Name="Orden" ColumnName="Orden" />
+          <ScalarProperty Name="NumeroFila" ColumnName="NumeroFila" />
+          <ScalarProperty Name="BackgroundColor" ColumnName="BackgroundColor" />
+          <ScalarProperty Name="Colspan" ColumnName="Colspan" />
+          <ScalarProperty Name="Rowspan" ColumnName="Rowspan" />
+          <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+          <ScalarProperty Name="IdTipoTag" ColumnName="IdTipoTag" />
+          <ScalarProperty Name="IdTipoCelda" ColumnName="IdTipoCelda" />
+          <ScalarProperty Name="IdSeccion" ColumnName="IdSeccion" />
+          <ScalarProperty Name="IdSeccionBody" ColumnName="IdSeccionBody" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="DefaultValue" TypeName="ESSAC.InspeccionesDbModel.DefaultValue" StoreEntitySet="DefaultValue">
+      <EndProperty Name="SeccionBody">
+        <ScalarProperty Name="IdSeccionBody" ColumnName="IdSeccionBody" />
+      </EndProperty>
+      <EndProperty Name="Plantilla">
+        <ScalarProperty Name="IdPlantilla" ColumnName="IdPlantilla" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <FunctionImportMapping FunctionImportName="SP_GetDefaultValues" FunctionName="ESSAC.InspeccionesDbModel.Store.SP_GetDefaultValues">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="ESSAC.InspeccionesDbModel.SP_GetDefaultValues_Result">
+          <ScalarProperty Name="IdSeccionBody" ColumnName="IdSeccionBody" />
+          <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
   </EntityContainerMapping>
 </Mapping>

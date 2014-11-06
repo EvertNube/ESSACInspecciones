@@ -10,16 +10,10 @@
 namespace ESSACInspecciones.Data
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class Respuesta
+    public partial class SP_GetDefaultValues_Result
     {
-        public int IdProtocolo { get; set; }
         public int IdSeccionBody { get; set; }
         public string Descripcion { get; set; }
-        public bool Active { get; set; }
-    
-        public virtual Protocolo Protocolo { get; set; }
-        public virtual SeccionBody SeccionBody { get; set; }
     }
 }

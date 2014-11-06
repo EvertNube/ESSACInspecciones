@@ -34,6 +34,14 @@
     <Property Name="Active" Type="bit" Nullable="false" />
     <Property Name="Default" Type="bit" Nullable="false" />
   </EntityType>
+  <EntityType Name="DefaultValue">
+    <Key>
+      <PropertyRef Name="IdPlantilla" />
+      <PropertyRef Name="IdSeccionBody" />
+    </Key>
+    <Property Name="IdPlantilla" Type="int" Nullable="false" />
+    <Property Name="IdSeccionBody" Type="int" Nullable="false" />
+  </EntityType>
   <EntityType Name="Estado">
     <Key>
       <PropertyRef Name="IdEstado" />
@@ -247,6 +255,30 @@
       </Principal>
       <Dependent Role="ContactoCliente">
         <PropertyRef Name="IdCliente" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DefaultValue_Plantilla">
+    <End Role="Plantilla" Type="Self.Plantilla" Multiplicity="1" />
+    <End Role="DefaultValue" Type="Self.DefaultValue" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Plantilla">
+        <PropertyRef Name="IdPlantilla" />
+      </Principal>
+      <Dependent Role="DefaultValue">
+        <PropertyRef Name="IdPlantilla" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DefaultValue_SeccionBody">
+    <End Role="SeccionBody" Type="Self.SeccionBody" Multiplicity="1" />
+    <End Role="DefaultValue" Type="Self.DefaultValue" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SeccionBody">
+        <PropertyRef Name="IdSeccionBody" />
+      </Principal>
+      <Dependent Role="DefaultValue">
+        <PropertyRef Name="IdSeccionBody" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -522,6 +554,10 @@
     <Parameter Name="FechaFin" Type="date" Mode="In" />
     <Parameter Name="IdResponsable" Type="int" Mode="In" />
   </Function>
+  <Function Name="SP_GetDefaultValues" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="IdPlantilla" Type="int" Mode="In" />
+    <Parameter Name="IdInmueble" Type="int" Mode="In" />
+  </Function>
   <Function Name="SP_GetPlantillas" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="IdUsuario" Type="int" Mode="In" />
     <Parameter Name="IdInmueble" Type="int" Mode="In" />
@@ -535,6 +571,7 @@
     <EntitySet Name="Cargo" EntityType="Self.Cargo" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Cliente" EntityType="Self.Cliente" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="ContactoCliente" EntityType="Self.ContactoCliente" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="DefaultValue" EntityType="Self.DefaultValue" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Estado" EntityType="Self.Estado" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="EstadoProtocolo" EntityType="Self.EstadoProtocolo" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Inmueble" EntityType="Self.Inmueble" Schema="dbo" store:Type="Tables" />
@@ -557,6 +594,14 @@
     <AssociationSet Name="FK_ContactoCliente_Cliente" Association="Self.FK_ContactoCliente_Cliente">
       <End Role="Cliente" EntitySet="Cliente" />
       <End Role="ContactoCliente" EntitySet="ContactoCliente" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DefaultValue_Plantilla" Association="Self.FK_DefaultValue_Plantilla">
+      <End Role="Plantilla" EntitySet="Plantilla" />
+      <End Role="DefaultValue" EntitySet="DefaultValue" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DefaultValue_SeccionBody" Association="Self.FK_DefaultValue_SeccionBody">
+      <End Role="SeccionBody" EntitySet="SeccionBody" />
+      <End Role="DefaultValue" EntitySet="DefaultValue" />
     </AssociationSet>
     <AssociationSet Name="FK_Inmueble_Cliente" Association="Self.FK_Inmueble_Cliente">
       <End Role="Cliente" EntitySet="Cliente" />

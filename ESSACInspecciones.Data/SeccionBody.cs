@@ -17,6 +17,7 @@ namespace ESSACInspecciones.Data
         public SeccionBody()
         {
             this.Respuesta = new HashSet<Respuesta>();
+            this.Plantilla = new HashSet<Plantilla>();
         }
     
         public int IdSeccionBody { get; set; }
@@ -35,5 +36,6 @@ namespace ESSACInspecciones.Data
         public virtual Seccion Seccion { get; set; }
         public virtual TipoCelda TipoCelda { get; set; }
         public virtual TipoTag TipoTag { get; set; }
+        public virtual ICollection<Plantilla> Plantilla { get; set; }
     }
 }

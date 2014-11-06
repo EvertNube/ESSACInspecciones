@@ -25,7 +25,6 @@
     <EntitySet Name="Respuesta" EntityType="ESSAC.InspeccionesDbModel.Respuesta" />
     <EntitySet Name="Rol" EntityType="ESSAC.InspeccionesDbModel.Rol" />
     <EntitySet Name="Seccion" EntityType="ESSAC.InspeccionesDbModel.Seccion" />
-    <EntitySet Name="SeccionBody" EntityType="ESSAC.InspeccionesDbModel.SeccionBody" />
     <EntitySet Name="Servicio" EntityType="ESSAC.InspeccionesDbModel.Servicio" />
     <EntitySet Name="ServicioEstado" EntityType="ESSAC.InspeccionesDbModel.ServicioEstado" />
     <EntitySet Name="TableHeader" EntityType="ESSAC.InspeccionesDbModel.TableHeader" />
@@ -47,22 +46,6 @@
     <AssociationSet Name="FK_OpcionRespuesta_TipoTag" Association="ESSAC.InspeccionesDbModel.FK_OpcionRespuesta_TipoTag">
       <End Role="TipoTag" EntitySet="TipoTag" />
       <End Role="OpcionRespuesta" EntitySet="OpcionRespuesta" />
-    </AssociationSet>
-    <AssociationSet Name="FK_Respuesta_TableBody" Association="ESSAC.InspeccionesDbModel.FK_Respuesta_TableBody">
-      <End Role="SeccionBody" EntitySet="SeccionBody" />
-      <End Role="Respuesta" EntitySet="Respuesta" />
-    </AssociationSet>
-    <AssociationSet Name="FK_TableBody_Seccion" Association="ESSAC.InspeccionesDbModel.FK_TableBody_Seccion">
-      <End Role="Seccion" EntitySet="Seccion" />
-      <End Role="SeccionBody" EntitySet="SeccionBody" />
-    </AssociationSet>
-    <AssociationSet Name="FK_TableBody_TipoCelda" Association="ESSAC.InspeccionesDbModel.FK_TableBody_TipoCelda">
-      <End Role="TipoCelda" EntitySet="TipoCelda" />
-      <End Role="SeccionBody" EntitySet="SeccionBody" />
-    </AssociationSet>
-    <AssociationSet Name="FK_TableBody_TipoTag" Association="ESSAC.InspeccionesDbModel.FK_TableBody_TipoTag">
-      <End Role="TipoTag" EntitySet="TipoTag" />
-      <End Role="SeccionBody" EntitySet="SeccionBody" />
     </AssociationSet>
     <AssociationSet Name="FK_ServicioEstado_Servicio" Association="ESSAC.InspeccionesDbModel.FK_ServicioEstado_Servicio">
       <End Role="Servicio" EntitySet="Servicio" />
@@ -116,6 +99,7 @@
       <End Role="Respuesta" EntitySet="Respuesta" />
     </AssociationSet>
     <EntitySet Name="Plantilla" EntityType="ESSAC.InspeccionesDbModel.Plantilla" />
+    <EntitySet Name="SeccionBody" EntityType="ESSAC.InspeccionesDbModel.SeccionBody" />
     <AssociationSet Name="FK_Protocolo_Plantilla" Association="ESSAC.InspeccionesDbModel.FK_Protocolo_Plantilla">
       <End Role="Plantilla" EntitySet="Plantilla" />
       <End Role="Protocolo" EntitySet="Protocolo" />
@@ -124,6 +108,30 @@
       <End Role="Plantilla" EntitySet="Plantilla" />
       <End Role="Seccion" EntitySet="Seccion" />
     </AssociationSet>
+    <AssociationSet Name="FK_Respuesta_TableBody" Association="ESSAC.InspeccionesDbModel.FK_Respuesta_TableBody">
+      <End Role="SeccionBody" EntitySet="SeccionBody" />
+      <End Role="Respuesta" EntitySet="Respuesta" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TableBody_Seccion" Association="ESSAC.InspeccionesDbModel.FK_TableBody_Seccion">
+      <End Role="Seccion" EntitySet="Seccion" />
+      <End Role="SeccionBody" EntitySet="SeccionBody" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TableBody_TipoCelda" Association="ESSAC.InspeccionesDbModel.FK_TableBody_TipoCelda">
+      <End Role="TipoCelda" EntitySet="TipoCelda" />
+      <End Role="SeccionBody" EntitySet="SeccionBody" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TableBody_TipoTag" Association="ESSAC.InspeccionesDbModel.FK_TableBody_TipoTag">
+      <End Role="TipoTag" EntitySet="TipoTag" />
+      <End Role="SeccionBody" EntitySet="SeccionBody" />
+    </AssociationSet>
+    <AssociationSet Name="DefaultValue" Association="ESSAC.InspeccionesDbModel.DefaultValue">
+      <End Role="Plantilla" EntitySet="Plantilla" />
+      <End Role="SeccionBody" EntitySet="SeccionBody" />
+    </AssociationSet>
+    <FunctionImport Name="SP_GetDefaultValues" ReturnType="Collection(ESSAC.InspeccionesDbModel.SP_GetDefaultValues_Result)">
+      <Parameter Name="IdPlantilla" Mode="In" Type="Int32" />
+      <Parameter Name="IdInmueble" Mode="In" Type="Int32" />
+    </FunctionImport>
   </EntityContainer>
   <ComplexType Name="SP_CountEstados_Result">
     <Property Type="String" Name="NombreEstado" Nullable="false" MaxLength="100" />
@@ -247,8 +255,8 @@
     <Property Name="IdSeccionBody" Type="Int32" Nullable="false" />
     <Property Name="Descripcion" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="Active" Type="Boolean" Nullable="false" />
-    <NavigationProperty Name="SeccionBody" Relationship="ESSAC.InspeccionesDbModel.FK_Respuesta_TableBody" FromRole="Respuesta" ToRole="SeccionBody" />
     <NavigationProperty Name="Protocolo" Relationship="ESSAC.InspeccionesDbModel.FK_Respuesta_Protocolo" FromRole="Respuesta" ToRole="Protocolo" />
+    <NavigationProperty Name="SeccionBody" Relationship="ESSAC.InspeccionesDbModel.FK_Respuesta_TableBody" FromRole="Respuesta" ToRole="SeccionBody" />
   </EntityType>
   <EntityType Name="Rol">
     <Key>
@@ -270,28 +278,8 @@
     <Property Name="Pagina" Type="Int32" Nullable="false" />
     <Property Name="Orden" Type="Int32" Nullable="false" />
     <Property Name="Active" Type="Boolean" Nullable="false" />
-    <NavigationProperty Name="SeccionBody" Relationship="ESSAC.InspeccionesDbModel.FK_TableBody_Seccion" FromRole="Seccion" ToRole="SeccionBody" />
     <NavigationProperty Name="Plantilla" Relationship="ESSAC.InspeccionesDbModel.FK_Seccion_Plantilla" FromRole="Seccion" ToRole="Plantilla" />
-  </EntityType>
-  <EntityType Name="SeccionBody">
-    <Key>
-      <PropertyRef Name="IdSeccionBody" />
-    </Key>
-    <Property Name="IdSeccionBody" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="IdSeccion" Type="Int32" Nullable="false" />
-    <Property Name="IdTipoCelda" Type="Int32" Nullable="false" />
-    <Property Name="IdTipoTag" Type="Int32" />
-    <Property Name="Descripcion" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-    <Property Name="Rowspan" Type="Int32" Nullable="false" />
-    <Property Name="Colspan" Type="Int32" Nullable="false" />
-    <Property Name="BackgroundColor" Type="Boolean" Nullable="false" />
-    <Property Name="NumeroFila" Type="Int32" Nullable="false" />
-    <Property Name="Orden" Type="Int32" Nullable="false" />
-    <Property Name="Active" Type="Boolean" Nullable="false" />
-    <NavigationProperty Name="Respuesta" Relationship="ESSAC.InspeccionesDbModel.FK_Respuesta_TableBody" FromRole="SeccionBody" ToRole="Respuesta" />
-    <NavigationProperty Name="Seccion" Relationship="ESSAC.InspeccionesDbModel.FK_TableBody_Seccion" FromRole="SeccionBody" ToRole="Seccion" />
-    <NavigationProperty Name="TipoCelda" Relationship="ESSAC.InspeccionesDbModel.FK_TableBody_TipoCelda" FromRole="SeccionBody" ToRole="TipoCelda" />
-    <NavigationProperty Name="TipoTag" Relationship="ESSAC.InspeccionesDbModel.FK_TableBody_TipoTag" FromRole="SeccionBody" ToRole="TipoTag" />
+    <NavigationProperty Name="SeccionBody" Relationship="ESSAC.InspeccionesDbModel.FK_TableBody_Seccion" FromRole="Seccion" ToRole="SeccionBody" />
   </EntityType>
   <EntityType Name="Servicio">
     <Key>
@@ -402,54 +390,6 @@
       </Principal>
       <Dependent Role="OpcionRespuesta">
         <PropertyRef Name="IdTipoRespuesta" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_Respuesta_TableBody">
-    <End Type="ESSAC.InspeccionesDbModel.SeccionBody" Role="SeccionBody" Multiplicity="1" />
-    <End Type="ESSAC.InspeccionesDbModel.Respuesta" Role="Respuesta" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="SeccionBody">
-        <PropertyRef Name="IdSeccionBody" />
-      </Principal>
-      <Dependent Role="Respuesta">
-        <PropertyRef Name="IdSeccionBody" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_TableBody_Seccion">
-    <End Type="ESSAC.InspeccionesDbModel.Seccion" Role="Seccion" Multiplicity="1" />
-    <End Type="ESSAC.InspeccionesDbModel.SeccionBody" Role="SeccionBody" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Seccion">
-        <PropertyRef Name="IdSeccion" />
-      </Principal>
-      <Dependent Role="SeccionBody">
-        <PropertyRef Name="IdSeccion" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_TableBody_TipoCelda">
-    <End Type="ESSAC.InspeccionesDbModel.TipoCelda" Role="TipoCelda" Multiplicity="1" />
-    <End Type="ESSAC.InspeccionesDbModel.SeccionBody" Role="SeccionBody" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="TipoCelda">
-        <PropertyRef Name="IdTipoCelda" />
-      </Principal>
-      <Dependent Role="SeccionBody">
-        <PropertyRef Name="IdTipoCelda" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_TableBody_TipoTag">
-    <End Type="ESSAC.InspeccionesDbModel.TipoTag" Role="TipoTag" Multiplicity="0..1" />
-    <End Type="ESSAC.InspeccionesDbModel.SeccionBody" Role="SeccionBody" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="TipoTag">
-        <PropertyRef Name="IdTipoTag" />
-      </Principal>
-      <Dependent Role="SeccionBody">
-        <PropertyRef Name="IdTipoTag" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -660,6 +600,28 @@
     <Property Name="Active" Type="Boolean" Nullable="false" />
     <NavigationProperty Name="Protocolo" Relationship="ESSAC.InspeccionesDbModel.FK_Protocolo_Plantilla" FromRole="Plantilla" ToRole="Protocolo" />
     <NavigationProperty Name="Seccion" Relationship="ESSAC.InspeccionesDbModel.FK_Seccion_Plantilla" FromRole="Plantilla" ToRole="Seccion" />
+    <NavigationProperty Name="SeccionBody" Relationship="ESSAC.InspeccionesDbModel.DefaultValue" FromRole="Plantilla" ToRole="SeccionBody" />
+  </EntityType>
+  <EntityType Name="SeccionBody">
+    <Key>
+      <PropertyRef Name="IdSeccionBody" />
+    </Key>
+    <Property Name="IdSeccionBody" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="IdSeccion" Type="Int32" Nullable="false" />
+    <Property Name="IdTipoCelda" Type="Int32" Nullable="false" />
+    <Property Name="IdTipoTag" Type="Int32" />
+    <Property Name="Descripcion" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Rowspan" Type="Int32" Nullable="false" />
+    <Property Name="Colspan" Type="Int32" Nullable="false" />
+    <Property Name="BackgroundColor" Type="Boolean" Nullable="false" />
+    <Property Name="NumeroFila" Type="Int32" Nullable="false" />
+    <Property Name="Orden" Type="Int32" Nullable="false" />
+    <Property Name="Active" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="Respuesta" Relationship="ESSAC.InspeccionesDbModel.FK_Respuesta_TableBody" FromRole="SeccionBody" ToRole="Respuesta" />
+    <NavigationProperty Name="Seccion" Relationship="ESSAC.InspeccionesDbModel.FK_TableBody_Seccion" FromRole="SeccionBody" ToRole="Seccion" />
+    <NavigationProperty Name="TipoCelda" Relationship="ESSAC.InspeccionesDbModel.FK_TableBody_TipoCelda" FromRole="SeccionBody" ToRole="TipoCelda" />
+    <NavigationProperty Name="TipoTag" Relationship="ESSAC.InspeccionesDbModel.FK_TableBody_TipoTag" FromRole="SeccionBody" ToRole="TipoTag" />
+    <NavigationProperty Name="Plantilla" Relationship="ESSAC.InspeccionesDbModel.DefaultValue" FromRole="SeccionBody" ToRole="Plantilla" />
   </EntityType>
   <Association Name="FK_Protocolo_Plantilla">
     <End Type="ESSAC.InspeccionesDbModel.Plantilla" Role="Plantilla" Multiplicity="1" />
@@ -685,4 +647,60 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_Respuesta_TableBody">
+    <End Type="ESSAC.InspeccionesDbModel.SeccionBody" Role="SeccionBody" Multiplicity="1" />
+    <End Type="ESSAC.InspeccionesDbModel.Respuesta" Role="Respuesta" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SeccionBody">
+        <PropertyRef Name="IdSeccionBody" />
+      </Principal>
+      <Dependent Role="Respuesta">
+        <PropertyRef Name="IdSeccionBody" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TableBody_Seccion">
+    <End Type="ESSAC.InspeccionesDbModel.Seccion" Role="Seccion" Multiplicity="1" />
+    <End Type="ESSAC.InspeccionesDbModel.SeccionBody" Role="SeccionBody" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Seccion">
+        <PropertyRef Name="IdSeccion" />
+      </Principal>
+      <Dependent Role="SeccionBody">
+        <PropertyRef Name="IdSeccion" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TableBody_TipoCelda">
+    <End Type="ESSAC.InspeccionesDbModel.TipoCelda" Role="TipoCelda" Multiplicity="1" />
+    <End Type="ESSAC.InspeccionesDbModel.SeccionBody" Role="SeccionBody" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TipoCelda">
+        <PropertyRef Name="IdTipoCelda" />
+      </Principal>
+      <Dependent Role="SeccionBody">
+        <PropertyRef Name="IdTipoCelda" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TableBody_TipoTag">
+    <End Type="ESSAC.InspeccionesDbModel.TipoTag" Role="TipoTag" Multiplicity="0..1" />
+    <End Type="ESSAC.InspeccionesDbModel.SeccionBody" Role="SeccionBody" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TipoTag">
+        <PropertyRef Name="IdTipoTag" />
+      </Principal>
+      <Dependent Role="SeccionBody">
+        <PropertyRef Name="IdTipoTag" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="DefaultValue">
+    <End Type="ESSAC.InspeccionesDbModel.Plantilla" Role="Plantilla" Multiplicity="*" />
+    <End Type="ESSAC.InspeccionesDbModel.SeccionBody" Role="SeccionBody" Multiplicity="*" />
+  </Association>
+  <ComplexType Name="SP_GetDefaultValues_Result">
+    <Property Type="Int32" Name="IdSeccionBody" Nullable="false" />
+    <Property Type="String" Name="Descripcion" Nullable="false" />
+  </ComplexType>
 </Schema>

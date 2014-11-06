@@ -126,7 +126,8 @@ namespace ESSACInspecciones.Core.BL
                 }
                 else
                 {
-                    var IdProtocoloAnterior = context.Protocolo.Where(p => p.IdPlantilla == idPlantilla && p.IdInmueble == idInmueble).OrderByDescending(p => p.FechaCreacion).FirstOrDefault().IdProtocolo;
+                    //var IdProtocoloAnterior = context.Protocolo.Where(p => p.IdPlantilla == idPlantilla && p.IdInmueble == idInmueble).OrderByDescending(p => p.FechaCreacion).FirstOrDefault().IdProtocolo;
+                    var DefaultValues = context.SP_GetDefaultValues(idPlantilla, idInmueble).Select(x => new DefaultValueDTO { IdSeccionBody = x.IdSeccionBody, Descripcion = x.Descripcion }).ToList();
                     result = context.Plantilla.Where(x => x.IdPlantilla == idPlantilla)
                         .Select(x => new ProtocoloDTO
                         {
@@ -140,7 +141,7 @@ namespace ESSACInspecciones.Core.BL
                             MinutoInicio = 0,
                             Active = true,
                             TotalPaginas = x.Seccion.GroupBy(t => t.Pagina).Count(),
-                            Plantilla = new PlantillaDTO { Nombre = x.Nombre },
+                            Plantilla = new PlantillaDTO { Nombre = x.Nombre, Nombre2 = x.Nombre2 },
                         }).SingleOrDefault();
                     result.Secciones = context.Seccion.Where(y => y.IdPlantilla == idPlantilla && y.IdSeccionPadre == null)
                         .Select(y => new SeccionDTO
@@ -159,7 +160,7 @@ namespace ESSACInspecciones.Core.BL
                                             Nombre = z.Nombre,
                                             Orden = z.Orden
                                         }).OrderBy(z => z.Orden).ToList();
-                        seccion.SeccionBodys = context.SeccionBody.Where(w => w.IdSeccion == seccion.IdSeccion)
+                        seccion.SeccionBodys = context.SeccionBody.AsEnumerable().Where(w => w.IdSeccion == seccion.IdSeccion)
                                         .Select(w => new SeccionBodyDTO
                                         {
                                             IdSeccionBody = w.IdSeccionBody,
@@ -171,14 +172,14 @@ namespace ESSACInspecciones.Core.BL
                                             IdTipoCelda = w.IdTipoCelda,
                                             IdTipoTag = w.IdTipoTag ?? 0,
                                             Orden = w.Orden,
-                                            Respuesta = context.Respuesta.Where(a => a.IdProtocolo == IdProtocoloAnterior && a.IdSeccionBody == w.IdSeccionBody).Select(a => a.Descripcion).FirstOrDefault()
+                                            Respuesta = DefaultValues.Where(a => a.IdSeccionBody == w.IdSeccionBody).Select(a => a.Descripcion).FirstOrDefault() //context.Respuesta.Where(a => a.IdProtocolo == IdProtocoloAnterior && a.IdSeccionBody == w.IdSeccionBody).Select(a => a.Descripcion).FirstOrDefault()
                                         }).OrderBy(w => w.Orden).ToList();
                     }
                     foreach (var seccion in result.Secciones)
                     {
                         foreach (var subseccion in seccion.SubSecciones)
                         {
-                            subseccion.SeccionBodys = context.SeccionBody.Where(w => w.IdSeccion == subseccion.IdSeccion)
+                            subseccion.SeccionBodys = context.SeccionBody.AsEnumerable().Where(w => w.IdSeccion == subseccion.IdSeccion)
                                         .Select(w => new SeccionBodyDTO
                                         {
                                             IdSeccionBody = w.IdSeccionBody,
@@ -190,7 +191,7 @@ namespace ESSACInspecciones.Core.BL
                                             IdTipoCelda = w.IdTipoCelda,
                                             IdTipoTag = w.IdTipoTag ?? 0,
                                             Orden = w.Orden,
-                                            Respuesta = context.Respuesta.Where(a => a.IdProtocolo == IdProtocoloAnterior && a.IdSeccionBody == w.IdSeccionBody).Select(a => a.Descripcion).FirstOrDefault()
+                                            Respuesta = DefaultValues.Where(a => a.IdSeccionBody == w.IdSeccionBody).Select(a => a.Descripcion).FirstOrDefault()//context.Respuesta.Where(a => a.IdProtocolo == IdProtocoloAnterior && a.IdSeccionBody == w.IdSeccionBody).Select(a => a.Descripcion).FirstOrDefault()
                                         }).OrderBy(w => w.Orden).ToList();
                         }
                     }

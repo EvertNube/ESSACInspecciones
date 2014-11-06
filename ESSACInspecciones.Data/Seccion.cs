@@ -27,7 +27,7 @@ namespace ESSACInspecciones.Data
         public int Orden { get; set; }
         public bool Active { get; set; }
     
-        public virtual ICollection<SeccionBody> SeccionBody { get; set; }
         public virtual Plantilla Plantilla { get; set; }
+        public virtual ICollection<SeccionBody> SeccionBody { get; set; }
     }
 }

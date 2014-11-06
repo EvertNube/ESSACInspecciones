@@ -53,3 +53,4 @@ D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Helpers\bin\Debug\S
 C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Helpers\obj\Debug\ESSACInspecciones.Helpers.csprojResolveAssemblyReference.cache
 C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Helpers\bin\Debug\ESSACInspecciones.Helpers.dll.CodeAnalysisLog.xml
 C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Helpers\bin\Debug\ESSACInspecciones.Helpers.dll.lastcodeanalysissucceeded
+D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Helpers\obj\Debug\ESSACInspecciones.Helpers.csprojResolveAssemblyReference.cache

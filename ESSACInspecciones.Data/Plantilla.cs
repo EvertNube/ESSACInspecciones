@@ -18,6 +18,7 @@ namespace ESSACInspecciones.Data
         {
             this.Protocolo = new HashSet<Protocolo>();
             this.Seccion = new HashSet<Seccion>();
+            this.SeccionBody = new HashSet<SeccionBody>();
         }
     
         public int IdPlantilla { get; set; }
@@ -27,5 +28,6 @@ namespace ESSACInspecciones.Data
     
         public virtual ICollection<Protocolo> Protocolo { get; set; }
         public virtual ICollection<Seccion> Seccion { get; set; }
+        public virtual ICollection<SeccionBody> SeccionBody { get; set; }
     }
 }
