@@ -144,6 +144,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\js\jquery.flot.grow.js" />
+    <Content Include="Content\js\jquery.flot.min.js" />
+    <Content Include="Content\js\jquery.flot.orderBars.js" />
+    <Content Include="Content\js\jquery.flot.resize.js" />
+    <Content Include="Content\js\jquery.flot.tooltip.min.js" />
     <Content Include="Content\PagedList.css" />
     <Content Include="Content\themes\admin\css\animate.css" />
     <Content Include="Content\themes\admin\css\app.css" />

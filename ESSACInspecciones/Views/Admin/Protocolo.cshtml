@@ -9,9 +9,79 @@
 }
 @section scripts{
     @Scripts.Render("~/Content/themes/admin/js/fuelux/fuelux.js")
+    @Scripts.Render("~/Content/js/jquery.flot.min.js")
+    @Scripts.Render("~/Content/js/jquery.flot.tooltip.min.js")
+    @*@Scripts.Render("~/Content/js/jquery.flot.resize.js")*@
+    @*@Scripts.Render("~/Content/js/jquery.flot.orderBars.js")*@
+    @*@Scripts.Render("~/Content/js/jquery.flot.grow.js")*@
+
     <script type="text/javascript">
         //var contaFirma = 0;
         $(document).ready(function () {
+
+            //var d2 = [];
+            //for (var i = 0; i <= 6; i += 1) {
+            //    d2.push([i, parseInt((Math.floor(Math.random() * (1 + 30 - 10))) + 10)]);
+            //}
+            //var d3 = [];
+            //for (var i = 0; i <= 6; i += 1) {
+            //    d3.push([i, parseInt((Math.floor(Math.random() * (1 + 30 - 10))) + 10)]);
+            //}
+            //$("#flot-chart").length && $.plot($("#flot-chart"), [{
+            //    data: d2,
+            //    label: "Unique Visits"
+            //}, {
+            //    data: d3,
+            //    label: "Page Views"
+            //}],
+            //    {
+            //        series: {
+            //            lines: {
+            //                show: true,
+            //                lineWidth: 1,
+            //                fill: true,
+            //                fillColor: {
+            //                    colors: [{
+            //                        opacity: 0.2
+            //                    }, {
+            //                        opacity: 0.1
+            //                    }]
+            //                }
+            //            },
+            //            points: {
+            //                show: true
+            //            },
+            //            grow: {
+            //                active: true,
+            //                steps: 50
+            //            },
+            //            shadowSize: 2
+            //        },
+            //        grid: {
+            //            hoverable: true,
+            //            clickable: true,
+            //            tickColor: "#f0f0f0",
+            //            borderWidth: 0
+            //        },
+            //        colors: ["#dddddd", "#89cb4e"],
+            //        xaxis: {
+            //            //show: false
+            //        },
+            //        yaxis: {
+            //            ticks: 5
+            //        },
+            //        tooltip: true,
+            //        tooltipOpts: {
+            //            content: "'%s' of %x.1 is %y.4",
+            //            defaultTheme: false,
+            //            shifts: {
+            //                x: 0,
+            //                y: 20
+            //            }
+            //        }
+            //    }
+            //);
+
             var protocolo = JSON.parse(localStorage.getItem("protocolo"));
             //Imrimir titulo del protocolo
             var strHtmlTitle = "<h2>Protocolo de Pruebas<br /></h2><h4>" + protocolo.NombreAreaProtegida + " según NFPA 20 - Motobomba de agua Contra Incendio</h4>";
@@ -82,10 +152,15 @@
                     });
 
                     var strHtmlSeccion = ""; var strHtmlSeccionBodys = "", strHtmlSecRow = "";
+
                     $.each(Secciones, function (x, seccion) {
                         strHtmlSecRow = "";
+                        if (seccion.Nombre.toUpperCase().indexOf("CURVA DE FABRICA") > -1 || seccion.Nombre.toUpperCase() == "EN CASO EXISTA CABEZAL DE PRUEBA")
+                            tipoSeccion = " claseGrafica";
+                        else
+                            tipoSeccion = "";
                         if (seccion.SeccionBodys.length > 0) {
-                            var tmpFilaItem = 1, totalItems = seccion.SeccionBodys.length; var styleItem = "";
+                            var tmpFilaItem = 1, totalItems = seccion.SeccionBodys.length; var styleItem = ""; var tipoSeccion = "";
                             for (var s = 0; s < totalItems; s++) {
                                 var filaItem = seccion.SeccionBodys[s].NumeroFila;
                                 if (s == 0 || tmpFilaItem != filaItem) {
@@ -99,7 +174,7 @@
                                     //if (seccion.SeccionBodys[s].IdSeccionBody = 410) {
                                     //    debugger;
                                     //}
-                                    var classTextBox = "form-control input-sm GroupDescripcion " + stepname; var strHtmlTag = '';
+                                    var classTextBox = "form-control input-sm GroupDescripcion " + stepname + tipoSeccion; var strHtmlTag = '';
                                     switch (seccion.SeccionBodys[s].IdTipoTag) {
                                         case 2: strHtmlTag = '<input type="text" id="tag' + seccion.SeccionBodys[s].IdSeccionBody + '" class="' + classTextBox + '" value="' + removeNull(seccion.SeccionBodys[s].Respuesta) + '"/>'; break;
                                         case 3: strHtmlTag = drawSelect("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectSINO, seccion.SeccionBodys[s].Respuesta, 2, stepname); break;
@@ -120,6 +195,10 @@
                                 }
                                 tmpFilaItem = seccion.SeccionBodys[s].NumeroFila;
                             }
+
+                            //var grafica = '<section class="panel panel-default">' + '<header class="panel-heading font-bold">Grafica</header>' + '<div class="panel-body">' + '<div id="flot-chart" style="height:240px"></div>' + '</div>' + '</section>';
+                            var grafica = '<div id="flot-chart" style="height:240px"></div>';
+
                             var id = seccion.IdSeccion == 48 ? 'id="tblFirmas"' : '';
                             strHtmlSeccionBodys = '<div class="table-responsive">' +
                                                 '<table class="table table-bordered">' +
@@ -127,7 +206,7 @@
                                                     strHtmlSecRow +
                                                     '</tbody>' +
                                                 '</table>' +
-                                            '</div>';
+                                            '</div>';// + (tipoSeccion != '') ? grafica : '';
                         }
                         //
                         var panelGroupSubSec = "";
@@ -219,6 +298,7 @@
             $("#IdProtocolo").val(protocolo.IdProtocolo);
             $("#IdPlantilla").val(protocolo.IdPlantilla);
             $("#IdInmueble").val(protocolo.IdInmueble);
+            paintGrafica();
 
             if (protocolo.IdEstado == 4) {
                 $("#NombreAreaProtegida").prop('disabled', 'disabled');
@@ -375,6 +455,94 @@
                 getUsuarios(descripcion);
             });
         });
+        function paintGrafica() {
+            //var d2 = [];
+            //for (var i = 0; i <= 6; i += 1) {
+            //    d2.push([i, parseInt((Math.floor(Math.random() * (1 + 30 - 10))) + 10)]);
+            //}
+            //var d3 = [];
+            //for (var i = 0; i <= 6; i += 1) {
+            //    d3.push([i, parseInt((Math.floor(Math.random() * (1 + 30 - 10))) + 10)]);
+            //}
+            var datosGrafica = []; var d2 = []; var d3 = []; var d4 = [];
+
+            $('.claseGrafica').each(function (index, item) { var value = trim(item.value); datosGrafica.push(value); });
+
+            d2[0] = [parseInt(datosGrafica[0]), parseInt(datosGrafica[4])];
+            d2[1] = [parseInt(datosGrafica[1]), parseInt(datosGrafica[5])];
+            d2[2] = [parseInt(datosGrafica[2]), parseInt(datosGrafica[6])];
+            d2[3] = [parseInt(datosGrafica[3]), parseInt(datosGrafica[7])];
+
+            d3[0] = [parseInt(datosGrafica[14]), parseInt(datosGrafica[15])];
+            d3[1] = [parseInt(datosGrafica[22]), parseInt(datosGrafica[23])];
+            d3[2] = [parseInt(datosGrafica[30]), parseInt(datosGrafica[31])];
+            d3[3] = [parseInt(datosGrafica[38]), parseInt(datosGrafica[39])];
+
+            d4[0] = [parseInt(datosGrafica[49]), parseInt(datosGrafica[50])];
+            d4[1] = [parseInt(datosGrafica[57]), parseInt(datosGrafica[58])];
+            d4[2] = [parseInt(datosGrafica[65]), parseInt(datosGrafica[66])];
+            d4[3] = [parseInt(datosGrafica[73]), parseInt(datosGrafica[74])];
+
+            $("#flot-chart").length && $.plot($("#flot-chart"), [{
+                data: d2,
+                label: "Curva de Fábrica de la Bomba"
+            }, {
+                data: d3,
+                label: "Curva de Prueba de la Bomba"
+            }, {
+                data: d4,
+                label: "Curva de Prueba de la Bomba 2"
+            }],
+                {
+                    series: {
+                        lines: {
+                            show: true,
+                            lineWidth: 1,
+                            fill: true,
+                            fillColor: {
+                                colors: [{
+                                    opacity: 0.3
+                                }, {
+                                    opacity: 0.2
+                                }, {
+                                    opacity: 0.1
+                                }]
+                            }
+                        },
+                        points: {
+                            show: true
+                        },
+                        grow: {
+                            active: true,
+                            steps: 50
+                        },
+                        shadowSize: 2
+                    },
+                    grid: {
+                        hoverable: true,
+                        clickable: true,
+                        tickColor: "#f0f0f0",
+                        borderWidth: 0
+                    },
+                    colors: ["#dddddd", "#89cb4e", "#6783B7"],
+                    xaxis: {
+                        //show: false
+                    },
+                    yaxis: {
+                        ticks: 5
+                    },
+                    tooltip: true,
+                    tooltipOpts: {
+                        content: "'%s' of %x.1 is %y.4",
+                        defaultTheme: false,
+                        shifts: {
+                            x: 0,
+                            y: 20
+                        }
+                    }
+                }
+            );
+        }
         function getUsuarios(descripcion) {
             $.ajax({
                 url: "/Admin/GetUsuarios",
@@ -516,16 +684,17 @@
                                         </div>
                                     </div>
                                 </section>
-                                @*<section class="panel panel-default">
-                                        <header class="panel-heading font-bold">Puntuación</header>
-                                        <div class="panel-body">
-                                            <div class="form-inline">
-                                                <div class="form-group">
-                                                    <input type="text" id="puntuacion" class="form-control btn-rounded" value="" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </section>*@
+                                <section class="panel panel-default">
+                                    <header class="panel-heading font-bold">Puntuación</header>
+                                    <div class="panel-body">
+                                        <div id="flot-chart" style="height:240px"></div>
+                                        @*<div class="form-inline">
+        <div class="form-group">
+            <input type="text" id="puntuacion" class="form-control btn-rounded" value="" />
+        </div>
+    </div>*@
+                                    </div>
+                                </section>
                                 <div class="line line-dashed line-lg pull-in"></div>
                                 <input type="hidden" id="IdProtocolo" />
                                 <input type="hidden" id="IdPlantilla" />
