@@ -16,19 +16,19 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/22/2014 19:24:18</publishTime>
     </File>
     <File Include="bin/ESSACInspecciones.Core.dll">
-      <publishTime>10/29/2014 07:26:37</publishTime>
+      <publishTime>12/04/2014 17:49:13</publishTime>
     </File>
     <File Include="bin/ESSACInspecciones.Data.dll">
-      <publishTime>10/29/2014 07:26:35</publishTime>
+      <publishTime>12/04/2014 17:49:11</publishTime>
     </File>
     <File Include="bin/ESSACInspecciones.dll">
-      <publishTime>10/29/2014 09:03:54</publishTime>
+      <publishTime>12/04/2014 17:49:14</publishTime>
     </File>
     <File Include="bin/ESSACInspecciones.Helpers.dll">
-      <publishTime>10/29/2014 07:26:35</publishTime>
+      <publishTime>12/04/2014 17:49:11</publishTime>
     </File>
     <File Include="bin/ESSACInspecciones.Helpers.Razor.dll">
-      <publishTime>10/29/2014 07:26:36</publishTime>
+      <publishTime>12/04/2014 17:49:12</publishTime>
     </File>
     <File Include="bin/itextsharp.dll">
       <publishTime>10/28/2014 16:21:08</publishTime>
@@ -80,6 +80,21 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     </File>
     <File Include="bin/WebGrease.dll">
       <publishTime>10/22/2014 19:24:20</publishTime>
+    </File>
+    <File Include="Content/js/jquery.flot.grow.js">
+      <publishTime>11/07/2013 16:44:06</publishTime>
+    </File>
+    <File Include="Content/js/jquery.flot.min.js">
+      <publishTime>05/22/2013 17:03:32</publishTime>
+    </File>
+    <File Include="Content/js/jquery.flot.orderBars.js">
+      <publishTime>09/22/2013 22:10:08</publishTime>
+    </File>
+    <File Include="Content/js/jquery.flot.resize.js">
+      <publishTime>09/22/2013 17:12:44</publishTime>
+    </File>
+    <File Include="Content/js/jquery.flot.tooltip.min.js">
+      <publishTime>09/22/2013 16:56:36</publishTime>
     </File>
     <File Include="Content/PagedList.css">
       <publishTime>10/22/2014 19:24:13</publishTime>
@@ -1993,7 +2008,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/22/2014 19:24:17</publishTime>
     </File>
     <File Include="Views/Admin/Protocolo.cshtml">
-      <publishTime>10/23/2014 18:28:42</publishTime>
+      <publishTime>12/04/2014 17:28:51</publishTime>
     </File>
     <File Include="Views/Admin/ProtocoloReporte.cshtml">
       <publishTime>10/22/2014 19:24:12</publishTime>
@@ -2062,7 +2077,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/22/2014 19:24:17</publishTime>
     </File>
     <File Include="Views/Shared/_LayoutAdmin.cshtml">
-      <publishTime>10/22/2014 19:24:12</publishTime>
+      <publishTime>12/04/2014 17:47:59</publishTime>
     </File>
     <File Include="Views/Shared/_showAlertMessages.cshtml">
       <publishTime>10/22/2014 19:24:17</publishTime>
@@ -2074,7 +2089,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/22/2014 19:24:17</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>10/29/2014 09:03:55</publishTime>
+      <publishTime>12/04/2014 17:49:17</publishTime>
     </File>
   </ItemGroup>
 </Project>

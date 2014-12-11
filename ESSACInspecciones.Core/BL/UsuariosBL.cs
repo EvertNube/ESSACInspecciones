@@ -13,6 +13,25 @@ namespace ESSACInspecciones.Core.BL
 {
     public class UsuariosBL : Base
     {
+        public IList<UsuarioDTO> getUsuariosInspectores()
+        {
+            using (var context = getContext())
+            {
+                var result = from r in context.Usuario
+                             where r.Estado == true & r.IdRol == 3
+                             select new UsuarioDTO
+                             {
+                                 IdUsuario = r.IdUsuario,
+                                 Nombre = r.Nombre,
+                                 Email = r.Email,
+                                 Cuenta = r.Cuenta,
+                                 Pass = r.Pass,
+                                 Active = r.Estado,
+                                 IdRol = r.IdRol
+                             };
+                return result.AsEnumerable<UsuarioDTO>().OrderByDescending(x => x.IdUsuario).ToList<UsuarioDTO>();
+            }
+        }
         public IList<UsuarioDTO> getUsuarios()
         {
             using (var context = getContext())

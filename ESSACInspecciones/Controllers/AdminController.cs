@@ -915,15 +915,22 @@ namespace ESSACInspecciones.Controllers
             return ms;
         }
 
+        //[HttpGet]
+        //public ActionResult GetUsuarios(string descripcion)
+        //{
+        //    UsuariosBL objBL = new UsuariosBL();
+        //    var lista = objBL.getUsuarios();
+        //    if (!string.IsNullOrEmpty(descripcion))
+        //    {
+        //        lista = lista.Where(x => x.Nombre.Contains(descripcion.Trim())).ToList();
+        //    }
+        //    return Json(lista, JsonRequestBehavior.AllowGet);
+        //}
         [HttpGet]
-        public ActionResult GetUsuarios(string descripcion)
+        public ActionResult GetUsuariosInspectores()
         {
             UsuariosBL objBL = new UsuariosBL();
-            var lista = objBL.getUsuarios();
-            if (!string.IsNullOrEmpty(descripcion))
-            {
-                lista = lista.Where(x => x.Nombre.Contains(descripcion.Trim())).ToList();
-            }
+            var lista = objBL.getUsuariosInspectores();
             return Json(lista, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]

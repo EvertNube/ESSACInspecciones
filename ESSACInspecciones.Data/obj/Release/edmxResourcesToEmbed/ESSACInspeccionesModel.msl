@@ -125,30 +125,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Plantilla">
-      <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.Plantilla">
-        <MappingFragment StoreEntitySet="Plantilla">
-          <ScalarProperty Name="Active" ColumnName="Active" />
-          <ScalarProperty Name="Nombre" ColumnName="Nombre" />
-          <ScalarProperty Name="IdPlantilla" ColumnName="IdPlantilla" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="Protocolo">
-      <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.Protocolo">
-        <MappingFragment StoreEntitySet="Protocolo">
-          <ScalarProperty Name="Active" ColumnName="Active" />
-          <ScalarProperty Name="Direccion" ColumnName="Direccion" />
-          <ScalarProperty Name="Fecha" ColumnName="Fecha" />
-          <ScalarProperty Name="NombreAreaProtegida" ColumnName="NombreAreaProtegida" />
-          <ScalarProperty Name="IdEstado" ColumnName="IdEstado" />
-          <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
-          <ScalarProperty Name="IdInmueble" ColumnName="IdInmueble" />
-          <ScalarProperty Name="IdPlantilla" ColumnName="IdPlantilla" />
-          <ScalarProperty Name="IdProtocolo" ColumnName="IdProtocolo" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="Respuesta">
       <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.Respuesta">
         <MappingFragment StoreEntitySet="Respuesta">
@@ -178,23 +154,6 @@
           <ScalarProperty Name="IdPlantilla" ColumnName="IdPlantilla" />
           <ScalarProperty Name="IdSeccionPadre" ColumnName="IdSeccionPadre" />
           <ScalarProperty Name="IdSeccion" ColumnName="IdSeccion" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="SeccionBody">
-      <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.SeccionBody">
-        <MappingFragment StoreEntitySet="SeccionBody">
-          <ScalarProperty Name="Active" ColumnName="Active" />
-          <ScalarProperty Name="Orden" ColumnName="Orden" />
-          <ScalarProperty Name="NumeroFila" ColumnName="NumeroFila" />
-          <ScalarProperty Name="BackgroundColor" ColumnName="BackgroundColor" />
-          <ScalarProperty Name="Colspan" ColumnName="Colspan" />
-          <ScalarProperty Name="Rowspan" ColumnName="Rowspan" />
-          <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
-          <ScalarProperty Name="IdTipoTag" ColumnName="IdTipoTag" />
-          <ScalarProperty Name="IdTipoCelda" ColumnName="IdTipoCelda" />
-          <ScalarProperty Name="IdSeccion" ColumnName="IdSeccion" />
-          <ScalarProperty Name="IdSeccionBody" ColumnName="IdSeccionBody" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -302,5 +261,64 @@
         <ScalarProperty Name="IdTarea" ColumnName="IdTarea" />
       </EndProperty>
     </AssociationSetMapping>
+    <EntitySetMapping Name="Protocolo">
+      <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.Protocolo">
+        <MappingFragment StoreEntitySet="Protocolo">
+          <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
+          <ScalarProperty Name="Active" ColumnName="Active" />
+          <ScalarProperty Name="Direccion" ColumnName="Direccion" />
+          <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+          <ScalarProperty Name="NombreAreaProtegida" ColumnName="NombreAreaProtegida" />
+          <ScalarProperty Name="IdEstado" ColumnName="IdEstado" />
+          <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+          <ScalarProperty Name="IdInmueble" ColumnName="IdInmueble" />
+          <ScalarProperty Name="IdPlantilla" ColumnName="IdPlantilla" />
+          <ScalarProperty Name="IdProtocolo" ColumnName="IdProtocolo" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Plantilla">
+      <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.Plantilla">
+        <MappingFragment StoreEntitySet="Plantilla">
+          <ScalarProperty Name="Active" ColumnName="Active" />
+          <ScalarProperty Name="Nombre2" ColumnName="Nombre2" />
+          <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+          <ScalarProperty Name="IdPlantilla" ColumnName="IdPlantilla" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SeccionBody">
+      <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.SeccionBody">
+        <MappingFragment StoreEntitySet="SeccionBody">
+          <ScalarProperty Name="Active" ColumnName="Active" />
+          <ScalarProperty Name="Orden" ColumnName="Orden" />
+          <ScalarProperty Name="NumeroFila" ColumnName="NumeroFila" />
+          <ScalarProperty Name="BackgroundColor" ColumnName="BackgroundColor" />
+          <ScalarProperty Name="Colspan" ColumnName="Colspan" />
+          <ScalarProperty Name="Rowspan" ColumnName="Rowspan" />
+          <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+          <ScalarProperty Name="IdTipoTag" ColumnName="IdTipoTag" />
+          <ScalarProperty Name="IdTipoCelda" ColumnName="IdTipoCelda" />
+          <ScalarProperty Name="IdSeccion" ColumnName="IdSeccion" />
+          <ScalarProperty Name="IdSeccionBody" ColumnName="IdSeccionBody" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="DefaultValue" TypeName="ESSAC.InspeccionesDbModel.DefaultValue" StoreEntitySet="DefaultValue">
+      <EndProperty Name="SeccionBody">
+        <ScalarProperty Name="IdSeccionBody" ColumnName="IdSeccionBody" />
+      </EndProperty>
+      <EndProperty Name="Plantilla">
+        <ScalarProperty Name="IdPlantilla" ColumnName="IdPlantilla" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <FunctionImportMapping FunctionImportName="SP_GetDefaultValues" FunctionName="ESSAC.InspeccionesDbModel.Store.SP_GetDefaultValues">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="ESSAC.InspeccionesDbModel.SP_GetDefaultValues_Result">
+          <ScalarProperty Name="IdSeccionBody" ColumnName="IdSeccionBody" />
+          <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
   </EntityContainerMapping>
 </Mapping>
