@@ -680,6 +680,12 @@ namespace ESSACInspecciones.Controllers
         }
         public ActionResult Protocolo()
         {
+            UsuariosBL oUsuariosBL = new UsuariosBL();
+            var listaInspectores = oUsuariosBL.getUsuariosInspectores();
+            var usuarioActual = getCurrentUser();
+            listaInspectores.Insert(0, new UsuarioDTO { IdUsuario = 0, Nombre = "Seleccione" });
+            listaInspectores = listaInspectores.Where(x=>x.IdUsuario != usuarioActual.IdUsuario).ToList();
+
             OpcionRespuestaBL obj = new OpcionRespuestaBL();
             ViewBag.Horas = new BaseDTO().fillHoras().ToJSON();
             ViewBag.Minutos = new BaseDTO().fillMinutos().ToJSON();
@@ -688,7 +694,7 @@ namespace ESSACInspecciones.Controllers
             ViewBag.Items_SelectNivelTanque = obj.getOpcionRespuesta(5).ToJSON(); //new BaseDTO().fillSelectNivelTanque().ToJSON();
             ViewBag.Items_SelectAccesorios = obj.getOpcionRespuesta(6).ToJSON(); //new BaseDTO().fillSelectAccesorios().ToJSON();
             ViewBag.Items_SelectPresiones = obj.getOpcionRespuesta(7).ToJSON(); //new BaseDTO().fillSelectPresiones().ToJSON();
-
+            ViewBag.Items_SelectInspectores = listaInspectores.ToJSON();
             return View();
         }
 
@@ -927,10 +933,10 @@ namespace ESSACInspecciones.Controllers
         //    return Json(lista, JsonRequestBehavior.AllowGet);
         //}
         [HttpGet]
-        public ActionResult GetUsuariosInspectores()
+        public ActionResult GetUsuario(int id)
         {
             UsuariosBL objBL = new UsuariosBL();
-            var lista = objBL.getUsuariosInspectores();
+            var lista = objBL.getUsuario(id);
             return Json(lista, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]

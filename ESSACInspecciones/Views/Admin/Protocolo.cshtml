@@ -16,10 +16,11 @@
     @*@Scripts.Render("~/Content/js/jquery.flot.grow.js")*@
 
     <script type="text/javascript">
+        var RemovedFirmas = [];
         $(document).ready(function () {
             var protocolo = JSON.parse(localStorage.getItem("protocolo"));
             //Imrimir titulo del protocolo
-            var strHtmlTitle = "<h2>Protocolo de Pruebas<br /></h2><h4>" + protocolo.NombreAreaProtegida + " según NFPA 20 - Motobomba de agua Contra Incendio</h4>";
+            var strHtmlTitle = "<h2>" + protocolo.Plantilla.Nombre + "<br /></h2><h4>" + protocolo.Plantilla.Nombre2 + " </h4>";
             $(".prototitle").append(strHtmlTitle);
 
             var strHtmlStep = "";
@@ -37,7 +38,8 @@
             var jsonSelectNivelTanque = '@Html.Raw(ViewBag.Items_SelectNivelTanque)'; var Items_SelectNivelTanque = JSON.parse(jsonSelectNivelTanque);
             var jsonSelectAccesorios = '@Html.Raw(ViewBag.Items_SelectAccesorios)'; var Items_SelectAccesorios = JSON.parse(jsonSelectAccesorios);
             var jsonSelectPresiones = '@Html.Raw(ViewBag.Items_SelectPresiones)'; var Items_SelectPresiones = JSON.parse(jsonSelectPresiones);
-
+            var jsonSelectInspectores = '@Html.Raw(ViewBag.Items_SelectInspectores)'; var Items_SelectInspectores = JSON.parse(jsonSelectInspectores);
+            
             var strHtmlStepContent = "";
             for (var i = 1; i <= protocolo.TotalPaginas; i++) {
                 var stepname = "step" + i; activeStep = "";
@@ -101,17 +103,19 @@
                             for (var s = 0; s < totalItems; s++) {
                                 var filaItem = seccion.SeccionBodys[s].NumeroFila;
                                 if (s == 0 || tmpFilaItem != filaItem) {
-                                    strHtmlSecRow += "<tr>";
+                                    if (seccion.SeccionBodys[s].IdTipoTag == 8) { strHtmlSecRow += '<tr id="firma' + seccion.SeccionBodys[s].NumeroFila + '">'; }
+                                    else strHtmlSecRow += "<tr>";
                                 }
                                 if (seccion.SeccionBodys[s].IdTipoCelda == 1) {
                                     if (seccion.SeccionBodys[s].BackgroundColor == true) { styleItem = 'style="background-color:#c2c0c2;"'; } else { styleItem = ''; }
                                     strHtmlSecRow += '<th rowspan="' + seccion.SeccionBodys[s].Rowspan + '" colspan="' + seccion.SeccionBodys[s].Colspan + '" ' + styleItem + '>' + seccion.SeccionBodys[s].Descripcion + '</th>';
-                                    if (seccion.SeccionBodys[s].IdSeccionBody == 451) strHtmlSecRow += '<th><a id="btnAddFilaFirma" class="btn btn-sm btn-success btn-rounded" title="Agregar"><i class="fa fa-plus"></i></a></th>';
+                                    //if (seccion.SeccionBodys[s].IdSeccionBody == 451) strHtmlSecRow += '<th><a id="btnAddFilaFirma" class="btn btn-sm btn-success btn-rounded" title="Agregar"><i class="fa fa-plus"></i></a></th>';
                                 } else {
                                     //if (seccion.SeccionBodys[s].IdSeccionBody = 1622) {
                                     //    debugger;
                                     //}
                                     var classTextBox = "form-control input-sm GroupDescripcion " + stepname + tipoSeccion; var strHtmlTag = '';
+                                    var idCeldaFirma = "";
                                     switch (seccion.SeccionBodys[s].IdTipoTag) {
                                         case 2: strHtmlTag = '<input type="text" id="tag' + seccion.SeccionBodys[s].IdSeccionBody + '" class="' + classTextBox + '" value="' + removeNull(seccion.SeccionBodys[s].Respuesta) + '"/>'; break;
                                         case 3: strHtmlTag = drawSelect("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectSINO, seccion.SeccionBodys[s].Respuesta, 2, stepname); break;
@@ -119,31 +123,40 @@
                                         case 5: strHtmlTag = drawSelect("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectNivelTanque, seccion.SeccionBodys[s].Respuesta, 2, stepname); break;
                                         case 6: strHtmlTag = drawSelect("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectAccesorios, seccion.SeccionBodys[s].Respuesta, 2, stepname); break;
                                         case 7: strHtmlTag = drawSelect("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectPresiones, seccion.SeccionBodys[s].Respuesta, 2, stepname); break;
-                                        case 8: strHtmlTag = '<div class="input-group m-t-sm m-b-sm"><input type="text" id="tag' + seccion.SeccionBodys[s].IdSeccionBody + '" class="' + classTextBox + '" value="' + removeNull(seccion.SeccionBodys[s].Respuesta) + '">' +
-                                                    '<span class="input-group-btn"><button class="btn btn-sm btn-default btnPopupCliente" type="button"><i class="fa fa-search"></i></button></span></div>';
+                                        case 8: strHtmlTag = drawSelectFirma("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectInspectores, seccion.SeccionBodys[s].Respuesta, seccion.SeccionBodys[s].NumeroFila); break;
+                                        case 9: strHtmlTag = '<input type="text" id="empresa' + seccion.SeccionBodys[s].NumeroFila + '" class="' + classTextBox + '" value="' + removeNull(seccion.SeccionBodys[s].Respuesta) + '"/>'; break;
+                                        case 10: strHtmlTag = '<input type="text" id="representante' + seccion.SeccionBodys[s].NumeroFila + '" class="' + classTextBox + '" value="' + removeNull(seccion.SeccionBodys[s].Respuesta) + '"/>'; break;
+                                        case 11: strHtmlTag = '<input id="hddFirmaDigital' + seccion.SeccionBodys[s].NumeroFila + '" type="hidden" name="GroupDescripcion" class="GroupDescripcion" value=""/>';
+                                            idCeldaFirma = 'id = "firmadigital' + seccion.SeccionBodys[s].NumeroFila + '"';
+                                            break;
+                                            //'<img src="" alt="" height="80" width="80">'; break;
+                                            //'<input type="text" id="firmadigital' + seccion.SeccionBodys[s].NumeroFila + '" class="' + classTextBox + '" value="' + removeNull(seccion.SeccionBodys[s].Respuesta) + '"/>'; break;
+                                        case 12: strHtmlTag = '<input type="text" id="tag' + seccion.SeccionBodys[s].IdSeccionBody + '" class="' + classTextBox + '" value="' + removeNull(seccion.SeccionBodys[s].Respuesta) + '"/>'; break;
+                                            //case 8: strHtmlTag = '<input type="text" id="tag' + seccion.SeccionBodys[s].IdSeccionBody + '" class="' + classTextBox + '" value="' + removeNull(seccion.SeccionBodys[s].Respuesta) + '"/>'; break;
+                                        //case 8: strHtmlTag = '<div class="input-group m-t-sm m-b-sm"><input type="text" id="tag' + seccion.SeccionBodys[s].IdSeccionBody + '" class="' + classTextBox + '" value="' + removeNull(seccion.SeccionBodys[s].Respuesta) + '">' +
+                                        //            '<span class="input-group-btn"><button class="btn btn-sm btn-default btnPopupCliente" type="button"><i class="fa fa-search"></i></button></span></div>';
                                         default: break;
                                     }
-                                    strHtmlSecRow += '<td rowspan="' + seccion.SeccionBodys[s].Rowspan + '" colspan="' + seccion.SeccionBodys[s].Colspan + '">' + strHtmlTag + '<input type="hidden" name="GroupIdTableBody" class="GroupIdTableBody" value="' + seccion.SeccionBodys[s].IdSeccionBody + '" />' + '</td>';
+                                    strHtmlSecRow += '<td ' + idCeldaFirma + ' rowspan="' + seccion.SeccionBodys[s].Rowspan + '" colspan="' + seccion.SeccionBodys[s].Colspan + '">' + strHtmlTag + '<input type="hidden" name="GroupIdTableBody" class="GroupIdTableBody" value="' + seccion.SeccionBodys[s].IdSeccionBody + '" />' + '</td>';
                                     //strHtmlSecRow += '<input type="hidden" name="GroupIdTableBody" class="GroupIdTableBody" value="' + seccion.SeccionBodys[s].IdSeccionBody + '" />';
-                                    if (seccion.SeccionBodys[s].IdSeccionBody == 452 || seccion.SeccionBodys[s].IdSeccionBody == 453) strHtmlSecRow += '<td></td>';
+                                    //if (seccion.SeccionBodys[s].IdSeccionBody == 452 || seccion.SeccionBodys[s].IdSeccionBody == 453) strHtmlSecRow += '<td></td>';
                                 }
                                 if (s == (totalItems - 1) || filaItem != seccion.SeccionBodys[s + 1].NumeroFila) {
+                                    if (seccion.SeccionBodys[s].IdTipoCelda == 1 && seccion.SeccionBodys[s].IdTipoTag == 8) { strHtmlSecRow += '<td><a id="btnAgregarFirma" class="btn btn-sm btn-success btn-rounded" title="Agregar"><i class="fa fa-plus"></i></a></td>'; }
+                                    if (seccion.SeccionBodys[s].IdTipoCelda == 2 && seccion.SeccionBodys[s].IdTipoTag == 11) { strHtmlSecRow += '<td><button type="button" id="btnRemoverFirma" onclick="removerFila(' + seccion.SeccionBodys[s].NumeroFila + ');" class="btn btn-sm btn-danger btn-rounded" title="Quitar"><i class="fa fa-minus"></i></button></td>'; }
                                     strHtmlSecRow += "</tr>";
                                 }
                                 tmpFilaItem = seccion.SeccionBodys[s].NumeroFila;
                             }
 
-                            //var grafica = '<section class="panel panel-default">' + '<header class="panel-heading font-bold">Grafica</header>' + '<div class="panel-body">' + '<div id="flot-chart" style="height:240px"></div>' + '</div>' + '</section>';
-                            //var grafica = '<div id="flot-chart" style="height:240px"></div>';
-
-                            var id = seccion.IdSeccion == 48 ? 'id="tblFirmas"' : '';
+                            var id = ''; //seccion.IdSeccion == 48 ? 'id="tblFirmas"' : '';
                             strHtmlSeccionBodys = '<div class="table-responsive">' +
                                                 '<table class="table table-bordered">' +
                                                     '<tbody ' + id + '>' +
                                                     strHtmlSecRow +
                                                     '</tbody>' +
                                                 '</table>' +
-                                            '</div>';// + (tipoSeccion != '') ? grafica : '';
+                                            '</div>';
                         }
                         //
                         var panelGroupSubSec = "";
@@ -385,22 +398,38 @@
                 paintGraficaElectrobomba();
             });
 
-            var contaFirma = 0; var indexFirma = 0;
-            $("#btnAddFilaFirma").click(function () {
-                if (contaFirma < 6) {
-                    contaFirma++;
-                    $("#tblFirmas").append("<tr id='firma" + indexFirma + "'><td colspan='3'></td> <td colspan='3'></td> <td colspan='2'></td> <td colspan='2'></td> <td colspan='2'></td> <td><a href=\"javascript:eliminarFilaFirma('" + indexFirma + "')\"><i class='fa fa-times text-danger'></i></a></td></tr>");
-                    indexFirma++;
+            //var contaFirma = 0; var indexFirma = 0;
+                        
+            $("#btnAgregarFirma").click(function () {
+                if (RemovedFirmas[0]) {
+                    $('#firma' + RemovedFirmas[0]).show();
+                    RemovedFirmas.splice(0, 1);
                 }
             });
-            $(".btnPopupCliente").click(function () {
-                $("#modal-usuarioform").modal("show");
+
+            $(".SelectFirmas").change(function () {
+                //alert($(this)[0].id);
+                var idSelect = $(this)[0].id;
+                var idUsuario = $("#" + idSelect + " option:selected").val();
+                var fila = $(this)[0].getAttribute("data-fila");
+                pintarDatosFilaFirma(Items_SelectInspectores, idUsuario, fila);
+                //alert(fila);
             });
-            $("#btnBuscarUsuarios").click(function () {
-                var descripcion = $("#searchUsuario").val();
-                getUsuarios(descripcion);
-            });
+            
+            //$(".btnPopupCliente").click(function () {
+            //    $("#modal-usuarioform").modal("show");
+            //});
+            //$("#btnBuscarUsuarios").click(function () {
+            //    var descripcion = $("#searchUsuario").val();
+            //    getUsuarios(descripcion);
+            //});
         });
+
+        //Funciones        
+        function removerFila(fila) {
+            $('#firma' + fila).hide();
+            RemovedFirmas.push(fila);
+        }
         function paintGraficaMotobomba() {
             var datosGrafica = []; var d2 = []; var d3 = []; var d4 = [];
 
@@ -573,26 +602,52 @@
                 }
             );
         }
-        function getUsuariosInspectores(descripcion) {
-            $.ajax({
-                url: "/Admin/GetUsuariosInspectores",
-                type: "GET",
-                cache: false,
-                data: { descripcion: descripcion },
-                dataType: "json"
-            }).done(function (data) {
-                $('#usuariosTable td').remove();
-                $.each(data, function (index, item) {
-                    $('#usuariosTable > tbody:last').append(
-                        '<tr><td>' + item.Nombre + '</td>' +
-                        '<td><button type="button" onclick="agregarFirma(' + item.Nombre + ', \'' + item.RutaFirma + '\')" data-dismiss="modal"><i class="fa fa-check"></i></button></td></tr>');
-                });
-            }).fail(function () {
-                alert('Error al intentar obtener el listado de Usuarios. Por favor, actualice la página o presione F5.');
+        //function getUsuariosInspectores(descripcion) {
+        //    $.ajax({
+        //        url: "/Admin/GetUsuariosInspectores",
+        //        type: "GET",
+        //        cache: false,
+        //        data: { descripcion: descripcion },
+        //        dataType: "json"
+        //    }).done(function (data) {
+        //        $('#usuariosTable td').remove();
+        //        $.each(data, function (index, item) {
+        //            $('#usuariosTable > tbody:last').append(
+        //                '<tr><td>' + item.Nombre + '</td>' +
+        //                '<td><button type="button" onclick="agregarFirma(' + item.Nombre + ', \'' + item.RutaFirma + '\')" data-dismiss="modal"><i class="fa fa-check"></i></button></td></tr>');
+        //        });
+        //    }).fail(function () {
+        //        alert('Error al intentar obtener el listado de Usuarios. Por favor, actualice la página o presione F5.');
+        //    });
+        //}
+        function pintarDatosFilaFirma(lista, idUsuario, fila) {
+            var urlAbsolute = ""; var img = "";
+            $.each(lista, function (x, item) {
+                if (item.IdUsuario == idUsuario) {
+                    $('#firmadigital' + fila).find("img").remove();
+                    if (item.RutaFirma) {
+                        $('#hddFirmaDigital' + fila).val(item.RutaFirma);
+                        urlAbsolute = "../../Content/images/" + item.RutaFirma;
+                        img = '<img src="' + urlAbsolute + '" />';//width="310" height="310"
+                        $('#firmadigital' + fila).append(img);
+                    } else { $('#hddFirmaDigital' + fila).val(""); }
+                    //$('#firmadigital' + fila).attr("src", urlAbsolute);
+                }
             });
-        }
-        function agregarFirma(nombre, ruta) {
 
+            //$.ajax({
+            //    url: "/Admin/GetUsuario",
+            //    type: "GET",
+            //    cache: false,
+            //    data: { id: idUsuario },
+            //    dataType: "json"
+            //}).done(function (data) {
+            //    //$('#empresa' + fila).val();
+            //    //$('#representante' + fila).val();
+            //    $('#firmadigital' + fila).val(data.RutaFirma);
+            //}).fail(function () {
+            //    alert('Error al intentar obtener el listado de Usuarios. Por favor, actualice la página o presione F5.');
+            //});
         }
         function eliminarFilaFirma(index) {
             $("#firma" + index).remove();//eliminino una fila con el indice: producto1
@@ -657,6 +712,17 @@
             $.each(lista, function (x, item) {
                 if (item.IdOpcion == respuesta) selected = "selected"; else selected = "";
                 select += '<option value="' + item.IdOpcion + '" data-puntaje="' + item.Puntaje + '" ' + selected + '>' + item.NombreOpcion + '</option>';
+            });
+            select += '</select>';
+            return select;
+        }
+        function drawSelectFirma(id, lista, respuesta, fila) {
+            var select = "", selected = "", clase = "";
+            clase = "form-control input-sm parsley-validated GroupDescripcion SelectFirmas";
+            select = '<select id="' + id + '" class = "' + clase + '" style = "width: auto;" data-fila = "' + fila + '">';
+            $.each(lista, function (x, item) {
+                if (item.IdUsuario == respuesta) selected = "selected"; else selected = "";
+                select += '<option value="' + item.IdUsuario + '" ' + selected + '>' + item.Nombre + '</option>';
             });
             select += '</select>';
             return select;
@@ -731,6 +797,7 @@
                                 @*@{var btnName = (Model != null && Model.IdProtocolo > 0) ? "Guardar Cambios" : "Crear";}*@
                             </div>
                             <footer class="panel-footer text-right bg-light lter">
+                                @*<button type="button" id="btnAgregarFirma" class="btn btn-s-xs btn-success btn-rounded">Agregar Fila</button>*@
                                 <button type="button" id="btnGuardar" class="btn btn-s-xs btn-success btn-rounded">Guardar</button>
                                 <button type="button" id="btnFinalizar" class="btn btn-s-xs btn-info btn-rounded">Finalizar</button>
                                 <a class="btn btn-s-xs btn-danger btn-rounded" href="@Url.Action("Protocolos")">Salir</a>

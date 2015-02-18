@@ -27,7 +27,8 @@ namespace ESSACInspecciones.Core.BL
                                  Cuenta = r.Cuenta,
                                  Pass = r.Pass,
                                  Active = r.Estado,
-                                 IdRol = r.IdRol
+                                 IdRol = r.IdRol,
+                                 RutaFirma = r.RutaFirma
                              };
                 return result.AsEnumerable<UsuarioDTO>().OrderByDescending(x => x.IdUsuario).ToList<UsuarioDTO>();
             }
@@ -275,7 +276,8 @@ namespace ESSACInspecciones.Core.BL
                                  IdUsuario = r.IdUsuario,
                                  Nombre = r.Nombre,
                                  InicialesNombre = r.InicialesNombre,
-                                 Pass = r.Pass
+                                 Pass = r.Pass,
+                                 RutaFirma = r.RutaFirma
                              };
                 return result.SingleOrDefault();
             }
