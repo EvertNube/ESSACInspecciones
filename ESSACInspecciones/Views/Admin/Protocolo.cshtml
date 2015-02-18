@@ -117,7 +117,7 @@
                                     var classTextBox = "form-control input-sm GroupDescripcion " + stepname + tipoSeccion; var strHtmlTag = '';
                                     var idCeldaFirma = "";
                                     switch (seccion.SeccionBodys[s].IdTipoTag) {
-                                        case 2: strHtmlTag = '<input type="text" id="tag' + seccion.SeccionBodys[s].IdSeccionBody + '" class="' + classTextBox + '" value="' + removeNull(seccion.SeccionBodys[s].Respuesta) + '"/>'; break;
+                                        case 2: strHtmlTag = '<input type="text" id="tag' + seccion.SeccionBodys[s].IdSeccionBody + '" class="rounded ' + classTextBox + '" value="' + removeNull(seccion.SeccionBodys[s].Respuesta) + '"/>'; break;
                                         case 3: strHtmlTag = drawSelect("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectSINO, seccion.SeccionBodys[s].Respuesta, 2, stepname); break;
                                         case 4: strHtmlTag = drawSelect("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectBomba, seccion.SeccionBodys[s].Respuesta, 2, stepname); break;
                                         case 5: strHtmlTag = drawSelect("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectNivelTanque, seccion.SeccionBodys[s].Respuesta, 2, stepname); break;
@@ -170,15 +170,15 @@
                                     for (var s = 0; s < totalItems; s++) {
                                         var filaItem = subSeccion.SeccionBodys[s].NumeroFila;
                                         if (s == 0 || tmpFilaItem != filaItem) {
-                                            strHtmlSubSecRow += "<tr>";
+                                            strHtmlSubSecRow += '<tr class="rounded">';
                                         }
                                         if (subSeccion.SeccionBodys[s].IdTipoCelda == 1) {
                                             if (subSeccion.SeccionBodys[s].BackgroundColor == true) { styleItem = 'style="background-color:#c2c0c2;"'; } else { styleItem = ''; }
-                                            strHtmlSubSecRow += '<th rowspan="' + subSeccion.SeccionBodys[s].Rowspan + '" colspan="' + subSeccion.SeccionBodys[s].Colspan + '" ' + styleItem + '>' + subSeccion.SeccionBodys[s].Descripcion + '</th>';
+                                            strHtmlSubSecRow += '<th class="rounded" rowspan="' + subSeccion.SeccionBodys[s].Rowspan + '" colspan="' + subSeccion.SeccionBodys[s].Colspan + '" ' + styleItem + '>' + subSeccion.SeccionBodys[s].Descripcion + '</th>';
                                         } else {
                                             var classTextBox = "form-control input-sm GroupDescripcion " + stepname + tipoSeccion; var strHtmlTag = '';
                                             switch (subSeccion.SeccionBodys[s].IdTipoTag) {
-                                                case 2: strHtmlTag = '<input type="text" id=tag"' + subSeccion.SeccionBodys[s].IdSeccionBody + '" class="' + classTextBox + '" value="' + removeNull(subSeccion.SeccionBodys[s].Respuesta) + '"/>'; break;
+                                                case 2: strHtmlTag = '<input type="text" id=tag"' + subSeccion.SeccionBodys[s].IdSeccionBody + '" class="rounded ' + classTextBox + '" value="' + removeNull(subSeccion.SeccionBodys[s].Respuesta) + '"/>'; break;
                                                 case 3: strHtmlTag = drawSelect("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectSINO, subSeccion.SeccionBodys[s].Respuesta, 2, stepname, tipoSeccion); break;
                                                 case 4: strHtmlTag = drawSelect("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectBomba, subSeccion.SeccionBodys[s].Respuesta, 2, stepname, tipoSeccion); break;
                                                 case 5: strHtmlTag = drawSelect("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectNivelTanque, subSeccion.SeccionBodys[s].Respuesta, 2, stepname, tipoSeccion); break;
@@ -195,8 +195,8 @@
                                     }
 
                                     strHtmlSubSeccionBodys = '<div class="table-responsive">' +
-                                                '<table class="table table-bordered">' +
-                                                    '<tbody>' +
+                                                '<table class="table table-bordered rounded">' +
+                                                    '<tbody class="rounded">' +
                                                     strHtmlSubSecRow +
                                                     '</tbody>' +
                                                 '</table>' +
@@ -210,7 +210,7 @@
                                                         '</div>' +
                                                         '</a>' +
                                                         '<div id="' + subSeccion.IdSeccion + '" class="panel-collapse collapse">' +
-                                                            '<div class="panel-body text-sm">' +
+                                                            '<div class="panel-body text-sm rounded">' +
                                                                 strHtmlSubSeccionBodys +
                                                             '</div>' +
                                                         '</div>' +
@@ -704,8 +704,8 @@
         function drawSelect(id, lista, respuesta, tipoClase, stepName, claseAlternativa) {
             var select = "", selected = "", clase = "";
             switch (tipoClase) {
-                case 1: clase = "form-control hour parsley-validated" + claseAlternativa; break;
-                case 2: clase = "form-control input-sm parsley-validated GroupDescripcion " + stepName + claseAlternativa; break;
+                case 1: clase = "form-control hour parsley-validated rounded " + claseAlternativa; break;
+                case 2: clase = "form-control input-sm parsley-validated GroupDescripcion rounded " + stepName + claseAlternativa; break;
                 default: clase = "form-control parsley-validated GroupDescripcion " + stepName + claseAlternativa; break;
             }
             select = '<select id="' + id + '" class = "' + clase + '" style = "width: auto;">';
@@ -768,7 +768,7 @@
                         @Html.Partial("_showAlertMessages")
 
                         <section class="panel panel-default">
-                            <header class="panel-heading font-bold text-right prototitle"></header>
+                            <header class="panel-heading font-bold text-center prototitle"></header>
                             <div class="panel-body">
                                 <section class="panel panel-default">
                                     <header class="panel-heading bg-light">
@@ -799,7 +799,7 @@
                             <footer class="panel-footer text-right bg-light lter">
                                 @*<button type="button" id="btnAgregarFirma" class="btn btn-s-xs btn-success btn-rounded">Agregar Fila</button>*@
                                 <button type="button" id="btnGuardar" class="btn btn-s-xs btn-success btn-rounded">Guardar</button>
-                                <button type="button" id="btnFinalizar" class="btn btn-s-xs btn-info btn-rounded">Finalizar</button>
+                                @*<button type="button" id="btnFinalizar" class="btn btn-s-xs btn-info btn-rounded">Finalizar</button>*@
                                 <a class="btn btn-s-xs btn-danger btn-rounded" href="@Url.Action("Protocolos")">Salir</a>
                             </footer>
                         </section>

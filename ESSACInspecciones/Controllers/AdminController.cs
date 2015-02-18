@@ -756,13 +756,11 @@ namespace ESSACInspecciones.Controllers
             return RedirectToAction("Protocolo_server");
         }
 
-        
-
         #region APIS
         private MemoryStream CrearPDF(ProtocoloDTO protocolo)
         {
             MemoryStream ms = new MemoryStream();
-            Document doc = new Document(PageSize.A4.Rotate());
+            Document doc = new Document(PageSize.A4, 10, 10, 10, 10);
             PdfWriter writer = PdfWriter.GetInstance(doc, ms);
 
             //Document doc = new Document();
@@ -781,8 +779,8 @@ namespace ESSACInspecciones.Controllers
             int numColumns = 12;
 
             doc.Open();
-            doc.Add(new Paragraph("Protocolo de Pruebas", myFontTitle18_B));
-            doc.Add(new Paragraph(protocolo.NombreAreaProtegida + " según NFPA 20 - Motobomba de agua Contra Incendio", myFontTitle15));
+            doc.Add(new Paragraph("Protocolo de Pruebas" + protocolo.Plantilla.Nombre, myFontTitle18_B));
+            doc.Add(new Paragraph(protocolo.Plantilla.Nombre2, myFontTitle15));
             doc.Add(new Paragraph(" "));
 
             //Cabecera del protocolo
@@ -828,6 +826,21 @@ namespace ESSACInspecciones.Controllers
                 cellSeccion.Colspan = numColumns;
                 cellSeccion.Phrase = new Phrase(Seccion.Nombre, myFontTextH12_B);
                 tableSeccion.AddCell(cellSeccion);
+                //if (Seccion.SeccionBodys != null)
+                //{
+                //    int sum = 0; int fila = 1;
+                //    foreach (var SeccionBody in Seccion.SeccionBodys)
+                //    {
+                //        if(SeccionBody.IdTipoCelda == 1 && SeccionBody.IdTipoTag == 1)
+                //            sum += SeccionBody.Colspan;
+                //        if(fila != SeccionBody.NumeroFila)
+                //        {
+                //            cellSeccion.Colspan = sum;
+                //            break;
+                //        }
+                //        fila = SeccionBody.NumeroFila;
+                //    }
+                //}
 
                 //Contenido de secciones
                 foreach (var SeccionBody in Seccion.SeccionBodys)
@@ -835,6 +848,7 @@ namespace ESSACInspecciones.Controllers
                     PdfPCell cellSeccionBody = new PdfPCell();
                     cellSeccionBody.Rowspan = SeccionBody.Rowspan;
                     cellSeccionBody.Colspan = SeccionBody.Colspan;
+                    
                     if (SeccionBody.IdTipoCelda == 1)
                     {
                         cellSeccionBody.Phrase = new Phrase(SeccionBody.Descripcion);
@@ -921,17 +935,6 @@ namespace ESSACInspecciones.Controllers
             return ms;
         }
 
-        //[HttpGet]
-        //public ActionResult GetUsuarios(string descripcion)
-        //{
-        //    UsuariosBL objBL = new UsuariosBL();
-        //    var lista = objBL.getUsuarios();
-        //    if (!string.IsNullOrEmpty(descripcion))
-        //    {
-        //        lista = lista.Where(x => x.Nombre.Contains(descripcion.Trim())).ToList();
-        //    }
-        //    return Json(lista, JsonRequestBehavior.AllowGet);
-        //}
         [HttpGet]
         public ActionResult GetUsuario(int id)
         {

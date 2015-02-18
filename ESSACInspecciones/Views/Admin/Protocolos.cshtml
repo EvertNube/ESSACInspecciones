@@ -12,13 +12,10 @@
                         @Html.Partial("_showAlertMessages")
                         <section class="panel panel-default">
                             <div class="row wrapper">
-                                <div class="col-sm-4 m-b-xs">
-                                    @*@using (Html.BeginForm("Protocolos", "Admin", FormMethod.Get))
-                                    {*@
+                                <div class="col-sm-6 m-b-xs">
                                         @Html.DropDownList("Cliente", new SelectList(ViewBag.Clientes, "IdCliente", "NombreEmpresa"), new { @class = "form-control input-sm input-s-sm inline v-middle rounded" })
                                         @Html.DropDownList("Inmueble", new SelectList(new List<ESSACInspecciones.Core.DTO.InmuebleDTO>(), "IdInmueble", "NombreInmueble"), new { @class = "form-control input-sm input-s-sm inline v-middle rounded" })
                                         <button type="button" class="btn btn-sm btn-default btn-rounded" id="BuscarProtocolos">Buscar</button>
-                                    @*}*@
                                 </div>
                                 <div class="col-sm-4 m-b-xs">
                                     @if (ViewBag.EsAdmin)
