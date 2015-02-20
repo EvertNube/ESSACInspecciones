@@ -205,7 +205,7 @@
                                 }
 
                                 strHtmlSubSeccion += '<div class="panel panel-default">' +
-                                    '<a class="accordion-toggle panel-default" data-toggle="collapse" data-parent="#' + secondtLevelName + '" href="#' + subSeccion.IdSeccion + '">' +
+                                    '<a class="accordion-toggle panel-default bkgray collapsed" data-toggle="collapse" data-parent="#' + secondtLevelName + '" href="#' + subSeccion.IdSeccion + '">' +
                                                         '<div class="panel-heading">' +
                                                             subSeccion.Nombre +
                                                         '</div>' +
@@ -222,7 +222,7 @@
 
                         var grafica = (tipoSeccion != '') ? '<div id="flot-chart" style="height:240px"></div>' : '';
                         strHtmlSeccion += '<div class="panel panel-default">' +
-                            '<a class="accordion-toggle panel-default" data-toggle="collapse" data-parent="#' + firstLevelName + '" href="#' + seccion.IdSeccion + '">' +
+                            '<a class="accordion-toggle panel-default bkgray collapsed" data-toggle="collapse" data-parent="#' + firstLevelName + '" href="#' + seccion.IdSeccion + '">' +
                                             '<div class="panel-heading">' +
                                                 '<h4 class="panel-title">' +
                                                     seccion.Nombre +
@@ -416,14 +416,22 @@
                 pintarDatosFilaFirma(Items_SelectInspectores, idUsuario, fila);
                 //alert(fila);
             });
-            
-            //$(".btnPopupCliente").click(function () {
-            //    $("#modal-usuarioform").modal("show");
-            //});
-            //$("#btnBuscarUsuarios").click(function () {
-            //    var descripcion = $("#searchUsuario").val();
-            //    getUsuarios(descripcion);
-            //});
+
+            $('.bkgray').click(function () {
+                if ($(this).hasClass('collapsed'))
+                {
+                    $('.bkgray').children().css("background-color", "#f5f5f5");
+                    $('.bkgray').children().css("font-weight", "");
+                    $('.bkgray').parent().css("border-color", "#e8e8e8");
+                    $(this).children().css("background-color", "#FB6B5B");
+                    $(this).children().css("font-weight", "bold");
+                    $(this).parent().css("border-color", "#FB6B5B");
+                }
+                else
+                {
+                    $(this).children().css("background-color", "#f5f5f5");
+                }
+            });
         });
 
         //Funciones        
@@ -753,6 +761,9 @@
             });
             $("#puntuacion").val(score);
         }
+
+        
+        
     </script>
 
 }
