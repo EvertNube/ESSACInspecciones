@@ -24,7 +24,6 @@
                                     }
                                 </div>
                                 <div class="col-sm-4">
-                                    @*<a class="btn btn-sm btn-success pull-right btn-rounded" href="@Url.Action("Tarea")"><i class="fa fa-plus"></i> Crear nueva Tarea</a>*@
                                 </div>
                             </div>
                             <div class="table-responsive">
@@ -84,8 +83,36 @@
         });
         $("#BuscarProtocolos").click(function () {
             var InmuebleId = $("#Inmueble").val();
+
             listarProtocolos(InmuebleId);
         });
+
+        var varin = '@ViewBag.IdInmueble';
+        if (varin != '') {
+            $('#Cliente').val('@ViewBag.IdCliente');
+            $.getJSON("/Admin/GetListInmueblesByClienteId", { id: '@ViewBag.IdCliente' }, function (data) {
+            }).done(function (data) {
+                //inmuebles = data.slice(0);
+                //inmuebles.splice(0, 1);
+                var select = $("#Inmueble");
+                select.empty();
+                $.each(data, function (index, itemData) {
+                    select.append($('<option />', {
+                        value: itemData.IdInmueble,
+                        text: itemData.NombreInmueble
+                    }));
+                });
+            }).done(function() {
+                $('#Inmueble').val(varin);
+            });
+
+            listarProtocolos(varin);
+        }
+
+        @*if(@ViewBag.IdInmueble != null)
+        {
+            listarProtocolos(@ViewBag.IdInmueble);
+        }*@
     });
 
     function getProtocolo(idInmueble, idProtocolo, idPlantilla) {
@@ -138,12 +165,13 @@
         $('#tableProtocolo td').remove();
         $.each(data, function (index, itemData) {
             @*var url = '@Url.Action("Protocolo", "Admin")?idProtocolo=' + itemData.IdProtocolo + '&idPlantilla=' + itemData.IdPlantilla + '&idInmueble=' + itemData.IdInmueble;*@
-            var url = '@Url.Action("Protocolo", "Admin")';
+            var url = '@Url.Action("Protocolo", "Admin", new { idInmueble = "abcIn" })';
+            url = url.replace("abcIn", itemData.IdInmueble);
             var urlReporte = '@Url.Action("GenerarPdfProtocolo", "Admin")?idProtocolo=' + itemData.IdProtocolo + '&idPlantilla=' + itemData.IdPlantilla + '&idInmueble=' + itemData.IdInmueble;//ProtocoloReporte
             $('#tableProtocolo > tbody:last').append(
                 '<tr><td>' + (index + 1) + '</td>' +
                 '<td>' + itemData.Plantilla.Nombre + '</td>' +
-                '<td>' + itemData.Estado.NombreEstado  + '</td>' + //+ "\t"
+                '<td>' + itemData.Estado.NombreEstado + '</td>' + //+ "\t"
                 '<td>' + setImage(itemData.IdProtocolo, itemData.IdPlantilla, itemData.IdInmueble, itemData.IdEstado) + '</td>' +
                 '<td>' + '<a href="' + url + '" onclick="return getProtocolo(' + itemData.IdInmueble + ', ' + itemData.IdProtocolo + ', ' + itemData.IdPlantilla + ')" title="Editar" ><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;' +
                 '<a target="_blank" href="' + urlReporte + '" title="Generar PDF" ><i class="fa fa-file-text-o"></i></a>' +

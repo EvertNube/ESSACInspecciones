@@ -10,3 +10,13 @@
     margin-left: -15px;
     margin-top: -15px;
 }
+table.redondeado {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+table.redondeado, td.redondeado, th.redondeado {
+    border: 1px solid #dddddd;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    padding: 5px;
+}

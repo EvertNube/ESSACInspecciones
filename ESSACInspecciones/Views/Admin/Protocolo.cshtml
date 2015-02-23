@@ -792,27 +792,15 @@
                                         </div>
                                     </div>
                                 </section>
-                                @*<section class="panel panel-default">
-                                    <header class="panel-heading font-bold">Puntuación</header>
-                                    <div class="panel-body">
-                                        <div class="form-inline">
-                                            <div class="form-group">
-                                                <input type="text" id="puntuacion" class="form-control btn-rounded" value="" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </section>*@
                                 <div class="line line-dashed line-lg pull-in"></div>
                                 <input type="hidden" id="IdProtocolo" />
                                 <input type="hidden" id="IdPlantilla" />
                                 <input type="hidden" id="IdInmueble" />
-                                @*@{var btnName = (Model != null && Model.IdProtocolo > 0) ? "Guardar Cambios" : "Crear";}*@
                             </div>
                             <footer class="panel-footer text-right bg-light lter">
-                                @*<button type="button" id="btnAgregarFirma" class="btn btn-s-xs btn-success btn-rounded">Agregar Fila</button>*@
                                 <button type="button" id="btnGuardar" class="btn btn-s-xs btn-success btn-rounded">Guardar</button>
                                 @*<button type="button" id="btnFinalizar" class="btn btn-s-xs btn-info btn-rounded">Finalizar</button>*@
-                                <a class="btn btn-s-xs btn-danger btn-rounded" href="@Url.Action("Protocolos")">Salir</a>
+                                <a class="btn btn-s-xs btn-danger btn-rounded" href="@Url.Action("Protocolos", new { inmueble = @ViewBag.IdInmueble, idcliente = @ViewBag.IdCliente })">Salir</a>
                             </footer>
                         </section>
                     </div>

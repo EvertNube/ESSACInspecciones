@@ -43,3 +43,17 @@ D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Core\obj\Release\ES
 D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Core\obj\Release\ESSACInspecciones.Core.dll
 D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Core\obj\Release\ESSACInspecciones.Core.pdb
 D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Core\bin\Release\ESSACInspecciones.Core.dll.config
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones.Core\bin\Release\ESSACInspecciones.Core.dll.config
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones.Core\bin\Release\ESSACInspecciones.Core.dll
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones.Core\bin\Release\ESSACInspecciones.Core.pdb
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones.Core\bin\Release\EntityFramework.dll
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones.Core\bin\Release\ESSACInspecciones.Data.dll
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones.Core\bin\Release\ESSACInspecciones.Helpers.dll
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones.Core\bin\Release\System.Web.Mvc.dll
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones.Core\bin\Release\ESSACInspecciones.Data.pdb
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones.Core\bin\Release\ESSACInspecciones.Helpers.pdb
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones.Core\bin\Release\EntityFramework.xml
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones.Core\bin\Release\System.Web.Mvc.xml
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones.Core\obj\Release\ESSACInspecciones.Core.csprojResolveAssemblyReference.cache
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones.Core\obj\Release\ESSACInspecciones.Core.dll
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones.Core\obj\Release\ESSACInspecciones.Core.pdb
