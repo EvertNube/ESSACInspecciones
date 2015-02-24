@@ -17,30 +17,30 @@
     @*@Scripts.Render("~/Content/js/jquery.flot.grow.js")*@
 
     <script type="text/javascript">
-        var RemovedFirmas = [];
-        $(document).ready(function () {
-            var protocolo = JSON.parse(localStorage.getItem("protocolo"));
-            //Imrimir titulo del protocolo
-            var strHtmlTitle = "<h2>" + protocolo.Plantilla.Nombre + "<br /></h2><h4>" + protocolo.Plantilla.Nombre2 + " </h4>";
-            $(".prototitle").append(strHtmlTitle);
+    var RemovedFirmas = [];
+    $(document).ready(function () {
+        var protocolo = JSON.parse(localStorage.getItem("protocolo"));
+        //Imrimir titulo del protocolo
+        var strHtmlTitle = "<h2>" + protocolo.Plantilla.Nombre + "<br /></h2><h4>" + protocolo.Plantilla.Nombre2 + " </h4>";
+        $(".prototitle").append(strHtmlTitle);
 
-            var strHtmlStep = "";
-            for (var i = 1; i <= protocolo.TotalPaginas; i++) {
-                var stepName = "step" + i, activeStep = "", badgeStep = "", pagina = "Paso " + i;
-                if (i == 1) { activeStep = "active"; badgeStep = "badge-info"; }
-                strHtmlStep += '<li class="' + activeStep + '">' + '<a href="#' + stepName + '" data-toggle="tab">' + pagina + ' <b class="badge dot" id="bg_tab' + i + '"></b></a>' + '</li>';
-            }
-            $(".nav-tabs").append(strHtmlStep);
-            //
-            var jsonHoras = '@Html.Raw(ViewBag.Horas)'; var listaHoras = JSON.parse(jsonHoras);
-            var jsonMinutos = '@Html.Raw(ViewBag.Minutos)'; var listaMinutos = JSON.parse(jsonMinutos);
-            var jsonSelectSINO = '@Html.Raw(ViewBag.Items_SelectSINO)'; var Items_SelectSINO = JSON.parse(jsonSelectSINO);
-            var jsonSelectBomba = '@Html.Raw(ViewBag.Items_SelectBomba)'; var Items_SelectBomba = JSON.parse(jsonSelectBomba);
-            var jsonSelectNivelTanque = '@Html.Raw(ViewBag.Items_SelectNivelTanque)'; var Items_SelectNivelTanque = JSON.parse(jsonSelectNivelTanque);
-            var jsonSelectAccesorios = '@Html.Raw(ViewBag.Items_SelectAccesorios)'; var Items_SelectAccesorios = JSON.parse(jsonSelectAccesorios);
-            var jsonSelectPresiones = '@Html.Raw(ViewBag.Items_SelectPresiones)'; var Items_SelectPresiones = JSON.parse(jsonSelectPresiones);
-            var jsonSelectInspectores = '@Html.Raw(ViewBag.Items_SelectInspectores)'; var Items_SelectInspectores = JSON.parse(jsonSelectInspectores);
-            
+        var strHtmlStep = "";
+        for (var i = 1; i <= protocolo.TotalPaginas; i++) {
+            var stepName = "step" + i, activeStep = "", badgeStep = "", pagina = "Paso " + i;
+            if (i == 1) { activeStep = "active"; badgeStep = "badge-info"; }
+            strHtmlStep += '<li class="' + activeStep + '">' + '<a href="#' + stepName + '" data-toggle="tab">' + pagina + ' <b class="badge dot" id="bg_tab' + i + '"></b></a>' + '</li>';
+        }
+        $(".nav-tabs").append(strHtmlStep);
+        //
+        var jsonHoras = '@Html.Raw(ViewBag.Horas)'; var listaHoras = JSON.parse(jsonHoras);
+        var jsonMinutos = '@Html.Raw(ViewBag.Minutos)'; var listaMinutos = JSON.parse(jsonMinutos);
+        var jsonSelectSINO = '@Html.Raw(ViewBag.Items_SelectSINO)'; var Items_SelectSINO = JSON.parse(jsonSelectSINO);
+        var jsonSelectBomba = '@Html.Raw(ViewBag.Items_SelectBomba)'; var Items_SelectBomba = JSON.parse(jsonSelectBomba);
+        var jsonSelectNivelTanque = '@Html.Raw(ViewBag.Items_SelectNivelTanque)'; var Items_SelectNivelTanque = JSON.parse(jsonSelectNivelTanque);
+        var jsonSelectAccesorios = '@Html.Raw(ViewBag.Items_SelectAccesorios)'; var Items_SelectAccesorios = JSON.parse(jsonSelectAccesorios);
+        var jsonSelectPresiones = '@Html.Raw(ViewBag.Items_SelectPresiones)'; var Items_SelectPresiones = JSON.parse(jsonSelectPresiones);
+        var jsonSelectInspectores = '@Html.Raw(ViewBag.Items_SelectInspectores)'; var Items_SelectInspectores = JSON.parse(jsonSelectInspectores);
+
             var strHtmlStepContent = "";
             for (var i = 1; i <= protocolo.TotalPaginas; i++) {
                 var stepname = "step" + i; activeStep = "";
@@ -307,7 +307,8 @@
                     }).done(function (data) {
                         if (data) {
                             localStorage.removeItem("respuestas_" + IdProtocolo + IdPlantilla + IdInmueble);
-                            window.location = "/Admin/Protocolos";
+                            window.location.href = "@Url.Action("Protocolos", new { inmueble = @ViewBag.IdInmueble })";
+                            //window.location = "/Admin/Protocolos";
                         } else {
                             console.log('Error al intentar guardar los datos.');
                             alert("Error al intentar guardar el protocolo. Por favor, actualice la página o presione F5.");
@@ -401,7 +402,7 @@
             });
 
             //var contaFirma = 0; var indexFirma = 0;
-                        
+
             $("#btnAgregarFirma").click(function () {
                 if (RemovedFirmas[0]) {
                     $('#firma' + RemovedFirmas[0]).show();
@@ -435,7 +436,7 @@
             });
         });
 
-        //Funciones        
+        //Funciones
         function removerFila(fila) {
             $('#firma' + fila).hide();
             RemovedFirmas.push(fila);
@@ -763,8 +764,8 @@
             $("#puntuacion").val(score);
         }
 
-        
-        
+
+
     </script>
 
 }
@@ -801,7 +802,7 @@
                             <footer class="panel-footer text-right bg-light lter">
                                 <button type="button" id="btnGuardar" class="btn btn-s-xs btn-success btn-rounded">Guardar</button>
                                 @*<button type="button" id="btnFinalizar" class="btn btn-s-xs btn-info btn-rounded">Finalizar</button>*@
-                                <a class="btn btn-s-xs btn-danger btn-rounded" href="@Url.Action("Protocolos", new { inmueble = @ViewBag.IdInmueble, idcliente = @ViewBag.IdCliente })">Salir</a>
+                                <a class="btn btn-s-xs btn-danger btn-rounded" href="@Url.Action("Protocolos", new { inmueble = @ViewBag.IdInmueble })">Salir</a>
                             </footer>
                         </section>
                     </div>

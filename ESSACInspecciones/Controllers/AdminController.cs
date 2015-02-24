@@ -638,7 +638,7 @@ namespace ESSACInspecciones.Controllers
             }
         }
 
-        public ActionResult Protocolos(int? inmueble, int? idcliente)
+        public ActionResult Protocolos(int? inmueble)
         {
             if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
             List<ProtocoloDTO> model = new List<ProtocoloDTO>();
@@ -654,8 +654,10 @@ namespace ESSACInspecciones.Controllers
             }
             else
             {
+
                 ViewBag.IdInmueble = inmueble;
-                ViewBag.IdCliente = idcliente;
+                ClienteBL oClienteBL = new ClienteBL();
+                ViewBag.IdCliente = oClienteBL.getInmueble(inmueble.GetValueOrDefault()).IdCliente;
             }
 
             return View();
