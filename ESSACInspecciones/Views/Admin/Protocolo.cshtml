@@ -127,7 +127,8 @@
                                         case 8: strHtmlTag = drawSelectFirma("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectInspectores, seccion.SeccionBodys[s].Respuesta, seccion.SeccionBodys[s].NumeroFila); break;
                                         case 9: strHtmlTag = '<input type="text" id="empresa' + seccion.SeccionBodys[s].NumeroFila + '" class="' + classTextBox + '" value="' + removeNull(seccion.SeccionBodys[s].Respuesta) + '"/>'; break;
                                         case 10: strHtmlTag = '<input type="text" id="representante' + seccion.SeccionBodys[s].NumeroFila + '" class="' + classTextBox + '" value="' + removeNull(seccion.SeccionBodys[s].Respuesta) + '"/>'; break;
-                                        case 11: strHtmlTag = '<input id="hddFirmaDigital' + seccion.SeccionBodys[s].NumeroFila + '" type="hidden" name="GroupDescripcion" class="GroupDescripcion" value=""/>';
+                                        case 11: var imgFirma = seccion.SeccionBodys[s].Respuesta ? '<img src="../../Content/images/' + seccion.SeccionBodys[s].Respuesta + '" />' : "";
+                                            strHtmlTag = imgFirma + '<input id="hddFirmaDigital' + seccion.SeccionBodys[s].NumeroFila + '" type="hidden" name="GroupDescripcion" class="GroupDescripcion" value="' + removeNull(seccion.SeccionBodys[s].Respuesta) + '"/>';
                                             idCeldaFirma = 'id = "firmadigital' + seccion.SeccionBodys[s].NumeroFila + '"';
                                             break;
                                             //'<img src="" alt="" height="80" width="80">'; break;

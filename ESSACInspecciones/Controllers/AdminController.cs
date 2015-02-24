@@ -686,7 +686,7 @@ namespace ESSACInspecciones.Controllers
             var listaInspectores = oUsuariosBL.getUsuariosInspectores();
             var usuarioActual = getCurrentUser();
             listaInspectores.Insert(0, new UsuarioDTO { IdUsuario = 0, Nombre = "Seleccione" });
-            listaInspectores = listaInspectores.Where(x=>x.IdUsuario != usuarioActual.IdUsuario).ToList();
+            //listaInspectores = listaInspectores.Where(x=>x.IdUsuario != usuarioActual.IdUsuario).ToList();
 
             ClienteBL oClienteBL = new ClienteBL();
             ViewBag.IdCliente = oClienteBL.getInmueble(idInmueble).IdCliente;
