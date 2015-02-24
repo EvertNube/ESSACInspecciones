@@ -3,3 +3,6 @@ Mejoras:
 - Permitir que las imagenes de firmas sean visibles cuando no haya conexion. (Es Posible: No tengo idea)
 - Al iniciar el formulario debera aparecer la firma del inspector logueado.
 - Si en el Select se escoge al inspector A, en los demás Select no deberá estar visible.
+
+
+FALTA HACER COMMIT AND PUSH. ME OLVIDE LAS CREDENCIALES DEL GIT XD
