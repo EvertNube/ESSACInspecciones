@@ -186,7 +186,6 @@ C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACI
 C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones\bin\ESSACInspecciones.Helpers.Razor.dll
 C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones\bin\itextsharp.dll
 C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones\bin\Microsoft.Web.Infrastructure.dll
-C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones\bin\Microsoft.Web.Mvc.FixedDisplayModes.dll
 C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones\bin\Newtonsoft.Json.dll
 C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones\bin\PagedList.dll
 C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones\bin\PagedList.Mvc.dll
@@ -216,3 +215,16 @@ C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACI
 C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones\obj\Release\ESSACInspecciones.csprojResolveAssemblyReference.cache
 C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones\obj\Release\ESSACInspecciones.dll
 C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones\obj\Release\ESSACInspecciones.pdb
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones\bin\System.Web.Http.dll
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones\bin\System.Web.Http.WebHost.dll
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones\bin\System.Web.Http.xml
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones\bin\System.Web.Http.WebHost.xml
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones\bin\EntityFramework.SqlServer.dll
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones\bin\System.Net.Http.Formatting.dll
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones\bin\System.Web.Helpers.dll
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones\bin\Antlr3.Runtime.pdb
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones\bin\EntityFramework.SqlServer.xml
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones\bin\System.Net.Http.Formatting.xml
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones\bin\System.Web.Helpers.xml
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones\bin\System.Web.Optimization.xml
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones\bin\System.Web.Providers.xml

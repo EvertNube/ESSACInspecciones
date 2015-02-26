@@ -4,7 +4,7 @@ using ESSACInspecciones.Helpers;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data.Objects.SqlClient;
+//using System.Data.Objects.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;

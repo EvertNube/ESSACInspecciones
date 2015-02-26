@@ -30,3 +30,13 @@ D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Data\bin\Release\En
 D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Data\obj\Release\ESSACInspecciones.Data.csprojResolveAssemblyReference.cache
 D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Data\obj\Release\ESSACInspecciones.Data.dll
 D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Data\obj\Release\ESSACInspecciones.Data.pdb
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones.Data\bin\Release\ESSACInspecciones.Data.dll.config
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones.Data\bin\Release\ESSACInspecciones.Data.dll
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones.Data\bin\Release\ESSACInspecciones.Data.pdb
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones.Data\bin\Release\EntityFramework.dll
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones.Data\bin\Release\EntityFramework.SqlServer.dll
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones.Data\bin\Release\EntityFramework.xml
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones.Data\bin\Release\EntityFramework.SqlServer.xml
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones.Data\obj\Release\ESSACInspecciones.Data.csprojResolveAssemblyReference.cache
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones.Data\obj\Release\ESSACInspecciones.Data.dll
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones.Data\obj\Release\ESSACInspecciones.Data.pdb
