@@ -28,6 +28,7 @@ namespace ESSACInspecciones.Helpers
                 //client.UseDefaultCredentials = false;
                 client.EnableSsl = true;
                 ServicePointManager.ServerCertificateValidationCallback = delegate(object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; };
+                client.UseDefaultCredentials = false;
                 client.Send(mail);
             }
             catch (Exception e)

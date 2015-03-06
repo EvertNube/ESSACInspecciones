@@ -152,7 +152,7 @@
                             }
 
                             var id = ''; //seccion.IdSeccion == 48 ? 'id="tblFirmas"' : '';
-                            strHtmlSeccionBodys = '<div class="table-responsive">' +
+                            strHtmlSeccionBodys = '<div class="table-responsive" style="overflow:auto;">' +
                                                 '<table class="table table-bordered redondeado">' +
                                                     '<tbody ' + id + '>' +
                                                     strHtmlSecRow +
@@ -196,7 +196,7 @@
                                         tmpFilaItem = subSeccion.SeccionBodys[s].NumeroFila;
                                     }
 
-                                    strHtmlSubSeccionBodys = '<div class="table-responsive">' +
+                                    strHtmlSubSeccionBodys = '<div class="table-responsive" style="overflow:auto;">' +
                                                 '<table class="table table-bordered redondeado">' +
                                                     '<tbody>' +
                                                     strHtmlSubSecRow +
