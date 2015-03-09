@@ -27,7 +27,7 @@ namespace ESSACInspecciones.Core.BL
                                  Cuenta = r.Cuenta,
                                  Pass = r.Pass,
                                  Active = r.Estado,
-                                 IdRol = r.IdRol,
+                                 IdRolUsuario = r.IdRol,
                                  RutaFirma = r.RutaFirma
                              };
                 return result.AsEnumerable<UsuarioDTO>().OrderByDescending(x => x.IdUsuario).ToList<UsuarioDTO>();
@@ -47,7 +47,7 @@ namespace ESSACInspecciones.Core.BL
                                  Cuenta = r.Cuenta,
                                  Pass = r.Pass,
                                  Active = r.Estado,
-                                 IdRol = r.IdRol //?? 0
+                                 IdRolUsuario = r.IdRol //?? 0
                              };
                 return result.AsEnumerable<UsuarioDTO>().OrderByDescending(x => x.IdUsuario).ToList<UsuarioDTO>();
             }
@@ -65,9 +65,28 @@ namespace ESSACInspecciones.Core.BL
                                  Email = r.Email,
                                  Cuenta = r.Cuenta,
                                  Active = r.Estado,
-                                 IdRol = r.IdRol //?? 0
+                                 IdRolUsuario = r.IdRol //?? 0
                              };
                 return result.ToList<UsuarioDTO>();//.AsEnumerable<UsuarioDTO>().OrderByDescending(x => x.Nombre).ToList<UsuarioDTO>();
+            }
+        }
+
+        public IList<UsuarioDTO> getUsuariosTodos()
+        {
+            using(var context = getContext())
+            {
+                var result = from r in context.Usuario.AsEnumerable()
+                             select new UsuarioDTO
+                             {
+                                 IdUsuario = r.IdUsuario,
+                                 Nombre = r.Nombre,
+                                 Email = r.Email,
+                                 Cuenta = r.Cuenta,
+                                 Active = r.Estado,
+                                 IdRolUsuario = r.IdRol //?? 0
+                             };
+
+                return result.ToList<UsuarioDTO>();
             }
         }
 
@@ -92,7 +111,7 @@ namespace ESSACInspecciones.Core.BL
                                  Email = r.Email,
                                  Cuenta = r.Cuenta,
                                  Active = r.Estado,
-                                 IdRol = r.IdRol //?? 0
+                                 IdRolUsuario = r.IdRol //?? 0
                              };
                 return result.AsEnumerable<UsuarioDTO>().OrderByDescending(x => x.Nombre).ToList<UsuarioDTO>();
             }
@@ -186,21 +205,21 @@ namespace ESSACInspecciones.Core.BL
                 return result.ToList<RolDTO>();
             }
         }
-        //public IList<CargoDTO> getCargos()
-        //{
-        //    using (var context = getContext())
-        //    {
-        //        var result = (from r in context.Cargo
-        //                      where r.Active == true
-        //                      select new CargoDTO
-        //                     {
-        //                         IdCargo = r.IdCargo,
-        //                         Nombre = r.Nombre
-        //                     }).ToList();
-        //        result.Insert(0, new CargoDTO() { IdCargo = 0, Nombre = "Seleccione un Cargo" });
-        //        return result;
-        //    }
-        //}
+
+        public IList<RolDTO> getRolesCurrent(int idCurrentRol)
+        {
+            using (var context = getContext())
+            {
+                var result = from r in context.Rol
+                             where r.IdRol >= idCurrentRol
+                             select new RolDTO
+                             {
+                                 IdRol = r.IdRol,
+                                 Nombre = r.Nombre
+                             };
+                return result.ToList<RolDTO>();
+            }
+        }
 
         public UsuarioDTO getUsuarioByCuenta(UsuarioDTO user)
         {
@@ -212,7 +231,7 @@ namespace ESSACInspecciones.Core.BL
                              {
                                  IdUsuario = r.IdUsuario,
                                  Nombre = r.Nombre,
-                                 IdRol = r.IdRol,// ?? 0,
+                                 IdRolUsuario = r.IdRol,// ?? 0,
                                  Active = r.Estado,
                                  Email = r.Email,
                                  Pass = r.Pass,
@@ -224,6 +243,9 @@ namespace ESSACInspecciones.Core.BL
 
         public bool isValidUser(UsuarioDTO user)
         {
+            if (user.Cuenta == null || user.Pass == null)
+                return false;
+
             using (var context = getContext())
             {
                 var result = from r in context.Usuario
@@ -271,7 +293,7 @@ namespace ESSACInspecciones.Core.BL
                                  Cuenta = r.Cuenta,
                                  Email = r.Email,
                                  Active = r.Estado,
-                                 IdRol = r.IdRol,// ?? 0,
+                                 //IdRol = r.IdRol,// ?? 0,
                                  IdRolUsuario = r.IdRol,
                                  IdUsuario = r.IdUsuario,
                                  Nombre = r.Nombre,

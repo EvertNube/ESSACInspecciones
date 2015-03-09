@@ -98,8 +98,8 @@
                                                 <span>Clientes</span>
                                             </a>
                                         </li>
-                                        @if (ViewBag.EsAdmin)
-                                        {
+                                        @*@if (ViewBag.EsAdmin)
+                                        {*@
                                             <li class="">
                                                 <a href="@Url.Action("Servicios")" class="active">
                                                     <i class="fa fa-gear icon">
@@ -117,9 +117,9 @@
                                                     <span>Usuarios</span>
                                                 </a>
                                             </li>
-                                        }
-                                        @if (ViewBag.IdRol == CONSTANTES.ROL_RESPONSABLE)
-                                        {
+                                        @*}*@
+                                        @*@if (ViewBag.IdRol == CONSTANTES.ROL_RESPONSABLE)
+                                        {*@
                                             <li class="">
                                                 <a href="@Url.Action("Protocolos")" class="active">
                                                     <i class="fa fa-gear icon">
@@ -128,7 +128,7 @@
                                                     <span>Protocolos Asignados</span>
                                                 </a>
                                             </li>
-                                        }
+                                        @*}*@
                                     </ul>
                                 </nav>
                                 <!-- / nav -->

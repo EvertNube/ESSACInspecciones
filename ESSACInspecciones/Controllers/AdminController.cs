@@ -35,12 +35,12 @@ namespace ESSACInspecciones.Controllers
         }
         private bool isSuperAdministrator()
         {
-            if (getCurrentUser().IdRol == 1) return true;
+            if (getCurrentUser().IdRolUsuario == 1) return true;
             return false;
         }
         private bool isAdministrator()
         {
-            if (getCurrentUser().IdRol <= 2) return true;
+            if (getCurrentUser().IdRolUsuario <= 2) return true;
             return false;
         }
         private void createResponseMessage(string status, string message = "", string status_field = "status", string message_field = "message")
@@ -60,7 +60,7 @@ namespace ESSACInspecciones.Controllers
                 ViewBag.currentUser = user;
                 ViewBag.EsAdmin = isAdministrator();
                 ViewBag.EsSuperAdmin = isSuperAdministrator();
-                ViewBag.IdRol = user.IdRol;
+                ViewBag.IdRol = user.IdRolUsuario;
             }
             else { ViewBag.EsAdmin = false; ViewBag.EsSuperAdmin = false; }
         }
@@ -82,7 +82,7 @@ namespace ESSACInspecciones.Controllers
             if (searchResponsable == null && searchResponsable != 0)
             {
                 UsuarioDTO user = getCurrentUser();
-                if (user.IdRol == CONSTANTES.ROL_RESPONSABLE)
+                if (user.IdRolUsuario == CONSTANTES.ROL_RESPONSABLE)
                 {
                     ViewBag.IdResponsable = user.IdUsuario;
                     ViewBag.Nombre = user.Nombre;
@@ -95,28 +95,29 @@ namespace ESSACInspecciones.Controllers
         public ActionResult Usuarios()
         {
             if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
-            if (!this.isAdministrator()) { return RedirectToAction("Index"); }
+            //if (!this.isAdministrator()) { return RedirectToAction("Index"); }
             UsuariosBL usuariosBL = new UsuariosBL();
             UsuarioDTO currentUser = getCurrentUser();
-            return View(usuariosBL.getUsuarios(currentUser.IdRol));//(CONSTANTES.ROL_RESPONSABLE));
+            return View(usuariosBL.getUsuariosTodos());//(CONSTANTES.ROL_RESPONSABLE));
         }
 
         public ActionResult Usuario(int? id = null)
         {
             if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
             UsuarioDTO currentUser = getCurrentUser();
-            if (!this.isAdministrator() && id != currentUser.IdUsuario) { return RedirectToAction("Index"); }
-            if (id == 1 && !this.isSuperAdministrator()) { return RedirectToAction("Index"); }
+            //if (!this.isAdministrator() && id != currentUser.IdUsuario) { return RedirectToAction("Index"); }
+            //if (id == 1 && !this.isSuperAdministrator()) { return RedirectToAction("Index"); }
             UsuariosBL usuariosBL = new UsuariosBL();
-            IList<RolDTO> roles = usuariosBL.getRoles();
-            //var rolesList = roles.ToList();
+            IList<RolDTO> roles = usuariosBL.getRolesCurrent(this.getCurrentUser().IdRolUsuario);
             roles.Insert(0, new RolDTO() { IdRol = 0, Nombre = "Seleccione un Rol" });
-            ViewBag.Roles = roles;//.AsEnumerable();
+            ViewBag.Roles = roles;
             var objSent = TempData["Usuario"];
             if (objSent != null) { TempData["Usuario"] = null; return View(objSent); }
             if (id != null)
             {
                 UsuarioDTO usuario = usuariosBL.getUsuario((int)id);
+                ViewBag.Roles = usuariosBL.getRolesCurrent(usuario.IdRolUsuario);
+                //if (usuario.IdRol == 1 && !this.isSuperAdministrator()) { return RedirectToAction("Index"); }
                 return View(usuario);
             }
             return View();
@@ -126,8 +127,11 @@ namespace ESSACInspecciones.Controllers
         {
             if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
             UsuarioDTO currentUser = getCurrentUser();
-            if (!this.isAdministrator() && user.IdUsuario != currentUser.IdUsuario) { return RedirectToAction("Index"); }
-            if (user.IdUsuario == 1 && !this.isSuperAdministrator()) { return RedirectToAction("Index"); }
+            if (!this.isAdministrator() && user.IdUsuario != currentUser.IdUsuario) { return RedirectToAction("Usuarios"); }
+            if (user.IdRolUsuario == 1 && !this.isSuperAdministrator()) { return RedirectToAction("Usuarios"); }
+            if (user.IdRolUsuario == 2 && !this.isAdministrator()) { return RedirectToAction("Usuarios"); }
+            if (currentUser.IdRolUsuario == 2 && user.IdRolUsuario == 2 && user.IdUsuario != currentUser.IdUsuario) { return RedirectToAction("Usuarios"); }
+            if (currentUser.IdRolUsuario >= 3 && user.IdUsuario != currentUser.IdUsuario) { return RedirectToAction("Usuarios"); }
             try
             {
                 if (Request.Files.Count > 0)

@@ -26,7 +26,7 @@ namespace ESSACInspecciones.Core.DTO
         public string Pass { get; set; }
         public bool Active { get; set; }
         //[Required]
-        public int IdRol { get; set; }
+        //public int IdRol { get; set; }
         public int? IdCargo { get; set; }
         public int IdRolUsuario { get; set; }
         public string RutaFirma { get; set; }
