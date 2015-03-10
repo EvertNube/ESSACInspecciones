@@ -192,7 +192,7 @@ namespace ESSACInspecciones.Core.BL
                     //    }
                     //    //agregar validación para Desagendado
                     //}
-
+                    
                     SendMailResponsable(oTareaDTO, responsablesToRemove, responsablesToAdd);
                     return Tarea.IdTarea;
                 }
@@ -310,6 +310,7 @@ namespace ESSACInspecciones.Core.BL
             copy = copy.Substring(0, copy.Length - (copy.Length == 0 ? 0 : 1));
             body += " </div>" + "<div>Servicio : " + oTareaDTO.Servicio.NombreServicio + " </div>" + "<div>Estado : " + oTareaDTO.Estado.NombreEstado + " </div>";
             MailHandler.Send(to, copy, subject, body);
+            //MailHandler.sendEmail(body);
         }
 
         #region GET

@@ -28,10 +28,33 @@ namespace ESSACInspecciones.Helpers
                 //client.UseDefaultCredentials = false;
                 client.EnableSsl = true;
                 ServicePointManager.ServerCertificateValidationCallback = delegate(object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; };
-                client.UseDefaultCredentials = false;
+                //client.UseDefaultCredentials = false;
                 client.Send(mail);
             }
             catch (Exception e)
+            {
+                throw e;
+            }
+        }
+        //Funcion de prueba para enviar correo
+        public static void sendEmailTest(string emailBody)
+        {
+            try
+            {
+                MailMessage mailMessage = new MailMessage("evert@go3studios.com", "77saber77@gmail.com");
+                mailMessage.Subject = "Exception";
+                mailMessage.Body = emailBody;
+
+                SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
+                smtpClient.Credentials = new System.Net.NetworkCredential()
+                {
+                    UserName = "evert@go3studios.com",
+                    Password = "BladeKnight7"
+                };
+                smtpClient.EnableSsl = true;
+                smtpClient.Send(mailMessage);
+            }
+            catch(Exception e)
             {
                 throw e;
             }
