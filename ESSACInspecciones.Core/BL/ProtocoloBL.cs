@@ -277,6 +277,7 @@ namespace ESSACInspecciones.Core.BL
                     protocolo.IdEstado = (oProtocoloDTO.IdEstado != 0 ? oProtocoloDTO.IdEstado : (contaEstado != 0 ? 2 : 3));    // 2: Incompleto, 3: Completo, 4: Finalizado
                     protocolo.NombreAreaProtegida = oProtocoloDTO.NombreAreaProtegida;
                     protocolo.Direccion = oProtocoloDTO.Direccion;
+                    protocolo.FechaCreacion = DateTime.Now;
                     protocolo.Fecha = (oProtocoloDTO.Fecha != null ? Convert.ToDateTime(oProtocoloDTO.Fecha.Value.ToString("dd/MM/yyyy") + " " + oProtocoloDTO.HoraInicio + ":" + oProtocoloDTO.MinutoInicio) : oProtocoloDTO.Fecha);
                     protocolo.Active = true;
                     context.Protocolo.Add(protocolo);
