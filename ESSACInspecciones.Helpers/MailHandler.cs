@@ -26,7 +26,7 @@ namespace ESSACInspecciones.Helpers
                 mail.IsBodyHtml = true;
                 SmtpClient client = new SmtpClient();
                 //client.UseDefaultCredentials = false;
-                client.EnableSsl = true;
+                client.EnableSsl = false;
                 ServicePointManager.ServerCertificateValidationCallback = delegate(object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; };
                 //client.UseDefaultCredentials = false;
                 client.Send(mail);

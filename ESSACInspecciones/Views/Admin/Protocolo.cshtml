@@ -165,7 +165,9 @@
                                     for (var s = 0; s < totalItems; s++) {
                                         var filaItem = subSeccion.SeccionBodys[s].NumeroFila;
                                         if (s == 0 || tmpFilaItem != filaItem) {
-                                            strHtmlSubSecRow += '<tr class="redondeado">';
+                                            //strHtmlSubSecRow += '<tr class="redondeado">';
+                                            if (subSeccion.SeccionBodys[s].IdTipoTag == 8) { strHtmlSubSecRow += '<tr id="firma' + subSeccion.SeccionBodys[s].NumeroFila + '">'; }
+                                            else strHtmlSubSecRow += '<tr class="redondeado">';
                                         }
                                         if (subSeccion.SeccionBodys[s].IdTipoCelda == 1) {
                                             if (subSeccion.SeccionBodys[s].BackgroundColor == true) { styleItem = 'style="background-color:#c2c0c2;"'; } else { styleItem = ''; }

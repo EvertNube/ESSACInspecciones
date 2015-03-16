@@ -131,17 +131,10 @@
                                             strHtmlTag = imgFirma + '<input id="hddFirmaDigital' + seccion.SeccionBodys[s].NumeroFila + '" type="hidden" name="GroupDescripcion" class="GroupDescripcion" value="' + removeNull(seccion.SeccionBodys[s].Respuesta) + '"/>';
                                             idCeldaFirma = 'id = "firmadigital' + seccion.SeccionBodys[s].NumeroFila + '"';
                                             break;
-                                            //'<img src="" alt="" height="80" width="80">'; break;
-                                            //'<input type="text" id="firmadigital' + seccion.SeccionBodys[s].NumeroFila + '" class="' + classTextBox + '" value="' + removeNull(seccion.SeccionBodys[s].Respuesta) + '"/>'; break;
                                         case 12: strHtmlTag = '<input type="text" id="tag' + seccion.SeccionBodys[s].IdSeccionBody + '" class="' + classTextBox + '" value="' + removeNull(seccion.SeccionBodys[s].Respuesta) + '"/>'; break;
-                                            //case 8: strHtmlTag = '<input type="text" id="tag' + seccion.SeccionBodys[s].IdSeccionBody + '" class="' + classTextBox + '" value="' + removeNull(seccion.SeccionBodys[s].Respuesta) + '"/>'; break;
-                                        //case 8: strHtmlTag = '<div class="input-group m-t-sm m-b-sm"><input type="text" id="tag' + seccion.SeccionBodys[s].IdSeccionBody + '" class="' + classTextBox + '" value="' + removeNull(seccion.SeccionBodys[s].Respuesta) + '">' +
-                                        //            '<span class="input-group-btn"><button class="btn btn-sm btn-default btnPopupCliente" type="button"><i class="fa fa-search"></i></button></span></div>';
                                         default: break;
                                     }
                                     strHtmlSecRow += '<td ' + idCeldaFirma + ' rowspan="' + seccion.SeccionBodys[s].Rowspan + '" colspan="' + seccion.SeccionBodys[s].Colspan + '">' + strHtmlTag + '<input type="hidden" name="GroupIdTableBody" class="GroupIdTableBody redondeado" value="' + seccion.SeccionBodys[s].IdSeccionBody + '" />' + '</td>';
-                                    //strHtmlSecRow += '<input type="hidden" name="GroupIdTableBody" class="GroupIdTableBody" value="' + seccion.SeccionBodys[s].IdSeccionBody + '" />';
-                                    //if (seccion.SeccionBodys[s].IdSeccionBody == 452 || seccion.SeccionBodys[s].IdSeccionBody == 453) strHtmlSecRow += '<td></td>';
                                 }
                                 if (s == (totalItems - 1) || filaItem != seccion.SeccionBodys[s + 1].NumeroFila) {
                                     if (seccion.SeccionBodys[s].IdTipoCelda == 1 && seccion.SeccionBodys[s].IdTipoTag == 8) { strHtmlSecRow += '<td><a id="btnAgregarFirma" class="btn btn-sm btn-success btn-rounded" title="Agregar"><i class="fa fa-plus"></i></a></td>'; }
@@ -152,7 +145,7 @@
                             }
 
                             var id = ''; //seccion.IdSeccion == 48 ? 'id="tblFirmas"' : '';
-                            strHtmlSeccionBodys = '<div class="table-responsive">' +
+                            strHtmlSeccionBodys = '<div class="table-responsive" style="overflow:auto;">' +
                                                 '<table class="table table-bordered redondeado">' +
                                                     '<tbody ' + id + '>' +
                                                     strHtmlSecRow +
@@ -172,7 +165,9 @@
                                     for (var s = 0; s < totalItems; s++) {
                                         var filaItem = subSeccion.SeccionBodys[s].NumeroFila;
                                         if (s == 0 || tmpFilaItem != filaItem) {
-                                            strHtmlSubSecRow += '<tr>';
+                                            //strHtmlSubSecRow += '<tr class="redondeado">';
+                                            if (subSeccion.SeccionBodys[s].IdTipoTag == 8) { strHtmlSubSecRow += '<tr id="firma' + subSeccion.SeccionBodys[s].NumeroFila + '">'; }
+                                            else strHtmlSubSecRow += '<tr class="redondeado">';
                                         }
                                         if (subSeccion.SeccionBodys[s].IdTipoCelda == 1) {
                                             if (subSeccion.SeccionBodys[s].BackgroundColor == true) { styleItem = 'style="background-color:#c2c0c2;"'; } else { styleItem = ''; }
@@ -186,17 +181,32 @@
                                                 case 5: strHtmlTag = drawSelect("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectNivelTanque, subSeccion.SeccionBodys[s].Respuesta, 2, stepname, tipoSeccion); break;
                                                 case 6: strHtmlTag = drawSelect("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectAccesorios, subSeccion.SeccionBodys[s].Respuesta, 2, stepname, tipoSeccion); break;
                                                 case 7: strHtmlTag = drawSelect("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectPresiones, subSeccion.SeccionBodys[s].Respuesta, 2, stepname, tipoSeccion); break;
+                                                case 8: strHtmlTag = drawSelectFirma("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectInspectores, subSeccion.SeccionBodys[s].Respuesta, subSeccion.SeccionBodys[s].NumeroFila); break;
+                                                case 9: strHtmlTag = '<input type="text" id="empresa' + subSeccion.SeccionBodys[s].NumeroFila + '" class="' + classTextBox + '" value="' + removeNull(subSeccion.SeccionBodys[s].Respuesta) + '"/>'; break;
+                                                case 10: strHtmlTag = '<input type="text" id="representante' + subSeccion.SeccionBodys[s].NumeroFila + '" class="' + classTextBox + '" value="' + removeNull(subSeccion.SeccionBodys[s].Respuesta) + '"/>'; break;
+                                                case 11: var imgFirma = subSeccion.SeccionBodys[s].Respuesta ? '<img src="../../Content/images/' + subSeccion.SeccionBodys[s].Respuesta + '" />' : "";
+                                                    strHtmlTag = imgFirma + '<input id="hddFirmaDigital' + subSeccion.SeccionBodys[s].NumeroFila + '" type="hidden" name="GroupDescripcion" class="GroupDescripcion" value="' + removeNull(subSeccion.SeccionBodys[s].Respuesta) + '"/>';
+                                                    idCeldaFirma = 'id = "firmadigital' + subSeccion.SeccionBodys[s].NumeroFila + '"';
+                                                    break;
+                                                case 12: strHtmlTag = '<input type="text" id="tag' + subSeccion.SeccionBodys[s].IdSeccionBody + '" class="' + classTextBox + '" value="' + removeNull(subSeccion.SeccionBodys[s].Respuesta) + '"/>'; break;
+                                                default: break;
                                             }
-                                            strHtmlSubSecRow += '<td class="redondeado" rowspan="' + subSeccion.SeccionBodys[s].Rowspan + '" colspan="' + subSeccion.SeccionBodys[s].Colspan + '" style="text-align:-webkit-center;">' + strHtmlTag + '</td>';
-                                            strHtmlSubSecRow += '<input type="hidden" name="GroupIdTableBody" class="GroupIdTableBody" value="' + subSeccion.SeccionBodys[s].IdSeccionBody + '" />';
+                                            /*strHtmlSubSecRow += '<td class="redondeado" rowspan="' + subSeccion.SeccionBodys[s].Rowspan + '" colspan="' + subSeccion.SeccionBodys[s].Colspan + '" style="text-align:-webkit-center;">' + strHtmlTag + '</td>';
+                                            strHtmlSubSecRow += '<input type="hidden" name="GroupIdTableBody" class="GroupIdTableBody" value="' + subSeccion.SeccionBodys[s].IdSeccionBody + '" />';*/
+                                            strHtmlSubSecRow += '<td class="redondeado" ' + idCeldaFirma + ' rowspan="' + subSeccion.SeccionBodys[s].Rowspan + '" colspan="' + subSeccion.SeccionBodys[s].Colspan + '">' + strHtmlTag + '<input type="hidden" name="GroupIdTableBody" class="GroupIdTableBody redondeado" value="' + subSeccion.SeccionBodys[s].IdSeccionBody + '" />' + '</td>';
                                         }
+                                        /*if (s == (totalItems - 1) || filaItem != subSeccion.SeccionBodys[s + 1].NumeroFila) {
+                                            strHtmlSubSecRow += "</tr>";
+                                        }*/
                                         if (s == (totalItems - 1) || filaItem != subSeccion.SeccionBodys[s + 1].NumeroFila) {
+                                            if (subSeccion.SeccionBodys[s].IdTipoCelda == 1 && subSeccion.SeccionBodys[s].IdTipoTag == 8) { strHtmlSubSecRow += '<td><a id="btnAgregarFirma" class="btn btn-sm btn-success btn-rounded" title="Agregar"><i class="fa fa-plus"></i></a></td>'; }
+                                            if (subSeccion.SeccionBodys[s].IdTipoCelda == 2 && subSeccion.SeccionBodys[s].IdTipoTag == 11) { strHtmlSubSecRow += '<td><button type="button" id="btnRemoverFirma" onclick="removerFila(' + subSeccion.SeccionBodys[s].NumeroFila + ');" class="btn btn-sm btn-danger btn-rounded" title="Quitar"><i class="fa fa-minus"></i></button></td>'; }
                                             strHtmlSubSecRow += "</tr>";
                                         }
                                         tmpFilaItem = subSeccion.SeccionBodys[s].NumeroFila;
                                     }
 
-                                    strHtmlSubSeccionBodys = '<div class="table-responsive">' +
+                                    strHtmlSubSeccionBodys = '<div class="table-responsive" style="overflow:auto;">' +
                                                 '<table class="table table-bordered redondeado">' +
                                                     '<tbody>' +
                                                     strHtmlSubSecRow +

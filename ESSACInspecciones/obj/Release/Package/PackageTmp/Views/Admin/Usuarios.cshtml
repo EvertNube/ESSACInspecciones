@@ -10,24 +10,23 @@
                 <h2>Usuarios</h2>
                 @Html.Partial("_showAlertMessages")
                 <section class="panel panel-default">
-                    <div class="row text-sm wrapper">
-                        <div class="col-sm-8">
-                            <div class="btn-group">
-                                @if (ViewBag.EsAdmin)
-                                {
+                    @if (ViewBag.EsAdmin)
+                    {
+                        <div class="row text-sm wrapper">
+                            <div class="col-sm-8">
+                                <div class="btn-group">
                                     <label><input type="checkbox" id="btn-showInactive" /> Mostrar Inactivos</label>
-                                }
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <a class="btn btn-sm btn-success pull-right btn-rounded" href="@Url.Action("Usuario")"><i class="fa fa-plus"></i> Crear nuevo usuario</a>
                             </div>
                         </div>
-                        <div class="col-sm-4">
-                            <a class="btn btn-sm btn-success pull-right btn-rounded" href="@Url.Action("Usuario")"><i class="fa fa-plus"></i> Crear nuevo usuario</a>
-                        </div>
-                    </div>
+                    }
                     <div class="table-responsive">
                         <table class="table table-striped m-b-none">
                             <thead>
                                 <tr>
-                                    <th width="10%">ID</th>
                                     <th width="30%">Nombre</th>
                                     <th width="30%">Email</th>
                                     <th width="20%">Cuenta</th>
@@ -43,21 +42,15 @@
                                 {
                                     var classInactive = (ViewBag.EsAdmin && !usuario.Active) ? "class='inactive'" : "";
                                     <tr @Html.Raw(classInactive)>
-                                        <td align="center">
-                                            @if (ViewBag.EsAdmin && !usuario.Active)
-                                            { <span class="badge bg-danger" data-toggle="tooltip" data-placement="left" data-original-title="Inactivo">@cont</span>}
-                                            else
-                                            {@cont}
-                                    </td>
-                                    <td>@usuario.Nombre</td>
-                                    <td>@usuario.Email</td>
-                                    <td>@usuario.Cuenta</td>
-                                    @if (ViewBag.EsAdmin)
-                                    {
-                                        <td align="center"><a href="@Url.Action("Usuario", new { id = usuario.IdUsuario})"><i class="fa fa-pencil"></i></a></td>
-                                    }
-                                </tr>
-                                    cont++;
+                                        <td>@usuario.Nombre</td>
+                                        <td>@usuario.Email</td>
+                                        <td>@usuario.Cuenta</td>
+                                        @if (ViewBag.EsAdmin)
+                                        {
+                                            <td align="center"><a href="@Url.Action("Usuario", new { id = usuario.IdUsuario})"><i class="fa fa-pencil"></i></a></td>
+                                        }
+                                    </tr>
+                                        cont++;
                                 }
                             </tbody>
                         </table>

@@ -17,14 +17,12 @@
                                         @Html.DropDownList("Inmueble", new SelectList(new List<ESSACInspecciones.Core.DTO.InmuebleDTO>(), "IdInmueble", "NombreInmueble"), new { @class = "form-control input-sm input-s-sm inline v-middle rounded" })
                                         <button type="button" class="btn btn-sm btn-default btn-rounded" id="BuscarProtocolos">Buscar</button>
                                 </div>
-                                <div class="col-sm-4 m-b-xs">
+                                @*<div class="col-sm-4 m-b-xs">
                                     @if (ViewBag.EsAdmin)
                                     {
                                         <label class="text-sm"><input type="checkbox" id="btn-showInactive" /> Mostrar Inactivos</label>
                                     }
-                                </div>
-                                <div class="col-sm-4">
-                                </div>
+                                </div>*@
                             </div>
                             <div class="table-responsive">
                                 <table class="table table-striped b-t b-light" id="tableProtocolo">
