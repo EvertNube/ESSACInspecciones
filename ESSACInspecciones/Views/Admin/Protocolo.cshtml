@@ -182,8 +182,8 @@
                                                 case 6: strHtmlTag = drawSelect("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectAccesorios, subSeccion.SeccionBodys[s].Respuesta, 2, stepname, tipoSeccion); break;
                                                 case 7: strHtmlTag = drawSelect("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectPresiones, subSeccion.SeccionBodys[s].Respuesta, 2, stepname, tipoSeccion); break;
                                                 case 8: strHtmlTag = drawSelectFirma("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectInspectores, subSeccion.SeccionBodys[s].Respuesta, subSeccion.SeccionBodys[s].NumeroFila); break;
-                                                case 9: strHtmlTag = '<input type="text" id="empresa' + subSeccion.SeccionBodys[s].NumeroFila + '" class="' + classTextBox + '" value="' + removeNull(subSeccion.SeccionBodys[s].Respuesta) + '"/>'; break;
-                                                case 10: strHtmlTag = '<input type="text" id="representante' + subSeccion.SeccionBodys[s].NumeroFila + '" class="' + classTextBox + '" value="' + removeNull(subSeccion.SeccionBodys[s].Respuesta) + '"/>'; break;
+                                                case 9: strHtmlTag = '<input type="text" id="empresa' + subSeccion.SeccionBodys[s].NumeroFila + '" class="rounded ' + classTextBox + '" value="' + removeNull(subSeccion.SeccionBodys[s].Respuesta) + '"/>'; break;
+                                                case 10: strHtmlTag = '<input type="text" id="representante' + subSeccion.SeccionBodys[s].NumeroFila + '" class="rounded ' + classTextBox + '" value="' + removeNull(subSeccion.SeccionBodys[s].Respuesta) + '"/>'; break;
                                                 case 11: var imgFirma = subSeccion.SeccionBodys[s].Respuesta ? '<img src="../../Content/images/' + subSeccion.SeccionBodys[s].Respuesta + '" />' : "";
                                                     strHtmlTag = imgFirma + '<input id="hddFirmaDigital' + subSeccion.SeccionBodys[s].NumeroFila + '" type="hidden" name="GroupDescripcion" class="GroupDescripcion" value="' + removeNull(subSeccion.SeccionBodys[s].Respuesta) + '"/>';
                                                     idCeldaFirma = 'id = "firmadigital' + subSeccion.SeccionBodys[s].NumeroFila + '"';
@@ -230,11 +230,12 @@
                             });
                             panelGroupSubSec = '<div class="panel-group m-b" id="' + secondtLevelName + '">' + strHtmlSubSeccion + '</div>';
                         }
-
+                        
+                        var seccionConGrafica = (seccion.Nombre.toUpperCase().indexOf("RESULTADOS DE LA PRUEBA DE LA BOMBA CONTRA INCENDIO") > -1) ? ' claseGrafica' : '';
                         var grafica = (tipoSeccion != '') ? '<div id="flot-chart" style="height:240px"></div>' : '';
                         strHtmlSeccion += '<div class="panel panel-default">' +
                             '<a class="accordion-toggle panel-default bkgray collapsed" data-toggle="collapse" data-parent="#' + firstLevelName + '" href="#' + seccion.IdSeccion + '">' +
-                                            '<div class="panel-heading">' +
+                                            '<div class="panel-heading' + seccionConGrafica + '">' +
                                                 '<h4 class="panel-title">' +
                                                     seccion.Nombre +
                                                 '</h4>' +
@@ -444,7 +445,19 @@
                     $(this).children().css("background-color", "#f5f5f5");
                 }
             });
+
+            $('.claseGrafica').click(function () {
+                    switch (protocolo.IdPlantilla) {
+                        case 4:
+                            paintGraficaElectrobomba();
+                            break;
+                        case 5:
+                            paintGraficaMotobomba();
+                            break;
+                    }
+            });
         });
+
 
         //Funciones
         function removerFila(fila) {

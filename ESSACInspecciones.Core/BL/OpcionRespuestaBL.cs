@@ -17,7 +17,7 @@ namespace ESSACInspecciones.Core.BL
             using (var context = getContext())
             {
                 var result = context.OpcionRespuesta.Where(x => x.IdTipoRespuesta == IdTipoRespuesta).Select(x => new OpcionDTO { IdOpcion = x.IdOpcion, NombreOpcion = x.Nombre, Puntaje = x.Puntaje }).ToList();
-                result.Insert(0, new OpcionDTO() { IdOpcion = 0, NombreOpcion = "Seleccione" });
+                result.Insert(0, new OpcionDTO() { IdOpcion = -1, NombreOpcion = "Seleccione" });
                 return result;
             }
         }

@@ -284,7 +284,8 @@ namespace ESSACInspecciones.Core.BL
 
                     for (int i = 0; i < oProtocoloDTO.GroupIdTableBody.Count; i++)
                     {
-                        if (!string.IsNullOrEmpty(oProtocoloDTO.GroupDescripcion[i].Trim()) && oProtocoloDTO.GroupDescripcion[i] != "0")
+                        //&& oProtocoloDTO.GroupDescripcion[i] != "0"
+                        if (!string.IsNullOrEmpty(oProtocoloDTO.GroupDescripcion[i].Trim()) && oProtocoloDTO.GroupDescripcion[i] != "-1")
                         {
                             Respuesta respuesta = new Respuesta();
                             //respuesta.IdProtocolo = protocolo.IdProtocolo;
@@ -304,35 +305,6 @@ namespace ESSACInspecciones.Core.BL
                 }
             }
         }
-
-        //public bool add_Respuesta(ProtocoloDTO oProtocoloDTO)
-        //{
-        //    using (var context = getContext())
-        //    {
-        //        try
-        //        {
-        //            var protocolo = context.Protocolo.Where(x => x.IdProtocolo == oProtocoloDTO.IdProtocolo).SingleOrDefault();
-        //            for (int i = 0; i < oProtocoloDTO.GroupIdTableBody.Count; i++)
-        //            {
-        //                if (string.IsNullOrEmpty(oProtocoloDTO.GroupDescripcion[i].Trim()) && oProtocoloDTO.GroupDescripcion[i] != "0" )
-        //                {
-        //                    Respuesta respuesta = new Respuesta();
-        //                    respuesta.IdProtocolo = protocolo.IdProtocolo;
-        //                    respuesta.IdSeccionBody = oProtocoloDTO.GroupIdTableBody[i];
-        //                    respuesta.Descripcion = oProtocoloDTO.GroupDescripcion[i];
-        //                    respuesta.Active = true;
-        //                    context.Respuesta.Add(respuesta);
-        //                }
-        //            }
-        //            return true;
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            //throw e;
-        //            return false;
-        //        }
-        //    }
-        //}
 
         public bool update(ProtocoloDTO oProtocoloDTO)
         {
@@ -354,7 +326,9 @@ namespace ESSACInspecciones.Core.BL
                         var respuesta = oldRespuesta.Where(x => x.IdSeccionBody == oProtocoloDTO.GroupIdTableBody[i]).SingleOrDefault();
                         if (respuesta != null)
                         {
-                            if (string.IsNullOrEmpty(oProtocoloDTO.GroupDescripcion[i].Trim()) || oProtocoloDTO.GroupDescripcion[i] == "0")
+                            //Esto no permite guardar valores en la caja de texto con Null o 0
+                            //if (string.IsNullOrEmpty(oProtocoloDTO.GroupDescripcion[i].Trim()) || oProtocoloDTO.GroupDescripcion[i] == "0")
+                            if (string.IsNullOrEmpty(oProtocoloDTO.GroupDescripcion[i].Trim()) || oProtocoloDTO.GroupDescripcion[i] == "-1")
                             {
                                 //Elimino
                                 //var respuestaToRemove = oldRespuesta.Where(x => x.IdSeccionBody == oProtocoloDTO.GroupIdTableBody[i]).SingleOrDefault();
@@ -368,7 +342,8 @@ namespace ESSACInspecciones.Core.BL
                         }
                         else
                         {
-                            if (!string.IsNullOrEmpty(oProtocoloDTO.GroupDescripcion[i].Trim()) && oProtocoloDTO.GroupDescripcion[i] != "0")
+                            //&& oProtocoloDTO.GroupDescripcion[i] != "0"
+                            if (!string.IsNullOrEmpty(oProtocoloDTO.GroupDescripcion[i].Trim()) && oProtocoloDTO.GroupDescripcion[i] != "-1")
                             {
                                 Respuesta respuestaToAdd = new Respuesta();
                                 respuestaToAdd.IdSeccionBody = oProtocoloDTO.GroupIdTableBody[i];
