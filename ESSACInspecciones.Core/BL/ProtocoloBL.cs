@@ -379,16 +379,6 @@ namespace ESSACInspecciones.Core.BL
                              }).Distinct().ToList();
                 lista.Insert(0, new ClienteDTO() { IdCliente = 0, NombreEmpresa = "Seleccione" });
                 return lista;
-                //return (from r in context.Tarea
-                //        from u in context.Usuario
-                //        where u.IdUsuario == idUsuario && r.IdEstado != 5 && r.Active == true
-                //        select new TareaDTO
-                //        {
-                //            IdCliente = r.IdCliente,
-                //            Cliente = new ClienteDTO { NombreEmpresa = r.Cliente.Nombre },
-                //            IdInmueble = r.IdInmueble,
-                //            Inmueble = new InmuebleDTO { NombreInmueble = r.Inmueble.Nombre }
-                //        }).Distinct().ToList();
             }
         }
         #endregion

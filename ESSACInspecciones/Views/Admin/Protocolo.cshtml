@@ -555,28 +555,28 @@
         function paintGraficaElectrobomba() {
             var datosGrafica = []; var d1 = []; var d2 = []; var d3 = []; var d4 = [];
             $('.claseGraficaElectrobomba').each(function (index, item) { var value = trim(item.value); datosGrafica.push(value); });
+            
+            d1[0] = [parseInt(datosGrafica[79]), parseInt(datosGrafica[89])];
+            d1[1] = [parseInt(datosGrafica[80]), parseInt(datosGrafica[90])];
+            d1[2] = [parseInt(datosGrafica[81]), parseInt(datosGrafica[91])];
+            d1[3] = [parseInt(datosGrafica[82]), parseInt(datosGrafica[92])];
+            d1[4] = [parseInt(datosGrafica[83]), parseInt(datosGrafica[93])];
+            //Linea Azul
+            d2[0] = [parseInt(datosGrafica[53]), parseInt(datosGrafica[8])];
+            d2[1] = [parseInt(datosGrafica[61]), parseInt(datosGrafica[16])];
+            d2[2] = [parseInt(datosGrafica[69]), parseInt(datosGrafica[24])];
+            d2[3] = [parseInt(datosGrafica[77]), parseInt(datosGrafica[32])];
 
-            d1[0] = [parseInt(datosGrafica[78]), parseInt(datosGrafica[88])];
-            d1[1] = [parseInt(datosGrafica[79]), parseInt(datosGrafica[89])];
-            d1[2] = [parseInt(datosGrafica[80]), parseInt(datosGrafica[90])];
-            d1[3] = [parseInt(datosGrafica[81]), parseInt(datosGrafica[91])];
-            d1[4] = [parseInt(datosGrafica[82]), parseInt(datosGrafica[92])];
+            d3[0] = [parseInt(datosGrafica[53]), parseInt(datosGrafica[54])];
+            d3[1] = [parseInt(datosGrafica[61]), parseInt(datosGrafica[62])];
+            d3[2] = [parseInt(datosGrafica[69]), parseInt(datosGrafica[70])];
+            d3[3] = [parseInt(datosGrafica[77]), parseInt(datosGrafica[78])];
 
-            d2[0] = [parseInt(datosGrafica[52]), parseInt(datosGrafica[7])];
-            d2[1] = [parseInt(datosGrafica[60]), parseInt(datosGrafica[15])];
-            d2[2] = [parseInt(datosGrafica[68]), parseInt(datosGrafica[23])];
-            d2[3] = [parseInt(datosGrafica[76]), parseInt(datosGrafica[31])];
-
-            d3[0] = [parseInt(datosGrafica[52]), parseInt(datosGrafica[53])];
-            d3[1] = [parseInt(datosGrafica[60]), parseInt(datosGrafica[61])];
-            d3[2] = [parseInt(datosGrafica[68]), parseInt(datosGrafica[69])];
-            d3[3] = [parseInt(datosGrafica[76]), parseInt(datosGrafica[77])];
-
-            d4[0] = [parseInt(datosGrafica[78]), parseInt(datosGrafica[83])];
-            d4[1] = [parseInt(datosGrafica[79]), parseInt(datosGrafica[84])];
-            d4[2] = [parseInt(datosGrafica[80]), parseInt(datosGrafica[85])];
-            d4[3] = [parseInt(datosGrafica[81]), parseInt(datosGrafica[86])];
-            d4[4] = [parseInt(datosGrafica[82]), parseInt(datosGrafica[87])];
+            d4[0] = [parseInt(datosGrafica[79]), parseInt(datosGrafica[84])];
+            d4[1] = [parseInt(datosGrafica[80]), parseInt(datosGrafica[85])];
+            d4[2] = [parseInt(datosGrafica[81]), parseInt(datosGrafica[86])];
+            d4[3] = [parseInt(datosGrafica[82]), parseInt(datosGrafica[87])];
+            d4[4] = [parseInt(datosGrafica[83]), parseInt(datosGrafica[88])];
 
             $("#flot-chart").length && $.plot($("#flot-chart"), [{
                 data: d1,
