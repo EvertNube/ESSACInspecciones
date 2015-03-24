@@ -772,7 +772,9 @@ namespace ESSACInspecciones.Controllers
         private MemoryStream CrearPDF(ProtocoloDTO protocolo)
         {
             MemoryStream ms = new MemoryStream();
-            Document doc = new Document(PageSize.A4, 10, 10, 10, 10);
+            //Document doc = new Document(PageSize.A4, 1, 1, 1, 1);
+            Document doc = new Document(PageSize.A4, 5f, 5f, 15f, 15f);
+            //Document doc = new Document(PageSize.A4.Rotate(), 1, 1, 1, 1);
             PdfWriter writer = PdfWriter.GetInstance(doc, ms);
 
             //Document doc = new Document();
@@ -780,19 +782,25 @@ namespace ESSACInspecciones.Controllers
             //PdfWriter.GetInstance(doc, new FileStream(path + "/Doc1.pdf", FileMode.Create));
 
             //Mis Fonts
-            Font myFontTitle18 = FontFactory.GetFont("Open Sans", 18);
-            Font myFontTitle18_B = FontFactory.GetFont("Open Sans", 18, Font.BOLD);
-            Font myFontTitle15 = FontFactory.GetFont("Open Sans", 15);
-            Font myFontTitle15_B = FontFactory.GetFont("Open Sans", 15, Font.BOLD);
+            Font myFontTitle18 = FontFactory.GetFont("Open Sans", 16);
+            Font myFontTitle18_B = FontFactory.GetFont("Open Sans", 16, Font.BOLD);
+            Font myFontTitle15 = FontFactory.GetFont("Open Sans", 14);
+            Font myFontTitle15_B = FontFactory.GetFont("Open Sans", 14, Font.BOLD);
             Font myFontTextH12 = FontFactory.GetFont("Open Sans", 12);
             Font myFontTextH12_B = FontFactory.GetFont("Open Sans", 12, Font.BOLD);
             Font myFontText10 = FontFactory.GetFont("Open Sans", 10);
             Font myFontText10_B = FontFactory.GetFont("Open Sans", 10, Font.BOLD);
+            Font myFontText8 = FontFactory.GetFont("Open Sans", 8);
+            Font myFontText8_B = FontFactory.GetFont("Open Sans", 8, Font.BOLD);
             int numColumns = 12;
 
             doc.Open();
-            doc.Add(new Paragraph("Protocolo de Pruebas" + protocolo.Plantilla.Nombre, myFontTitle18_B));
-            doc.Add(new Paragraph(protocolo.Plantilla.Nombre2, myFontTitle15));
+            Paragraph Titulo = new Paragraph("Protocolo de Pruebas" + protocolo.Plantilla.Nombre, myFontTitle18_B);
+            Titulo.Alignment = Element.ALIGN_CENTER;
+            doc.Add(Titulo);
+            Paragraph SubTitulo = new Paragraph(protocolo.Plantilla.Nombre2, myFontTitle15);
+            SubTitulo.Alignment = Element.ALIGN_CENTER;
+            doc.Add(SubTitulo);
             doc.Add(new Paragraph(" "));
 
             //Cabecera del protocolo
@@ -831,28 +839,17 @@ namespace ESSACInspecciones.Controllers
             List<OpcionDTO> opciones7 = (List<OpcionDTO>)obj.getOpcionRespuesta(7);
 
             //Inicio Tabla Reporte
-            PdfPTable tableSeccion = new PdfPTable(numColumns);
             foreach(var Seccion in protocolo.Secciones)
             {
+                numColumns = Seccion.Nombre.Equals("ANEXO - RELACIÓN DE DIPOSITIVOS PROBADOS") ? 32 : 12;
+                //Validacion del tamaño de tabla de los anexos
+                numColumns = numeroFilasEnSeccion(Seccion.Nombre);
+
+                PdfPTable tableSeccion = new PdfPTable(numColumns);
                 PdfPCell cellSeccion = new PdfPCell();
                 cellSeccion.Colspan = numColumns;
-                cellSeccion.Phrase = new Phrase(Seccion.Nombre, myFontTextH12_B);
+                cellSeccion.Phrase = new Phrase(Seccion.Nombre, myFontText10_B);
                 tableSeccion.AddCell(cellSeccion);
-                //if (Seccion.SeccionBodys != null)
-                //{
-                //    int sum = 0; int fila = 1;
-                //    foreach (var SeccionBody in Seccion.SeccionBodys)
-                //    {
-                //        if(SeccionBody.IdTipoCelda == 1 && SeccionBody.IdTipoTag == 1)
-                //            sum += SeccionBody.Colspan;
-                //        if(fila != SeccionBody.NumeroFila)
-                //        {
-                //            cellSeccion.Colspan = sum;
-                //            break;
-                //        }
-                //        fila = SeccionBody.NumeroFila;
-                //    }
-                //}
 
                 //Contenido de secciones
                 foreach (var SeccionBody in Seccion.SeccionBodys)
@@ -863,7 +860,7 @@ namespace ESSACInspecciones.Controllers
                     
                     if (SeccionBody.IdTipoCelda == 1)
                     {
-                        cellSeccionBody.Phrase = new Phrase(SeccionBody.Descripcion);
+                        cellSeccionBody.Phrase = new Phrase(SeccionBody.Descripcion, myFontText8);
                     }
                     else
                     {
@@ -889,7 +886,7 @@ namespace ESSACInspecciones.Controllers
                         else
                             rpta = SeccionBody.Respuesta;
                         
-                        cellSeccionBody.Phrase = new Phrase(rpta);
+                        cellSeccionBody.Phrase = new Phrase(rpta, myFontText8);
                     }
                     tableSeccion.AddCell(cellSeccionBody);
                 }
@@ -898,7 +895,7 @@ namespace ESSACInspecciones.Controllers
                 {
                     PdfPCell cellSubSeccion = new PdfPCell();
                     cellSubSeccion.Colspan = numColumns;
-                    cellSubSeccion.Phrase = new Phrase(SubSeccion.Nombre, myFontTextH12_B);
+                    cellSubSeccion.Phrase = new Phrase(SubSeccion.Nombre, myFontText10_B);
                     tableSeccion.AddCell(cellSubSeccion);
 
                     //Contenido de secciones
@@ -909,7 +906,7 @@ namespace ESSACInspecciones.Controllers
                         cellSubSeccionBody.Colspan = SubSeccionBody.Colspan;
                         if (SubSeccionBody.IdTipoCelda == 1)
                         {
-                            cellSubSeccionBody.Phrase = new Phrase(SubSeccionBody.Descripcion);
+                            cellSubSeccionBody.Phrase = new Phrase(SubSeccionBody.Descripcion, myFontText8);
                         }
                         else
                         {
@@ -935,16 +932,32 @@ namespace ESSACInspecciones.Controllers
                             else
                                 rpta = SubSeccionBody.Respuesta;
 
-                            cellSubSeccionBody.Phrase = new Phrase(rpta);
+                            cellSubSeccionBody.Phrase = new Phrase(rpta, myFontText8);
                         }
                         tableSeccion.AddCell(cellSubSeccionBody);
                     }
                 }
+                doc.Add(tableSeccion);
+                doc.Add(new Paragraph(" "));
             }
-            doc.Add(tableSeccion);
-            doc.Add(new Paragraph(" "));
+            
             doc.Close();
             return ms;
+        }
+
+        private int numeroFilasEnSeccion(string NombreSeccion)
+        {
+            switch (NombreSeccion)
+            {
+                case "ANEXO - LISTADO DE CASETAS DE ATAQUE RÁPIDO (CAR)":
+                    return 36;
+                case "ANEXO - INSPECCION DE MONITORES":
+                    return 28;
+                case "ANEXO - RELACIÓN DE DIPOSITIVOS PROBADOS":
+                    return 32;
+                default:
+                    return 12;
+            }
         }
 
         [HttpGet]
