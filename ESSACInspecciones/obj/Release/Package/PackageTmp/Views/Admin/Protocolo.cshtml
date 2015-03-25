@@ -446,7 +446,19 @@
                 }
             });
 
-            $('.claseGrafica').click(function () {
+            //$('.claseGrafica').click(function () {
+            //        switch (protocolo.IdPlantilla) {
+            //            case 4:
+            //                paintGraficaElectrobomba();
+            //                break;
+            //            case 5:
+            //                paintGraficaMotobomba();
+            //                break;
+            //        }
+            //});
+
+            $(".accordion-toggle").click(function () {
+                setInterval(function () {
                     switch (protocolo.IdPlantilla) {
                         case 4:
                             paintGraficaElectrobomba();
@@ -455,6 +467,7 @@
                             paintGraficaMotobomba();
                             break;
                     }
+                }, 1)
             });
         });
 

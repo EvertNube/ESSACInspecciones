@@ -842,7 +842,7 @@ namespace ESSACInspecciones.Controllers
             foreach(var Seccion in protocolo.Secciones)
             {
                 numColumns = Seccion.Nombre.Equals("ANEXO - RELACIÓN DE DIPOSITIVOS PROBADOS") ? 32 : 12;
-                //Validacion del tamaño de tabla de los anexos
+                //Validacion del tamaño de tabla de los ANEXOS
                 numColumns = numeroFilasEnSeccion(Seccion.Nombre);
 
                 PdfPTable tableSeccion = new PdfPTable(numColumns);
@@ -949,6 +949,8 @@ namespace ESSACInspecciones.Controllers
         {
             switch (NombreSeccion)
             {
+                case "ANEXO - HOJA DE INSPECCIÓN DE GABINETES CONTRA INCENDIOS":
+                    return 36;
                 case "ANEXO - LISTADO DE CASETAS DE ATAQUE RÁPIDO (CAR)":
                     return 36;
                 case "ANEXO - INSPECCION DE MONITORES":
