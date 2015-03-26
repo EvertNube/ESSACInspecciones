@@ -269,7 +269,8 @@ namespace ESSACInspecciones.Core.BL
             {
                 try
                 {
-                    int contaEstado = oProtocoloDTO.GroupDescripcion.Where(x => x == null || x == "0").FirstOrDefault().Count();
+                    //int contaEstado = oProtocoloDTO.GroupDescripcion.Where(x => x == null || x == "0").FirstOrDefault().Count(); --> Validacion cuando los 0 no eran permitidos
+                    int contaEstado = EstadoProtocolo(oProtocoloDTO.GroupDescripcion);
                     Protocolo protocolo = new Protocolo();
                     protocolo.IdPlantilla = oProtocoloDTO.IdPlantilla;
                     protocolo.IdInmueble = oProtocoloDTO.IdInmueble;
@@ -312,7 +313,8 @@ namespace ESSACInspecciones.Core.BL
             {
                 try
                 {
-                    int contaEstado = oProtocoloDTO.GroupDescripcion.Where(x => x == null || x == "0").FirstOrDefault().Count();
+                    //int contaEstado = oProtocoloDTO.GroupDescripcion.Where(x => x == null || x == "0").FirstOrDefault().Count();
+                    int contaEstado = EstadoProtocolo(oProtocoloDTO.GroupDescripcion);
                     var protocolo = context.Protocolo.Where(x => x.IdProtocolo == oProtocoloDTO.IdProtocolo).SingleOrDefault();
                     protocolo.IdEstado = (oProtocoloDTO.IdEstado != 0 ? oProtocoloDTO.IdEstado : (contaEstado != 0 ? 2 : 3));    // 2: Incompleto, 3: Completo, 4: Finalizado
                     protocolo.NombreAreaProtegida = oProtocoloDTO.NombreAreaProtegida;
@@ -383,5 +385,14 @@ namespace ESSACInspecciones.Core.BL
         }
         #endregion
 
+        private int EstadoProtocolo(List<string> lista)
+        {
+            foreach (string item in lista)
+            {
+                if (string.IsNullOrEmpty(item) || item == "-1")
+                    return 1;
+            }
+            return 0;
+        }
     }
 }

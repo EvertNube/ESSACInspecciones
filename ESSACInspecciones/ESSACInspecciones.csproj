@@ -659,7 +659,9 @@
     <Content Include="Content\themes\base\tooltip.css" />
     <Content Include="Content\themes\views\css\comunes.css" />
     <Content Include="Content\themes\views\images\check_icon.png" />
+    <Content Include="Content\themes\views\images\circle_blue.png" />
     <Content Include="Content\themes\views\images\circle_green.png" />
+    <Content Include="Content\themes\views\images\circle_orange.png" />
     <Content Include="Content\themes\views\images\circle_red.png" />
     <Content Include="Content\themes\views\images\circle_yellow.png" />
     <Content Include="Content\themes\views\images\loading-blue.gif" />
