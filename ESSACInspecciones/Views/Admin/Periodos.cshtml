@@ -1,13 +1,14 @@
 ﻿@{
-    ViewBag.Title = "Usuarios";
+    ViewBag.Title = "Periodos";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
-@model IList<ESSACInspecciones.Core.DTO.UsuarioDTO>
+@using System.Globalization;
+@model  IList<ESSACInspecciones.Core.DTO.PeriodoDTO>
 <section class="vbox">
     <section class="scrollable padder">
         <div class="row m-b">
             <div class="col-xs-12 col-md-10 col-md-offset-1">
-                <h2>Usuarios</h2>
+                <h2>Periodos</h2>
                 @Html.Partial("_showAlertMessages")
                 <section class="panel panel-default">
                     @if (ViewBag.EsAdmin)
@@ -19,7 +20,7 @@
                                 </div>
                             </div>
                             <div class="col-sm-4">
-                                <a class="btn btn-sm btn-success pull-right btn-rounded" href="@Url.Action("Usuario")"><i class="fa fa-plus"></i> Crear nuevo usuario</a>
+                                <a class="btn btn-sm btn-success pull-right btn-rounded" href="@Url.Action("Periodo")"><i class="fa fa-plus"></i> Crear nuevo periodo</a>
                             </div>
                         </div>
                     }
@@ -28,26 +29,26 @@
                             <thead>
                                 <tr>
                                     <th width="30%">Nombre</th>
-                                    <th width="30%">Email</th>
-                                    <th width="20%">Cuenta</th>
+                                    <th class="text-center" width="25%">Fecha Inicio</th>
+                                    <th class="text-center" width="25%">Fecha Fin</th>
                                     @if (ViewBag.EsAdmin)
                                     {
-                                        <th width="20%">Opciones</th>
+                                        <th class="text-center" width="20%">Opciones</th>
                                     }
                                 </tr>
                             </thead>
                             <tbody>
                                 @{int cont = 1;}
-                                @foreach (var usuario in Model)
+                                @foreach (var periodo in Model)
                                 {
-                                    var classInactive = (ViewBag.EsAdmin && !usuario.Active) ? "class='inactive'" : "";
+                                    var classInactive = (ViewBag.EsAdmin && !periodo.Active) ? "class='inactive'" : "";
                                     <tr @Html.Raw(classInactive)>
-                                        <td>@usuario.Nombre</td>
-                                        <td>@usuario.Email</td>
-                                        <td>@usuario.Cuenta</td>
+                                        <td width="30%">@periodo.Nombre</td>
+                                        <td class="text-center" width="25%">@periodo.FechaInicio.ToString("dd/MMM/yyyy", CultureInfo.CreateSpecificCulture("es-PE"))</td>
+                                        <td class="text-center" width="25%">@periodo.FechaFin.ToString("dd/MMM/yyyy", CultureInfo.CreateSpecificCulture("es-PE"))</td>
                                         @if (ViewBag.EsAdmin)
                                         {
-                                            <td align="center"><a href="@Url.Action("Usuario", new { id = usuario.IdUsuario})"><i class="fa fa-pencil"></i></a></td>
+                                            <td align="center"><a href="@Url.Action("Periodo", new { id = periodo.IdPeriodo})"><i class="fa fa-pencil"></i></a></td>
                                         }
                                     </tr>
                                         cont++;
@@ -58,6 +59,6 @@
                 </section>
             </div>
         </div>
-
     </section>
 </section>
+

@@ -803,6 +803,8 @@
     <Content Include="Views\Admin\Protocolos.cshtml" />
     <Content Include="Views\Admin\Protocolo.cshtml" />
     <Content Include="Views\Admin\ProtocoloReporte.cshtml" />
+    <Content Include="Views\Admin\Periodos.cshtml" />
+    <Content Include="Views\Admin\Periodo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

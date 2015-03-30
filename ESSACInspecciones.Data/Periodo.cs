@@ -12,22 +12,19 @@ namespace ESSACInspecciones.Data
     using System;
     using System.Collections.Generic;
     
-    public partial class Seccion
+    public partial class Periodo
     {
-        public Seccion()
+        public Periodo()
         {
-            this.SeccionBody = new HashSet<SeccionBody>();
+            this.PeriodoProtocolo = new HashSet<PeriodoProtocolo>();
         }
     
-        public int IdSeccion { get; set; }
-        public Nullable<int> IdSeccionPadre { get; set; }
-        public int IdPlantilla { get; set; }
+        public int IdPeriodo { get; set; }
         public string Nombre { get; set; }
-        public int Pagina { get; set; }
-        public int Orden { get; set; }
+        public System.DateTime FechaInicio { get; set; }
+        public System.DateTime FechaFin { get; set; }
         public bool Active { get; set; }
     
-        public virtual Plantilla Plantilla { get; set; }
-        public virtual ICollection<SeccionBody> SeccionBody { get; set; }
+        public virtual ICollection<PeriodoProtocolo> PeriodoProtocolo { get; set; }
     }
 }

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Schema Namespace="ESSAC.InspeccionesDbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+<Schema Namespace="ESSAC.InspeccionesDbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
   <EntityType Name="Cargo">
     <Key>
       <PropertyRef Name="IdCargo" />
@@ -77,6 +77,25 @@
     <Property Name="Nombre" Type="nvarchar" MaxLength="100" Nullable="false" />
     <Property Name="Puntaje" Type="int" Nullable="false" />
     <Property Name="Orden" Type="int" Nullable="false" />
+    <Property Name="Active" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Periodo">
+    <Key>
+      <PropertyRef Name="IdPeriodo" />
+    </Key>
+    <Property Name="IdPeriodo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="FechaInicio" Type="datetime" Nullable="false" />
+    <Property Name="FechaFin" Type="datetime" Nullable="false" />
+    <Property Name="Active" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="PeriodoProtocolo">
+    <Key>
+      <PropertyRef Name="IdPeriodoProtocolo" />
+    </Key>
+    <Property Name="IdPeriodoProtocolo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="IdPeriodo" Type="int" Nullable="false" />
+    <Property Name="IdProtocolo" Type="int" Nullable="false" />
     <Property Name="Active" Type="bit" Nullable="false" />
   </EntityType>
   <EntityType Name="Plantilla">
@@ -177,6 +196,16 @@
     <Property Name="IdEstado" Type="int" Nullable="false" />
     <Property Name="Active" Type="bit" Nullable="false" />
   </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="principal_id" Type="int" Nullable="false" />
+    <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="version" Type="int" />
+    <Property Name="definition" Type="varbinary(max)" />
+  </EntityType>
   <EntityType Name="TableHeader">
     <Key>
       <PropertyRef Name="IdTableHeader" />
@@ -197,6 +226,7 @@
     <Property Name="IdTarea" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="IdCliente" Type="int" Nullable="false" />
     <Property Name="IdInmueble" Type="int" Nullable="false" />
+    <Property Name="IdPeriodoProtocolo" Type="int" />
     <Property Name="IdServicio" Type="int" Nullable="false" />
     <Property Name="Nombre" Type="nvarchar" MaxLength="100" Nullable="false" />
     <Property Name="Descripcion" Type="nvarchar" MaxLength="500" />
@@ -303,6 +333,30 @@
       </Principal>
       <Dependent Role="OpcionRespuesta">
         <PropertyRef Name="IdTipoRespuesta" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_PeriodoProtocolo_Periodo">
+    <End Role="Periodo" Type="Self.Periodo" Multiplicity="1" />
+    <End Role="PeriodoProtocolo" Type="Self.PeriodoProtocolo" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Periodo">
+        <PropertyRef Name="IdPeriodo" />
+      </Principal>
+      <Dependent Role="PeriodoProtocolo">
+        <PropertyRef Name="IdPeriodo" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_PeriodoProtocolo_Protocolo">
+    <End Role="Protocolo" Type="Self.Protocolo" Multiplicity="1" />
+    <End Role="PeriodoProtocolo" Type="Self.PeriodoProtocolo" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Protocolo">
+        <PropertyRef Name="IdProtocolo" />
+      </Principal>
+      <Dependent Role="PeriodoProtocolo">
+        <PropertyRef Name="IdProtocolo" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -510,6 +564,18 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_Tarea_PeriodoProtocolo">
+    <End Role="PeriodoProtocolo" Type="Self.PeriodoProtocolo" Multiplicity="0..1" />
+    <End Role="Tarea" Type="Self.Tarea" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PeriodoProtocolo">
+        <PropertyRef Name="IdPeriodoProtocolo" />
+      </Principal>
+      <Dependent Role="Tarea">
+        <PropertyRef Name="IdPeriodoProtocolo" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_Tarea_Servicio">
     <End Role="Servicio" Type="Self.Servicio" Multiplicity="1" />
     <End Role="Tarea" Type="Self.Tarea" Multiplicity="*" />
@@ -546,13 +612,30 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
   <Function Name="FN_GetResponsables" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="nvarchar(max)">
     <Parameter Name="IdTarea" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+    <Parameter Name="version" Type="int" Mode="In" />
+    <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
   </Function>
   <Function Name="SP_CountEstados" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="FechaInicio" Type="date" Mode="In" />
     <Parameter Name="FechaFin" Type="date" Mode="In" />
     <Parameter Name="IdResponsable" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_creatediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+    <Parameter Name="version" Type="int" Mode="In" />
+    <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+  </Function>
+  <Function Name="sp_dropdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
   </Function>
   <Function Name="SP_GetDefaultValues" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="IdPlantilla" Type="int" Mode="In" />
@@ -567,6 +650,20 @@
     <Parameter Name="FechaInicio" Type="date" Mode="In" />
     <Parameter Name="FechaFin" Type="date" Mode="In" />
   </Function>
+  <Function Name="sp_helpdiagramdefinition" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_helpdiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_renamediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+    <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
   <EntityContainer Name="ESSACInspeccionesDbModelStoreContainer">
     <EntitySet Name="Cargo" EntityType="Self.Cargo" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Cliente" EntityType="Self.Cliente" Schema="dbo" store:Type="Tables" />
@@ -576,6 +673,8 @@
     <EntitySet Name="EstadoProtocolo" EntityType="Self.EstadoProtocolo" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Inmueble" EntityType="Self.Inmueble" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="OpcionRespuesta" EntityType="Self.OpcionRespuesta" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Periodo" EntityType="Self.Periodo" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="PeriodoProtocolo" EntityType="Self.PeriodoProtocolo" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Plantilla" EntityType="Self.Plantilla" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Protocolo" EntityType="Self.Protocolo" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Responsables_Tarea" EntityType="Self.Responsables_Tarea" Schema="dbo" store:Type="Tables" />
@@ -585,6 +684,7 @@
     <EntitySet Name="SeccionBody" EntityType="Self.SeccionBody" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Servicio" EntityType="Self.Servicio" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="ServicioEstado" EntityType="Self.ServicioEstado" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="TableHeader" EntityType="Self.TableHeader" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Tarea" EntityType="Self.Tarea" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="TipoCelda" EntityType="Self.TipoCelda" Schema="dbo" store:Type="Tables" />
@@ -610,6 +710,14 @@
     <AssociationSet Name="FK_OpcionRespuesta_TipoTag" Association="Self.FK_OpcionRespuesta_TipoTag">
       <End Role="TipoTag" EntitySet="TipoTag" />
       <End Role="OpcionRespuesta" EntitySet="OpcionRespuesta" />
+    </AssociationSet>
+    <AssociationSet Name="FK_PeriodoProtocolo_Periodo" Association="Self.FK_PeriodoProtocolo_Periodo">
+      <End Role="Periodo" EntitySet="Periodo" />
+      <End Role="PeriodoProtocolo" EntitySet="PeriodoProtocolo" />
+    </AssociationSet>
+    <AssociationSet Name="FK_PeriodoProtocolo_Protocolo" Association="Self.FK_PeriodoProtocolo_Protocolo">
+      <End Role="Protocolo" EntitySet="Protocolo" />
+      <End Role="PeriodoProtocolo" EntitySet="PeriodoProtocolo" />
     </AssociationSet>
     <AssociationSet Name="FK_Protocolo_EstadoProtocolo" Association="Self.FK_Protocolo_EstadoProtocolo">
       <End Role="EstadoProtocolo" EntitySet="EstadoProtocolo" />
@@ -677,6 +785,10 @@
     </AssociationSet>
     <AssociationSet Name="FK_Tarea_Inmueble" Association="Self.FK_Tarea_Inmueble">
       <End Role="Inmueble" EntitySet="Inmueble" />
+      <End Role="Tarea" EntitySet="Tarea" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Tarea_PeriodoProtocolo" Association="Self.FK_Tarea_PeriodoProtocolo">
+      <End Role="PeriodoProtocolo" EntitySet="PeriodoProtocolo" />
       <End Role="Tarea" EntitySet="Tarea" />
     </AssociationSet>
     <AssociationSet Name="FK_Tarea_Servicio" Association="Self.FK_Tarea_Servicio">

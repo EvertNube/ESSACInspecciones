@@ -74,7 +74,7 @@ namespace ESSACInspecciones.Core.BL
         {
             using (var context = getContext())
             {
-                var result = context.SP_GetTareasResponsables(fechaInicio, fechaFin).Select(x => new EventDTO { title = x.title, start = x.start, end = x.end, idTarea = x.idTarea, color = x.color, strResource = x.strResource }).ToList();
+                var result = context.SP_GetTareasResponsables(fechaInicio, fechaFin).Select(x => new EventDTO { title = x.title, start = x.start.GetValueOrDefault(), end = x.end.GetValueOrDefault(), idTarea = x.idTarea, color = x.color, strResource = x.strResource }).ToList();
                 if (result != null)
                     foreach (var item in result)
                         item.resource = item.strResource != null ? item.strResource.Split(',').Select(r => Convert.ToInt32(r)).ToList() : new List<int>();

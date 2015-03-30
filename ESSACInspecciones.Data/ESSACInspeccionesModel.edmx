@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="ESSAC.InspeccionesDbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="ESSAC.InspeccionesDbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Cargo">
           <Key>
             <PropertyRef Name="IdCargo" />
@@ -82,6 +82,25 @@
           <Property Name="Nombre" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="Puntaje" Type="int" Nullable="false" />
           <Property Name="Orden" Type="int" Nullable="false" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Periodo">
+          <Key>
+            <PropertyRef Name="IdPeriodo" />
+          </Key>
+          <Property Name="IdPeriodo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="FechaInicio" Type="datetime" Nullable="false" />
+          <Property Name="FechaFin" Type="datetime" Nullable="false" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PeriodoProtocolo">
+          <Key>
+            <PropertyRef Name="IdPeriodoProtocolo" />
+          </Key>
+          <Property Name="IdPeriodoProtocolo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdPeriodo" Type="int" Nullable="false" />
+          <Property Name="IdProtocolo" Type="int" Nullable="false" />
           <Property Name="Active" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Plantilla">
@@ -182,6 +201,16 @@
           <Property Name="IdEstado" Type="int" Nullable="false" />
           <Property Name="Active" Type="bit" Nullable="false" />
         </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
         <EntityType Name="TableHeader">
           <Key>
             <PropertyRef Name="IdTableHeader" />
@@ -202,6 +231,7 @@
           <Property Name="IdTarea" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="IdCliente" Type="int" Nullable="false" />
           <Property Name="IdInmueble" Type="int" Nullable="false" />
+          <Property Name="IdPeriodoProtocolo" Type="int" />
           <Property Name="IdServicio" Type="int" Nullable="false" />
           <Property Name="Nombre" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="Descripcion" Type="nvarchar" MaxLength="500" />
@@ -308,6 +338,30 @@
             </Principal>
             <Dependent Role="OpcionRespuesta">
               <PropertyRef Name="IdTipoRespuesta" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PeriodoProtocolo_Periodo">
+          <End Role="Periodo" Type="Self.Periodo" Multiplicity="1" />
+          <End Role="PeriodoProtocolo" Type="Self.PeriodoProtocolo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Periodo">
+              <PropertyRef Name="IdPeriodo" />
+            </Principal>
+            <Dependent Role="PeriodoProtocolo">
+              <PropertyRef Name="IdPeriodo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PeriodoProtocolo_Protocolo">
+          <End Role="Protocolo" Type="Self.Protocolo" Multiplicity="1" />
+          <End Role="PeriodoProtocolo" Type="Self.PeriodoProtocolo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Protocolo">
+              <PropertyRef Name="IdProtocolo" />
+            </Principal>
+            <Dependent Role="PeriodoProtocolo">
+              <PropertyRef Name="IdProtocolo" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -515,6 +569,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Tarea_PeriodoProtocolo">
+          <End Role="PeriodoProtocolo" Type="Self.PeriodoProtocolo" Multiplicity="0..1" />
+          <End Role="Tarea" Type="Self.Tarea" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PeriodoProtocolo">
+              <PropertyRef Name="IdPeriodoProtocolo" />
+            </Principal>
+            <Dependent Role="Tarea">
+              <PropertyRef Name="IdPeriodoProtocolo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Tarea_Servicio">
           <End Role="Servicio" Type="Self.Servicio" Multiplicity="1" />
           <End Role="Tarea" Type="Self.Tarea" Multiplicity="*" />
@@ -551,13 +617,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
         <Function Name="FN_GetResponsables" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="nvarchar(max)">
           <Parameter Name="IdTarea" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="version" Type="int" Mode="In" />
+          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
         </Function>
         <Function Name="SP_CountEstados" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="FechaInicio" Type="date" Mode="In" />
           <Parameter Name="FechaFin" Type="date" Mode="In" />
           <Parameter Name="IdResponsable" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_creatediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="version" Type="int" Mode="In" />
+          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+        </Function>
+        <Function Name="sp_dropdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
         </Function>
         <Function Name="SP_GetDefaultValues" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="IdPlantilla" Type="int" Mode="In" />
@@ -572,6 +655,20 @@
           <Parameter Name="FechaInicio" Type="date" Mode="In" />
           <Parameter Name="FechaFin" Type="date" Mode="In" />
         </Function>
+        <Function Name="sp_helpdiagramdefinition" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_helpdiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_renamediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <EntityContainer Name="ESSACInspeccionesDbModelStoreContainer">
           <EntitySet Name="Cargo" EntityType="Self.Cargo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Cliente" EntityType="Self.Cliente" Schema="dbo" store:Type="Tables" />
@@ -581,6 +678,8 @@
           <EntitySet Name="EstadoProtocolo" EntityType="Self.EstadoProtocolo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Inmueble" EntityType="Self.Inmueble" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OpcionRespuesta" EntityType="Self.OpcionRespuesta" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Periodo" EntityType="Self.Periodo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PeriodoProtocolo" EntityType="Self.PeriodoProtocolo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Plantilla" EntityType="Self.Plantilla" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Protocolo" EntityType="Self.Protocolo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Responsables_Tarea" EntityType="Self.Responsables_Tarea" Schema="dbo" store:Type="Tables" />
@@ -590,6 +689,7 @@
           <EntitySet Name="SeccionBody" EntityType="Self.SeccionBody" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Servicio" EntityType="Self.Servicio" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ServicioEstado" EntityType="Self.ServicioEstado" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TableHeader" EntityType="Self.TableHeader" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tarea" EntityType="Self.Tarea" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TipoCelda" EntityType="Self.TipoCelda" Schema="dbo" store:Type="Tables" />
@@ -615,6 +715,14 @@
           <AssociationSet Name="FK_OpcionRespuesta_TipoTag" Association="Self.FK_OpcionRespuesta_TipoTag">
             <End Role="TipoTag" EntitySet="TipoTag" />
             <End Role="OpcionRespuesta" EntitySet="OpcionRespuesta" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PeriodoProtocolo_Periodo" Association="Self.FK_PeriodoProtocolo_Periodo">
+            <End Role="Periodo" EntitySet="Periodo" />
+            <End Role="PeriodoProtocolo" EntitySet="PeriodoProtocolo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PeriodoProtocolo_Protocolo" Association="Self.FK_PeriodoProtocolo_Protocolo">
+            <End Role="Protocolo" EntitySet="Protocolo" />
+            <End Role="PeriodoProtocolo" EntitySet="PeriodoProtocolo" />
           </AssociationSet>
           <AssociationSet Name="FK_Protocolo_EstadoProtocolo" Association="Self.FK_Protocolo_EstadoProtocolo">
             <End Role="EstadoProtocolo" EntitySet="EstadoProtocolo" />
@@ -684,6 +792,10 @@
             <End Role="Inmueble" EntitySet="Inmueble" />
             <End Role="Tarea" EntitySet="Tarea" />
           </AssociationSet>
+          <AssociationSet Name="FK_Tarea_PeriodoProtocolo" Association="Self.FK_Tarea_PeriodoProtocolo">
+            <End Role="PeriodoProtocolo" EntitySet="PeriodoProtocolo" />
+            <End Role="Tarea" EntitySet="Tarea" />
+          </AssociationSet>
           <AssociationSet Name="FK_Tarea_Servicio" Association="Self.FK_Tarea_Servicio">
             <End Role="Servicio" EntitySet="Servicio" />
             <End Role="Tarea" EntitySet="Tarea" />
@@ -700,12 +812,611 @@
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="ESSAC.InspeccionesDbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <Schema Namespace="ESSAC.InspeccionesDbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Cargo">
+          <Key>
+            <PropertyRef Name="IdCargo" />
+          </Key>
+          <Property Name="IdCargo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Usuario" Relationship="Self.FK_Usuario_Cargo" FromRole="Cargo" ToRole="Usuario" />
+        </EntityType>
+        <EntityType Name="Cliente">
+          <Key>
+            <PropertyRef Name="IdCliente" />
+          </Key>
+          <Property Name="IdCliente" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="Telefono_1" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Telefono_2" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="ContactoCliente" Relationship="Self.FK_ContactoCliente_Cliente" FromRole="Cliente" ToRole="ContactoCliente" />
+          <NavigationProperty Name="Inmueble" Relationship="Self.FK_Inmueble_Cliente" FromRole="Cliente" ToRole="Inmueble" />
+          <NavigationProperty Name="Tarea" Relationship="ESSAC.InspeccionesDbModel.FK_Tarea_Cliente" FromRole="Cliente" ToRole="Tarea" />
+        </EntityType>
+        <EntityType Name="ContactoCliente">
+          <Key>
+            <PropertyRef Name="IdContactoCliente" />
+          </Key>
+          <Property Name="IdContactoCliente" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Telefono" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Area" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Cargo" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Celular" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Anexo" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="IdCliente" Type="Int32" Nullable="false" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <Property Name="Default" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Cliente" Relationship="Self.FK_ContactoCliente_Cliente" FromRole="ContactoCliente" ToRole="Cliente" />
+        </EntityType>
+        <EntityType Name="Estado">
+          <Key>
+            <PropertyRef Name="IdEstado" />
+          </Key>
+          <Property Name="IdEstado" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NombreEstado" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="ServicioEstado" Relationship="Self.FK_ServicioEstado_Estado" FromRole="Estado" ToRole="ServicioEstado" />
+          <NavigationProperty Name="Tarea" Relationship="ESSAC.InspeccionesDbModel.FK_Tarea_Estado" FromRole="Estado" ToRole="Tarea" />
+        </EntityType>
+        <EntityType Name="EstadoProtocolo">
+          <Key>
+            <PropertyRef Name="IdEstado" />
+          </Key>
+          <Property Name="IdEstado" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NombreEstado" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Protocolo" Relationship="Self.FK_Protocolo_EstadoProtocolo" FromRole="EstadoProtocolo" ToRole="Protocolo" />
+        </EntityType>
+        <EntityType Name="Inmueble">
+          <Key>
+            <PropertyRef Name="IdInmueble" />
+          </Key>
+          <Property Name="IdInmueble" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdCliente" Type="Int32" Nullable="false" />
+          <Property Name="Nombre" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="Direccion" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Cliente" Relationship="Self.FK_Inmueble_Cliente" FromRole="Inmueble" ToRole="Cliente" />
+          <NavigationProperty Name="Protocolo" Relationship="Self.FK_Protocolo_Inmueble" FromRole="Inmueble" ToRole="Protocolo" />
+          <NavigationProperty Name="Tarea" Relationship="ESSAC.InspeccionesDbModel.FK_Tarea_Inmueble" FromRole="Inmueble" ToRole="Tarea" />
+        </EntityType>
+        <EntityType Name="OpcionRespuesta">
+          <Key>
+            <PropertyRef Name="IdOpcion" />
+          </Key>
+          <Property Name="IdOpcion" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdTipoRespuesta" Type="Int32" Nullable="false" />
+          <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Puntaje" Type="Int32" Nullable="false" />
+          <Property Name="Orden" Type="Int32" Nullable="false" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="TipoTag" Relationship="Self.FK_OpcionRespuesta_TipoTag" FromRole="OpcionRespuesta" ToRole="TipoTag" />
+        </EntityType>
+        <EntityType Name="Periodo">
+          <Key>
+            <PropertyRef Name="IdPeriodo" />
+          </Key>
+          <Property Name="IdPeriodo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="FechaInicio" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="FechaFin" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="PeriodoProtocolo" Relationship="ESSAC.InspeccionesDbModel.FK_PeriodoProtocolo_Periodo" FromRole="Periodo" ToRole="PeriodoProtocolo" />
+        </EntityType>
+        <EntityType Name="Plantilla">
+          <Key>
+            <PropertyRef Name="IdPlantilla" />
+          </Key>
+          <Property Name="IdPlantilla" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Nombre2" Type="String" MaxLength="200" FixedLength="true" Unicode="true" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Protocolo" Relationship="Self.FK_Protocolo_Plantilla" FromRole="Plantilla" ToRole="Protocolo" />
+          <NavigationProperty Name="Seccion" Relationship="Self.FK_Seccion_Plantilla" FromRole="Plantilla" ToRole="Seccion" />
+          <NavigationProperty Name="SeccionBody" Relationship="Self.DefaultValue" FromRole="Plantilla" ToRole="SeccionBody" />
+        </EntityType>
+        <EntityType Name="Protocolo">
+          <Key>
+            <PropertyRef Name="IdProtocolo" />
+          </Key>
+          <Property Name="IdProtocolo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdPlantilla" Type="Int32" Nullable="false" />
+          <Property Name="IdInmueble" Type="Int32" Nullable="false" />
+          <Property Name="IdUsuario" Type="Int32" Nullable="false" />
+          <Property Name="IdEstado" Type="Int32" Nullable="false" />
+          <Property Name="NombreAreaProtegida" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Fecha" Type="DateTime" Precision="3" />
+          <Property Name="Direccion" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <Property Name="FechaCreacion" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="EstadoProtocolo" Relationship="Self.FK_Protocolo_EstadoProtocolo" FromRole="Protocolo" ToRole="EstadoProtocolo" />
+          <NavigationProperty Name="Inmueble" Relationship="Self.FK_Protocolo_Inmueble" FromRole="Protocolo" ToRole="Inmueble" />
+          <NavigationProperty Name="Plantilla" Relationship="Self.FK_Protocolo_Plantilla" FromRole="Protocolo" ToRole="Plantilla" />
+          <NavigationProperty Name="Usuario" Relationship="Self.FK_Protocolo_Usuario" FromRole="Protocolo" ToRole="Usuario" />
+          <NavigationProperty Name="Respuesta" Relationship="Self.FK_Respuesta_Protocolo" FromRole="Protocolo" ToRole="Respuesta" />
+          <NavigationProperty Name="PeriodoProtocolo" Relationship="ESSAC.InspeccionesDbModel.FK_PeriodoProtocolo_Protocolo" FromRole="Protocolo" ToRole="PeriodoProtocolo" />
+        </EntityType>
+        <EntityType Name="Respuesta">
+          <Key>
+            <PropertyRef Name="IdProtocolo" />
+            <PropertyRef Name="IdSeccionBody" />
+          </Key>
+          <Property Name="IdProtocolo" Type="Int32" Nullable="false" />
+          <Property Name="IdSeccionBody" Type="Int32" Nullable="false" />
+          <Property Name="Descripcion" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Protocolo" Relationship="Self.FK_Respuesta_Protocolo" FromRole="Respuesta" ToRole="Protocolo" />
+          <NavigationProperty Name="SeccionBody" Relationship="Self.FK_Respuesta_TableBody" FromRole="Respuesta" ToRole="SeccionBody" />
+        </EntityType>
+        <EntityType Name="Rol">
+          <Key>
+            <PropertyRef Name="IdRol" />
+          </Key>
+          <Property Name="IdRol" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DescripcionRol" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Usuario" Relationship="Self.FK_Usuario_Rol" FromRole="Rol" ToRole="Usuario" />
+        </EntityType>
+        <EntityType Name="Seccion">
+          <Key>
+            <PropertyRef Name="IdSeccion" />
+          </Key>
+          <Property Name="IdSeccion" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdSeccionPadre" Type="Int32" />
+          <Property Name="IdPlantilla" Type="Int32" Nullable="false" />
+          <Property Name="Nombre" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Pagina" Type="Int32" Nullable="false" />
+          <Property Name="Orden" Type="Int32" Nullable="false" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Plantilla" Relationship="Self.FK_Seccion_Plantilla" FromRole="Seccion" ToRole="Plantilla" />
+          <NavigationProperty Name="SeccionBody" Relationship="Self.FK_TableBody_Seccion" FromRole="Seccion" ToRole="SeccionBody" />
+        </EntityType>
+        <EntityType Name="SeccionBody">
+          <Key>
+            <PropertyRef Name="IdSeccionBody" />
+          </Key>
+          <Property Name="IdSeccionBody" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdSeccion" Type="Int32" Nullable="false" />
+          <Property Name="IdTipoCelda" Type="Int32" Nullable="false" />
+          <Property Name="IdTipoTag" Type="Int32" />
+          <Property Name="Descripcion" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Rowspan" Type="Int32" Nullable="false" />
+          <Property Name="Colspan" Type="Int32" Nullable="false" />
+          <Property Name="BackgroundColor" Type="Boolean" Nullable="false" />
+          <Property Name="NumeroFila" Type="Int32" Nullable="false" />
+          <Property Name="Orden" Type="Int32" Nullable="false" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Respuesta" Relationship="Self.FK_Respuesta_TableBody" FromRole="SeccionBody" ToRole="Respuesta" />
+          <NavigationProperty Name="Seccion" Relationship="Self.FK_TableBody_Seccion" FromRole="SeccionBody" ToRole="Seccion" />
+          <NavigationProperty Name="TipoCelda" Relationship="Self.FK_TableBody_TipoCelda" FromRole="SeccionBody" ToRole="TipoCelda" />
+          <NavigationProperty Name="TipoTag" Relationship="Self.FK_TableBody_TipoTag" FromRole="SeccionBody" ToRole="TipoTag" />
+          <NavigationProperty Name="Plantilla" Relationship="Self.DefaultValue" FromRole="SeccionBody" ToRole="Plantilla" />
+        </EntityType>
+        <EntityType Name="Servicio">
+          <Key>
+            <PropertyRef Name="IdServicio" />
+          </Key>
+          <Property Name="IdServicio" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="NombreCorto" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Descripcion" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Color" Type="String" MaxLength="6" FixedLength="false" Unicode="true" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="ServicioEstado" Relationship="Self.FK_ServicioEstado_Servicio" FromRole="Servicio" ToRole="ServicioEstado" />
+          <NavigationProperty Name="Tarea" Relationship="ESSAC.InspeccionesDbModel.FK_Tarea_Servicio" FromRole="Servicio" ToRole="Tarea" />
+        </EntityType>
+        <EntityType Name="ServicioEstado">
+          <Key>
+            <PropertyRef Name="IdServicio" />
+            <PropertyRef Name="IdEstado" />
+          </Key>
+          <Property Name="IdServicio" Type="Int32" Nullable="false" />
+          <Property Name="IdEstado" Type="Int32" Nullable="false" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Estado" Relationship="Self.FK_ServicioEstado_Estado" FromRole="ServicioEstado" ToRole="Estado" />
+          <NavigationProperty Name="Servicio" Relationship="Self.FK_ServicioEstado_Servicio" FromRole="ServicioEstado" ToRole="Servicio" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="TableHeader">
+          <Key>
+            <PropertyRef Name="IdTableHeader" />
+          </Key>
+          <Property Name="IdTableHeader" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdSeccion" Type="Int32" Nullable="false" />
+          <Property Name="Descripcion" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Rowspan" Type="Int32" Nullable="false" />
+          <Property Name="Colspan" Type="Int32" Nullable="false" />
+          <Property Name="NumeroFila" Type="Int32" Nullable="false" />
+          <Property Name="Orden" Type="Int32" Nullable="false" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TipoCelda">
+          <Key>
+            <PropertyRef Name="IdTipoCelda" />
+          </Key>
+          <Property Name="IdTipoCelda" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="SeccionBody" Relationship="Self.FK_TableBody_TipoCelda" FromRole="TipoCelda" ToRole="SeccionBody" />
+        </EntityType>
+        <EntityType Name="TipoSeccion">
+          <Key>
+            <PropertyRef Name="IdTipoSeccion" />
+          </Key>
+          <Property Name="IdTipoSeccion" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TipoTag">
+          <Key>
+            <PropertyRef Name="IdTipoTag" />
+          </Key>
+          <Property Name="IdTipoTag" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="OpcionRespuesta" Relationship="Self.FK_OpcionRespuesta_TipoTag" FromRole="TipoTag" ToRole="OpcionRespuesta" />
+          <NavigationProperty Name="SeccionBody" Relationship="Self.FK_TableBody_TipoTag" FromRole="TipoTag" ToRole="SeccionBody" />
+        </EntityType>
+        <EntityType Name="Usuario">
+          <Key>
+            <PropertyRef Name="IdUsuario" />
+          </Key>
+          <Property Name="IdUsuario" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="InicialesNombre" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Cuenta" Type="String" MaxLength="40" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Pass" Type="String" MaxLength="64" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Estado" Type="Boolean" Nullable="false" />
+          <Property Name="FechaRegistro" Type="DateTime" Precision="3" />
+          <Property Name="IdRol" Type="Int32" Nullable="false" />
+          <Property Name="IdCargo" Type="Int32" />
+          <Property Name="RutaFirma" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Cargo" Relationship="Self.FK_Usuario_Cargo" FromRole="Usuario" ToRole="Cargo" />
+          <NavigationProperty Name="Protocolo" Relationship="Self.FK_Protocolo_Usuario" FromRole="Usuario" ToRole="Protocolo" />
+          <NavigationProperty Name="Rol" Relationship="Self.FK_Usuario_Rol" FromRole="Usuario" ToRole="Rol" />
+          <NavigationProperty Name="Tarea" Relationship="ESSAC.InspeccionesDbModel.Responsables_Tarea" FromRole="Usuario" ToRole="Tarea" />
+        </EntityType>
+        <Association Name="FK_Usuario_Cargo">
+          <End Role="Cargo" Type="Self.Cargo" Multiplicity="0..1" />
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cargo">
+              <PropertyRef Name="IdCargo" />
+            </Principal>
+            <Dependent Role="Usuario">
+              <PropertyRef Name="IdCargo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ContactoCliente_Cliente">
+          <End Role="Cliente" Type="Self.Cliente" Multiplicity="1" />
+          <End Role="ContactoCliente" Type="Self.ContactoCliente" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cliente">
+              <PropertyRef Name="IdCliente" />
+            </Principal>
+            <Dependent Role="ContactoCliente">
+              <PropertyRef Name="IdCliente" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Inmueble_Cliente">
+          <End Role="Cliente" Type="Self.Cliente" Multiplicity="1" />
+          <End Role="Inmueble" Type="Self.Inmueble" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cliente">
+              <PropertyRef Name="IdCliente" />
+            </Principal>
+            <Dependent Role="Inmueble">
+              <PropertyRef Name="IdCliente" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ServicioEstado_Estado">
+          <End Role="Estado" Type="Self.Estado" Multiplicity="1" />
+          <End Role="ServicioEstado" Type="Self.ServicioEstado" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Estado">
+              <PropertyRef Name="IdEstado" />
+            </Principal>
+            <Dependent Role="ServicioEstado">
+              <PropertyRef Name="IdEstado" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Protocolo_EstadoProtocolo">
+          <End Role="EstadoProtocolo" Type="Self.EstadoProtocolo" Multiplicity="1" />
+          <End Role="Protocolo" Type="Self.Protocolo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EstadoProtocolo">
+              <PropertyRef Name="IdEstado" />
+            </Principal>
+            <Dependent Role="Protocolo">
+              <PropertyRef Name="IdEstado" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Protocolo_Inmueble">
+          <End Role="Inmueble" Type="Self.Inmueble" Multiplicity="1" />
+          <End Role="Protocolo" Type="Self.Protocolo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Inmueble">
+              <PropertyRef Name="IdInmueble" />
+            </Principal>
+            <Dependent Role="Protocolo">
+              <PropertyRef Name="IdInmueble" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OpcionRespuesta_TipoTag">
+          <End Role="TipoTag" Type="Self.TipoTag" Multiplicity="1" />
+          <End Role="OpcionRespuesta" Type="Self.OpcionRespuesta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TipoTag">
+              <PropertyRef Name="IdTipoTag" />
+            </Principal>
+            <Dependent Role="OpcionRespuesta">
+              <PropertyRef Name="IdTipoRespuesta" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Protocolo_Plantilla">
+          <End Role="Plantilla" Type="Self.Plantilla" Multiplicity="1" />
+          <End Role="Protocolo" Type="Self.Protocolo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plantilla">
+              <PropertyRef Name="IdPlantilla" />
+            </Principal>
+            <Dependent Role="Protocolo">
+              <PropertyRef Name="IdPlantilla" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Seccion_Plantilla">
+          <End Role="Plantilla" Type="Self.Plantilla" Multiplicity="1" />
+          <End Role="Seccion" Type="Self.Seccion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plantilla">
+              <PropertyRef Name="IdPlantilla" />
+            </Principal>
+            <Dependent Role="Seccion">
+              <PropertyRef Name="IdPlantilla" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Protocolo_Usuario">
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="1" />
+          <End Role="Protocolo" Type="Self.Protocolo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuario">
+              <PropertyRef Name="IdUsuario" />
+            </Principal>
+            <Dependent Role="Protocolo">
+              <PropertyRef Name="IdUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Respuesta_Protocolo">
+          <End Role="Protocolo" Type="Self.Protocolo" Multiplicity="1" />
+          <End Role="Respuesta" Type="Self.Respuesta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Protocolo">
+              <PropertyRef Name="IdProtocolo" />
+            </Principal>
+            <Dependent Role="Respuesta">
+              <PropertyRef Name="IdProtocolo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Respuesta_TableBody">
+          <End Role="SeccionBody" Type="Self.SeccionBody" Multiplicity="1" />
+          <End Role="Respuesta" Type="Self.Respuesta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SeccionBody">
+              <PropertyRef Name="IdSeccionBody" />
+            </Principal>
+            <Dependent Role="Respuesta">
+              <PropertyRef Name="IdSeccionBody" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Usuario_Rol">
+          <End Role="Rol" Type="Self.Rol" Multiplicity="1" />
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Rol">
+              <PropertyRef Name="IdRol" />
+            </Principal>
+            <Dependent Role="Usuario">
+              <PropertyRef Name="IdRol" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TableBody_Seccion">
+          <End Role="Seccion" Type="Self.Seccion" Multiplicity="1" />
+          <End Role="SeccionBody" Type="Self.SeccionBody" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Seccion">
+              <PropertyRef Name="IdSeccion" />
+            </Principal>
+            <Dependent Role="SeccionBody">
+              <PropertyRef Name="IdSeccion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TableBody_TipoCelda">
+          <End Role="TipoCelda" Type="Self.TipoCelda" Multiplicity="1" />
+          <End Role="SeccionBody" Type="Self.SeccionBody" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TipoCelda">
+              <PropertyRef Name="IdTipoCelda" />
+            </Principal>
+            <Dependent Role="SeccionBody">
+              <PropertyRef Name="IdTipoCelda" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TableBody_TipoTag">
+          <End Role="TipoTag" Type="Self.TipoTag" Multiplicity="0..1" />
+          <End Role="SeccionBody" Type="Self.SeccionBody" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TipoTag">
+              <PropertyRef Name="IdTipoTag" />
+            </Principal>
+            <Dependent Role="SeccionBody">
+              <PropertyRef Name="IdTipoTag" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ServicioEstado_Servicio">
+          <End Role="Servicio" Type="Self.Servicio" Multiplicity="1" />
+          <End Role="ServicioEstado" Type="Self.ServicioEstado" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Servicio">
+              <PropertyRef Name="IdServicio" />
+            </Principal>
+            <Dependent Role="ServicioEstado">
+              <PropertyRef Name="IdServicio" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="DefaultValue">
+          <End Role="Plantilla" Type="Self.Plantilla" Multiplicity="*" />
+          <End Role="SeccionBody" Type="Self.SeccionBody" Multiplicity="*" />
+        </Association>
         <EntityContainer Name="ESSACInspeccionesEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Cargo" EntityType="Self.Cargo" />
+          <EntitySet Name="Cliente" EntityType="Self.Cliente" />
+          <EntitySet Name="ContactoCliente" EntityType="Self.ContactoCliente" />
+          <EntitySet Name="Estado" EntityType="Self.Estado" />
+          <EntitySet Name="EstadoProtocolo" EntityType="Self.EstadoProtocolo" />
+          <EntitySet Name="Inmueble" EntityType="Self.Inmueble" />
+          <EntitySet Name="OpcionRespuesta" EntityType="Self.OpcionRespuesta" />
+          <EntitySet Name="Periodo" EntityType="Self.Periodo" />
+          <EntitySet Name="Plantilla" EntityType="Self.Plantilla" />
+          <EntitySet Name="Protocolo" EntityType="Self.Protocolo" />
+          <EntitySet Name="Respuesta" EntityType="Self.Respuesta" />
+          <EntitySet Name="Rol" EntityType="Self.Rol" />
+          <EntitySet Name="Seccion" EntityType="Self.Seccion" />
+          <EntitySet Name="SeccionBody" EntityType="Self.SeccionBody" />
+          <EntitySet Name="Servicio" EntityType="Self.Servicio" />
+          <EntitySet Name="ServicioEstado" EntityType="Self.ServicioEstado" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+          <EntitySet Name="TableHeader" EntityType="Self.TableHeader" />
+          <EntitySet Name="TipoCelda" EntityType="Self.TipoCelda" />
+          <EntitySet Name="TipoSeccion" EntityType="Self.TipoSeccion" />
+          <EntitySet Name="TipoTag" EntityType="Self.TipoTag" />
+          <EntitySet Name="Usuario" EntityType="Self.Usuario" />
+          <AssociationSet Name="FK_Usuario_Cargo" Association="Self.FK_Usuario_Cargo">
+            <End Role="Cargo" EntitySet="Cargo" />
+            <End Role="Usuario" EntitySet="Usuario" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ContactoCliente_Cliente" Association="Self.FK_ContactoCliente_Cliente">
+            <End Role="Cliente" EntitySet="Cliente" />
+            <End Role="ContactoCliente" EntitySet="ContactoCliente" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Inmueble_Cliente" Association="Self.FK_Inmueble_Cliente">
+            <End Role="Cliente" EntitySet="Cliente" />
+            <End Role="Inmueble" EntitySet="Inmueble" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ServicioEstado_Estado" Association="Self.FK_ServicioEstado_Estado">
+            <End Role="Estado" EntitySet="Estado" />
+            <End Role="ServicioEstado" EntitySet="ServicioEstado" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Protocolo_EstadoProtocolo" Association="Self.FK_Protocolo_EstadoProtocolo">
+            <End Role="EstadoProtocolo" EntitySet="EstadoProtocolo" />
+            <End Role="Protocolo" EntitySet="Protocolo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Protocolo_Inmueble" Association="Self.FK_Protocolo_Inmueble">
+            <End Role="Inmueble" EntitySet="Inmueble" />
+            <End Role="Protocolo" EntitySet="Protocolo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OpcionRespuesta_TipoTag" Association="Self.FK_OpcionRespuesta_TipoTag">
+            <End Role="TipoTag" EntitySet="TipoTag" />
+            <End Role="OpcionRespuesta" EntitySet="OpcionRespuesta" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Protocolo_Plantilla" Association="Self.FK_Protocolo_Plantilla">
+            <End Role="Plantilla" EntitySet="Plantilla" />
+            <End Role="Protocolo" EntitySet="Protocolo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Seccion_Plantilla" Association="Self.FK_Seccion_Plantilla">
+            <End Role="Plantilla" EntitySet="Plantilla" />
+            <End Role="Seccion" EntitySet="Seccion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Protocolo_Usuario" Association="Self.FK_Protocolo_Usuario">
+            <End Role="Usuario" EntitySet="Usuario" />
+            <End Role="Protocolo" EntitySet="Protocolo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Respuesta_Protocolo" Association="Self.FK_Respuesta_Protocolo">
+            <End Role="Protocolo" EntitySet="Protocolo" />
+            <End Role="Respuesta" EntitySet="Respuesta" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Respuesta_TableBody" Association="Self.FK_Respuesta_TableBody">
+            <End Role="SeccionBody" EntitySet="SeccionBody" />
+            <End Role="Respuesta" EntitySet="Respuesta" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Usuario_Rol" Association="Self.FK_Usuario_Rol">
+            <End Role="Rol" EntitySet="Rol" />
+            <End Role="Usuario" EntitySet="Usuario" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TableBody_Seccion" Association="Self.FK_TableBody_Seccion">
+            <End Role="Seccion" EntitySet="Seccion" />
+            <End Role="SeccionBody" EntitySet="SeccionBody" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TableBody_TipoCelda" Association="Self.FK_TableBody_TipoCelda">
+            <End Role="TipoCelda" EntitySet="TipoCelda" />
+            <End Role="SeccionBody" EntitySet="SeccionBody" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TableBody_TipoTag" Association="Self.FK_TableBody_TipoTag">
+            <End Role="TipoTag" EntitySet="TipoTag" />
+            <End Role="SeccionBody" EntitySet="SeccionBody" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ServicioEstado_Servicio" Association="Self.FK_ServicioEstado_Servicio">
+            <End Role="Servicio" EntitySet="Servicio" />
+            <End Role="ServicioEstado" EntitySet="ServicioEstado" />
+          </AssociationSet>
+          <AssociationSet Name="DefaultValue" Association="Self.DefaultValue">
+            <End Role="Plantilla" EntitySet="Plantilla" />
+            <End Role="SeccionBody" EntitySet="SeccionBody" />
+          </AssociationSet>
+          <FunctionImport Name="sp_alterdiagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="version" Mode="In" Type="Int32" />
+            <Parameter Name="definition" Mode="In" Type="Binary" />
+          </FunctionImport>
           <FunctionImport Name="SP_CountEstados" ReturnType="Collection(ESSAC.InspeccionesDbModel.SP_CountEstados_Result)">
             <Parameter Name="FechaInicio" Mode="In" Type="DateTime" />
             <Parameter Name="FechaFin" Mode="In" Type="DateTime" />
             <Parameter Name="IdResponsable" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_creatediagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="version" Mode="In" Type="Int32" />
+            <Parameter Name="definition" Mode="In" Type="Binary" />
+          </FunctionImport>
+          <FunctionImport Name="sp_dropdiagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="SP_GetDefaultValues" ReturnType="Collection(ESSAC.InspeccionesDbModel.SP_GetDefaultValues_Result)">
+            <Parameter Name="IdPlantilla" Mode="In" Type="Int32" />
+            <Parameter Name="IdInmueble" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GetPlantillas" ReturnType="Collection(ESSAC.InspeccionesDbModel.SP_GetPlantillas_Result)">
             <Parameter Name="IdUsuario" Mode="In" Type="Int32" />
@@ -716,48 +1427,22 @@
             <Parameter Name="FechaInicio" Mode="In" Type="DateTime" />
             <Parameter Name="FechaFin" Mode="In" Type="DateTime" />
           </FunctionImport>
-          <EntitySet Name="Cargo" EntityType="ESSAC.InspeccionesDbModel.Cargo" />
-          <EntitySet Name="Cliente" EntityType="ESSAC.InspeccionesDbModel.Cliente" />
-          <EntitySet Name="ContactoCliente" EntityType="ESSAC.InspeccionesDbModel.ContactoCliente" />
-          <EntitySet Name="Estado" EntityType="ESSAC.InspeccionesDbModel.Estado" />
-          <EntitySet Name="EstadoProtocolo" EntityType="ESSAC.InspeccionesDbModel.EstadoProtocolo" />
-          <EntitySet Name="Inmueble" EntityType="ESSAC.InspeccionesDbModel.Inmueble" />
-          <EntitySet Name="OpcionRespuesta" EntityType="ESSAC.InspeccionesDbModel.OpcionRespuesta" />
-          <EntitySet Name="Respuesta" EntityType="ESSAC.InspeccionesDbModel.Respuesta" />
-          <EntitySet Name="Rol" EntityType="ESSAC.InspeccionesDbModel.Rol" />
-          <EntitySet Name="Seccion" EntityType="ESSAC.InspeccionesDbModel.Seccion" />
-          <EntitySet Name="Servicio" EntityType="ESSAC.InspeccionesDbModel.Servicio" />
-          <EntitySet Name="ServicioEstado" EntityType="ESSAC.InspeccionesDbModel.ServicioEstado" />
-          <EntitySet Name="TableHeader" EntityType="ESSAC.InspeccionesDbModel.TableHeader" />
-          <EntitySet Name="TipoCelda" EntityType="ESSAC.InspeccionesDbModel.TipoCelda" />
-          <EntitySet Name="TipoSeccion" EntityType="ESSAC.InspeccionesDbModel.TipoSeccion" />
-          <EntitySet Name="TipoTag" EntityType="ESSAC.InspeccionesDbModel.TipoTag" />
-          <AssociationSet Name="FK_ContactoCliente_Cliente" Association="ESSAC.InspeccionesDbModel.FK_ContactoCliente_Cliente">
-            <End Role="Cliente" EntitySet="Cliente" />
-            <End Role="ContactoCliente" EntitySet="ContactoCliente" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Inmueble_Cliente" Association="ESSAC.InspeccionesDbModel.FK_Inmueble_Cliente">
-            <End Role="Cliente" EntitySet="Cliente" />
-            <End Role="Inmueble" EntitySet="Inmueble" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ServicioEstado_Estado" Association="ESSAC.InspeccionesDbModel.FK_ServicioEstado_Estado">
-            <End Role="Estado" EntitySet="Estado" />
-            <End Role="ServicioEstado" EntitySet="ServicioEstado" />
-          </AssociationSet>
-          <AssociationSet Name="FK_OpcionRespuesta_TipoTag" Association="ESSAC.InspeccionesDbModel.FK_OpcionRespuesta_TipoTag">
-            <End Role="TipoTag" EntitySet="TipoTag" />
-            <End Role="OpcionRespuesta" EntitySet="OpcionRespuesta" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ServicioEstado_Servicio" Association="ESSAC.InspeccionesDbModel.FK_ServicioEstado_Servicio">
-            <End Role="Servicio" EntitySet="Servicio" />
-            <End Role="ServicioEstado" EntitySet="ServicioEstado" />
-          </AssociationSet>
+          <FunctionImport Name="sp_helpdiagramdefinition" ReturnType="Collection(ESSAC.InspeccionesDbModel.sp_helpdiagramdefinition_Result)">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_helpdiagrams" ReturnType="Collection(ESSAC.InspeccionesDbModel.sp_helpdiagrams_Result)">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_renamediagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="new_diagramname" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_upgraddiagrams" />
+          <EntitySet Name="PeriodoProtocolo" EntityType="ESSAC.InspeccionesDbModel.PeriodoProtocolo" />
           <EntitySet Name="Tarea" EntityType="ESSAC.InspeccionesDbModel.Tarea" />
-          <EntitySet Name="Usuario" EntityType="ESSAC.InspeccionesDbModel.Usuario" />
-          <AssociationSet Name="FK_Usuario_Cargo" Association="ESSAC.InspeccionesDbModel.FK_Usuario_Cargo">
-            <End Role="Cargo" EntitySet="Cargo" />
-            <End Role="Usuario" EntitySet="Usuario" />
-          </AssociationSet>
           <AssociationSet Name="FK_Tarea_Cliente" Association="ESSAC.InspeccionesDbModel.FK_Tarea_Cliente">
             <End Role="Cliente" EntitySet="Cliente" />
             <End Role="Tarea" EntitySet="Tarea" />
@@ -770,9 +1455,17 @@
             <End Role="Inmueble" EntitySet="Inmueble" />
             <End Role="Tarea" EntitySet="Tarea" />
           </AssociationSet>
-          <AssociationSet Name="FK_Usuario_Rol" Association="ESSAC.InspeccionesDbModel.FK_Usuario_Rol">
-            <End Role="Rol" EntitySet="Rol" />
-            <End Role="Usuario" EntitySet="Usuario" />
+          <AssociationSet Name="FK_PeriodoProtocolo_Periodo" Association="ESSAC.InspeccionesDbModel.FK_PeriodoProtocolo_Periodo">
+            <End Role="Periodo" EntitySet="Periodo" />
+            <End Role="PeriodoProtocolo" EntitySet="PeriodoProtocolo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PeriodoProtocolo_Protocolo" Association="ESSAC.InspeccionesDbModel.FK_PeriodoProtocolo_Protocolo">
+            <End Role="Protocolo" EntitySet="Protocolo" />
+            <End Role="PeriodoProtocolo" EntitySet="PeriodoProtocolo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tarea_PeriodoProtocolo" Association="ESSAC.InspeccionesDbModel.FK_Tarea_PeriodoProtocolo">
+            <End Role="PeriodoProtocolo" EntitySet="PeriodoProtocolo" />
+            <End Role="Tarea" EntitySet="Tarea" />
           </AssociationSet>
           <AssociationSet Name="FK_Tarea_Servicio" Association="ESSAC.InspeccionesDbModel.FK_Tarea_Servicio">
             <End Role="Servicio" EntitySet="Servicio" />
@@ -782,61 +1475,14 @@
             <End Role="Tarea" EntitySet="Tarea" />
             <End Role="Usuario" EntitySet="Usuario" />
           </AssociationSet>
-          <EntitySet Name="Protocolo" EntityType="ESSAC.InspeccionesDbModel.Protocolo" />
-          <AssociationSet Name="FK_Protocolo_EstadoProtocolo" Association="ESSAC.InspeccionesDbModel.FK_Protocolo_EstadoProtocolo">
-            <End Role="EstadoProtocolo" EntitySet="EstadoProtocolo" />
-            <End Role="Protocolo" EntitySet="Protocolo" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Protocolo_Inmueble" Association="ESSAC.InspeccionesDbModel.FK_Protocolo_Inmueble">
-            <End Role="Inmueble" EntitySet="Inmueble" />
-            <End Role="Protocolo" EntitySet="Protocolo" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Protocolo_Usuario" Association="ESSAC.InspeccionesDbModel.FK_Protocolo_Usuario">
-            <End Role="Usuario" EntitySet="Usuario" />
-            <End Role="Protocolo" EntitySet="Protocolo" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Respuesta_Protocolo" Association="ESSAC.InspeccionesDbModel.FK_Respuesta_Protocolo">
-            <End Role="Protocolo" EntitySet="Protocolo" />
-            <End Role="Respuesta" EntitySet="Respuesta" />
-          </AssociationSet>
-          <EntitySet Name="Plantilla" EntityType="ESSAC.InspeccionesDbModel.Plantilla" />
-          <EntitySet Name="SeccionBody" EntityType="ESSAC.InspeccionesDbModel.SeccionBody" />
-          <AssociationSet Name="FK_Protocolo_Plantilla" Association="ESSAC.InspeccionesDbModel.FK_Protocolo_Plantilla">
-            <End Role="Plantilla" EntitySet="Plantilla" />
-            <End Role="Protocolo" EntitySet="Protocolo" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Seccion_Plantilla" Association="ESSAC.InspeccionesDbModel.FK_Seccion_Plantilla">
-            <End Role="Plantilla" EntitySet="Plantilla" />
-            <End Role="Seccion" EntitySet="Seccion" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Respuesta_TableBody" Association="ESSAC.InspeccionesDbModel.FK_Respuesta_TableBody">
-            <End Role="SeccionBody" EntitySet="SeccionBody" />
-            <End Role="Respuesta" EntitySet="Respuesta" />
-          </AssociationSet>
-          <AssociationSet Name="FK_TableBody_Seccion" Association="ESSAC.InspeccionesDbModel.FK_TableBody_Seccion">
-            <End Role="Seccion" EntitySet="Seccion" />
-            <End Role="SeccionBody" EntitySet="SeccionBody" />
-          </AssociationSet>
-          <AssociationSet Name="FK_TableBody_TipoCelda" Association="ESSAC.InspeccionesDbModel.FK_TableBody_TipoCelda">
-            <End Role="TipoCelda" EntitySet="TipoCelda" />
-            <End Role="SeccionBody" EntitySet="SeccionBody" />
-          </AssociationSet>
-          <AssociationSet Name="FK_TableBody_TipoTag" Association="ESSAC.InspeccionesDbModel.FK_TableBody_TipoTag">
-            <End Role="TipoTag" EntitySet="TipoTag" />
-            <End Role="SeccionBody" EntitySet="SeccionBody" />
-          </AssociationSet>
-          <AssociationSet Name="DefaultValue" Association="ESSAC.InspeccionesDbModel.DefaultValue">
-            <End Role="Plantilla" EntitySet="Plantilla" />
-            <End Role="SeccionBody" EntitySet="SeccionBody" />
-          </AssociationSet>
-          <FunctionImport Name="SP_GetDefaultValues" ReturnType="Collection(ESSAC.InspeccionesDbModel.SP_GetDefaultValues_Result)">
-            <Parameter Name="IdPlantilla" Mode="In" Type="Int32" />
-            <Parameter Name="IdInmueble" Mode="In" Type="Int32" />
-          </FunctionImport>
-          </EntityContainer>
+        </EntityContainer>
         <ComplexType Name="SP_CountEstados_Result">
           <Property Type="String" Name="NombreEstado" Nullable="false" MaxLength="100" />
           <Property Type="Int32" Name="CuentaEstado" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="SP_GetDefaultValues_Result">
+          <Property Type="Int32" Name="IdSeccionBody" Nullable="false" />
+          <Property Type="String" Name="Descripcion" Nullable="false" />
         </ComplexType>
         <ComplexType Name="SP_GetPlantillas_Result">
           <Property Type="Int32" Name="IdPlantilla" Nullable="false" />
@@ -864,248 +1510,29 @@
           <Property Type="String" Name="color" Nullable="true" MaxLength="7" />
           <Property Type="String" Name="strResource" Nullable="true" />
         </ComplexType>
-        <EntityType Name="Cargo">
+        <ComplexType Name="sp_helpdiagramdefinition_Result">
+          <Property Type="Int32" Name="version" Nullable="true" />
+          <Property Type="Binary" Name="definition" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_helpdiagrams_Result">
+          <Property Type="String" Name="Database" Nullable="true" MaxLength="128" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
+          <Property Type="Int32" Name="OwnerID" Nullable="false" />
+        </ComplexType>
+        <EntityType Name="PeriodoProtocolo">
           <Key>
-            <PropertyRef Name="IdCargo" />
+            <PropertyRef Name="IdPeriodoProtocolo" />
           </Key>
-          <Property Name="IdCargo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Active" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Usuario" Relationship="ESSAC.InspeccionesDbModel.FK_Usuario_Cargo" FromRole="Cargo" ToRole="Usuario" />
-        </EntityType>
-        <EntityType Name="Cliente">
-          <Key>
-            <PropertyRef Name="IdCliente" />
-          </Key>
-          <Property Name="IdCliente" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Nombre" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
-          <Property Name="Telefono_1" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Telefono_2" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Active" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="ContactoCliente" Relationship="ESSAC.InspeccionesDbModel.FK_ContactoCliente_Cliente" FromRole="Cliente" ToRole="ContactoCliente" />
-          <NavigationProperty Name="Inmueble" Relationship="ESSAC.InspeccionesDbModel.FK_Inmueble_Cliente" FromRole="Cliente" ToRole="Inmueble" />
-          <NavigationProperty Name="Tarea" Relationship="ESSAC.InspeccionesDbModel.FK_Tarea_Cliente" FromRole="Cliente" ToRole="Tarea" />
-        </EntityType>
-        <EntityType Name="ContactoCliente">
-          <Key>
-            <PropertyRef Name="IdContactoCliente" />
-          </Key>
-          <Property Name="IdContactoCliente" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="Telefono" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="Area" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="Cargo" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="Celular" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Anexo" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="IdCliente" Type="Int32" Nullable="false" />
-          <Property Name="Active" Type="Boolean" Nullable="false" />
-          <Property Name="Default" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Cliente" Relationship="ESSAC.InspeccionesDbModel.FK_ContactoCliente_Cliente" FromRole="ContactoCliente" ToRole="Cliente" />
-        </EntityType>
-        <EntityType Name="Estado">
-          <Key>
-            <PropertyRef Name="IdEstado" />
-          </Key>
-          <Property Name="IdEstado" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="NombreEstado" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="Active" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="ServicioEstado" Relationship="ESSAC.InspeccionesDbModel.FK_ServicioEstado_Estado" FromRole="Estado" ToRole="ServicioEstado" />
-          <NavigationProperty Name="Tarea" Relationship="ESSAC.InspeccionesDbModel.FK_Tarea_Estado" FromRole="Estado" ToRole="Tarea" />
-        </EntityType>
-        <EntityType Name="EstadoProtocolo">
-          <Key>
-            <PropertyRef Name="IdEstado" />
-          </Key>
-          <Property Name="IdEstado" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="NombreEstado" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="Active" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Protocolo" Relationship="ESSAC.InspeccionesDbModel.FK_Protocolo_EstadoProtocolo" FromRole="EstadoProtocolo" ToRole="Protocolo" />
-        </EntityType>
-        <EntityType Name="Inmueble">
-          <Key>
-            <PropertyRef Name="IdInmueble" />
-          </Key>
-          <Property Name="IdInmueble" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="IdCliente" Type="Int32" Nullable="false" />
-          <Property Name="Nombre" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
-          <Property Name="Direccion" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Active" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Cliente" Relationship="ESSAC.InspeccionesDbModel.FK_Inmueble_Cliente" FromRole="Inmueble" ToRole="Cliente" />
-          <NavigationProperty Name="Tarea" Relationship="ESSAC.InspeccionesDbModel.FK_Tarea_Inmueble" FromRole="Inmueble" ToRole="Tarea" />
-          <NavigationProperty Name="Protocolo" Relationship="ESSAC.InspeccionesDbModel.FK_Protocolo_Inmueble" FromRole="Inmueble" ToRole="Protocolo" />
-        </EntityType>
-        <EntityType Name="OpcionRespuesta">
-          <Key>
-            <PropertyRef Name="IdOpcion" />
-          </Key>
-          <Property Name="IdOpcion" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="IdTipoRespuesta" Type="Int32" Nullable="false" />
-          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="Puntaje" Type="Int32" Nullable="false" />
-          <Property Name="Orden" Type="Int32" Nullable="false" />
-          <Property Name="Active" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="TipoTag" Relationship="ESSAC.InspeccionesDbModel.FK_OpcionRespuesta_TipoTag" FromRole="OpcionRespuesta" ToRole="TipoTag" />
-        </EntityType>
-        <EntityType Name="Respuesta">
-          <Key>
-            <PropertyRef Name="IdProtocolo" />
-            <PropertyRef Name="IdSeccionBody" />
-          </Key>
+          <Property Name="IdPeriodoProtocolo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdPeriodo" Type="Int32" Nullable="false" />
           <Property Name="IdProtocolo" Type="Int32" Nullable="false" />
-          <Property Name="IdSeccionBody" Type="Int32" Nullable="false" />
-          <Property Name="Descripcion" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Active" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Protocolo" Relationship="ESSAC.InspeccionesDbModel.FK_Respuesta_Protocolo" FromRole="Respuesta" ToRole="Protocolo" />
-          <NavigationProperty Name="SeccionBody" Relationship="ESSAC.InspeccionesDbModel.FK_Respuesta_TableBody" FromRole="Respuesta" ToRole="SeccionBody" />
+          <NavigationProperty Name="Periodo" Relationship="ESSAC.InspeccionesDbModel.FK_PeriodoProtocolo_Periodo" FromRole="PeriodoProtocolo" ToRole="Periodo" />
+          <NavigationProperty Name="Protocolo" Relationship="ESSAC.InspeccionesDbModel.FK_PeriodoProtocolo_Protocolo" FromRole="PeriodoProtocolo" ToRole="Protocolo" />
+          <NavigationProperty Name="Tarea" Relationship="ESSAC.InspeccionesDbModel.FK_Tarea_PeriodoProtocolo" FromRole="PeriodoProtocolo" ToRole="Tarea" />
         </EntityType>
-        <EntityType Name="Rol">
-          <Key>
-            <PropertyRef Name="IdRol" />
-          </Key>
-          <Property Name="IdRol" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="DescripcionRol" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Usuario" Relationship="ESSAC.InspeccionesDbModel.FK_Usuario_Rol" FromRole="Rol" ToRole="Usuario" />
-        </EntityType>
-        <EntityType Name="Seccion">
-          <Key>
-            <PropertyRef Name="IdSeccion" />
-          </Key>
-          <Property Name="IdSeccion" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="IdSeccionPadre" Type="Int32" />
-          <Property Name="IdPlantilla" Type="Int32" Nullable="false" />
-          <Property Name="Nombre" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="Pagina" Type="Int32" Nullable="false" />
-          <Property Name="Orden" Type="Int32" Nullable="false" />
-          <Property Name="Active" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Plantilla" Relationship="ESSAC.InspeccionesDbModel.FK_Seccion_Plantilla" FromRole="Seccion" ToRole="Plantilla" />
-          <NavigationProperty Name="SeccionBody" Relationship="ESSAC.InspeccionesDbModel.FK_TableBody_Seccion" FromRole="Seccion" ToRole="SeccionBody" />
-        </EntityType>
-        <EntityType Name="Servicio">
-          <Key>
-            <PropertyRef Name="IdServicio" />
-          </Key>
-          <Property Name="IdServicio" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="NombreCorto" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Descripcion" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Color" Type="String" MaxLength="6" FixedLength="false" Unicode="true" />
-          <Property Name="Active" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="ServicioEstado" Relationship="ESSAC.InspeccionesDbModel.FK_ServicioEstado_Servicio" FromRole="Servicio" ToRole="ServicioEstado" />
-          <NavigationProperty Name="Tarea" Relationship="ESSAC.InspeccionesDbModel.FK_Tarea_Servicio" FromRole="Servicio" ToRole="Tarea" />
-        </EntityType>
-        <EntityType Name="ServicioEstado">
-          <Key>
-            <PropertyRef Name="IdServicio" />
-            <PropertyRef Name="IdEstado" />
-          </Key>
-          <Property Name="IdServicio" Type="Int32" Nullable="false" />
-          <Property Name="IdEstado" Type="Int32" Nullable="false" />
-          <Property Name="Active" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Estado" Relationship="ESSAC.InspeccionesDbModel.FK_ServicioEstado_Estado" FromRole="ServicioEstado" ToRole="Estado" />
-          <NavigationProperty Name="Servicio" Relationship="ESSAC.InspeccionesDbModel.FK_ServicioEstado_Servicio" FromRole="ServicioEstado" ToRole="Servicio" />
-        </EntityType>
-        <EntityType Name="TableHeader">
-          <Key>
-            <PropertyRef Name="IdTableHeader" />
-          </Key>
-          <Property Name="IdTableHeader" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="IdSeccion" Type="Int32" Nullable="false" />
-          <Property Name="Descripcion" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="Rowspan" Type="Int32" Nullable="false" />
-          <Property Name="Colspan" Type="Int32" Nullable="false" />
-          <Property Name="NumeroFila" Type="Int32" Nullable="false" />
-          <Property Name="Orden" Type="Int32" Nullable="false" />
-          <Property Name="Active" Type="Boolean" Nullable="false" />
-        </EntityType>
-        <EntityType Name="TipoCelda">
-          <Key>
-            <PropertyRef Name="IdTipoCelda" />
-          </Key>
-          <Property Name="IdTipoCelda" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Active" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="SeccionBody" Relationship="ESSAC.InspeccionesDbModel.FK_TableBody_TipoCelda" FromRole="TipoCelda" ToRole="SeccionBody" />
-        </EntityType>
-        <EntityType Name="TipoSeccion">
-          <Key>
-            <PropertyRef Name="IdTipoSeccion" />
-          </Key>
-          <Property Name="IdTipoSeccion" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="Active" Type="Boolean" Nullable="false" />
-        </EntityType>
-        <EntityType Name="TipoTag">
-          <Key>
-            <PropertyRef Name="IdTipoTag" />
-          </Key>
-          <Property Name="IdTipoTag" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="Active" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="OpcionRespuesta" Relationship="ESSAC.InspeccionesDbModel.FK_OpcionRespuesta_TipoTag" FromRole="TipoTag" ToRole="OpcionRespuesta" />
-          <NavigationProperty Name="SeccionBody" Relationship="ESSAC.InspeccionesDbModel.FK_TableBody_TipoTag" FromRole="TipoTag" ToRole="SeccionBody" />
-        </EntityType>
-        <Association Name="FK_ContactoCliente_Cliente">
-          <End Type="ESSAC.InspeccionesDbModel.Cliente" Role="Cliente" Multiplicity="1" />
-          <End Type="ESSAC.InspeccionesDbModel.ContactoCliente" Role="ContactoCliente" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Cliente">
-              <PropertyRef Name="IdCliente" />
-            </Principal>
-            <Dependent Role="ContactoCliente">
-              <PropertyRef Name="IdCliente" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Inmueble_Cliente">
-          <End Type="ESSAC.InspeccionesDbModel.Cliente" Role="Cliente" Multiplicity="1" />
-          <End Type="ESSAC.InspeccionesDbModel.Inmueble" Role="Inmueble" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Cliente">
-              <PropertyRef Name="IdCliente" />
-            </Principal>
-            <Dependent Role="Inmueble">
-              <PropertyRef Name="IdCliente" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ServicioEstado_Estado">
-          <End Type="ESSAC.InspeccionesDbModel.Estado" Role="Estado" Multiplicity="1" />
-          <End Type="ESSAC.InspeccionesDbModel.ServicioEstado" Role="ServicioEstado" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Estado">
-              <PropertyRef Name="IdEstado" />
-            </Principal>
-            <Dependent Role="ServicioEstado">
-              <PropertyRef Name="IdEstado" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_OpcionRespuesta_TipoTag">
-          <End Type="ESSAC.InspeccionesDbModel.TipoTag" Role="TipoTag" Multiplicity="1" />
-          <End Type="ESSAC.InspeccionesDbModel.OpcionRespuesta" Role="OpcionRespuesta" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="TipoTag">
-              <PropertyRef Name="IdTipoTag" />
-            </Principal>
-            <Dependent Role="OpcionRespuesta">
-              <PropertyRef Name="IdTipoRespuesta" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ServicioEstado_Servicio">
-          <End Type="ESSAC.InspeccionesDbModel.Servicio" Role="Servicio" Multiplicity="1" />
-          <End Type="ESSAC.InspeccionesDbModel.ServicioEstado" Role="ServicioEstado" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Servicio">
-              <PropertyRef Name="IdServicio" />
-            </Principal>
-            <Dependent Role="ServicioEstado">
-              <PropertyRef Name="IdServicio" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="Tarea">
           <Key>
             <PropertyRef Name="IdTarea" />
@@ -1113,6 +1540,7 @@
           <Property Name="IdTarea" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="IdCliente" Type="Int32" Nullable="false" />
           <Property Name="IdInmueble" Type="Int32" Nullable="false" />
+          <Property Name="IdPeriodoProtocolo" Type="Int32" />
           <Property Name="IdServicio" Type="Int32" Nullable="false" />
           <Property Name="Nombre" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="Descripcion" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
@@ -1124,41 +1552,10 @@
           <NavigationProperty Name="Cliente" Relationship="ESSAC.InspeccionesDbModel.FK_Tarea_Cliente" FromRole="Tarea" ToRole="Cliente" />
           <NavigationProperty Name="Estado" Relationship="ESSAC.InspeccionesDbModel.FK_Tarea_Estado" FromRole="Tarea" ToRole="Estado" />
           <NavigationProperty Name="Inmueble" Relationship="ESSAC.InspeccionesDbModel.FK_Tarea_Inmueble" FromRole="Tarea" ToRole="Inmueble" />
+          <NavigationProperty Name="PeriodoProtocolo" Relationship="ESSAC.InspeccionesDbModel.FK_Tarea_PeriodoProtocolo" FromRole="Tarea" ToRole="PeriodoProtocolo" />
           <NavigationProperty Name="Servicio" Relationship="ESSAC.InspeccionesDbModel.FK_Tarea_Servicio" FromRole="Tarea" ToRole="Servicio" />
           <NavigationProperty Name="Usuario" Relationship="ESSAC.InspeccionesDbModel.Responsables_Tarea" FromRole="Tarea" ToRole="Usuario" />
         </EntityType>
-        <EntityType Name="Usuario">
-          <Key>
-            <PropertyRef Name="IdUsuario" />
-          </Key>
-          <Property Name="IdUsuario" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="InicialesNombre" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Cuenta" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="true" />
-          <Property Name="Pass" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="true" />
-          <Property Name="Estado" Type="Boolean" Nullable="false" />
-          <Property Name="FechaRegistro" Type="DateTime" Precision="3" />
-          <Property Name="IdRol" Type="Int32" Nullable="false" />
-          <Property Name="IdCargo" Type="Int32" />
-          <Property Name="RutaFirma" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Cargo" Relationship="ESSAC.InspeccionesDbModel.FK_Usuario_Cargo" FromRole="Usuario" ToRole="Cargo" />
-          <NavigationProperty Name="Rol" Relationship="ESSAC.InspeccionesDbModel.FK_Usuario_Rol" FromRole="Usuario" ToRole="Rol" />
-          <NavigationProperty Name="Tarea" Relationship="ESSAC.InspeccionesDbModel.Responsables_Tarea" FromRole="Usuario" ToRole="Tarea" />
-          <NavigationProperty Name="Protocolo" Relationship="ESSAC.InspeccionesDbModel.FK_Protocolo_Usuario" FromRole="Usuario" ToRole="Protocolo" />
-        </EntityType>
-        <Association Name="FK_Usuario_Cargo">
-          <End Type="ESSAC.InspeccionesDbModel.Cargo" Role="Cargo" Multiplicity="0..1" />
-          <End Type="ESSAC.InspeccionesDbModel.Usuario" Role="Usuario" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Cargo">
-              <PropertyRef Name="IdCargo" />
-            </Principal>
-            <Dependent Role="Usuario">
-              <PropertyRef Name="IdCargo" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Tarea_Cliente">
           <End Type="ESSAC.InspeccionesDbModel.Cliente" Role="Cliente" Multiplicity="1" />
           <End Type="ESSAC.InspeccionesDbModel.Tarea" Role="Tarea" Multiplicity="*" />
@@ -1195,15 +1592,39 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Usuario_Rol">
-          <End Type="ESSAC.InspeccionesDbModel.Rol" Role="Rol" Multiplicity="1" />
-          <End Type="ESSAC.InspeccionesDbModel.Usuario" Role="Usuario" Multiplicity="*" />
+        <Association Name="FK_PeriodoProtocolo_Periodo">
+          <End Type="ESSAC.InspeccionesDbModel.Periodo" Role="Periodo" Multiplicity="1" />
+          <End Type="ESSAC.InspeccionesDbModel.PeriodoProtocolo" Role="PeriodoProtocolo" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Rol">
-              <PropertyRef Name="IdRol" />
+            <Principal Role="Periodo">
+              <PropertyRef Name="IdPeriodo" />
             </Principal>
-            <Dependent Role="Usuario">
-              <PropertyRef Name="IdRol" />
+            <Dependent Role="PeriodoProtocolo">
+              <PropertyRef Name="IdPeriodo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PeriodoProtocolo_Protocolo">
+          <End Type="ESSAC.InspeccionesDbModel.Protocolo" Role="Protocolo" Multiplicity="1" />
+          <End Type="ESSAC.InspeccionesDbModel.PeriodoProtocolo" Role="PeriodoProtocolo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Protocolo">
+              <PropertyRef Name="IdProtocolo" />
+            </Principal>
+            <Dependent Role="PeriodoProtocolo">
+              <PropertyRef Name="IdProtocolo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tarea_PeriodoProtocolo">
+          <End Type="ESSAC.InspeccionesDbModel.PeriodoProtocolo" Role="PeriodoProtocolo" Multiplicity="0..1" />
+          <End Type="ESSAC.InspeccionesDbModel.Tarea" Role="Tarea" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PeriodoProtocolo">
+              <PropertyRef Name="IdPeriodoProtocolo" />
+            </Principal>
+            <Dependent Role="Tarea">
+              <PropertyRef Name="IdPeriodoProtocolo" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1223,198 +1644,290 @@
           <End Type="ESSAC.InspeccionesDbModel.Tarea" Role="Tarea" Multiplicity="*" />
           <End Type="ESSAC.InspeccionesDbModel.Usuario" Role="Usuario" Multiplicity="*" />
         </Association>
-        <EntityType Name="Protocolo">
-          <Key>
-            <PropertyRef Name="IdProtocolo" />
-          </Key>
-          <Property Name="IdProtocolo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="IdPlantilla" Type="Int32" Nullable="false" />
-          <Property Name="IdInmueble" Type="Int32" Nullable="false" />
-          <Property Name="IdUsuario" Type="Int32" Nullable="false" />
-          <Property Name="IdEstado" Type="Int32" Nullable="false" />
-          <Property Name="NombreAreaProtegida" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="Fecha" Type="DateTime" Precision="3" />
-          <Property Name="Direccion" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
-          <Property Name="Active" Type="Boolean" Nullable="false" />
-          <Property Name="FechaCreacion" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="EstadoProtocolo" Relationship="ESSAC.InspeccionesDbModel.FK_Protocolo_EstadoProtocolo" FromRole="Protocolo" ToRole="EstadoProtocolo" />
-          <NavigationProperty Name="Inmueble" Relationship="ESSAC.InspeccionesDbModel.FK_Protocolo_Inmueble" FromRole="Protocolo" ToRole="Inmueble" />
-          <NavigationProperty Name="Usuario" Relationship="ESSAC.InspeccionesDbModel.FK_Protocolo_Usuario" FromRole="Protocolo" ToRole="Usuario" />
-          <NavigationProperty Name="Respuesta" Relationship="ESSAC.InspeccionesDbModel.FK_Respuesta_Protocolo" FromRole="Protocolo" ToRole="Respuesta" />
-          <NavigationProperty Name="Plantilla" Relationship="ESSAC.InspeccionesDbModel.FK_Protocolo_Plantilla" FromRole="Protocolo" ToRole="Plantilla" />
-        </EntityType>
-        <Association Name="FK_Protocolo_EstadoProtocolo">
-          <End Type="ESSAC.InspeccionesDbModel.EstadoProtocolo" Role="EstadoProtocolo" Multiplicity="1" />
-          <End Type="ESSAC.InspeccionesDbModel.Protocolo" Role="Protocolo" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="EstadoProtocolo">
-              <PropertyRef Name="IdEstado" />
-            </Principal>
-            <Dependent Role="Protocolo">
-              <PropertyRef Name="IdEstado" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Protocolo_Inmueble">
-          <End Type="ESSAC.InspeccionesDbModel.Inmueble" Role="Inmueble" Multiplicity="1" />
-          <End Type="ESSAC.InspeccionesDbModel.Protocolo" Role="Protocolo" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Inmueble">
-              <PropertyRef Name="IdInmueble" />
-            </Principal>
-            <Dependent Role="Protocolo">
-              <PropertyRef Name="IdInmueble" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Protocolo_Usuario">
-          <End Type="ESSAC.InspeccionesDbModel.Usuario" Role="Usuario" Multiplicity="1" />
-          <End Type="ESSAC.InspeccionesDbModel.Protocolo" Role="Protocolo" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Usuario">
-              <PropertyRef Name="IdUsuario" />
-            </Principal>
-            <Dependent Role="Protocolo">
-              <PropertyRef Name="IdUsuario" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Respuesta_Protocolo">
-          <End Type="ESSAC.InspeccionesDbModel.Protocolo" Role="Protocolo" Multiplicity="1" />
-          <End Type="ESSAC.InspeccionesDbModel.Respuesta" Role="Respuesta" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Protocolo">
-              <PropertyRef Name="IdProtocolo" />
-            </Principal>
-            <Dependent Role="Respuesta">
-              <PropertyRef Name="IdProtocolo" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="Plantilla">
-          <Key>
-            <PropertyRef Name="IdPlantilla" />
-          </Key>
-          <Property Name="IdPlantilla" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="Nombre2" Type="String" MaxLength="200" FixedLength="true" Unicode="true" />
-          <Property Name="Active" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Protocolo" Relationship="ESSAC.InspeccionesDbModel.FK_Protocolo_Plantilla" FromRole="Plantilla" ToRole="Protocolo" />
-          <NavigationProperty Name="Seccion" Relationship="ESSAC.InspeccionesDbModel.FK_Seccion_Plantilla" FromRole="Plantilla" ToRole="Seccion" />
-          <NavigationProperty Name="SeccionBody" Relationship="ESSAC.InspeccionesDbModel.DefaultValue" FromRole="Plantilla" ToRole="SeccionBody" />
-        </EntityType>
-        <EntityType Name="SeccionBody">
-          <Key>
-            <PropertyRef Name="IdSeccionBody" />
-          </Key>
-          <Property Name="IdSeccionBody" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="IdSeccion" Type="Int32" Nullable="false" />
-          <Property Name="IdTipoCelda" Type="Int32" Nullable="false" />
-          <Property Name="IdTipoTag" Type="Int32" />
-          <Property Name="Descripcion" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Rowspan" Type="Int32" Nullable="false" />
-          <Property Name="Colspan" Type="Int32" Nullable="false" />
-          <Property Name="BackgroundColor" Type="Boolean" Nullable="false" />
-          <Property Name="NumeroFila" Type="Int32" Nullable="false" />
-          <Property Name="Orden" Type="Int32" Nullable="false" />
-          <Property Name="Active" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Respuesta" Relationship="ESSAC.InspeccionesDbModel.FK_Respuesta_TableBody" FromRole="SeccionBody" ToRole="Respuesta" />
-          <NavigationProperty Name="Seccion" Relationship="ESSAC.InspeccionesDbModel.FK_TableBody_Seccion" FromRole="SeccionBody" ToRole="Seccion" />
-          <NavigationProperty Name="TipoCelda" Relationship="ESSAC.InspeccionesDbModel.FK_TableBody_TipoCelda" FromRole="SeccionBody" ToRole="TipoCelda" />
-          <NavigationProperty Name="TipoTag" Relationship="ESSAC.InspeccionesDbModel.FK_TableBody_TipoTag" FromRole="SeccionBody" ToRole="TipoTag" />
-          <NavigationProperty Name="Plantilla" Relationship="ESSAC.InspeccionesDbModel.DefaultValue" FromRole="SeccionBody" ToRole="Plantilla" />
-        </EntityType>
-        <Association Name="FK_Protocolo_Plantilla">
-          <End Type="ESSAC.InspeccionesDbModel.Plantilla" Role="Plantilla" Multiplicity="1" />
-          <End Type="ESSAC.InspeccionesDbModel.Protocolo" Role="Protocolo" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Plantilla">
-              <PropertyRef Name="IdPlantilla" />
-            </Principal>
-            <Dependent Role="Protocolo">
-              <PropertyRef Name="IdPlantilla" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Seccion_Plantilla">
-          <End Type="ESSAC.InspeccionesDbModel.Plantilla" Role="Plantilla" Multiplicity="1" />
-          <End Type="ESSAC.InspeccionesDbModel.Seccion" Role="Seccion" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Plantilla">
-              <PropertyRef Name="IdPlantilla" />
-            </Principal>
-            <Dependent Role="Seccion">
-              <PropertyRef Name="IdPlantilla" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Respuesta_TableBody">
-          <End Type="ESSAC.InspeccionesDbModel.SeccionBody" Role="SeccionBody" Multiplicity="1" />
-          <End Type="ESSAC.InspeccionesDbModel.Respuesta" Role="Respuesta" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="SeccionBody">
-              <PropertyRef Name="IdSeccionBody" />
-            </Principal>
-            <Dependent Role="Respuesta">
-              <PropertyRef Name="IdSeccionBody" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_TableBody_Seccion">
-          <End Type="ESSAC.InspeccionesDbModel.Seccion" Role="Seccion" Multiplicity="1" />
-          <End Type="ESSAC.InspeccionesDbModel.SeccionBody" Role="SeccionBody" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Seccion">
-              <PropertyRef Name="IdSeccion" />
-            </Principal>
-            <Dependent Role="SeccionBody">
-              <PropertyRef Name="IdSeccion" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_TableBody_TipoCelda">
-          <End Type="ESSAC.InspeccionesDbModel.TipoCelda" Role="TipoCelda" Multiplicity="1" />
-          <End Type="ESSAC.InspeccionesDbModel.SeccionBody" Role="SeccionBody" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="TipoCelda">
-              <PropertyRef Name="IdTipoCelda" />
-            </Principal>
-            <Dependent Role="SeccionBody">
-              <PropertyRef Name="IdTipoCelda" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_TableBody_TipoTag">
-          <End Type="ESSAC.InspeccionesDbModel.TipoTag" Role="TipoTag" Multiplicity="0..1" />
-          <End Type="ESSAC.InspeccionesDbModel.SeccionBody" Role="SeccionBody" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="TipoTag">
-              <PropertyRef Name="IdTipoTag" />
-            </Principal>
-            <Dependent Role="SeccionBody">
-              <PropertyRef Name="IdTipoTag" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="DefaultValue">
-          <End Type="ESSAC.InspeccionesDbModel.Plantilla" Role="Plantilla" Multiplicity="*" />
-          <End Type="ESSAC.InspeccionesDbModel.SeccionBody" Role="SeccionBody" Multiplicity="*" />
-        </Association>
-        <ComplexType Name="SP_GetDefaultValues_Result">
-          <Property Type="Int32" Name="IdSeccionBody" Nullable="false" />
-          <Property Type="String" Name="Descripcion" Nullable="false" />
-        </ComplexType>
-        </Schema>
+      </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="ESSACInspeccionesDbModelStoreContainer" CdmEntityContainer="ESSACInspeccionesEntities">
+          <EntitySetMapping Name="Cargo">
+            <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.Cargo">
+              <MappingFragment StoreEntitySet="Cargo">
+                <ScalarProperty Name="IdCargo" ColumnName="IdCargo" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Cliente">
+            <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.Cliente">
+              <MappingFragment StoreEntitySet="Cliente">
+                <ScalarProperty Name="IdCliente" ColumnName="IdCliente" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Telefono_1" ColumnName="Telefono_1" />
+                <ScalarProperty Name="Telefono_2" ColumnName="Telefono_2" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ContactoCliente">
+            <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.ContactoCliente">
+              <MappingFragment StoreEntitySet="ContactoCliente">
+                <ScalarProperty Name="IdContactoCliente" ColumnName="IdContactoCliente" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Telefono" ColumnName="Telefono" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Area" ColumnName="Area" />
+                <ScalarProperty Name="Cargo" ColumnName="Cargo" />
+                <ScalarProperty Name="Celular" ColumnName="Celular" />
+                <ScalarProperty Name="Anexo" ColumnName="Anexo" />
+                <ScalarProperty Name="IdCliente" ColumnName="IdCliente" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="Default" ColumnName="Default" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Estado">
+            <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.Estado">
+              <MappingFragment StoreEntitySet="Estado">
+                <ScalarProperty Name="IdEstado" ColumnName="IdEstado" />
+                <ScalarProperty Name="NombreEstado" ColumnName="NombreEstado" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EstadoProtocolo">
+            <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.EstadoProtocolo">
+              <MappingFragment StoreEntitySet="EstadoProtocolo">
+                <ScalarProperty Name="IdEstado" ColumnName="IdEstado" />
+                <ScalarProperty Name="NombreEstado" ColumnName="NombreEstado" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Inmueble">
+            <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.Inmueble">
+              <MappingFragment StoreEntitySet="Inmueble">
+                <ScalarProperty Name="IdInmueble" ColumnName="IdInmueble" />
+                <ScalarProperty Name="IdCliente" ColumnName="IdCliente" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Direccion" ColumnName="Direccion" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OpcionRespuesta">
+            <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.OpcionRespuesta">
+              <MappingFragment StoreEntitySet="OpcionRespuesta">
+                <ScalarProperty Name="IdOpcion" ColumnName="IdOpcion" />
+                <ScalarProperty Name="IdTipoRespuesta" ColumnName="IdTipoRespuesta" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Puntaje" ColumnName="Puntaje" />
+                <ScalarProperty Name="Orden" ColumnName="Orden" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Periodo">
+            <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.Periodo">
+              <MappingFragment StoreEntitySet="Periodo">
+                <ScalarProperty Name="IdPeriodo" ColumnName="IdPeriodo" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="FechaInicio" ColumnName="FechaInicio" />
+                <ScalarProperty Name="FechaFin" ColumnName="FechaFin" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Plantilla">
+            <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.Plantilla">
+              <MappingFragment StoreEntitySet="Plantilla">
+                <ScalarProperty Name="IdPlantilla" ColumnName="IdPlantilla" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Nombre2" ColumnName="Nombre2" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Protocolo">
+            <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.Protocolo">
+              <MappingFragment StoreEntitySet="Protocolo">
+                <ScalarProperty Name="IdProtocolo" ColumnName="IdProtocolo" />
+                <ScalarProperty Name="IdPlantilla" ColumnName="IdPlantilla" />
+                <ScalarProperty Name="IdInmueble" ColumnName="IdInmueble" />
+                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+                <ScalarProperty Name="IdEstado" ColumnName="IdEstado" />
+                <ScalarProperty Name="NombreAreaProtegida" ColumnName="NombreAreaProtegida" />
+                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+                <ScalarProperty Name="Direccion" ColumnName="Direccion" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Respuesta">
+            <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.Respuesta">
+              <MappingFragment StoreEntitySet="Respuesta">
+                <ScalarProperty Name="IdProtocolo" ColumnName="IdProtocolo" />
+                <ScalarProperty Name="IdSeccionBody" ColumnName="IdSeccionBody" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Rol">
+            <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.Rol">
+              <MappingFragment StoreEntitySet="Rol">
+                <ScalarProperty Name="IdRol" ColumnName="IdRol" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="DescripcionRol" ColumnName="DescripcionRol" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Seccion">
+            <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.Seccion">
+              <MappingFragment StoreEntitySet="Seccion">
+                <ScalarProperty Name="IdSeccion" ColumnName="IdSeccion" />
+                <ScalarProperty Name="IdSeccionPadre" ColumnName="IdSeccionPadre" />
+                <ScalarProperty Name="IdPlantilla" ColumnName="IdPlantilla" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Pagina" ColumnName="Pagina" />
+                <ScalarProperty Name="Orden" ColumnName="Orden" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SeccionBody">
+            <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.SeccionBody">
+              <MappingFragment StoreEntitySet="SeccionBody">
+                <ScalarProperty Name="IdSeccionBody" ColumnName="IdSeccionBody" />
+                <ScalarProperty Name="IdSeccion" ColumnName="IdSeccion" />
+                <ScalarProperty Name="IdTipoCelda" ColumnName="IdTipoCelda" />
+                <ScalarProperty Name="IdTipoTag" ColumnName="IdTipoTag" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="Rowspan" ColumnName="Rowspan" />
+                <ScalarProperty Name="Colspan" ColumnName="Colspan" />
+                <ScalarProperty Name="BackgroundColor" ColumnName="BackgroundColor" />
+                <ScalarProperty Name="NumeroFila" ColumnName="NumeroFila" />
+                <ScalarProperty Name="Orden" ColumnName="Orden" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Servicio">
+            <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.Servicio">
+              <MappingFragment StoreEntitySet="Servicio">
+                <ScalarProperty Name="IdServicio" ColumnName="IdServicio" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="NombreCorto" ColumnName="NombreCorto" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="Color" ColumnName="Color" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ServicioEstado">
+            <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.ServicioEstado">
+              <MappingFragment StoreEntitySet="ServicioEstado">
+                <ScalarProperty Name="IdServicio" ColumnName="IdServicio" />
+                <ScalarProperty Name="IdEstado" ColumnName="IdEstado" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TableHeader">
+            <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.TableHeader">
+              <MappingFragment StoreEntitySet="TableHeader">
+                <ScalarProperty Name="IdTableHeader" ColumnName="IdTableHeader" />
+                <ScalarProperty Name="IdSeccion" ColumnName="IdSeccion" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="Rowspan" ColumnName="Rowspan" />
+                <ScalarProperty Name="Colspan" ColumnName="Colspan" />
+                <ScalarProperty Name="NumeroFila" ColumnName="NumeroFila" />
+                <ScalarProperty Name="Orden" ColumnName="Orden" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TipoCelda">
+            <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.TipoCelda">
+              <MappingFragment StoreEntitySet="TipoCelda">
+                <ScalarProperty Name="IdTipoCelda" ColumnName="IdTipoCelda" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TipoSeccion">
+            <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.TipoSeccion">
+              <MappingFragment StoreEntitySet="TipoSeccion">
+                <ScalarProperty Name="IdTipoSeccion" ColumnName="IdTipoSeccion" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TipoTag">
+            <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.TipoTag">
+              <MappingFragment StoreEntitySet="TipoTag">
+                <ScalarProperty Name="IdTipoTag" ColumnName="IdTipoTag" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Usuario">
+            <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.Usuario">
+              <MappingFragment StoreEntitySet="Usuario">
+                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="InicialesNombre" ColumnName="InicialesNombre" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Cuenta" ColumnName="Cuenta" />
+                <ScalarProperty Name="Pass" ColumnName="Pass" />
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+                <ScalarProperty Name="FechaRegistro" ColumnName="FechaRegistro" />
+                <ScalarProperty Name="IdRol" ColumnName="IdRol" />
+                <ScalarProperty Name="IdCargo" ColumnName="IdCargo" />
+                <ScalarProperty Name="RutaFirma" ColumnName="RutaFirma" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="DefaultValue" TypeName="ESSAC.InspeccionesDbModel.DefaultValue" StoreEntitySet="DefaultValue">
+            <EndProperty Name="Plantilla">
+              <ScalarProperty Name="IdPlantilla" ColumnName="IdPlantilla" />
+            </EndProperty>
+            <EndProperty Name="SeccionBody">
+              <ScalarProperty Name="IdSeccionBody" ColumnName="IdSeccionBody" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <FunctionImportMapping FunctionImportName="sp_alterdiagram" FunctionName="ESSAC.InspeccionesDbModel.Store.sp_alterdiagram" />
           <FunctionImportMapping FunctionImportName="SP_CountEstados" FunctionName="ESSAC.InspeccionesDbModel.Store.SP_CountEstados">
             <ResultMapping>
               <ComplexTypeMapping TypeName="ESSAC.InspeccionesDbModel.SP_CountEstados_Result">
                 <ScalarProperty Name="NombreEstado" ColumnName="NombreEstado" />
                 <ScalarProperty Name="CuentaEstado" ColumnName="CuentaEstado" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_creatediagram" FunctionName="ESSAC.InspeccionesDbModel.Store.sp_creatediagram" />
+          <FunctionImportMapping FunctionImportName="sp_dropdiagram" FunctionName="ESSAC.InspeccionesDbModel.Store.sp_dropdiagram" />
+          <FunctionImportMapping FunctionImportName="SP_GetDefaultValues" FunctionName="ESSAC.InspeccionesDbModel.Store.SP_GetDefaultValues">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="ESSAC.InspeccionesDbModel.SP_GetDefaultValues_Result">
+                <ScalarProperty Name="IdSeccionBody" ColumnName="IdSeccionBody" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -1456,175 +1969,34 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <EntitySetMapping Name="Cargo">
-            <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.Cargo">
-              <MappingFragment StoreEntitySet="Cargo">
+          <FunctionImportMapping FunctionImportName="sp_helpdiagramdefinition" FunctionName="ESSAC.InspeccionesDbModel.Store.sp_helpdiagramdefinition">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="ESSAC.InspeccionesDbModel.sp_helpdiagramdefinition_Result">
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_helpdiagrams" FunctionName="ESSAC.InspeccionesDbModel.Store.sp_helpdiagrams">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="ESSAC.InspeccionesDbModel.sp_helpdiagrams_Result">
+                <ScalarProperty Name="Database" ColumnName="Database" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Owner" ColumnName="Owner" />
+                <ScalarProperty Name="OwnerID" ColumnName="OwnerID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="ESSAC.InspeccionesDbModel.Store.sp_renamediagram" />
+          <FunctionImportMapping FunctionImportName="sp_upgraddiagrams" FunctionName="ESSAC.InspeccionesDbModel.Store.sp_upgraddiagrams" />
+          <EntitySetMapping Name="PeriodoProtocolo">
+            <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.PeriodoProtocolo">
+              <MappingFragment StoreEntitySet="PeriodoProtocolo">
                 <ScalarProperty Name="Active" ColumnName="Active" />
-                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
-                <ScalarProperty Name="IdCargo" ColumnName="IdCargo" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Cliente">
-            <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.Cliente">
-              <MappingFragment StoreEntitySet="Cliente">
-                <ScalarProperty Name="Active" ColumnName="Active" />
-                <ScalarProperty Name="Telefono_2" ColumnName="Telefono_2" />
-                <ScalarProperty Name="Telefono_1" ColumnName="Telefono_1" />
-                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
-                <ScalarProperty Name="IdCliente" ColumnName="IdCliente" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="ContactoCliente">
-            <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.ContactoCliente">
-              <MappingFragment StoreEntitySet="ContactoCliente">
-                <ScalarProperty Name="Default" ColumnName="Default" />
-                <ScalarProperty Name="Active" ColumnName="Active" />
-                <ScalarProperty Name="IdCliente" ColumnName="IdCliente" />
-                <ScalarProperty Name="Anexo" ColumnName="Anexo" />
-                <ScalarProperty Name="Celular" ColumnName="Celular" />
-                <ScalarProperty Name="Cargo" ColumnName="Cargo" />
-                <ScalarProperty Name="Area" ColumnName="Area" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="Telefono" ColumnName="Telefono" />
-                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
-                <ScalarProperty Name="IdContactoCliente" ColumnName="IdContactoCliente" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Estado">
-            <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.Estado">
-              <MappingFragment StoreEntitySet="Estado">
-                <ScalarProperty Name="Active" ColumnName="Active" />
-                <ScalarProperty Name="NombreEstado" ColumnName="NombreEstado" />
-                <ScalarProperty Name="IdEstado" ColumnName="IdEstado" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="EstadoProtocolo">
-            <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.EstadoProtocolo">
-              <MappingFragment StoreEntitySet="EstadoProtocolo">
-                <ScalarProperty Name="Active" ColumnName="Active" />
-                <ScalarProperty Name="NombreEstado" ColumnName="NombreEstado" />
-                <ScalarProperty Name="IdEstado" ColumnName="IdEstado" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Inmueble">
-            <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.Inmueble">
-              <MappingFragment StoreEntitySet="Inmueble">
-                <ScalarProperty Name="Active" ColumnName="Active" />
-                <ScalarProperty Name="Direccion" ColumnName="Direccion" />
-                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
-                <ScalarProperty Name="IdCliente" ColumnName="IdCliente" />
-                <ScalarProperty Name="IdInmueble" ColumnName="IdInmueble" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="OpcionRespuesta">
-            <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.OpcionRespuesta">
-              <MappingFragment StoreEntitySet="OpcionRespuesta">
-                <ScalarProperty Name="Active" ColumnName="Active" />
-                <ScalarProperty Name="Orden" ColumnName="Orden" />
-                <ScalarProperty Name="Puntaje" ColumnName="Puntaje" />
-                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
-                <ScalarProperty Name="IdTipoRespuesta" ColumnName="IdTipoRespuesta" />
-                <ScalarProperty Name="IdOpcion" ColumnName="IdOpcion" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Respuesta">
-            <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.Respuesta">
-              <MappingFragment StoreEntitySet="Respuesta">
-                <ScalarProperty Name="Active" ColumnName="Active" />
-                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
-                <ScalarProperty Name="IdSeccionBody" ColumnName="IdSeccionBody" />
                 <ScalarProperty Name="IdProtocolo" ColumnName="IdProtocolo" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Rol">
-            <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.Rol">
-              <MappingFragment StoreEntitySet="Rol">
-                <ScalarProperty Name="DescripcionRol" ColumnName="DescripcionRol" />
-                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
-                <ScalarProperty Name="IdRol" ColumnName="IdRol" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Seccion">
-            <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.Seccion">
-              <MappingFragment StoreEntitySet="Seccion">
-                <ScalarProperty Name="Active" ColumnName="Active" />
-                <ScalarProperty Name="Orden" ColumnName="Orden" />
-                <ScalarProperty Name="Pagina" ColumnName="Pagina" />
-                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
-                <ScalarProperty Name="IdPlantilla" ColumnName="IdPlantilla" />
-                <ScalarProperty Name="IdSeccionPadre" ColumnName="IdSeccionPadre" />
-                <ScalarProperty Name="IdSeccion" ColumnName="IdSeccion" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Servicio">
-            <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.Servicio">
-              <MappingFragment StoreEntitySet="Servicio">
-                <ScalarProperty Name="Active" ColumnName="Active" />
-                <ScalarProperty Name="Color" ColumnName="Color" />
-                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
-                <ScalarProperty Name="NombreCorto" ColumnName="NombreCorto" />
-                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
-                <ScalarProperty Name="IdServicio" ColumnName="IdServicio" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="ServicioEstado">
-            <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.ServicioEstado">
-              <MappingFragment StoreEntitySet="ServicioEstado">
-                <ScalarProperty Name="Active" ColumnName="Active" />
-                <ScalarProperty Name="IdEstado" ColumnName="IdEstado" />
-                <ScalarProperty Name="IdServicio" ColumnName="IdServicio" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="TableHeader">
-            <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.TableHeader">
-              <MappingFragment StoreEntitySet="TableHeader">
-                <ScalarProperty Name="Active" ColumnName="Active" />
-                <ScalarProperty Name="Orden" ColumnName="Orden" />
-                <ScalarProperty Name="NumeroFila" ColumnName="NumeroFila" />
-                <ScalarProperty Name="Colspan" ColumnName="Colspan" />
-                <ScalarProperty Name="Rowspan" ColumnName="Rowspan" />
-                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
-                <ScalarProperty Name="IdSeccion" ColumnName="IdSeccion" />
-                <ScalarProperty Name="IdTableHeader" ColumnName="IdTableHeader" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="TipoCelda">
-            <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.TipoCelda">
-              <MappingFragment StoreEntitySet="TipoCelda">
-                <ScalarProperty Name="Active" ColumnName="Active" />
-                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
-                <ScalarProperty Name="IdTipoCelda" ColumnName="IdTipoCelda" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="TipoSeccion">
-            <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.TipoSeccion">
-              <MappingFragment StoreEntitySet="TipoSeccion">
-                <ScalarProperty Name="Active" ColumnName="Active" />
-                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
-                <ScalarProperty Name="IdTipoSeccion" ColumnName="IdTipoSeccion" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="TipoTag">
-            <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.TipoTag">
-              <MappingFragment StoreEntitySet="TipoTag">
-                <ScalarProperty Name="Active" ColumnName="Active" />
-                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
-                <ScalarProperty Name="IdTipoTag" ColumnName="IdTipoTag" />
+                <ScalarProperty Name="IdPeriodo" ColumnName="IdPeriodo" />
+                <ScalarProperty Name="IdPeriodoProtocolo" ColumnName="IdPeriodoProtocolo" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1639,26 +2011,10 @@
                 <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />
                 <ScalarProperty Name="IdServicio" ColumnName="IdServicio" />
+                <ScalarProperty Name="IdPeriodoProtocolo" ColumnName="IdPeriodoProtocolo" />
                 <ScalarProperty Name="IdInmueble" ColumnName="IdInmueble" />
                 <ScalarProperty Name="IdCliente" ColumnName="IdCliente" />
                 <ScalarProperty Name="IdTarea" ColumnName="IdTarea" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Usuario">
-            <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.Usuario">
-              <MappingFragment StoreEntitySet="Usuario">
-                <ScalarProperty Name="RutaFirma" ColumnName="RutaFirma" />
-                <ScalarProperty Name="IdCargo" ColumnName="IdCargo" />
-                <ScalarProperty Name="IdRol" ColumnName="IdRol" />
-                <ScalarProperty Name="FechaRegistro" ColumnName="FechaRegistro" />
-                <ScalarProperty Name="Estado" ColumnName="Estado" />
-                <ScalarProperty Name="Pass" ColumnName="Pass" />
-                <ScalarProperty Name="Cuenta" ColumnName="Cuenta" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="InicialesNombre" ColumnName="InicialesNombre" />
-                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
-                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1670,66 +2026,7 @@
               <ScalarProperty Name="IdTarea" ColumnName="IdTarea" />
             </EndProperty>
           </AssociationSetMapping>
-          <EntitySetMapping Name="Protocolo">
-            <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.Protocolo">
-              <MappingFragment StoreEntitySet="Protocolo">
-                <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
-                <ScalarProperty Name="Active" ColumnName="Active" />
-                <ScalarProperty Name="Direccion" ColumnName="Direccion" />
-                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
-                <ScalarProperty Name="NombreAreaProtegida" ColumnName="NombreAreaProtegida" />
-                <ScalarProperty Name="IdEstado" ColumnName="IdEstado" />
-                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
-                <ScalarProperty Name="IdInmueble" ColumnName="IdInmueble" />
-                <ScalarProperty Name="IdPlantilla" ColumnName="IdPlantilla" />
-                <ScalarProperty Name="IdProtocolo" ColumnName="IdProtocolo" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Plantilla">
-            <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.Plantilla">
-              <MappingFragment StoreEntitySet="Plantilla">
-                <ScalarProperty Name="Active" ColumnName="Active" />
-                <ScalarProperty Name="Nombre2" ColumnName="Nombre2" />
-                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
-                <ScalarProperty Name="IdPlantilla" ColumnName="IdPlantilla" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="SeccionBody">
-            <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.SeccionBody">
-              <MappingFragment StoreEntitySet="SeccionBody">
-                <ScalarProperty Name="Active" ColumnName="Active" />
-                <ScalarProperty Name="Orden" ColumnName="Orden" />
-                <ScalarProperty Name="NumeroFila" ColumnName="NumeroFila" />
-                <ScalarProperty Name="BackgroundColor" ColumnName="BackgroundColor" />
-                <ScalarProperty Name="Colspan" ColumnName="Colspan" />
-                <ScalarProperty Name="Rowspan" ColumnName="Rowspan" />
-                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
-                <ScalarProperty Name="IdTipoTag" ColumnName="IdTipoTag" />
-                <ScalarProperty Name="IdTipoCelda" ColumnName="IdTipoCelda" />
-                <ScalarProperty Name="IdSeccion" ColumnName="IdSeccion" />
-                <ScalarProperty Name="IdSeccionBody" ColumnName="IdSeccionBody" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <AssociationSetMapping Name="DefaultValue" TypeName="ESSAC.InspeccionesDbModel.DefaultValue" StoreEntitySet="DefaultValue">
-            <EndProperty Name="SeccionBody">
-              <ScalarProperty Name="IdSeccionBody" ColumnName="IdSeccionBody" />
-            </EndProperty>
-            <EndProperty Name="Plantilla">
-              <ScalarProperty Name="IdPlantilla" ColumnName="IdPlantilla" />
-            </EndProperty>
-          </AssociationSetMapping>
-          <FunctionImportMapping FunctionImportName="SP_GetDefaultValues" FunctionName="ESSAC.InspeccionesDbModel.Store.SP_GetDefaultValues">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="ESSAC.InspeccionesDbModel.SP_GetDefaultValues_Result">
-                <ScalarProperty Name="IdSeccionBody" ColumnName="IdSeccionBody" />
-                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          </EntityContainerMapping>
+        </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
   </edmx:Runtime>
@@ -1745,7 +2042,7 @@
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
         <DesignerProperty Name="EnablePluralization" Value="false" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
-        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
       </DesignerInfoPropertySet>
     </Options>

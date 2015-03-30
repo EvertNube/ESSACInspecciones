@@ -48,7 +48,7 @@ namespace ESSACInspecciones.Core.BL
                     {
                         IdProtocolo = x.IdProtocolo,
                         IdPlantilla = x.IdPlantilla,
-                        IdInmueble = x.IdInmueble,
+                        IdInmueble = x.IdInmueble.GetValueOrDefault(),
                         IdEstado = x.IdEstado,
                         Plantilla = new PlantillaDTO { Nombre = x.Nombre },
                         Estado = new EstadoDTO { NombreEstado = x.NombreEstado },

@@ -50,6 +50,7 @@
     <Compile Include="BL\Base.cs" />
     <Compile Include="BL\BolsaTareasBL.cs" />
     <Compile Include="BL\ClienteBL.cs" />
+    <Compile Include="BL\PeriodoBL.cs" />
     <Compile Include="BL\ServiciosBL.cs" />
     <Compile Include="BL\ProtocoloBL.cs" />
     <Compile Include="BL\OpcionRespuestaBL.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="DTO\ClienteDTO.cs" />
     <Compile Include="DTO\ContactoDTO.cs" />
     <Compile Include="DTO\OpcionDTO.cs" />
+    <Compile Include="DTO\PeriodoDTO.cs" />
     <Compile Include="DTO\PlantillaDTO.cs" />
     <Compile Include="DTO\RespuestaDTO.cs" />
     <Compile Include="DTO\SeccionBodyDTO.cs" />

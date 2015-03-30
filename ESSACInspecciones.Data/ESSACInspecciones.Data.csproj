@@ -85,6 +85,12 @@
     <Compile Include="OpcionRespuesta.cs">
       <DependentUpon>ESSACInspeccionesModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Periodo.cs">
+      <DependentUpon>ESSACInspeccionesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PeriodoProtocolo.cs">
+      <DependentUpon>ESSACInspeccionesModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Plantilla.cs">
       <DependentUpon>ESSACInspeccionesModel.tt</DependentUpon>
     </Compile>
@@ -125,6 +131,15 @@
     <Compile Include="SP_GetTareas_Result.cs">
       <DependentUpon>ESSACInspeccionesModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="sp_helpdiagramdefinition_Result.cs">
+      <DependentUpon>ESSACInspeccionesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_helpdiagrams_Result.cs">
+      <DependentUpon>ESSACInspeccionesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sysdiagrams.cs">
+      <DependentUpon>ESSACInspeccionesModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="TableHeader.cs">
       <DependentUpon>ESSACInspeccionesModel.tt</DependentUpon>
     </Compile>
@@ -148,13 +163,11 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.Config" />
     <EntityDeploy Include="ESSACInspeccionesModel.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>ESSACInspeccionesModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.Config" />
     <None Include="ESSACInspeccionesModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>ESSACInspeccionesModel.edmx</DependentUpon>

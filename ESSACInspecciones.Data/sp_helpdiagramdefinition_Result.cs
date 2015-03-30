@@ -11,9 +11,9 @@ namespace ESSACInspecciones.Data
 {
     using System;
     
-    public partial class SP_GetDefaultValues_Result
+    public partial class sp_helpdiagramdefinition_Result
     {
-        public int IdSeccionBody { get; set; }
-        public string Descripcion { get; set; }
+        public Nullable<int> version { get; set; }
+        public byte[] definition { get; set; }
     }
 }

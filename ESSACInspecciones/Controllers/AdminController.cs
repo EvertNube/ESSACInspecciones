@@ -453,9 +453,9 @@ namespace ESSACInspecciones.Controllers
             if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
 
             TareaBL objBL = new TareaBL();
-            var dataResponsables = objBL.getResponsables(true);//ViewBag.Responsables = objBL.getResponsables(true);
+            var dataResponsables = objBL.getResponsables(true);
             ViewBag.Servicios = objBL.getServicios(true);
-            ViewBag.Clientes = objBL.getComboClientes();//objBL.getClientes(true);
+            ViewBag.Clientes = objBL.getComboClientes();
             ViewBag.Horas = new TareaDTO().fillHoras();
             ViewBag.Minutos = new TareaDTO().fillMinutos();
 
@@ -471,14 +471,6 @@ namespace ESSACInspecciones.Controllers
             if (id != null)
             {
                 TareaDTO obj = objBL.getTarea((int)id);
-                //var resource = obj.Responsables;
-                //List<UsuarioDTO> responsablesLeft = new List<UsuarioDTO>();//.ToList();
-                //responsablesLeft = dataResponsables.ToList();
-                //foreach (var resp in dataResponsables)
-                //    foreach (var resptarea in resource)
-                //        if (resp.IdUsuario > 0 && resp.IdUsuario == resptarea.IdUsuario)
-                //            responsablesLeft.Remove(resp);
-                //ViewBag.Responsables = responsablesLeft;
                 ViewBag.Responsables = removeResponsables(dataResponsables, obj.Responsables);
                 ViewBag.Resources = obj.Responsables;
                 return View(obj);
@@ -613,10 +605,6 @@ namespace ESSACInspecciones.Controllers
             if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
             UsuariosBL usuariosBL = new UsuariosBL();
             var responsables = usuariosBL.getUsuarios(CONSTANTES.ROL_RESPONSABLE).OrderBy(x => x.IdUsuario).ToList();
-            /* IDictionary<string, UsuarioDTO> dictResponsables = new Dictionary<string, UsuarioDTO>();
-             foreach (var responsable in responsables){
-                 dictResponsables.Add(responsable.InicialesNombre + " - " + responsable.Nombre, responsable);
-             }*/
             ViewBag.Responsables = responsables;
 
             return View();
@@ -665,13 +653,6 @@ namespace ESSACInspecciones.Controllers
             }
 
             return View();
-            //if (inmueble != 0 && inmueble != null)
-            //{
-            //    model = objBL.getProtocolos(idUsuario, (int)inmueble);
-            //}
-            //int pageSize = 10;
-            //int pageNumber = (page ?? 1);
-            //return View(model.ToPagedList(pageNumber, pageSize));
         }
         public ActionResult Protocolo_server(int idInmueble, int? idProtocolo = null, int? idPlantilla = null)
         {
@@ -701,28 +682,14 @@ namespace ESSACInspecciones.Controllers
             OpcionRespuestaBL obj = new OpcionRespuestaBL();
             ViewBag.Horas = new BaseDTO().fillHoras().ToJSON();
             ViewBag.Minutos = new BaseDTO().fillMinutos().ToJSON();
-            ViewBag.Items_SelectSINO = obj.getOpcionRespuesta(3).ToJSON();//new BaseDTO().fillSelectSINO().ToJSON();
-            ViewBag.Items_SelectBomba = obj.getOpcionRespuesta(4).ToJSON(); //new BaseDTO().fillSelectBomba().ToJSON();
-            ViewBag.Items_SelectNivelTanque = obj.getOpcionRespuesta(5).ToJSON(); //new BaseDTO().fillSelectNivelTanque().ToJSON();
-            ViewBag.Items_SelectAccesorios = obj.getOpcionRespuesta(6).ToJSON(); //new BaseDTO().fillSelectAccesorios().ToJSON();
-            ViewBag.Items_SelectPresiones = obj.getOpcionRespuesta(7).ToJSON(); //new BaseDTO().fillSelectPresiones().ToJSON();
+            ViewBag.Items_SelectSINO = obj.getOpcionRespuesta(3).ToJSON();
+            ViewBag.Items_SelectBomba = obj.getOpcionRespuesta(4).ToJSON();
+            ViewBag.Items_SelectNivelTanque = obj.getOpcionRespuesta(5).ToJSON();
+            ViewBag.Items_SelectAccesorios = obj.getOpcionRespuesta(6).ToJSON();
+            ViewBag.Items_SelectPresiones = obj.getOpcionRespuesta(7).ToJSON();
             ViewBag.Items_SelectInspectores = listaInspectores.ToJSON();
             return View();
         }
-
-        //public ActionResult ProtocoloReporte()
-        //{
-        //    OpcionRespuestaBL obj = new OpcionRespuestaBL();
-        //    ViewBag.Horas = new BaseDTO().fillHoras().ToJSON();
-        //    ViewBag.Minutos = new BaseDTO().fillMinutos().ToJSON();
-        //    ViewBag.Items_SelectSINO = obj.getOpcionRespuesta(3).ToJSON();//new BaseDTO().fillSelectSINO().ToJSON();
-        //    ViewBag.Items_SelectBomba = obj.getOpcionRespuesta(4).ToJSON(); //new BaseDTO().fillSelectBomba().ToJSON();
-        //    ViewBag.Items_SelectNivelTanque = obj.getOpcionRespuesta(5).ToJSON(); //new BaseDTO().fillSelectNivelTanque().ToJSON();
-        //    ViewBag.Items_SelectAccesorios = obj.getOpcionRespuesta(6).ToJSON(); //new BaseDTO().fillSelectAccesorios().ToJSON();
-        //    ViewBag.Items_SelectPresiones = obj.getOpcionRespuesta(7).ToJSON(); //new BaseDTO().fillSelectPresiones().ToJSON();
-
-        //    return View();
-        //}
 
         public ActionResult AddProtocolo(ProtocoloDTO dto)
         {
@@ -766,6 +733,71 @@ namespace ESSACInspecciones.Controllers
             }
             TempData["Protocolo"] = dto;
             return RedirectToAction("Protocolo_server");
+        }
+
+        public ActionResult Periodos()
+        {
+            if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
+            //if (!this.isAdministrator()) { return RedirectToAction("Index"); }
+            PeriodoBL periodoBL = new PeriodoBL();
+            return View(periodoBL.getPeriodos());
+        }
+
+        public ActionResult Periodo(int? id = null)
+        {
+            if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
+
+            PeriodoBL objBL = new PeriodoBL();
+            ViewBag.IdPeriodo = id;
+            var objSent = TempData["Periodo"];
+            if (objSent != null) { TempData["Periodo"] = null; return View(objSent); }
+            if (id != null)
+            {
+                PeriodoDTO obj = objBL.getPeriodo((int)id);
+                return View(obj);
+            }
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult AddPeriodo(PeriodoDTO dto)
+        {
+            if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
+            try
+            {
+                PeriodoBL objBL = new PeriodoBL();
+                if (dto.IdPeriodo == 0)
+                {
+                    objBL.add(dto);
+                    createResponseMessage(CONSTANTES.SUCCESS);
+                    return RedirectToAction("Periodos");
+                }
+                else if (dto.IdPeriodo != 0)
+                {
+                    if (objBL.update(dto))
+                    {
+                        createResponseMessage(CONSTANTES.SUCCESS);
+                        return RedirectToAction("Periodos");
+                    }
+                    else
+                    {
+                        createResponseMessage(CONSTANTES.ERROR, CONSTANTES.ERROR_UPDATE_MESSAGE);
+                    }
+
+                }
+                else
+                {
+                    createResponseMessage(CONSTANTES.ERROR, CONSTANTES.ERROR_INSERT_MESSAGE);
+                }
+            }
+            catch
+            {
+                if (dto.IdPeriodo != 0)
+                    createResponseMessage(CONSTANTES.ERROR, CONSTANTES.ERROR_UPDATE_MESSAGE);
+                else createResponseMessage(CONSTANTES.ERROR, CONSTANTES.ERROR_INSERT_MESSAGE);
+            }
+            TempData["Periodo"] = dto;
+            return RedirectToAction("Periodo");
         }
 
         #region APIS
