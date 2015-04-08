@@ -16,7 +16,7 @@ namespace ESSACInspecciones.Data
     {
         public Periodo()
         {
-            this.PeriodoProtocolo = new HashSet<PeriodoProtocolo>();
+            this.Protocolo = new HashSet<Protocolo>();
         }
     
         public int IdPeriodo { get; set; }
@@ -25,6 +25,6 @@ namespace ESSACInspecciones.Data
         public System.DateTime FechaFin { get; set; }
         public bool Active { get; set; }
     
-        public virtual ICollection<PeriodoProtocolo> PeriodoProtocolo { get; set; }
+        public virtual ICollection<Protocolo> Protocolo { get; set; }
     }
 }

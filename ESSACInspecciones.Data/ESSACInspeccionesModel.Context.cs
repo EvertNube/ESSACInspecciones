@@ -45,12 +45,11 @@ namespace ESSACInspecciones.Data
         public virtual DbSet<ServicioEstado> ServicioEstado { get; set; }
         public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
         public virtual DbSet<TableHeader> TableHeader { get; set; }
+        public virtual DbSet<Tarea> Tarea { get; set; }
         public virtual DbSet<TipoCelda> TipoCelda { get; set; }
         public virtual DbSet<TipoSeccion> TipoSeccion { get; set; }
         public virtual DbSet<TipoTag> TipoTag { get; set; }
         public virtual DbSet<Usuario> Usuario { get; set; }
-        public virtual DbSet<PeriodoProtocolo> PeriodoProtocolo { get; set; }
-        public virtual DbSet<Tarea> Tarea { get; set; }
     
         public virtual int sp_alterdiagram(string diagramname, Nullable<int> owner_id, Nullable<int> version, byte[] definition)
         {

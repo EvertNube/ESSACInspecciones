@@ -17,7 +17,6 @@ namespace ESSACInspecciones.Data
         public Protocolo()
         {
             this.Respuesta = new HashSet<Respuesta>();
-            this.PeriodoProtocolo = new HashSet<PeriodoProtocolo>();
         }
     
         public int IdProtocolo { get; set; }
@@ -30,12 +29,13 @@ namespace ESSACInspecciones.Data
         public string Direccion { get; set; }
         public bool Active { get; set; }
         public System.DateTime FechaCreacion { get; set; }
+        public int IdPeriodo { get; set; }
     
         public virtual EstadoProtocolo EstadoProtocolo { get; set; }
         public virtual Inmueble Inmueble { get; set; }
+        public virtual Periodo Periodo { get; set; }
         public virtual Plantilla Plantilla { get; set; }
         public virtual Usuario Usuario { get; set; }
         public virtual ICollection<Respuesta> Respuesta { get; set; }
-        public virtual ICollection<PeriodoProtocolo> PeriodoProtocolo { get; set; }
     }
 }

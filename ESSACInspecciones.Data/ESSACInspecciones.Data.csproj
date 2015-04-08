@@ -88,9 +88,6 @@
     <Compile Include="Periodo.cs">
       <DependentUpon>ESSACInspeccionesModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="PeriodoProtocolo.cs">
-      <DependentUpon>ESSACInspeccionesModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Plantilla.cs">
       <DependentUpon>ESSACInspeccionesModel.tt</DependentUpon>
     </Compile>

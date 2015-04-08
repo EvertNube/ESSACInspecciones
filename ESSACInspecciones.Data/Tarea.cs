@@ -22,7 +22,7 @@ namespace ESSACInspecciones.Data
         public int IdTarea { get; set; }
         public int IdCliente { get; set; }
         public int IdInmueble { get; set; }
-        public Nullable<int> IdPeriodoProtocolo { get; set; }
+        public Nullable<int> IdPlantilla { get; set; }
         public int IdServicio { get; set; }
         public string Nombre { get; set; }
         public string Descripcion { get; set; }
@@ -35,7 +35,7 @@ namespace ESSACInspecciones.Data
         public virtual Cliente Cliente { get; set; }
         public virtual Estado Estado { get; set; }
         public virtual Inmueble Inmueble { get; set; }
-        public virtual PeriodoProtocolo PeriodoProtocolo { get; set; }
+        public virtual Plantilla Plantilla { get; set; }
         public virtual Servicio Servicio { get; set; }
         public virtual ICollection<Usuario> Usuario { get; set; }
     }

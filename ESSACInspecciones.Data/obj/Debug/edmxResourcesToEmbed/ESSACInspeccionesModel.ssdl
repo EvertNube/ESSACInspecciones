@@ -89,15 +89,6 @@
     <Property Name="FechaFin" Type="datetime" Nullable="false" />
     <Property Name="Active" Type="bit" Nullable="false" />
   </EntityType>
-  <EntityType Name="PeriodoProtocolo">
-    <Key>
-      <PropertyRef Name="IdPeriodoProtocolo" />
-    </Key>
-    <Property Name="IdPeriodoProtocolo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="IdPeriodo" Type="int" Nullable="false" />
-    <Property Name="IdProtocolo" Type="int" Nullable="false" />
-    <Property Name="Active" Type="bit" Nullable="false" />
-  </EntityType>
   <EntityType Name="Plantilla">
     <Key>
       <PropertyRef Name="IdPlantilla" />
@@ -121,6 +112,7 @@
     <Property Name="Direccion" Type="nvarchar" MaxLength="150" />
     <Property Name="Active" Type="bit" Nullable="false" />
     <Property Name="FechaCreacion" Type="datetime" Nullable="false" />
+    <Property Name="IdPeriodo" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="Responsables_Tarea">
     <Key>
@@ -226,7 +218,7 @@
     <Property Name="IdTarea" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="IdCliente" Type="int" Nullable="false" />
     <Property Name="IdInmueble" Type="int" Nullable="false" />
-    <Property Name="IdPeriodoProtocolo" Type="int" />
+    <Property Name="IdPlantilla" Type="int" />
     <Property Name="IdServicio" Type="int" Nullable="false" />
     <Property Name="Nombre" Type="nvarchar" MaxLength="100" Nullable="false" />
     <Property Name="Descripcion" Type="nvarchar" MaxLength="500" />
@@ -275,6 +267,7 @@
     <Property Name="IdRol" Type="int" Nullable="false" />
     <Property Name="IdCargo" Type="int" />
     <Property Name="RutaFirma" Type="varchar" MaxLength="100" />
+    <Property Name="IdCliente" Type="int" />
   </EntityType>
   <Association Name="FK_ContactoCliente_Cliente">
     <End Role="Cliente" Type="Self.Cliente" Multiplicity="1" />
@@ -336,30 +329,6 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_PeriodoProtocolo_Periodo">
-    <End Role="Periodo" Type="Self.Periodo" Multiplicity="1" />
-    <End Role="PeriodoProtocolo" Type="Self.PeriodoProtocolo" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Periodo">
-        <PropertyRef Name="IdPeriodo" />
-      </Principal>
-      <Dependent Role="PeriodoProtocolo">
-        <PropertyRef Name="IdPeriodo" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_PeriodoProtocolo_Protocolo">
-    <End Role="Protocolo" Type="Self.Protocolo" Multiplicity="1" />
-    <End Role="PeriodoProtocolo" Type="Self.PeriodoProtocolo" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Protocolo">
-        <PropertyRef Name="IdProtocolo" />
-      </Principal>
-      <Dependent Role="PeriodoProtocolo">
-        <PropertyRef Name="IdProtocolo" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="FK_Protocolo_EstadoProtocolo">
     <End Role="EstadoProtocolo" Type="Self.EstadoProtocolo" Multiplicity="1" />
     <End Role="Protocolo" Type="Self.Protocolo" Multiplicity="*" />
@@ -381,6 +350,18 @@
       </Principal>
       <Dependent Role="Protocolo">
         <PropertyRef Name="IdInmueble" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Protocolo_Periodo">
+    <End Role="Periodo" Type="Self.Periodo" Multiplicity="1" />
+    <End Role="Protocolo" Type="Self.Protocolo" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Periodo">
+        <PropertyRef Name="IdPeriodo" />
+      </Principal>
+      <Dependent Role="Protocolo">
+        <PropertyRef Name="IdPeriodo" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -564,15 +545,15 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_Tarea_PeriodoProtocolo">
-    <End Role="PeriodoProtocolo" Type="Self.PeriodoProtocolo" Multiplicity="0..1" />
+  <Association Name="FK_Tarea_Plantilla">
+    <End Role="Plantilla" Type="Self.Plantilla" Multiplicity="0..1" />
     <End Role="Tarea" Type="Self.Tarea" Multiplicity="*" />
     <ReferentialConstraint>
-      <Principal Role="PeriodoProtocolo">
-        <PropertyRef Name="IdPeriodoProtocolo" />
+      <Principal Role="Plantilla">
+        <PropertyRef Name="IdPlantilla" />
       </Principal>
       <Dependent Role="Tarea">
-        <PropertyRef Name="IdPeriodoProtocolo" />
+        <PropertyRef Name="IdPlantilla" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -597,6 +578,18 @@
       </Principal>
       <Dependent Role="Usuario">
         <PropertyRef Name="IdCargo" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Usuario_Cliente">
+    <End Role="Cliente" Type="Self.Cliente" Multiplicity="0..1" />
+    <End Role="Usuario" Type="Self.Usuario" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Cliente">
+        <PropertyRef Name="IdCliente" />
+      </Principal>
+      <Dependent Role="Usuario">
+        <PropertyRef Name="IdCliente" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -674,7 +667,6 @@
     <EntitySet Name="Inmueble" EntityType="Self.Inmueble" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="OpcionRespuesta" EntityType="Self.OpcionRespuesta" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Periodo" EntityType="Self.Periodo" Schema="dbo" store:Type="Tables" />
-    <EntitySet Name="PeriodoProtocolo" EntityType="Self.PeriodoProtocolo" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Plantilla" EntityType="Self.Plantilla" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Protocolo" EntityType="Self.Protocolo" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Responsables_Tarea" EntityType="Self.Responsables_Tarea" Schema="dbo" store:Type="Tables" />
@@ -711,20 +703,16 @@
       <End Role="TipoTag" EntitySet="TipoTag" />
       <End Role="OpcionRespuesta" EntitySet="OpcionRespuesta" />
     </AssociationSet>
-    <AssociationSet Name="FK_PeriodoProtocolo_Periodo" Association="Self.FK_PeriodoProtocolo_Periodo">
-      <End Role="Periodo" EntitySet="Periodo" />
-      <End Role="PeriodoProtocolo" EntitySet="PeriodoProtocolo" />
-    </AssociationSet>
-    <AssociationSet Name="FK_PeriodoProtocolo_Protocolo" Association="Self.FK_PeriodoProtocolo_Protocolo">
-      <End Role="Protocolo" EntitySet="Protocolo" />
-      <End Role="PeriodoProtocolo" EntitySet="PeriodoProtocolo" />
-    </AssociationSet>
     <AssociationSet Name="FK_Protocolo_EstadoProtocolo" Association="Self.FK_Protocolo_EstadoProtocolo">
       <End Role="EstadoProtocolo" EntitySet="EstadoProtocolo" />
       <End Role="Protocolo" EntitySet="Protocolo" />
     </AssociationSet>
     <AssociationSet Name="FK_Protocolo_Inmueble" Association="Self.FK_Protocolo_Inmueble">
       <End Role="Inmueble" EntitySet="Inmueble" />
+      <End Role="Protocolo" EntitySet="Protocolo" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Protocolo_Periodo" Association="Self.FK_Protocolo_Periodo">
+      <End Role="Periodo" EntitySet="Periodo" />
       <End Role="Protocolo" EntitySet="Protocolo" />
     </AssociationSet>
     <AssociationSet Name="FK_Protocolo_Plantilla" Association="Self.FK_Protocolo_Plantilla">
@@ -787,8 +775,8 @@
       <End Role="Inmueble" EntitySet="Inmueble" />
       <End Role="Tarea" EntitySet="Tarea" />
     </AssociationSet>
-    <AssociationSet Name="FK_Tarea_PeriodoProtocolo" Association="Self.FK_Tarea_PeriodoProtocolo">
-      <End Role="PeriodoProtocolo" EntitySet="PeriodoProtocolo" />
+    <AssociationSet Name="FK_Tarea_Plantilla" Association="Self.FK_Tarea_Plantilla">
+      <End Role="Plantilla" EntitySet="Plantilla" />
       <End Role="Tarea" EntitySet="Tarea" />
     </AssociationSet>
     <AssociationSet Name="FK_Tarea_Servicio" Association="Self.FK_Tarea_Servicio">
@@ -797,6 +785,10 @@
     </AssociationSet>
     <AssociationSet Name="FK_Usuario_Cargo" Association="Self.FK_Usuario_Cargo">
       <End Role="Cargo" EntitySet="Cargo" />
+      <End Role="Usuario" EntitySet="Usuario" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Usuario_Cliente" Association="Self.FK_Usuario_Cliente">
+      <End Role="Cliente" EntitySet="Cliente" />
       <End Role="Usuario" EntitySet="Usuario" />
     </AssociationSet>
     <AssociationSet Name="FK_Usuario_Rol" Association="Self.FK_Usuario_Rol">

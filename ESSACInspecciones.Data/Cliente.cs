@@ -19,6 +19,7 @@ namespace ESSACInspecciones.Data
             this.ContactoCliente = new HashSet<ContactoCliente>();
             this.Inmueble = new HashSet<Inmueble>();
             this.Tarea = new HashSet<Tarea>();
+            this.Usuario = new HashSet<Usuario>();
         }
     
         public int IdCliente { get; set; }
@@ -30,5 +31,6 @@ namespace ESSACInspecciones.Data
         public virtual ICollection<ContactoCliente> ContactoCliente { get; set; }
         public virtual ICollection<Inmueble> Inmueble { get; set; }
         public virtual ICollection<Tarea> Tarea { get; set; }
+        public virtual ICollection<Usuario> Usuario { get; set; }
     }
 }

@@ -18,6 +18,7 @@ namespace ESSACInspecciones.Data
         {
             this.Protocolo = new HashSet<Protocolo>();
             this.Seccion = new HashSet<Seccion>();
+            this.Tarea = new HashSet<Tarea>();
             this.SeccionBody = new HashSet<SeccionBody>();
         }
     
@@ -28,6 +29,7 @@ namespace ESSACInspecciones.Data
     
         public virtual ICollection<Protocolo> Protocolo { get; set; }
         public virtual ICollection<Seccion> Seccion { get; set; }
+        public virtual ICollection<Tarea> Tarea { get; set; }
         public virtual ICollection<SeccionBody> SeccionBody { get; set; }
     }
 }
