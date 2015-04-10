@@ -17,7 +17,22 @@
                 $("#passUser").removeClass("hide").focus();
                 $("#passChange").removeClass("hide");
             });
+
+            $('#IdRolUsuario').change(function () {
+                var sel = $(this).val();
+                switch (sel) {
+                    case "4":
+                        $("#formCliente").removeClass("hide").focus();
+                        break;
+                    default:
+                        $("#formCliente").addClass("hide").focus();
+                        $("#IdCliente").val('0');
+                        break;
+                }
+            })
         });
+
+
     </script>
 }
 
@@ -64,7 +79,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label>Firma digital</label>
-                                        @Html.TextBoxFor(u => u.RutaFirma, new { @id="fileUp", @type = "file", @class="filestyle", data_icon="false", data_classbutton="btn btn-default btn-rounded", data_classinput="form-control inline input-s" })
+                                        @Html.TextBoxFor(u => u.RutaFirma, new { @id = "fileUp", @type = "file", @class = "filestyle", data_icon = "false", data_classbutton = "btn btn-default btn-rounded", data_classinput = "form-control inline input-s" })
                                         @*<input id="fileUp" type="file" name="RutaFirma" value="@Model.RutaFirma" class="filestyle" data-icon="false" data-classbutton="btn btn-default btn-rounded" data-classinput="form-control inline input-s">*@
                                     </div>
                                     <div class="line line-dashed line-lg pull-in"></div>
@@ -93,13 +108,6 @@
                                         }
                                     </div>
 
-                                    @*<label class="col-sm-2 control-label">File input</label>
-                                        <div class="col-sm-10">
-                                            <input id="fileUp" type="file" name="file" class="filestyle" data-icon="false" data-classbutton="btn btn-default btn-rounded" data-classinput="form-control inline input-s">
-                                        </div>
-                                        <br />
-                                        <br />*@
-
                                     @if (ViewBag.EsAdmin && Model != null && Model.IdUsuario > 0)
                                     {
                                         <div class="line line-dashed line-lg pull-in"></div>
@@ -114,7 +122,16 @@
                                     {
                                         @Html.TextBoxFor(u => u.Active, new { @value = Model != null ? Model.Active : false, @type = "hidden" })
                                     }
+                                    @{var oculto = "";}
+                                    @if (ViewBag.EsAdmin && Model == null) { oculto = "hide"; }
+                                    else { if (Model.IdRolUsuario != 4) { oculto = "hide"; } else { oculto = ""; } }
                                     <div class="line line-dashed line-lg pull-in" style="margin-bottom:5px;"></div>
+                                    <div class="form-group @oculto" id="formCliente">
+                                        @*<div id="chkProtocolo" class="checkbox"> <label> <input type="checkbox"> ¿Desea asignar un cliente a esta tarea? </label> </div>*@
+                                        <label>Cliente</label>
+                                        @Html.DropDownListFor(u => u.IdCliente, new SelectList(ViewBag.Clientes, "IdCliente", "NombreEmpresa"), new { @class = "form-control parsley-validated" })
+                                        @Html.ValidationMessageFor(u => u.IdCliente)
+                                    </div>
                                     <div class="footer text-right">
                                         @Html.TextBoxFor(u => u.IdUsuario, new { @value = Model != null ? Model.IdUsuario.ToString() : "", @type = "hidden" })
                                         @{var btnName = (Model != null && Model.IdUsuario > 0) ? "Guardar Cambios" : "Crear";}

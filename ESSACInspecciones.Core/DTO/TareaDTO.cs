@@ -20,6 +20,7 @@ namespace ESSACInspecciones.Core.DTO
         //[Required]
         public int IdCliente { get; set; }
         //[Required]
+        public int? IdPlantilla { get; set; }
         public int IdInmueble { get; set; }
         //[DataType(DataType.Date)]
         public DateTime? FechaInicio { get; set; }

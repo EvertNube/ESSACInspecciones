@@ -1,4 +1,6 @@
 ﻿@model PagedList.IPagedList<ESSACInspecciones.Core.DTO.TareaDTO>
+@using System.Globalization;
+@using ESSACInspecciones.Core.DTO;
 @using PagedList.Mvc;
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 @{
@@ -38,44 +40,50 @@
                                 <table class="table table-striped b-t b-light">
                                     <thead>
                                         <tr>
-                                            <th width="10%">ID</th>
-                                            <th width="30%">Nombre</th>
-                                            <th width="30%">Inmueble</th>
-                                            <th width="20%">Estado</th>
+                                            <th width="15%">Nombre</th>
+                                            <th width="15%">Inmueble</th>
+                                            <th width="10%">Fecha Inicio</th>
+                                            <th width="10%">Fecha Fin</th>
+                                            <th class="text-center" width="10%">Estado</th>
+                                            <th width="30%">Responsabl(es)</th>
                                             @if (ViewBag.EsAdmin)
                                             {
-                                                <th width="10%">Opciones</th>
+                                                <th class="text-center" width="10%">Opciones</th>
                                             }
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @if (Model != null)
                                         {
-
-                                            int cont = 1;
                                             foreach (var obj in Model)
                                             {
                                                 var classInactive = (ViewBag.EsAdmin && !obj.Active) ? "class='inactive'" : "";
                                                 <tr @Html.Raw(classInactive)>
-
-                                                    <td align="center">
-                                                        @if (ViewBag.EsAdmin && !obj.Active)
-                                                        { <span class="badge bg-danger" data-toggle="tooltip" data-placement="left" data-original-title="Inactivo">@cont</span>}
-                                                        else
-                                                        {@cont}
-                                                    </td>
                                                     <td>@obj.NombreTarea</td>
                                                     <td>@obj.Inmueble.NombreInmueble <br />@obj.Cliente.NombreEmpresa</td>
+                                                    <td>@obj.FechaInicio.GetValueOrDefault().ToShortDateString()</td>
+                                                    <td>@obj.FechaFin.GetValueOrDefault().ToShortDateString()</td>
                                                     <td>@obj.Estado.NombreEstado</td>
+                                                    @{
+                                                var Responsables = "";
+                                                foreach (var responsable in obj.Responsables)
+                                                {
+                                                    if (responsable == obj.Responsables.Last())
+                                                    {
+                                                        Responsables += responsable.Nombre;
+                                                        break;
+                                                    }
+                                                    Responsables += responsable.Nombre + " - ";
+                                                }
+                                                    }
+                                                    <td>@Responsables</td>
                                                     @if (ViewBag.EsAdmin)
                                                     {
                                                         <td align="center">
                                                             <a href="@Url.Action("Tarea", new { id = obj.IdTarea })"><i class="fa fa-pencil"></i></a>
-                                                            @*<a href="#@obj.IdTarea" class="AddTaskToBagTasks"><i class="fa fa-plus"></i></a>*@
                                                         </td>
                                                     }
                                                 </tr>
-                                                    cont++;
                                             }
                                         }
                                     </tbody>
@@ -181,7 +189,7 @@
                 });
             }
         }
-  
+
         function PaintTareasInBolsaTareas() {
             var lista = $('#BolsaTareas');
             lista.empty();

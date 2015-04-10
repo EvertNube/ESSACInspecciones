@@ -758,7 +758,6 @@
       <Parameter Name="IdUsuario" Mode="In" Type="Int32" />
       <Parameter Name="IdInmueble" Mode="In" Type="Int32" />
     </FunctionImport>
-    <FunctionImport Name="SP_GetTareas" ReturnType="Collection(ESSAC.InspeccionesDbModel.SP_GetTareas_Result)" />
     <FunctionImport Name="SP_GetTareasResponsables" ReturnType="Collection(ESSAC.InspeccionesDbModel.SP_GetTareasResponsables_Result)">
       <Parameter Name="FechaInicio" Mode="In" Type="DateTime" />
       <Parameter Name="FechaFin" Mode="In" Type="DateTime" />
@@ -777,6 +776,7 @@
       <Parameter Name="new_diagramname" Mode="In" Type="String" />
     </FunctionImport>
     <FunctionImport Name="sp_upgraddiagrams" />
+    <FunctionImport Name="SP_GetTareas" ReturnType="Collection(ESSAC.InspeccionesDbModel.SP_GetTareas_Result)" />
   </EntityContainer>
   <ComplexType Name="SP_CountEstados_Result">
     <Property Type="String" Name="NombreEstado" Nullable="false" MaxLength="100" />
@@ -794,15 +794,6 @@
     <Property Type="Int32" Name="IdInmueble" Nullable="true" />
     <Property Type="Int32" Name="IdEstado" Nullable="false" />
     <Property Type="String" Name="NombreEstado" Nullable="false" MaxLength="100" />
-  </ComplexType>
-  <ComplexType Name="SP_GetTareas_Result">
-    <Property Type="Int32" Name="IdTarea" Nullable="false" />
-    <Property Type="String" Name="NombreTarea" Nullable="false" MaxLength="100" />
-    <Property Type="String" Name="NombreCliente" Nullable="true" MaxLength="300" />
-    <Property Type="String" Name="NombreInmueble" Nullable="true" MaxLength="300" />
-    <Property Type="String" Name="NombreEstado" Nullable="false" MaxLength="100" />
-    <Property Type="Boolean" Name="Active" Nullable="false" />
-    <Property Type="String" Name="Responsables" Nullable="true" />
   </ComplexType>
   <ComplexType Name="SP_GetTareasResponsables_Result">
     <Property Type="String" Name="title" Nullable="false" MaxLength="100" />
@@ -822,5 +813,16 @@
     <Property Type="Int32" Name="ID" Nullable="false" />
     <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
     <Property Type="Int32" Name="OwnerID" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="SP_GetTareas_Result">
+    <Property Type="Int32" Name="IdTarea" Nullable="false" />
+    <Property Type="String" Name="NombreTarea" Nullable="false" MaxLength="100" />
+    <Property Type="String" Name="NombreCliente" Nullable="true" MaxLength="300" />
+    <Property Type="String" Name="NombreInmueble" Nullable="true" MaxLength="300" />
+    <Property Type="String" Name="NombreEstado" Nullable="false" MaxLength="100" />
+    <Property Type="DateTime" Name="FechaInicio" Nullable="true" Precision="23" />
+    <Property Type="DateTime" Name="FechaFin" Nullable="true" Precision="23" />
+    <Property Type="Boolean" Name="Active" Nullable="false" />
+    <Property Type="String" Name="Responsables" Nullable="true" />
   </ComplexType>
 </Schema>

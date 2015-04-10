@@ -30,5 +30,6 @@ namespace ESSACInspecciones.Core.DTO
         public int? IdCargo { get; set; }
         public int IdRolUsuario { get; set; }
         public string RutaFirma { get; set; }
+        public int? IdCliente { get; set; }
     }
 }

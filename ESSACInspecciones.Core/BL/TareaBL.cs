@@ -39,7 +39,6 @@ namespace ESSACInspecciones.Core.BL
 
                 if (result != null)
                 {
-                    //var listTarea = result.ToList();
                     foreach (var tarea in result)
                     {
                         var resp = context.Tarea.Where(x => x.IdTarea == tarea.IdTarea)
@@ -78,30 +77,9 @@ namespace ESSACInspecciones.Core.BL
                 if (result != null)
                     foreach (var item in result)
                         item.resource = item.strResource != null ? item.strResource.Split(',').Select(r => Convert.ToInt32(r)).ToList() : new List<int>();
-                        //item.resource = context.Usuario.Where(x => x.Tarea.Any(y => y.IdTarea == item.idTarea)).Select(r => r.IdUsuario).ToList();
                 return result;
             }
         }
-        //public IList getTareasResponsables(DateTime fechaInicio, DateTime fechaFin)
-        //{
-        //    using (var context = getContext())
-        //    {
-        //        var result = from a in context.Tarea.AsEnumerable()
-        //                      join b in context.Servicio on a.IdServicio equals b.IdServicio
-        //                      where ((a.FechaInicio >= fechaInicio & a.FechaInicio <= fechaFin) | (a.FechaFin >= fechaInicio & a.FechaFin <= fechaFin)) & a.Active == true
-        //                      select new
-        //                      {
-        //                          title = a.Nombre,
-        //                          start = a.FechaInicio,
-        //                          end = a.FechaFin,
-        //                          allDay = true,
-        //                          resource = a.Usuario.Select(y => y.IdUsuario).ToList(),//['resource1','resource2']
-        //                          idTarea = a.IdTarea,
-        //                          color = "#" + b.Color
-        //                      };
-        //        return result.ToList();
-        //    }
-        //}
 
         public IList getTareasResponsables(int[] responsables)
         {
@@ -171,28 +149,6 @@ namespace ESSACInspecciones.Core.BL
                     oTareaDTO.Servicio = context.Servicio.Where(x => x.IdServicio == Tarea.IdServicio).Select(y => new ServicioDTO { NombreServicio = y.Nombre, NombreCorto = y.NombreCorto }).FirstOrDefault();
                     oTareaDTO.Estado = context.Estado.Where(x => x.IdEstado == Tarea.IdEstado).Select(y => new EstadoDTO { NombreEstado = y.NombreEstado }).FirstOrDefault();
 
-                    //if (tipoCorreo == 0)
-                    //{
-                    //    if (oldResponsables.Count == 0)
-                    //    {
-                    //        tipoCorreo = 1;
-                    //    }
-                    //    else if (responsablesToAdd.Count > 0 || responsablesToRemove.Count > 0)
-                    //    {
-                    //        tipoCorreo = 3;
-                    //    }
-                    //    else if ((!oldFechaInicio.HasValue && Tarea.FechaInicio.HasValue) || (!oldFechaFin.HasValue && Tarea.FechaFin.HasValue))
-                    //    {
-                    //        tipoCorreo = 2;
-                    //    }
-                    //    else if ((oldFechaInicio.HasValue && DateTime.Compare((DateTime)Tarea.FechaInicio, (DateTime)oldFechaInicio) != 0) ||
-                    //        (oldFechaFin.HasValue && DateTime.Compare((DateTime)Tarea.FechaFin, (DateTime)oldFechaFin) != 0))
-                    //    {
-                    //        tipoCorreo = 2;
-                    //    }
-                    //    //agregar validación para Desagendado
-                    //}
-                    
                     SendMailResponsable(oTareaDTO, responsablesToRemove, responsablesToAdd);
                     return Tarea.IdTarea;
                 }
@@ -415,13 +371,37 @@ namespace ESSACInspecciones.Core.BL
                     Cliente = new ClienteDTO { NombreEmpresa = r.NombreCliente },
                     Inmueble = new InmuebleDTO { NombreInmueble = r.NombreInmueble },
                     Estado = new EstadoDTO { NombreEstado = r.NombreEstado },
+                    FechaInicio = r.FechaInicio,
+                    FechaFin = r.FechaFin,
                     Active = r.Active,
                     StrResponsables = r.Responsables
                 }).ToList();
                 //string[] x;
+
+                UsuariosBL objBL = new UsuariosBL();
+                List<UsuarioDTO> listaUsuarios = new List<UsuarioDTO>();
+                listaUsuarios = objBL.getUsuariosTodos();
+
                 if (result != null)
+                { 
                     foreach (var tarea in result)
+                    {
                         tarea.Responsables = tarea.StrResponsables != null ? tarea.StrResponsables.Split(',').Select(r => new UsuarioDTO { IdUsuario = Convert.ToInt32(r) }).ToList() : new List<UsuarioDTO>();
+                        foreach (var responsable in tarea.Responsables)
+                        {
+                            if (responsable != null)
+                            {
+                                UsuarioDTO obj = listaUsuarios.Single(u => u.IdUsuario == responsable.IdUsuario);
+                                responsable.Nombre = obj.Nombre;
+                                responsable.Email = obj.Email;
+                                responsable.Cuenta = obj.Cuenta;
+                                responsable.Active = obj.Active;
+                                responsable.IdRolUsuario = obj.IdRolUsuario;
+                                responsable.IdCliente = obj.IdCliente;
+                            }
+                        }
+                    }
+                }
                 return result;
             }
         }
@@ -442,6 +422,11 @@ namespace ESSACInspecciones.Core.BL
                     Tarea.IdCliente = TareaDTO.IdCliente;
                     Tarea.IdInmueble = TareaDTO.IdInmueble;
                     Tarea.IdServicio = TareaDTO.IdServicio;
+                    if (TareaDTO.IdServicio == 3 || TareaDTO.IdServicio == 5)
+                        Tarea.IdPlantilla = (TareaDTO.IdPlantilla.GetValueOrDefault() != 0) ? TareaDTO.IdPlantilla : null;
+                    else
+                        Tarea.IdPlantilla = null;
+
                     Tarea.IdEstado = TareaDTO.Responsables == null ? 1 : 2;//1 : Por Asignar, 2 : Asignado
                     Tarea.Active = true;
                     context.Tarea.Add(Tarea);
@@ -489,6 +474,11 @@ namespace ESSACInspecciones.Core.BL
                     Tarea.IdCliente = oTareaDTO.IdCliente;
                     Tarea.IdInmueble = oTareaDTO.IdInmueble;
                     Tarea.IdServicio = oTareaDTO.IdServicio;
+                    if (oTareaDTO.IdServicio == 3 || oTareaDTO.IdServicio == 5)
+                        Tarea.IdPlantilla = (oTareaDTO.IdPlantilla.GetValueOrDefault() != 0) ? oTareaDTO.IdPlantilla : null;
+                    else
+                        Tarea.IdPlantilla = null;
+
                     Tarea.IdEstado = oTareaDTO.IdEstado;//oTareaDTO.Responsables == null ? 1 : 2;//1 : Por Asignar, 2 : Asignado
                     Tarea.Active = oTareaDTO.Active;
 
@@ -626,20 +616,36 @@ namespace ESSACInspecciones.Core.BL
                         Estado = context.Estado.Where(x => x.IdEstado == r.IdEstado).Select(y => new EstadoDTO { NombreEstado = y.NombreEstado }).FirstOrDefault(),
                         Active = r.Active
                     })).SingleOrDefault();
-
-                //if (result != null)
-                //{
-                //    var tarea = result.SingleOrDefault();
-                //    var resp = context.Tarea.Where(x => x.IdTarea == tarea.IdTarea)
-                //                            .FirstOrDefault().Usuario
-                //                            .Select(x => new UsuarioDTO { IdUsuario = x.IdUsuario, Nombre = x.Nombre, InicialesNombre = x.InicialesNombre }).ToList();
-                //    tarea.Responsables = resp;
-                //    return tarea;
-                //}
-                //return null;
                 return result;
             }
         }
         #endregion
+
+        public List<PlantillaDTO> getPlantillasViewBag()
+        {
+            using (var context = getContext())
+            {
+                var result = context.Plantilla.Select(x => new PlantillaDTO
+                {
+                    IdPlantilla = x.IdPlantilla,
+                    Nombre = x.Nombre,
+                    Nombre2 = x.Nombre2,
+                    Active = x.Active
+                }).ToList();
+                return result;
+            }
+        }
+
+        public IList<PlantillaDTO> getPlantillasBag(bool AsSelectList = false)
+        {
+            if (!AsSelectList)
+                return getPlantillasViewBag();
+            else
+            {
+                var lista = getPlantillasViewBag();
+                lista.Insert(0, new PlantillaDTO() { IdPlantilla = 0, Nombre = "Seleccione un protocolo" });
+                return lista;
+            }
+        }
     }
 }

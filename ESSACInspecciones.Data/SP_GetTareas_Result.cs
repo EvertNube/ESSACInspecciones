@@ -18,6 +18,8 @@ namespace ESSACInspecciones.Data
         public string NombreCliente { get; set; }
         public string NombreInmueble { get; set; }
         public string NombreEstado { get; set; }
+        public Nullable<System.DateTime> FechaInicio { get; set; }
+        public Nullable<System.DateTime> FechaFin { get; set; }
         public bool Active { get; set; }
         public string Responsables { get; set; }
     }

@@ -28,7 +28,8 @@ namespace ESSACInspecciones.Core.BL
                                  Pass = r.Pass,
                                  Active = r.Estado,
                                  IdRolUsuario = r.IdRol,
-                                 RutaFirma = r.RutaFirma
+                                 RutaFirma = r.RutaFirma,
+                                 IdCliente = r.IdCliente
                              };
                 return result.AsEnumerable<UsuarioDTO>().OrderByDescending(x => x.IdUsuario).ToList<UsuarioDTO>();
             }
@@ -47,7 +48,8 @@ namespace ESSACInspecciones.Core.BL
                                  Cuenta = r.Cuenta,
                                  Pass = r.Pass,
                                  Active = r.Estado,
-                                 IdRolUsuario = r.IdRol //?? 0
+                                 IdRolUsuario = r.IdRol, //?? 0
+                                 IdCliente = r.IdCliente
                              };
                 return result.AsEnumerable<UsuarioDTO>().OrderByDescending(x => x.IdUsuario).ToList<UsuarioDTO>();
             }
@@ -65,13 +67,14 @@ namespace ESSACInspecciones.Core.BL
                                  Email = r.Email,
                                  Cuenta = r.Cuenta,
                                  Active = r.Estado,
-                                 IdRolUsuario = r.IdRol //?? 0
+                                 IdRolUsuario = r.IdRol, //?? 0
+                                 IdCliente = r.IdCliente
                              };
                 return result.ToList<UsuarioDTO>();//.AsEnumerable<UsuarioDTO>().OrderByDescending(x => x.Nombre).ToList<UsuarioDTO>();
             }
         }
 
-        public IList<UsuarioDTO> getUsuariosTodos()
+        public List<UsuarioDTO> getUsuariosTodos()
         {
             using(var context = getContext())
             {
@@ -83,7 +86,8 @@ namespace ESSACInspecciones.Core.BL
                                  Email = r.Email,
                                  Cuenta = r.Cuenta,
                                  Active = r.Estado,
-                                 IdRolUsuario = r.IdRol //?? 0
+                                 IdRolUsuario = r.IdRol, //?? 0
+                                 IdCliente = r.IdCliente
                              };
 
                 return result.ToList<UsuarioDTO>();
@@ -111,7 +115,8 @@ namespace ESSACInspecciones.Core.BL
                                  Email = r.Email,
                                  Cuenta = r.Cuenta,
                                  Active = r.Estado,
-                                 IdRolUsuario = r.IdRol //?? 0
+                                 IdRolUsuario = r.IdRol, //?? 0
+                                 IdCliente = r.IdCliente
                              };
                 return result.AsEnumerable<UsuarioDTO>().OrderByDescending(x => x.Nombre).ToList<UsuarioDTO>();
             }
@@ -150,6 +155,10 @@ namespace ESSACInspecciones.Core.BL
                     usuario.RutaFirma = user.RutaFirma;
                     usuario.Estado = true;
                     usuario.FechaRegistro = DateTime.Now;
+                    if (user.IdRolUsuario == 4)
+                        usuario.IdCliente = (user.IdCliente.GetValueOrDefault() != 0) ? user.IdCliente : null;
+                    else
+                        usuario.IdCliente = null;
                     context.Usuario.Add(usuario);
                     context.SaveChanges();
                     return true;
@@ -235,7 +244,8 @@ namespace ESSACInspecciones.Core.BL
                                  Active = r.Estado,
                                  Email = r.Email,
                                  Pass = r.Pass,
-                                 Cuenta = r.Cuenta
+                                 Cuenta = r.Cuenta,
+                                 IdCliente = r.IdCliente
                              };
                 return result.SingleOrDefault<UsuarioDTO>();
             }
@@ -299,7 +309,8 @@ namespace ESSACInspecciones.Core.BL
                                  Nombre = r.Nombre,
                                  InicialesNombre = r.InicialesNombre,
                                  Pass = r.Pass,
-                                 RutaFirma = r.RutaFirma
+                                 RutaFirma = r.RutaFirma,
+                                 IdCliente = r.IdCliente
                              };
                 return result.SingleOrDefault();
             }
@@ -322,6 +333,10 @@ namespace ESSACInspecciones.Core.BL
                         usuario.Cuenta = user.Cuenta;
                         usuario.Estado = user.Active;
                         usuario.RutaFirma = user.RutaFirma;
+                        if (user.IdRolUsuario == 4)
+                            usuario.IdCliente = (user.IdCliente.GetValueOrDefault() != 0) ? user.IdCliente : null;
+                        else
+                            usuario.IdCliente = null;
                         if (!String.IsNullOrWhiteSpace(passUser) && !String.IsNullOrWhiteSpace(passChange))
                         {
                             if ((currentUser.IdRolUsuario <= 2 || currentUser.IdUsuario == user.IdUsuario)
@@ -392,6 +407,65 @@ namespace ESSACInspecciones.Core.BL
             string body = "Sr(a). " + user.Nombre + " su contraseña es : " + passChange;
             MailHandler.Send(to, "", subject, body);
         }
+
+        public IList<ClienteDTO> getClientes(bool activeOnly = false)
+        {
+            using (var context = getContext())
+            {
+                var result = !activeOnly ? from r in context.Cliente
+                                           select new ClienteDTO
+                                           {
+                                               IdCliente = r.IdCliente,
+                                               NombreEmpresa = r.Nombre,
+                                               Telefono1 = r.Telefono_1,
+                                               Telefono2 = r.Telefono_2,
+                                               contacto = context.ContactoCliente.Where(x => x.IdCliente == r.IdCliente && x.Default == true).Select(y => new ContactoDTO { IdContacto = y.IdContactoCliente, Nombre = y.Nombre, Anexo = y.Anexo, Telefono = y.Telefono, Email = y.Email, Celular = y.Celular }).FirstOrDefault(),
+                                               Active = r.Active
+                                           } : from r in context.Cliente
+                                               where r.Active == true
+                                               select new ClienteDTO
+                                               {
+                                                   IdCliente = r.IdCliente,
+                                                   NombreEmpresa = r.Nombre,
+                                                   Telefono1 = r.Telefono_1,
+                                                   Telefono2 = r.Telefono_2,
+                                                   contacto = context.ContactoCliente.Where(x => x.IdCliente == r.IdCliente && x.Default == true).Select(y => new ContactoDTO { IdContacto = y.IdContactoCliente, Nombre = y.Nombre, Anexo = y.Anexo, Telefono = y.Telefono, Email = y.Email, Celular = y.Celular }).FirstOrDefault(),
+                                                   Active = r.Active
+                                               };
+
+                return result.ToList<ClienteDTO>();
+            }
+        }
+
+        public List<ClienteDTO> getClientesViewBag()
+        {
+            using(var context = getContext())
+            {
+                var result = context.Cliente.Select(x => new ClienteDTO
+                {
+                    IdCliente = x.IdCliente,
+                    NombreEmpresa = x.Nombre,
+                    Telefono1 = x.Telefono_1,
+                    Telefono2 = x.Telefono_2,
+                    contacto = context.ContactoCliente.Where(r => x.IdCliente == r.IdCliente && r.Default == true).Select(y => new ContactoDTO { IdContacto = y.IdContactoCliente, Nombre = y.Nombre, Anexo = y.Anexo, Telefono = y.Telefono, Email = y.Email, Celular = y.Celular }).FirstOrDefault(),
+                    Active = x.Active
+                }).ToList();
+                return result;
+            }
+        }
+
+        public IList<ClienteDTO> getClientesBag(bool AsSelectList = false)
+        {
+            if (!AsSelectList)
+                return getClientesViewBag();
+            else
+            {
+                var lista = getClientesViewBag();
+                lista.Insert(0, new ClienteDTO() { IdCliente = 0, NombreEmpresa = "Seleccione un cliente" });
+                return lista;
+            }
+        }
+
         #region
         public IList<UsuarioDTO> searchResponsables(string busqueda)
         {

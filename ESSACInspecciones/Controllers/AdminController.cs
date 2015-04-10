@@ -109,15 +109,17 @@ namespace ESSACInspecciones.Controllers
             //if (id == 1 && !this.isSuperAdministrator()) { return RedirectToAction("Index"); }
             UsuariosBL usuariosBL = new UsuariosBL();
             IList<RolDTO> roles = usuariosBL.getRolesCurrent(this.getCurrentUser().IdRolUsuario);
+            IList<ClienteDTO> clientes = usuariosBL.getClientesBag(true);
             roles.Insert(0, new RolDTO() { IdRol = 0, Nombre = "Seleccione un Rol" });
             ViewBag.Roles = roles;
+            ViewBag.Clientes = clientes;
             var objSent = TempData["Usuario"];
             if (objSent != null) { TempData["Usuario"] = null; return View(objSent); }
             if (id != null)
             {
                 UsuarioDTO usuario = usuariosBL.getUsuario((int)id);
-                ViewBag.Roles = usuariosBL.getRolesCurrent(usuario.IdRolUsuario);
-                //if (usuario.IdRol == 1 && !this.isSuperAdministrator()) { return RedirectToAction("Index"); }
+                //ViewBag.Roles = usuariosBL.getRolesCurrent(usuario.IdRolUsuario);
+                ViewBag.Roles = usuariosBL.getRolesCurrent(currentUser.IdRolUsuario);
                 return View(usuario);
             }
             return View();
@@ -458,6 +460,7 @@ namespace ESSACInspecciones.Controllers
             ViewBag.Clientes = objBL.getComboClientes();
             ViewBag.Horas = new TareaDTO().fillHoras();
             ViewBag.Minutos = new TareaDTO().fillMinutos();
+            ViewBag.Plantillas = objBL.getPlantillasBag(true);
 
             var objSent = (TareaDTO)TempData["Tarea"];
             if (objSent != null)
