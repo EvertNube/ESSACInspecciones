@@ -13,9 +13,9 @@
                         <section class="panel panel-default">
                             <div class="row wrapper">
                                 <div class="col-sm-6 m-b-xs">
-                                        @Html.DropDownList("Cliente", new SelectList(ViewBag.Clientes, "IdCliente", "NombreEmpresa"), new { @class = "form-control input-sm input-s-sm inline v-middle rounded" })
-                                        @Html.DropDownList("Inmueble", new SelectList(new List<ESSACInspecciones.Core.DTO.InmuebleDTO>(), "IdInmueble", "NombreInmueble"), new { @class = "form-control input-sm input-s-sm inline v-middle rounded" })
-                                        <button type="button" class="btn btn-sm btn-default btn-rounded" id="BuscarProtocolos">Buscar</button>
+                                    @Html.DropDownList("Cliente", new SelectList(ViewBag.Clientes, "IdCliente", "NombreEmpresa"), new { @class = "form-control input-sm input-s-sm inline v-middle rounded" })
+                                    @Html.DropDownList("Inmueble", new SelectList(new List<ESSACInspecciones.Core.DTO.InmuebleDTO>(), "IdInmueble", "NombreInmueble"), new { @class = "form-control input-sm input-s-sm inline v-middle rounded" })
+                                    <button type="button" class="btn btn-sm btn-default btn-rounded" id="BuscarProtocolos">Buscar</button>
                                 </div>
                             </div>
                             <div class="table-responsive">
@@ -28,18 +28,26 @@
                                             <th width="10%">Opciones</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                    </tbody>
+                                    <tbody></tbody>
                                 </table>
                             </div>
                             <footer class="panel-footer">
                                 <div class="row">
-                                    <div class="col-sm-4"></div>
-                                    <div class="col-sm-4 text-center">
-                                        <small class="text-muted inline m-t-sm m-b-sm">@*Página @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) de @Model.PageCount*@</small>
-                                    </div>
-                                    <div class="col-sm-4 text-right text-center-xs">
-                                        @*@Html.PagedListPager(Model, page => Url.Action("Protocolos", new { page }), new PagedListRenderOptions { UlElementClasses = new[] { "m-b-none", "m-t-none", "pagination-sm", "pagination" }, ContainerDivClasses = new[] { "" } })*@
+                                    <div class="col-sm-12 m-b-xs">
+                                        <div class="btn-group" data-toggle="buttons" id="grupoPeriodos">
+                                            @*<label class="btn btn-sm btn-info active">
+                                                <input type="radio" name="options" id="option1">
+                                                <i class="fa fa-check text-active"></i> Male
+                                            </label> 
+                                            <label class="btn btn-sm btn-success">
+                                                <input type="radio" name="options" id="option2">
+                                                <i class="fa fa-check text-active"></i> Female
+                                            </label>
+                                            <label class="btn btn-sm btn-primary">
+                                                <input type="radio" name="options" id="option3">
+                                                <i class="fa fa-check text-active"></i> N/A
+                                            </label>*@
+                                        </div>
                                     </div>
                                 </div>
                             </footer>
@@ -53,169 +61,176 @@
 </section>
 @section scripts{
     <script type="text/javascript">
-    //var conexion = hostReachable();
-    $(document).ready(function () {
-        //if (localStorage.getItem("respuestas_" + id)) { }
-        //$("#2").attr("src", "../Content/themes/views/images/loading.gif");
-        $("#Cliente").on("change", function () {
-            var ClienteId = $(this).val();
-            $.getJSON("/Admin/GetListInmueblesByClienteId", { id: ClienteId }, function (data) {
+        //var conexion = hostReachable();
+        $(document).ready(function () {
+            //if (localStorage.getItem("respuestas_" + id)) { }
+            //$("#2").attr("src", "../Content/themes/views/images/loading.gif");
+            $("#Cliente").on("change", function () {
+                var ClienteId = $(this).val();
+                $.getJSON("/Admin/GetListInmueblesByClienteId", { id: ClienteId }, function (data) {
+                }).done(function (data) {
+                    //inmuebles = data.slice(0);
+                    //inmuebles.splice(0, 1);
+                    var select = $("#Inmueble");
+                    select.empty();
+                    $.each(data, function (index, itemData) {
+                        select.append($('<option />', {
+                            value: itemData.IdInmueble,
+                            text: itemData.NombreInmueble
+                        }));
+                    });
+                });
+            });
+            $("#BuscarProtocolos").click(function () {
+                var InmuebleId = $("#Inmueble").val();
+
+                listarProtocolos(InmuebleId);
+            });
+
+            var varin = '@ViewBag.IdInmueble';
+            if (varin != '') {
+                $('#Cliente').val('@ViewBag.IdCliente');
+                $.getJSON("/Admin/GetListInmueblesByClienteId", { id: '@ViewBag.IdCliente' }, function (data) {
+                }).done(function (data) {
+                    //inmuebles = data.slice(0);
+                    //inmuebles.splice(0, 1);
+                    var select = $("#Inmueble");
+                    select.empty();
+                    $.each(data, function (index, itemData) {
+                        select.append($('<option />', {
+                            value: itemData.IdInmueble,
+                            text: itemData.NombreInmueble
+                        }));
+                    });
+                }).done(function () {
+                    $('#Inmueble').val(varin);
+                });
+
+                listarProtocolos(varin);
+            }
+
+            $.getJSON("/Admin/GetPeriodos", function (data) {
             }).done(function (data) {
-                //inmuebles = data.slice(0);
-                //inmuebles.splice(0, 1);
-                var select = $("#Inmueble");
+                var count = 0;
+                var checkOp = '<i class="fa fa-check text-active"></i>';
+                var select = $("#grupoPeriodos");
                 select.empty();
                 $.each(data, function (index, itemData) {
-                    select.append($('<option />', {
-                        value: itemData.IdInmueble,
-                        text: itemData.NombreInmueble
-                    }));
+                    select.append(
+                        '<label class="btn btn-sm btn-info"> <input type="radio" name="options id="periodo' + data.IdPeriodo + '" ' + checkOp + data.Nombre + '</label>');
                 });
             });
         });
-        $("#BuscarProtocolos").click(function () {
-            var InmuebleId = $("#Inmueble").val();
 
-            listarProtocolos(InmuebleId);
-        });
-
-        var varin = '@ViewBag.IdInmueble';
-        if (varin != '') {
-            $('#Cliente').val('@ViewBag.IdCliente');
-            $.getJSON("/Admin/GetListInmueblesByClienteId", { id: '@ViewBag.IdCliente' }, function (data) {
+        function getProtocolo(idInmueble, idProtocolo, idPlantilla) {
+            $.ajax({
+                async: false,
+                url: "/Admin/GetProtocolo",
+                type: "GET",
+                cache: false,
+                data: { idInmueble: idInmueble, idProtocolo: idProtocolo, idPlantilla: idPlantilla },
+                dataType: "json"
             }).done(function (data) {
-                //inmuebles = data.slice(0);
-                //inmuebles.splice(0, 1);
-                var select = $("#Inmueble");
-                select.empty();
-                $.each(data, function (index, itemData) {
-                    select.append($('<option />', {
-                        value: itemData.IdInmueble,
-                        text: itemData.NombreInmueble
-                    }));
-                });
-            }).done(function() {
-                $('#Inmueble').val(varin);
+                saveStorage("protocolo", data);
+            }).fail(function () {
+                alert('Error al crear las variables temporales. Por favor, actualice la página o presione F5.');
             });
-
-            listarProtocolos(varin);
+            return true;
         }
 
-        @*if(@ViewBag.IdInmueble != null)
-        {
-            listarProtocolos(@ViewBag.IdInmueble);
-        }*@
-    });
-
-    function getProtocolo(idInmueble, idProtocolo, idPlantilla) {
-        $.ajax({
-            async: false,
-            url: "/Admin/GetProtocolo",
-            type: "GET",
-            cache: false,
-            data: { idInmueble: idInmueble, idProtocolo: idProtocolo, idPlantilla: idPlantilla },
-            dataType: "json"
-        }).done(function (data) {
-            saveStorage("protocolo", data);
-        }).fail(function () {
-            alert('Error al crear las variables temporales. Por favor, actualice la página o presione F5.');
-        });
-        return true;
-    }
-
-    function generarPdfProtocolo(idInmueble, idProtocolo, idPlantilla) {
-        $.ajax({
-            async: false,
-            url: "/Admin/GenerarPdfProtocolo",
-            type: "GET",
-            cache: false,
-            data: { idInmueble: idInmueble, idProtocolo: idProtocolo, idPlantilla: idPlantilla },
-            dataType: "json"
-        }).done(function (data) {
-        }).fail(function () {
-            alert('Error al crear el PDF. Por favor, actualice la página o presione F5.');
-        });
-        return true;
-    }
-
-    //////////////////////////////////////////
-    function listarProtocolos(InmuebleId) {
-        $.ajax({
-            url: "/Admin/GetProtocolos",
-            type: "GET",
-            cache: false,
-            data: { inmueble: InmuebleId },
-            dataType: "json"
-        }).done(function (data) {
-            //saveSession("Protocolos", data);
-            drawProtocolos(data);
-        }).fail(function () {
-            alert('Error al intentar obtener los Protocolos. Por favor, actualice la página o presione F5.');
-        });
-    }
-    function drawProtocolos(data) {
-        $('#tableProtocolo td').remove();
-        $.each(data, function (index, itemData) {
-            @*var url = '@Url.Action("Protocolo", "Admin")?idProtocolo=' + itemData.IdProtocolo + '&idPlantilla=' + itemData.IdPlantilla + '&idInmueble=' + itemData.IdInmueble;*@
-            var url = '@Url.Action("Protocolo", "Admin", new { idInmueble = "abcIn" })';
-            url = url.replace("abcIn", itemData.IdInmueble);
-            var urlReporte = '@Url.Action("GenerarPdfProtocolo", "Admin")?idProtocolo=' + itemData.IdProtocolo + '&idPlantilla=' + itemData.IdPlantilla + '&idInmueble=' + itemData.IdInmueble;//ProtocoloReporte
-            $('#tableProtocolo > tbody:last').append(
-                '<tr><td>' + (index + 1) + '</td>' +
-                '<td>' + itemData.Plantilla.Nombre + '</td>' +
-                '<td>' + itemData.Estado.NombreEstado + '</td>' + //+ "\t"
-                '<td>' + setImage(itemData.IdProtocolo, itemData.IdPlantilla, itemData.IdInmueble, itemData.IdEstado) + '</td>' +
-                '<td>' + '<a href="' + url + '" onclick="return getProtocolo(' + itemData.IdInmueble + ', ' + itemData.IdProtocolo + ', ' + itemData.IdPlantilla + ')" title="Editar" ><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;' +
-                '<a target="_blank" href="' + urlReporte + '" title="Generar PDF" ><i class="fa fa-file-text-o"></i></a>' +
-                '</td></tr>');
-        });
-    }
-    /*
-        1 - Pendiente -> Icono rojo : Plantilla vacía
-        2 - Incompleto -> Icono Amarillo : Existe Storage, Icono Verde : Datos guardados en Servidor
-        3 - Completo -> Icono Verde : Datos guardados en Servidor
-    */
-    function setImage(idProtocolo, idPlantilla, idInmueble, estado) {
-        var strImg = "", ruta = "../Content/themes/views/images/", titulo = ""; //$("#2").attr("src", "../Content/themes/views/images/loading.gif");
-        var title1 = "Plantilla vacía", title2 = "Guardado temporalmente", title3 = "Guardado en el servidor";
-        switch (estado) {
-            case 1:
-                if (localStorage.getItem("respuestas_" + idProtocolo + idPlantilla + idInmueble)) { ruta += "circle_yellow.png"; titulo = title2; }
-                else { ruta += "circle_red.png"; titulo = title1; }
-                break;
-            case 2:
-                if (localStorage.getItem("respuestas_" + idProtocolo + idPlantilla + idInmueble)) { ruta += "circle_yellow.png"; titulo = title2; }
-                else { ruta += "circle_orange.png"; titulo = title3; }
-                break;
-            case 3: ruta += "circle_green.png"; titulo = title3; break;
-            case 4: ruta += "check_icon.png"; titulo = "Finalizado"; break;
-            default: break;
+        function generarPdfProtocolo(idInmueble, idProtocolo, idPlantilla) {
+            $.ajax({
+                async: false,
+                url: "/Admin/GenerarPdfProtocolo",
+                type: "GET",
+                cache: false,
+                data: { idInmueble: idInmueble, idProtocolo: idProtocolo, idPlantilla: idPlantilla },
+                dataType: "json"
+            }).done(function (data) {
+            }).fail(function () {
+                alert('Error al crear el PDF. Por favor, actualice la página o presione F5.');
+            });
+            return true;
         }
-        strImg = '<img src="' + ruta + '" title="' + titulo + '" />';
-        return strImg;
-    }
-    function saveStorage(key, value) {
-        var oStorage = {};
-        oStorage = JSON.stringify(value);
-        localStorage.setItem(key, oStorage);
-    }
-    function hostReachable() {
-        // Handle IE and more capable browsers
-        var xhr = new (window.ActiveXObject || XMLHttpRequest)("Microsoft.XMLHTTP");
-        var status;
-        var server = window.location.hostname;
-        if (window.location.port != '') {
-            server += ':' + window.location.port;
+
+        //////////////////////////////////////////
+        function listarProtocolos(InmuebleId) {
+            $.ajax({
+                url: "/Admin/GetProtocolos",
+                type: "GET",
+                cache: false,
+                data: { inmueble: InmuebleId },
+                dataType: "json"
+            }).done(function (data) {
+                //saveSession("Protocolos", data);
+                drawProtocolos(data);
+            }).fail(function () {
+                alert('Error al intentar obtener los Protocolos. Por favor, actualice la página o presione F5.');
+            });
         }
-        // Open new request as a HEAD to the root hostname with a random param to bust the cache
-        xhr.open("HEAD", "//" + server + "/?rand=" + Math.floor((1 + Math.random()) * 0x10000), false);
-        // Issue request and handle response
-        try {
-            xhr.send();
-            return (xhr.status >= 200 && xhr.status < 300 || xhr.status === 304);
-        } catch (error) {
-            return false;
+        function drawProtocolos(data) {
+            $('#tableProtocolo td').remove();
+            $.each(data, function (index, itemData) {
+                @*var url = '@Url.Action("Protocolo", "Admin")?idProtocolo=' + itemData.IdProtocolo + '&idPlantilla=' + itemData.IdPlantilla + '&idInmueble=' + itemData.IdInmueble;*@
+                var url = '@Url.Action("Protocolo", "Admin", new { idInmueble = "abcIn" })';
+                url = url.replace("abcIn", itemData.IdInmueble);
+                var urlReporte = '@Url.Action("GenerarPdfProtocolo", "Admin")?idProtocolo=' + itemData.IdProtocolo + '&idPlantilla=' + itemData.IdPlantilla + '&idInmueble=' + itemData.IdInmueble;//ProtocoloReporte
+                $('#tableProtocolo > tbody:last').append(
+                    '<tr><td>' + (index + 1) + '</td>' +
+                    '<td>' + itemData.Plantilla.Nombre + '</td>' +
+                    '<td>' + itemData.Estado.NombreEstado + '</td>' + //+ "\t"
+                    '<td>' + setImage(itemData.IdProtocolo, itemData.IdPlantilla, itemData.IdInmueble, itemData.IdEstado) + '</td>' +
+                    '<td>' + '<a href="' + url + '" onclick="return getProtocolo(' + itemData.IdInmueble + ', ' + itemData.IdProtocolo + ', ' + itemData.IdPlantilla + ')" title="Editar" ><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;' +
+                    '<a target="_blank" href="' + urlReporte + '" title="Generar PDF" ><i class="fa fa-file-text-o"></i></a>' +
+                    '</td></tr>');
+            });
         }
-    }
-</script>
+        /*
+            1 - Pendiente -> Icono rojo : Plantilla vacía
+            2 - Incompleto -> Icono Amarillo : Existe Storage, Icono Verde : Datos guardados en Servidor
+            3 - Completo -> Icono Verde : Datos guardados en Servidor
+        */
+        function setImage(idProtocolo, idPlantilla, idInmueble, estado) {
+            var strImg = "", ruta = "../Content/themes/views/images/", titulo = ""; //$("#2").attr("src", "../Content/themes/views/images/loading.gif");
+            var title1 = "Plantilla vacía", title2 = "Guardado temporalmente", title3 = "Guardado en el servidor";
+            switch (estado) {
+                case 1:
+                    if (localStorage.getItem("respuestas_" + idProtocolo + idPlantilla + idInmueble)) { ruta += "circle_yellow.png"; titulo = title2; }
+                    else { ruta += "circle_red.png"; titulo = title1; }
+                    break;
+                case 2:
+                    if (localStorage.getItem("respuestas_" + idProtocolo + idPlantilla + idInmueble)) { ruta += "circle_yellow.png"; titulo = title2; }
+                    else { ruta += "circle_orange.png"; titulo = title3; }
+                    break;
+                case 3: ruta += "circle_green.png"; titulo = title3; break;
+                case 4: ruta += "check_icon.png"; titulo = "Finalizado"; break;
+                default: break;
+            }
+            strImg = '<img src="' + ruta + '" title="' + titulo + '" />';
+            return strImg;
+        }
+        function saveStorage(key, value) {
+            var oStorage = {};
+            oStorage = JSON.stringify(value);
+            localStorage.setItem(key, oStorage);
+        }
+        function hostReachable() {
+            // Handle IE and more capable browsers
+            var xhr = new (window.ActiveXObject || XMLHttpRequest)("Microsoft.XMLHTTP");
+            var status;
+            var server = window.location.hostname;
+            if (window.location.port != '') {
+                server += ':' + window.location.port;
+            }
+            // Open new request as a HEAD to the root hostname with a random param to bust the cache
+            xhr.open("HEAD", "//" + server + "/?rand=" + Math.floor((1 + Math.random()) * 0x10000), false);
+            // Issue request and handle response
+            try {
+                xhr.send();
+                return (xhr.status >= 200 && xhr.status < 300 || xhr.status === 304);
+            } catch (error) {
+                return false;
+            }
+        }
+    </script>
 }

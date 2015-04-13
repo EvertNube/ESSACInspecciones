@@ -1036,6 +1036,15 @@ namespace ESSACInspecciones.Controllers
             var model = objBL.getProtocolo(idInmueble, idProtocolo, idPlantilla);
             return Json(model, JsonRequestBehavior.AllowGet);
         }
+
+        [HttpGet]
+        public ActionResult GetPeriodos()
+        {
+            PeriodoBL perioBL = new PeriodoBL();
+
+            var periodos = perioBL.getPeriodos();
+            return Json(periodos, JsonRequestBehavior.AllowGet);
+        }
         
         public ActionResult GenerarPdfProtocolo(int idInmueble, int? idProtocolo = null, int? idPlantilla = null)
         {
