@@ -1028,7 +1028,7 @@ namespace ESSACInspecciones.Controllers
             return Json(model, JsonRequestBehavior.AllowGet);
         }
         [HttpGet]
-        public ActionResult GetProtocolo(int idInmueble, int? idProtocolo = null, int? idPlantilla = null)
+        public ActionResult GetProtocolo(int idInmueble, int? idProtocolo = null, int? idPlantilla = null, int? idPeriodo = null)
         {
             //if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
             ProtocoloBL objBL = new ProtocoloBL();
@@ -1046,7 +1046,7 @@ namespace ESSACInspecciones.Controllers
             return Json(periodos, JsonRequestBehavior.AllowGet);
         }
         
-        public ActionResult GenerarPdfProtocolo(int idInmueble, int? idProtocolo = null, int? idPlantilla = null)
+        public ActionResult GenerarPdfProtocolo(int idInmueble, int? idProtocolo = null, int? idPlantilla = null, int? idPeriodo = null)
         {
             ProtocoloBL objBL = new ProtocoloBL();
             //int idUsuario = getCurrentUser().IdUsuario;

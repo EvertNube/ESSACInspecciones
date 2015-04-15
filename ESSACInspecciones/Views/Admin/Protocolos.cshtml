@@ -83,7 +83,8 @@
             });
             $("#BuscarProtocolos").click(function () {
                 var InmuebleId = $("#Inmueble").val();
-
+                var PeriodoId = $('label.lblprd.active').first().children().first().attr('id');
+                PeriodoId = PeriodoId.replace('periodo', '');
                 listarProtocolos(InmuebleId);
             });
 
