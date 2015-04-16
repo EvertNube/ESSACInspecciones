@@ -39,11 +39,11 @@ namespace ESSACInspecciones.Core.BL
             }
         }
 
-        public List<ProtocoloDTO> getProtocolos(int idUsuario, int idInmueble)
+        public List<ProtocoloDTO> getProtocolos(int idUsuario, int idInmueble, int idPeriodo)
         {
             using (var context = getContext())
             {
-                var result = context.SP_GetPlantillas(idUsuario, idInmueble)
+                var result = context.SP_GetPlantillas(idUsuario, idInmueble, idPeriodo)
                     .Select(x => new ProtocoloDTO
                     {
                         IdProtocolo = x.IdProtocolo,
@@ -52,13 +52,14 @@ namespace ESSACInspecciones.Core.BL
                         IdEstado = x.IdEstado,
                         Plantilla = new PlantillaDTO { Nombre = x.Nombre },
                         Estado = new EstadoDTO { NombreEstado = x.NombreEstado },
-                        Active = x.Active
+                        Active = x.Active,
+                        IdPeriodo = x.IdPeriodo.GetValueOrDefault()
                     }).ToList();
                 return result;
             }
         }
 
-        public ProtocoloDTO getProtocolo(int idInmueble, int? idProtocolo, int? idPlantilla)
+        public ProtocoloDTO getProtocolo(int idInmueble, int idPeriodo, int? idProtocolo, int? idPlantilla)
         {
             using (var context = getContext())
             {
@@ -78,6 +79,7 @@ namespace ESSACInspecciones.Core.BL
                         HoraInicio = r.Fecha != null ? Convert.ToInt32(r.Fecha.Value.ToString("HH")) : 0,
                         MinutoInicio = r.Fecha != null ? Convert.ToInt32(r.Fecha.Value.ToString("mm")) : 0,
                         Active = r.Active,
+                        IdPeriodo = r.IdPeriodo,
                         TotalPaginas = r.Plantilla.Seccion.GroupBy(x => x.Pagina).Count(),
                         Plantilla = new PlantillaDTO { Nombre = r.Plantilla.Nombre, Nombre2 = r.Plantilla.Nombre2 },
                         Secciones = r.Plantilla.Seccion.Where(y => y.IdSeccionPadre == null).Select(y => new SeccionDTO
@@ -140,6 +142,7 @@ namespace ESSACInspecciones.Core.BL
                             HoraInicio = 0,
                             MinutoInicio = 0,
                             Active = true,
+                            IdPeriodo = idPeriodo,
                             TotalPaginas = x.Seccion.GroupBy(t => t.Pagina).Count(),
                             Plantilla = new PlantillaDTO { Nombre = x.Nombre, Nombre2 = x.Nombre2 },
                         }).SingleOrDefault();
@@ -274,6 +277,7 @@ namespace ESSACInspecciones.Core.BL
                     Protocolo protocolo = new Protocolo();
                     protocolo.IdPlantilla = oProtocoloDTO.IdPlantilla;
                     protocolo.IdInmueble = oProtocoloDTO.IdInmueble;
+                    protocolo.IdPeriodo = oProtocoloDTO.IdPeriodo;
                     protocolo.IdUsuario = oProtocoloDTO.IdUsuario;
                     protocolo.IdEstado = (oProtocoloDTO.IdEstado != 0 ? oProtocoloDTO.IdEstado : (contaEstado != 0 ? 2 : 3));    // 2: Incompleto, 3: Completo, 4: Finalizado
                     protocolo.NombreAreaProtegida = oProtocoloDTO.NombreAreaProtegida;

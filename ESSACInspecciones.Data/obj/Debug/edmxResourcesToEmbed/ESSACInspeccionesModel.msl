@@ -310,19 +310,6 @@
         </ComplexTypeMapping>
       </ResultMapping>
     </FunctionImportMapping>
-    <FunctionImportMapping FunctionImportName="SP_GetPlantillas" FunctionName="ESSAC.InspeccionesDbModel.Store.SP_GetPlantillas">
-      <ResultMapping>
-        <ComplexTypeMapping TypeName="ESSAC.InspeccionesDbModel.SP_GetPlantillas_Result">
-          <ScalarProperty Name="IdPlantilla" ColumnName="IdPlantilla" />
-          <ScalarProperty Name="Nombre" ColumnName="Nombre" />
-          <ScalarProperty Name="Active" ColumnName="Active" />
-          <ScalarProperty Name="IdProtocolo" ColumnName="IdProtocolo" />
-          <ScalarProperty Name="IdInmueble" ColumnName="IdInmueble" />
-          <ScalarProperty Name="IdEstado" ColumnName="IdEstado" />
-          <ScalarProperty Name="NombreEstado" ColumnName="NombreEstado" />
-        </ComplexTypeMapping>
-      </ResultMapping>
-    </FunctionImportMapping>
     <FunctionImportMapping FunctionImportName="SP_GetTareasResponsables" FunctionName="ESSAC.InspeccionesDbModel.Store.SP_GetTareasResponsables">
       <ResultMapping>
         <ComplexTypeMapping TypeName="ESSAC.InspeccionesDbModel.SP_GetTareasResponsables_Result">
@@ -368,6 +355,20 @@
           <ScalarProperty Name="FechaFin" ColumnName="FechaFin" />
           <ScalarProperty Name="Active" ColumnName="Active" />
           <ScalarProperty Name="Responsables" ColumnName="Responsables" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="SP_GetPlantillas" FunctionName="ESSAC.InspeccionesDbModel.Store.SP_GetPlantillas">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="ESSAC.InspeccionesDbModel.SP_GetPlantillas_Result">
+          <ScalarProperty Name="IdPlantilla" ColumnName="IdPlantilla" />
+          <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+          <ScalarProperty Name="Active" ColumnName="Active" />
+          <ScalarProperty Name="IdProtocolo" ColumnName="IdProtocolo" />
+          <ScalarProperty Name="IdInmueble" ColumnName="IdInmueble" />
+          <ScalarProperty Name="IdEstado" ColumnName="IdEstado" />
+          <ScalarProperty Name="NombreEstado" ColumnName="NombreEstado" />
+          <ScalarProperty Name="IdPeriodo" ColumnName="IdPeriodo" />
         </ComplexTypeMapping>
       </ResultMapping>
     </FunctionImportMapping>

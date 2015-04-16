@@ -85,8 +85,19 @@
                 var InmuebleId = $("#Inmueble").val();
                 var PeriodoId = $('label.lblprd.active').first().children().first().attr('id');
                 PeriodoId = PeriodoId.replace('periodo', '');
-                listarProtocolos(InmuebleId);
+                listarProtocolos(InmuebleId, PeriodoId);
             });
+
+            /*$('.periodos').click(function () {
+                var InmuebleId = $("#Inmueble").val();
+                if(InmuebleId != null || InmuebleId != 0)
+                {
+                    var PeriodoId = $(this).first.children().first().attr('id');
+                    PeriodoId = PeriodoId.replace('periodo', '');
+                    listarProtocolos(InmuebleId, PeriodoId);
+                }
+            });*/
+            
 
             var varin = '@ViewBag.IdInmueble';
             if (varin != '') {
@@ -132,20 +143,20 @@
                     }
 
                     select.append(
-                        '<label class="lblprd btn btn-sm btn-' + botonColor + '"> <input id="periodo' + itemData.IdPeriodo + '" type="radio" name="periodos"></input> ' + checkOp + itemData.Nombre + '</label>');
+                        '<label class="lblprd btn btn-sm btn-' + botonColor + '"> <input id="periodo' + itemData.IdPeriodo + '" type="radio" class="periodos"></input> ' + checkOp + itemData.Nombre + '</label>');
                     periodoColor++;
                 });
                 $('.lblprd').first().addClass('active');
             });
         });
 
-        function getProtocolo(idInmueble, idProtocolo, idPlantilla) {
+        function getProtocolo(idInmueble, idPeriodo, idProtocolo, idPlantilla) {
             $.ajax({
                 async: false,
                 url: "/Admin/GetProtocolo",
                 type: "GET",
                 cache: false,
-                data: { idInmueble: idInmueble, idProtocolo: idProtocolo, idPlantilla: idPlantilla },
+                data: { idInmueble: idInmueble, idPeriodo: idPeriodo, idProtocolo: idProtocolo, idPlantilla: idPlantilla },
                 dataType: "json"
             }).done(function (data) {
                 saveStorage("protocolo", data);
@@ -171,12 +182,12 @@
         }
 
         //////////////////////////////////////////
-        function listarProtocolos(InmuebleId) {
+        function listarProtocolos(InmuebleId, PeriodoId) {
             $.ajax({
                 url: "/Admin/GetProtocolos",
                 type: "GET",
                 cache: false,
-                data: { inmueble: InmuebleId },
+                data: { inmueble: InmuebleId, periodo: PeriodoId },
                 dataType: "json"
             }).done(function (data) {
                 //saveSession("Protocolos", data);
@@ -187,6 +198,7 @@
         }
         function drawProtocolos(data) {
             $('#tableProtocolo td').remove();
+            $('#tableProtocolo > tbody').empty();
             $.each(data, function (index, itemData) {
                 @*var url = '@Url.Action("Protocolo", "Admin")?idProtocolo=' + itemData.IdProtocolo + '&idPlantilla=' + itemData.IdPlantilla + '&idInmueble=' + itemData.IdInmueble;*@
                 var url = '@Url.Action("Protocolo", "Admin", new { idInmueble = "abcIn" })';
@@ -197,7 +209,7 @@
                     '<td>' + itemData.Plantilla.Nombre + '</td>' +
                     '<td>' + itemData.Estado.NombreEstado + '</td>' + //+ "\t"
                     '<td>' + setImage(itemData.IdProtocolo, itemData.IdPlantilla, itemData.IdInmueble, itemData.IdEstado) + '</td>' +
-                    '<td>' + '<a href="' + url + '" onclick="return getProtocolo(' + itemData.IdInmueble + ', ' + itemData.IdProtocolo + ', ' + itemData.IdPlantilla + ')" title="Editar" ><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;' +
+                    '<td>' + '<a href="' + url + '" onclick="return getProtocolo(' + itemData.IdInmueble + ', ' + itemData.IdPeriodo + ', ' + itemData.IdProtocolo + ', ' + itemData.IdPlantilla + ')" title="Editar" ><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;' +
                     '<a target="_blank" href="' + urlReporte + '" title="Generar PDF" ><i class="fa fa-file-text-o"></i></a>' +
                     '</td></tr>');
             });

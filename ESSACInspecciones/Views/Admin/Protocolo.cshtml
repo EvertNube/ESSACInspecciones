@@ -259,10 +259,11 @@
 
             $(".tab-content").append(strHtmlStepContent);
 
-            setRespuestas(protocolo.IdProtocolo, protocolo.IdPlantilla, protocolo.IdInmueble);
+            setRespuestas(protocolo.IdProtocolo, protocolo.IdPlantilla, protocolo.IdInmueble, protocolo.IdPeriodo);
             $("#IdProtocolo").val(protocolo.IdProtocolo);
             $("#IdPlantilla").val(protocolo.IdPlantilla);
             $("#IdInmueble").val(protocolo.IdInmueble);
+            $("#IdPeriodo").val(protocolo.IdPeriodo);
             //paintGraficaMotobomba();
 
             if (protocolo.IdEstado == 4) {
@@ -288,6 +289,7 @@
                 var IdProtocolo = $("#IdProtocolo").val();
                 var IdPlantilla = $("#IdPlantilla").val();
                 var IdInmueble = $("#IdInmueble").val();
+                var IdPeriodo = $("#IdPeriodo").val();
                 /*
                 Descomentar para pruebas
                 var respuestas = {
@@ -307,6 +309,7 @@
                         IdProtocolo: IdProtocolo,
                         IdPlantilla: $("#IdPlantilla").val(),
                         IdInmueble: $("#IdInmueble").val(),
+                        IdPeriodo: $("#IdPeriodo").val(),
                         NombreAreaProtegida: $("#NombreAreaProtegida").val(),
                         Direccion: $("#Direccion").val(),
                         StrFecha: $("#Fecha").val(),
@@ -319,8 +322,8 @@
                     $.post("/Admin/SaveProtocolo", { protocolo: JSON.stringify(protocolo) }, function (data) {
                     }).done(function (data) {
                         if (data) {
-                            localStorage.removeItem("respuestas_" + IdProtocolo + IdPlantilla + IdInmueble);
-                            window.location.href = "@Url.Action("Protocolos", new { inmueble = @ViewBag.IdInmueble })";
+                            localStorage.removeItem("respuestas_" + IdProtocolo + IdPlantilla + IdInmueble + IdPeriodo);
+                            window.location.href = "@Url.Action("Protocolos", new { inmueble = @ViewBag.IdInmueble, periodo = @ViewBag.IdPeriodo })";
                             $("#btnGuardar").val("Guardar");
                             $("#btnGuardar").prop('disabled', false);
                             //window.location = "/Admin/Protocolos";
@@ -343,7 +346,7 @@
                         GroupIdTableBody: array_Id,
                         GroupDescripcion: array_Descrip
                     };
-                    localStorage.setItem("respuestas_" + IdProtocolo + IdPlantilla + IdInmueble, JSON.stringify(respuestas));
+                    localStorage.setItem("respuestas_" + IdProtocolo + IdPlantilla + IdInmueble + IdPeriodo, JSON.stringify(respuestas));
                     alert("El protocolo se ha guardado temporalmente. Por favor, conectese a Internet para que lo datos sean guardados.");
                 }
             });
@@ -730,9 +733,9 @@
                 $("#bg_tab" + i).addClass(clase);
             }
         }
-        function setRespuestas(idProtocolo, idPlantilla, idInmueble) {
-            if (localStorage.getItem("respuestas_" + idProtocolo + idPlantilla + idInmueble)) {
-                var respuestas = {}; respuestas = JSON.parse(localStorage.getItem("respuestas_" + idProtocolo + idPlantilla + idInmueble));
+        function setRespuestas(idProtocolo, idPlantilla, idInmueble, idPeriodo) {
+            if (localStorage.getItem("respuestas_" + idProtocolo + idPlantilla + idInmueble + idPeriodo)) {
+                var respuestas = {}; respuestas = JSON.parse(localStorage.getItem("respuestas_" + idProtocolo + idPlantilla + idInmueble + idPeriodo));
                 $("#NombreAreaProtegida").val(respuestas.NombreAreaProtegida);
                 $("#Direccion").val(respuestas.Direccion);
                 $("#Fecha").val(respuestas.StrFecha);
@@ -847,6 +850,7 @@
                                 <input type="hidden" id="IdProtocolo" />
                                 <input type="hidden" id="IdPlantilla" />
                                 <input type="hidden" id="IdInmueble" />
+                                <input type="hidden" id="IdPeriodo" />
                             </div>
                             <footer class="panel-footer text-right bg-light lter">
                                 @*<button type="button" id="btnGuardar" class="btn btn-s-xs btn-success btn-rounded">Guardar</button>*@

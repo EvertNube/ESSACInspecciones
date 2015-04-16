@@ -20,5 +20,6 @@ namespace ESSACInspecciones.Data
         public Nullable<int> IdInmueble { get; set; }
         public int IdEstado { get; set; }
         public string NombreEstado { get; set; }
+        public Nullable<int> IdPeriodo { get; set; }
     }
 }

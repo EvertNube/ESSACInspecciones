@@ -633,7 +633,7 @@ namespace ESSACInspecciones.Controllers
             }
         }
 
-        public ActionResult Protocolos(int? inmueble)
+        public ActionResult Protocolos(int? inmueble, int? periodo)
         {
             if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
             List<ProtocoloDTO> model = new List<ProtocoloDTO>();
@@ -646,6 +646,7 @@ namespace ESSACInspecciones.Controllers
             {
                 ViewBag.IdInmueble = "";
                 ViewBag.IdCliente = "";
+                ViewBag.IdPeriodo = "";
             }
             else
             {
@@ -653,11 +654,12 @@ namespace ESSACInspecciones.Controllers
                 ViewBag.IdInmueble = inmueble;
                 ClienteBL oClienteBL = new ClienteBL();
                 ViewBag.IdCliente = oClienteBL.getInmueble(inmueble.GetValueOrDefault()).IdCliente;
+                ViewBag.IdPeriodo = periodo;
             }
 
             return View();
         }
-        public ActionResult Protocolo_server(int idInmueble, int? idProtocolo = null, int? idPlantilla = null)
+        public ActionResult Protocolo_server(int idInmueble, int idPeriodo, int? idProtocolo = null, int? idPlantilla = null)
         {
             ViewBag.Horas = new BaseDTO().fillHoras();
             ViewBag.Minutos = new BaseDTO().fillMinutos();
@@ -667,7 +669,7 @@ namespace ESSACInspecciones.Controllers
             ViewBag.Items_SelectAccesorios = new BaseDTO().fillSelectAccesorios();
             ViewBag.Items_SelectPresiones = new BaseDTO().fillSelectPresiones();
             ProtocoloBL objBL = new ProtocoloBL();
-            ProtocoloDTO obj = objBL.getProtocolo(idInmueble, idProtocolo, idPlantilla);
+            ProtocoloDTO obj = objBL.getProtocolo(idInmueble, idPeriodo, idProtocolo, idPlantilla);
             return View(obj);
         }
         public ActionResult Protocolo(int idInmueble)
@@ -1019,21 +1021,21 @@ namespace ESSACInspecciones.Controllers
             //return Json(new { Response = response }, JsonRequestBehavior.AllowGet);
         }
         [HttpGet]
-        public ActionResult GetProtocolos(int inmueble)
+        public ActionResult GetProtocolos(int inmueble, int periodo)
         {
             //if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
             ProtocoloBL objBL = new ProtocoloBL();
             int idUsuario = getCurrentUser().IdUsuario;
-            var model = objBL.getProtocolos(idUsuario, inmueble);
+            var model = objBL.getProtocolos(idUsuario, inmueble, periodo);
             return Json(model, JsonRequestBehavior.AllowGet);
         }
         [HttpGet]
-        public ActionResult GetProtocolo(int idInmueble, int? idProtocolo = null, int? idPlantilla = null, int? idPeriodo = null)
+        public ActionResult GetProtocolo(int idInmueble, int idPeriodo, int? idProtocolo = null, int? idPlantilla = null)
         {
             //if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
             ProtocoloBL objBL = new ProtocoloBL();
             //int idUsuario = getCurrentUser().IdUsuario;
-            var model = objBL.getProtocolo(idInmueble, idProtocolo, idPlantilla);
+            var model = objBL.getProtocolo(idInmueble, idPeriodo, idProtocolo, idPlantilla);
             return Json(model, JsonRequestBehavior.AllowGet);
         }
 
@@ -1045,12 +1047,12 @@ namespace ESSACInspecciones.Controllers
             var periodos = perioBL.getPeriodos();
             return Json(periodos, JsonRequestBehavior.AllowGet);
         }
-        
-        public ActionResult GenerarPdfProtocolo(int idInmueble, int? idProtocolo = null, int? idPlantilla = null, int? idPeriodo = null)
+
+        public ActionResult GenerarPdfProtocolo(int idInmueble, int idPeriodo, int? idProtocolo = null, int? idPlantilla = null)
         {
             ProtocoloBL objBL = new ProtocoloBL();
             //int idUsuario = getCurrentUser().IdUsuario;
-            var model = objBL.getProtocolo(idInmueble, idProtocolo, idPlantilla);
+            var model = objBL.getProtocolo(idInmueble, idPeriodo, idProtocolo, idPlantilla);
             var ms = CrearPDF(model);
             byte[] file = ms.ToArray();
             MemoryStream output = new MemoryStream();
