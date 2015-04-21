@@ -1,0 +1,82 @@
+﻿@using ESSACInspecciones.Core.DTO
+@model PeriodoDTO
+
+@{
+    if (Model == null || Model.IdPeriodo == 0)
+    {
+        ViewBag.Title = "Periodo";
+    }
+    else { ViewBag.Title = Model.Nombre; }
+
+    ViewBag.Title = "Periodo";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<section class="vbox">
+    <section class="scrollable padder">
+        <div class="row m-b">
+            <div class="col-xs-12 col-md-10 col-md-offset-1">
+                @if (Model == null || Model.IdPeriodo == 0)
+                {
+                    <h2>Nuevo Periodo</h2>
+                }
+                else
+                {<h2>Actualizar Periodo</h2>}
+
+                @using (Html.BeginForm("AddPeriodo", "Admin", FormMethod.Post))
+                {
+                    @Html.ValidationSummary(true)
+                    <div class="row m-b">
+                        <div class="col-xs-12 col-md-6">
+                            @Html.Partial("_showAlertMessages")
+
+                            <section class="panel panel-default">
+                                <header class="panel-heading font-bold">Formulario de Registro</header>
+                                <div class="panel-body">
+                                    <h4>Información del Periodo</h4>
+                                    <div class="line line-dashed line-lg pull-in"></div>
+                                    <div class="form-group">
+                                        <label>Nombre del Periodo</label>
+                                        @Html.TextBoxFor(u => u.Nombre, new { @class = "form-control", @placeholder = "Ingrese el nombre del periodo", @type = "text" })
+                                        @Html.ValidationMessageFor(u => u.Nombre)
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Fecha de Inicio</label>
+                                        @Html.TextBoxFor(u => u.FechaInicio, "{0:dd/MM/yyyy}", new { @class = "datepicker-input form-control", @placeholder = "Ingrese la fecha de conciliación", @type = "text", @data_provide = "datepicker", @readonly = "readonly" })
+                                        @Html.ValidationMessageFor(u => u.FechaInicio)
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Fecha de Fin</label>
+                                        @Html.TextBoxFor(u => u.FechaFin, "{0:dd/MM/yyyy}", new { @class = "datepicker-input form-control", @placeholder = "Ingrese la fecha de conciliación", @type = "text", @data_provide = "datepicker", @readonly = "readonly" })
+                                        @Html.ValidationMessageFor(u => u.FechaFin)
+                                    </div>
+
+                                    @if (ViewBag.EsAdmin && Model != null && Model.IdPeriodo > 0)
+                                    {
+                                        <div class="line line-dashed line-lg pull-in"></div>
+                                        <div class="checkbox">
+                                            <label>
+                                                @Html.CheckBoxFor(u => u.Active)
+                                                Activo
+                                            </label>
+                                            @Html.ValidationMessageFor(u => u.Active)
+                                        </div>}
+                                    else
+                                    {
+                                        @Html.TextBoxFor(u => u.Active, new { @value = Model != null ? Model.Active : false, @type = "hidden" })
+                                    }
+                                    <div class="line line-dashed line-lg pull-in"></div>
+                                    @Html.TextBoxFor(u => u.IdPeriodo, new { @value = Model != null ? Model.IdPeriodo.ToString() : "", @type = "hidden" })
+                                    @{var btnName = (Model != null && Model.IdPeriodo > 0) ? "Guardar Cambios" : "Crear";}
+                                    <button type="submit" class="btn btn-sm btn-primary btn-rounded">@btnName</button>
+                                    <a class="btn btn-sm btn-danger btn-rounded" href="@Url.Action("Periodos")">Salir</a>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+</section>
+

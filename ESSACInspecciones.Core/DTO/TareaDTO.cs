@@ -40,6 +40,7 @@ namespace ESSACInspecciones.Core.DTO
         public List<ContactoDTO> Contactos { get; set; }
         public InmuebleDTO Inmueble { get; set; }
         public EstadoDTO Estado { get; set; }
+        public PlantillaDTO Plantilla { get; set; }
 
         public int HoraInicio { get; set; }
         public int MinutoInicio { get; set; }

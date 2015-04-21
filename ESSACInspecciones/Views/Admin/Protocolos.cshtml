@@ -100,12 +100,11 @@
             
 
             var varin = '@ViewBag.IdInmueble';
+            var varper = '@ViewBag.IdPeriodo';
             if (varin != '') {
                 $('#Cliente').val('@ViewBag.IdCliente');
                 $.getJSON("/Admin/GetListInmueblesByClienteId", { id: '@ViewBag.IdCliente' }, function (data) {
                 }).done(function (data) {
-                    //inmuebles = data.slice(0);
-                    //inmuebles.splice(0, 1);
                     var select = $("#Inmueble");
                     select.empty();
                     $.each(data, function (index, itemData) {
@@ -118,7 +117,7 @@
                     $('#Inmueble').val(varin);
                 });
 
-                listarProtocolos(varin);
+                listarProtocolos(varin, varper);
             }
 
             $.getJSON("/Admin/GetPeriodos", function (data) {
@@ -143,10 +142,24 @@
                     }
 
                     select.append(
-                        '<label class="lblprd btn btn-sm btn-' + botonColor + '"> <input id="periodo' + itemData.IdPeriodo + '" type="radio" class="periodos"></input> ' + checkOp + itemData.Nombre + '</label>');
+                        '<label id="lbl'+ itemData.IdPeriodo +'" class="lblprd btn btn-sm btn-' + botonColor + '"> <input id="periodo' + itemData.IdPeriodo + '" type="radio" class="periodos"></input> ' + checkOp + itemData.Nombre + '</label>');
                     periodoColor++;
                 });
-                $('.lblprd').first().addClass('active');
+                if (varper != '')
+                { $('#lbl' + varper).addClass('active'); }
+                else
+                { $('.lblprd').first().addClass('active'); }
+            });
+
+            $('#grupoPeriodos').on('click', function (event) {
+                //console.log("You clicked on: ", event.target);
+                var target = $(event.target);
+                var InmuebleId = $("#Inmueble").val();
+                if (InmuebleId != null || InmuebleId != 0) {
+                    var PeriodoId = target.children().first().attr('id');
+                    PeriodoId = PeriodoId.replace('periodo', '');
+                    listarProtocolos(InmuebleId, PeriodoId);
+                }
             });
         });
 
@@ -201,8 +214,9 @@
             $('#tableProtocolo > tbody').empty();
             $.each(data, function (index, itemData) {
                 @*var url = '@Url.Action("Protocolo", "Admin")?idProtocolo=' + itemData.IdProtocolo + '&idPlantilla=' + itemData.IdPlantilla + '&idInmueble=' + itemData.IdInmueble;*@
-                var url = '@Url.Action("Protocolo", "Admin", new { idInmueble = "abcIn" })';
-                url = url.replace("abcIn", itemData.IdInmueble);
+                var url = '@Url.Action("Protocolo", "Admin", new { idInmueble = "abcInmueble", idPeriodo = "abcPeriodo" })';
+                url = url.replace("abcInmueble", itemData.IdInmueble);
+                url = url.replace("abcPeriodo", itemData.IdPeriodo);
                 var urlReporte = '@Url.Action("GenerarPdfProtocolo", "Admin")?idProtocolo=' + itemData.IdProtocolo + '&idPlantilla=' + itemData.IdPlantilla + '&idInmueble=' + itemData.IdInmueble;//ProtocoloReporte
                 $('#tableProtocolo > tbody:last').append(
                     '<tr><td>' + (index + 1) + '</td>' +

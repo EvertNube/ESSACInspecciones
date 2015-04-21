@@ -40,12 +40,21 @@
                                         @Html.TextAreaFor(u => u.Descripcion, new { @class = "form-control", @placeholder = "Ingrese la descripción de la tarea", @type = "text" })
                                         @Html.ValidationMessageFor(u => u.Descripcion)
                                     </div>
-                                    <div class="line line-dashed line-lg pull-in"></div>
+                                    @*<div class="line line-dashed line-lg pull-in"></div>*@
                                     <div class="form-group">
                                         <label>Servicio</label>
                                         @Html.DropDownListFor(u => u.IdServicio, new SelectList(ViewBag.Servicios, "IdServicio", "NombreServicio", Model != null ? (Model.IdServicio != null ? Model.IdServicio : 0) : 0), new { @class = "form-control parsley-validated" })
                                         @Html.ValidationMessageFor(u => u.IdServicio)
                                     </div>
+                                    @{var oculto = "";}
+                                    @if (ViewBag.EsAdmin && Model == null) { oculto = "hide"; }
+                                    else { if (Model.IdServicio != 3 || Model.IdServicio != 5) { oculto = "hide"; } else { oculto = ""; } }
+                                    <div class="form-group @oculto" id="formPlantilla">
+                                        <label>Protocolo</label>
+                                        @Html.DropDownListFor(u => u.IdPlantilla, new SelectList(ViewBag.Plantillas, "IdPlantilla", "Nombre"), new { @class = "form-control parsley-validated" })
+                                        @Html.ValidationMessageFor(u => u.IdPlantilla)
+                                    </div>
+                                    <div class="line line-dashed line-lg pull-in"></div>
                                     <div class=" form-horizontal">
                                         <div class="form-group">
                                             <label class="col-lg-3">Responsable</label>
@@ -73,12 +82,12 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group col-md-6" style="padding-left:0px;">
                                         <label>Cliente</label>
                                         @Html.DropDownListFor(u => u.IdCliente, new SelectList(ViewBag.Clientes, "IdCliente", "NombreEmpresa", Model != null ? (Model.IdCliente != null ? Model.IdCliente : 0) : 0), new { id = "ddlCliente", @class = "form-control parsley-validated" })
                                         @Html.ValidationMessageFor(u => u.IdCliente)
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group col-md-6" style="padding-right:0px;">
                                         <label>Inmueble</label>
                                         @Html.DropDownListFor(u => u.IdInmueble, new SelectList(Enumerable.Empty<SelectListItem>(), "IdInmueble", "NombreInmueble"), new { @class = "form-control parsley-validated" })
                                         @*@Html.DropDownListFor(u => u.IdInmueble, new SelectList(ViewBag.Inmuebles, "IdInmueble", "NombreInmueble", Model != null ? (Model.IdInmueble != null ? Model.IdInmueble : 0) : 0), new { @class = "form-control parsley-validated" })*@
@@ -87,40 +96,31 @@
                                     <div class="line line-dashed line-lg pull-in"></div>
                                     <div class=" form-horizontal">
                                         <div class="form-group">
-                                            <label class="col-lg-3 control-label">Fecha Inicio</label>
-                                            <div class="input-group col-lg-2">
+                                            <label class="col-md-6 control-label" style="text-align:right;">Fecha Inicio: </label>
+                                            <div class="input-group col-md-2">
                                                 @Html.TextBoxFor(u => u.FechaInicio, "{0:dd/MM/yyyy}", new { @class = "datepicker-input form-control", @type = "text", @data_provide = "datepicker" })
                                                 @*@{DateTime dateInicio = Model != null ? Model.FechaInicio ?? DateTime.Now : DateTime.Now; }
                                                 @Html.TextBox("FechaInicio", dateInicio.Date != DateTime.Now.Date ? dateInicio.ToString("dd/MM/yyyy") : string.Empty, new { @class = "datepicker-input form-control", @type = "text", @id = "FechaInicio", @style = "width: auto;" })*@
                                             </div>
-                                            <div class="input-group col-lg-4">
+                                            <div class="input-group col-md-4">
                                                 @*@Html.ValidationMessageFor(u => u.FechaInicio)*@
                                                 @Html.DropDownListFor(u => u.HoraInicio, new SelectList(ViewBag.Horas, "id", "name", Model != null ? Model.HoraInicio : 0), new { @class = "hour form-control parsley-validated", @style = "width: auto;" }) :
                                                 @Html.DropDownListFor(u => u.MinutoInicio, new SelectList(ViewBag.Minutos, "id", "name", Model != null ? Model.MinutoInicio : 0), new { @class = "minute form-control parsley-validated", @style = "width: auto;" })
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-lg-3 control-label">Fecha Fin</label>
-                                            <div class="input-group col-lg-2">
+                                            <label class="col-md-6 control-label" style="text-align:right;">Fecha Fin: </label>
+                                            <div class="input-group col-md-2">
                                                 @Html.TextBoxFor(u => u.FechaFin, "{0:dd/MM/yyyy}", new { @class = "datepicker-input form-control", @type = "text", @data_provide = "datepicker" })
                                                 @*@{DateTime dateFin = Model != null ? Model.FechaInicio ?? DateTime.Now : DateTime.Now; }
                                                 @Html.TextBox("FechaFin", dateFin.Date != DateTime.Now.Date ? dateFin.ToString("dd/MM/yyyy") : string.Empty, new { @class = "datepicker-input form-control", @type = "text", @id = "FechaFin", @style = "width: auto;" })*@
                                             </div>
-                                            <div class="input-group col-lg-4">
+                                            <div class="input-group col-md-4">
                                                 @*@Html.ValidationMessageFor(u => u.FechaFin)*@
                                                 @Html.DropDownListFor(u => u.HoraFin, new SelectList(ViewBag.Horas, "id", "name", Model != null ? Model.HoraFin : 0), new { id = "ddlHoraFin", @class = "hour form-control parsley-validated", @style = "width: auto;" }) :
                                                 @Html.DropDownListFor(u => u.MinutoFin, new SelectList(ViewBag.Minutos, "id", "name", Model != null ? Model.MinutoFin : 0), new { id = "ddlMinutoFin", @class = "minute form-control parsley-validated", @style = "width: auto;" })
                                             </div>
                                         </div>
-                                    </div>
-                                    @{var oculto = "";}
-                                    @if (ViewBag.EsAdmin && Model == null) { oculto = "hide"; }
-                                    else { if (Model.IdServicio != 3 || Model.IdServicio != 5) { oculto = "hide"; } else { oculto = ""; } }
-                                    <div class="form-group @oculto" id="formPlantilla">
-                                        <div class="line line-dashed line-lg pull-in"></div>
-                                        <label>Protocolo</label>
-                                        @Html.DropDownListFor(u => u.IdPlantilla, new SelectList(ViewBag.Plantillas, "IdPlantilla", "Nombre"), new { @class = "form-control parsley-validated" })
-                                        @Html.ValidationMessageFor(u => u.IdPlantilla)
                                     </div>
                                     <div class="line line-dashed line-lg pull-in"></div>
                                     <div class="form-group">

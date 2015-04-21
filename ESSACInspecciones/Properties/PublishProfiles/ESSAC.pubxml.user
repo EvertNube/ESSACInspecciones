@@ -19,13 +19,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/25/2015 18:07:52</publishTime>
     </File>
     <File Include="bin/ESSACInspecciones.Core.dll">
-      <publishTime>03/25/2015 10:15:37</publishTime>
+      <publishTime>04/20/2015 12:09:00</publishTime>
     </File>
     <File Include="bin/ESSACInspecciones.Data.dll">
-      <publishTime>02/25/2015 19:38:57</publishTime>
+      <publishTime>04/20/2015 12:08:59</publishTime>
     </File>
     <File Include="bin/ESSACInspecciones.dll">
-      <publishTime>03/25/2015 10:15:37</publishTime>
+      <publishTime>04/20/2015 12:09:02</publishTime>
     </File>
     <File Include="bin/ESSACInspecciones.Helpers.dll">
       <publishTime>03/12/2015 20:22:52</publishTime>
@@ -1962,11 +1962,17 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="Content/themes/views/images/check_icon.png">
       <publishTime>10/22/2014 19:24:12</publishTime>
     </File>
+    <File Include="Content/themes/views/images/circle_blue.png">
+      <publishTime>03/25/2015 15:51:37</publishTime>
+    </File>
     <File Include="Content/themes/views/images/circle_green.jpg">
       <publishTime>07/31/2014 17:58:56</publishTime>
     </File>
     <File Include="Content/themes/views/images/circle_green.png">
       <publishTime>10/22/2014 19:24:12</publishTime>
+    </File>
+    <File Include="Content/themes/views/images/circle_orange.png">
+      <publishTime>03/25/2015 16:13:21</publishTime>
     </File>
     <File Include="Content/themes/views/images/circle_red.jpg">
       <publishTime>07/31/2014 17:58:46</publishTime>
@@ -2097,14 +2103,20 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="Views/Admin/Inmueble.cshtml">
       <publishTime>10/22/2014 19:24:12</publishTime>
     </File>
+    <File Include="Views/Admin/Periodo.cshtml">
+      <publishTime>03/30/2015 15:30:30</publishTime>
+    </File>
+    <File Include="Views/Admin/Periodos.cshtml">
+      <publishTime>03/30/2015 15:39:12</publishTime>
+    </File>
     <File Include="Views/Admin/Protocolo.cshtml">
-      <publishTime>03/24/2015 16:17:06</publishTime>
+      <publishTime>04/20/2015 08:06:34</publishTime>
     </File>
     <File Include="Views/Admin/ProtocoloReporte.cshtml">
       <publishTime>10/22/2014 19:24:12</publishTime>
     </File>
     <File Include="Views/Admin/Protocolos.cshtml">
-      <publishTime>03/06/2015 17:05:17</publishTime>
+      <publishTime>04/17/2015 16:42:31</publishTime>
     </File>
     <File Include="Views/Admin/Protocolo_053.cshtml">
       <publishTime>07/11/2014 11:44:02</publishTime>
@@ -2131,16 +2143,16 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/22/2014 19:24:12</publishTime>
     </File>
     <File Include="Views/Admin/Tarea.cshtml">
-      <publishTime>10/22/2014 19:24:12</publishTime>
+      <publishTime>04/09/2015 18:13:04</publishTime>
     </File>
     <File Include="Views/Admin/Tareas.cshtml">
-      <publishTime>10/22/2014 19:24:12</publishTime>
+      <publishTime>04/10/2015 16:36:19</publishTime>
     </File>
     <File Include="Views/Admin/Usuario.cshtml">
-      <publishTime>03/09/2015 13:39:00</publishTime>
+      <publishTime>04/09/2015 17:22:00</publishTime>
     </File>
     <File Include="Views/Admin/Usuarios.cshtml">
-      <publishTime>03/09/2015 12:35:09</publishTime>
+      <publishTime>03/27/2015 17:38:02</publishTime>
     </File>
     <File Include="Views/Admin/_Contactos.cshtml">
       <publishTime>10/22/2014 19:24:12</publishTime>
@@ -2167,7 +2179,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/22/2014 19:24:12</publishTime>
     </File>
     <File Include="Views/Shared/_LayoutAdmin.cshtml">
-      <publishTime>03/06/2015 17:10:29</publishTime>
+      <publishTime>03/27/2015 17:22:27</publishTime>
     </File>
     <File Include="Views/Shared/_showAlertMessages.cshtml">
       <publishTime>10/22/2014 19:24:12</publishTime>

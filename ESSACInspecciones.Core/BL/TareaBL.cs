@@ -265,6 +265,9 @@ namespace ESSACInspecciones.Core.BL
             to = to.Substring(0, to.Length - 1);
             copy = copy.Substring(0, copy.Length - (copy.Length == 0 ? 0 : 1));
             body += " </div>" + "<div>Servicio : " + oTareaDTO.Servicio.NombreServicio + " </div>" + "<div>Estado : " + oTareaDTO.Estado.NombreEstado + " </div>";
+            if(oTareaDTO.Plantilla.IdPlantilla != 0)
+                body += "<div>Protocolo : " + oTareaDTO.Plantilla.Nombre + " - " + oTareaDTO.Plantilla.Nombre2 + " </div>";
+
             MailHandler.Send(to, copy, subject, body);
             //MailHandler.sendEmail(body);
         }
@@ -446,6 +449,7 @@ namespace ESSACInspecciones.Core.BL
                     TareaDTO.Responsables = context.Tarea.Where(x => x.IdTarea == Tarea.IdTarea).SingleOrDefault().Usuario.Select(x => new UsuarioDTO { IdUsuario = x.IdUsuario, Nombre = x.Nombre, Email = x.Email }).ToList();
                     TareaDTO.Servicio = context.Servicio.Where(x => x.IdServicio == Tarea.IdServicio).Select(y => new ServicioDTO { NombreServicio = y.Nombre, NombreCorto = y.NombreCorto }).FirstOrDefault();
                     TareaDTO.Estado = context.Estado.Where(x => x.IdEstado == Tarea.IdEstado).Select(y => new EstadoDTO { NombreEstado = y.NombreEstado }).FirstOrDefault();
+                    TareaDTO.Plantilla = context.Plantilla.Where(x => x.IdPlantilla == Tarea.IdPlantilla).Select(y => new PlantillaDTO { IdPlantilla = y.IdPlantilla, Nombre = y.Nombre, Nombre2 = y.Nombre2 }).FirstOrDefault();
 
                     if (TareaDTO.Responsables.Count > 0)
                         SendMailResponsable(TareaDTO, new List<int>(), TareaDTO.Responsables.Select(x => x.IdUsuario).ToList()); //SendMailResponsable(1, TareaDTO, null, null);
@@ -507,6 +511,7 @@ namespace ESSACInspecciones.Core.BL
                     oTareaDTO.Responsables = context.Tarea.Where(x => x.IdTarea == Tarea.IdTarea).SingleOrDefault().Usuario.Select(x => new UsuarioDTO { IdUsuario = x.IdUsuario, Nombre = x.Nombre, Email = x.Email }).ToList();
                     oTareaDTO.Servicio = context.Servicio.Where(x => x.IdServicio == Tarea.IdServicio).Select(y => new ServicioDTO { NombreServicio = y.Nombre, NombreCorto = y.NombreCorto }).FirstOrDefault();
                     oTareaDTO.Estado = context.Estado.Where(x => x.IdEstado == Tarea.IdEstado).Select(y => new EstadoDTO { NombreEstado = y.NombreEstado }).FirstOrDefault();
+                    oTareaDTO.Plantilla = context.Plantilla.Where(x => x.IdPlantilla == Tarea.IdPlantilla).Select(y => new PlantillaDTO { IdPlantilla = y.IdPlantilla, Nombre = y.Nombre, Nombre2 = y.Nombre2 }).FirstOrDefault();
 
                     if (oTareaDTO.Responsables.Count > 0)
                         SendMailResponsable(oTareaDTO, responsablesToRemove, responsablesToAdd);//SendMailResponsable(2, TareaDTO, null, null);
@@ -514,7 +519,7 @@ namespace ESSACInspecciones.Core.BL
                 }
                 catch (Exception e)
                 {
-                    //throw e;
+                    throw e;
                     return false;
                 }
             }
@@ -607,6 +612,7 @@ namespace ESSACInspecciones.Core.BL
                         MinutoFin = r.FechaFin != null ? Convert.ToInt32(r.FechaFin.Value.ToString("mm")) : -1,
                         IdCliente = r.IdCliente,
                         IdInmueble = r.IdInmueble,
+                        IdPlantilla = r.IdPlantilla,
                         IdServicio = r.IdServicio,
                         IdEstado = r.IdEstado,
                         Cliente = context.Cliente.Where(x => x.IdCliente == r.IdCliente).Select(y => new ClienteDTO { NombreEmpresa = y.Nombre }).FirstOrDefault(),

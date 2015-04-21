@@ -73,6 +73,7 @@
                     var startDate = $.fullCalendar.formatDate(start, "dd-MM-yyyy");
                     var endDate = $.fullCalendar.formatDate(end, "dd-MM-yyyy");
                     getServicios('0');
+                    getProtocolos('0');
                     getResponsables(resource.id);
                     getClientes('0');
                     $("#fechaIniTarea").val(startDate);
@@ -136,6 +137,9 @@
                 var ServicioId = $(this).val();
                 getEstados(ServicioId, 0);
             });
+            $('#protocoloTarea').on("change", function () {
+                var ProtocoloId = $(this).val();
+            });
             $("#clienteTarea").on("change", function () {
                 var ClienteId = $(this).val();
                 getInmueble(ClienteId, 0);
@@ -154,9 +158,10 @@
                     var _tarea = {
                         IdTarea: selectedDate.idTarea,
                         IdServicio: $("#servicioTarea").val(),
+                        IdPlantilla: $("#protocoloTarea").val(),
                         IdCliente: $("#clienteTarea").val(),
                         IdInmueble: $("#inmuebleTarea").val(),
-                        IdEstado: $("#estadoTarea").val() ? $("#estadoTarea").val() : 0,
+                        IdEstado: $("#estadoTarea").val() ? $("#estadoTarea").val() : 2,
                         NombreTarea: $("#nombreTarea").val(),
                         Descripcion: $("#descripcionTarea").val(),
                         StrFechaInicio: $("#fechaIniTarea").val(),
@@ -173,6 +178,8 @@
                     }).done(function (data) {
                         $("#loading").hide();
                         selectedDate.title = _tarea.NombreTarea;
+                        if ($("#inmuebleTarea").val() != 0 && $("#inmuebleTarea").val() != null)
+                            selectedDate.title += " " + $("#protocoloTarea option:selected").text();
                         selectedDate.color = "#" + data.ColorServicio;
                         selectedDate.resource = _resource;
                         if (data.Response != 0) {//NUEVO
@@ -353,6 +360,7 @@
                 $("#minutoFinTarea").val(data.MinutoFin);
                 $("#observacionesTarea").val(data.Observaciones);
                 getServicios(data.IdServicio);
+                getProtocolos(data.IdPlantilla);
                 getResponsables(data.Responsables);//data.IdResponsable
                 getClientes(data.IdCliente);
                 getInmueble(data.IdCliente, data.IdInmueble);
@@ -422,6 +430,26 @@
                 $("#servicioTarea").val(ServicioId);
             }).fail(function () {
                 alert('Error al intentar obtener la lista de Servicios. Por favor, actualice la página o presione F5.');
+            });
+        }
+        function getProtocolos(ProtocoloId) {
+            $.ajax({
+                url: "/Admin/GetPlantillas",
+                type: "GET",
+                cache: false,
+                datatype: "json"
+            }).done(function (data) {
+                var select = $("#protocoloTarea");
+                select.empty();
+                $.each(data, function (index, itemData) {
+                    select.append($('<option />', {
+                        value: itemData.IdPlantilla,
+                        text: itemData.Nombre
+                    }));
+                });
+                $("#protocoloTarea").val(ProtocoloId);
+            }).fail(function () {
+                alert('Error al intentar obtener la lista de Protocolos. Por favor, actualice la página o presione F5.');
             });
         }
         function getResponsables(resource) {
@@ -630,6 +658,7 @@
             if ($("#nombreTarea").val().trim() == "") message = "Ingrese un Nombre.";
             //if ($("#descripcionTarea").val().trim() == "") message += "\nIngrese una Descripción.";
             if ($("#servicioTarea").val() == 0) message += "\nSeleccione un Servicio.";
+            if ($("#protocoloTarea").val() == 0) message += "\nSeleccione un Protocolo.";
             if ($("#clienteTarea").val() == 0) message += "\nSeleccione un Cliente.";
             if ($("#inmuebleTarea").val() && $("#inmuebleTarea").val() == 0) message += "\nSeleccione un Inmueble.";
             //if ($("#fechaIniTarea").val() == 0) message += "\nIngrese Fecha de Inicio.";
@@ -783,6 +812,12 @@
                             <label class="col-lg-3 control-label">Servicio</label>
                             <div class="col-lg-9">
                                 <select id="servicioTarea" class="form-control"></select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">Protocolo</label>
+                            <div class="col-lg-9">
+                                <select id="protocoloTarea" class="form-control"></select>
                             </div>
                         </div>
                         <div class="form-group">

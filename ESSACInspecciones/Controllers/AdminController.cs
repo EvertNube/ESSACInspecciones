@@ -672,7 +672,7 @@ namespace ESSACInspecciones.Controllers
             ProtocoloDTO obj = objBL.getProtocolo(idInmueble, idPeriodo, idProtocolo, idPlantilla);
             return View(obj);
         }
-        public ActionResult Protocolo(int idInmueble)
+        public ActionResult Protocolo(int idInmueble, int idPeriodo)
         {
             UsuariosBL oUsuariosBL = new UsuariosBL();
             var listaInspectores = oUsuariosBL.getUsuariosInspectores();
@@ -683,6 +683,7 @@ namespace ESSACInspecciones.Controllers
             ClienteBL oClienteBL = new ClienteBL();
             ViewBag.IdCliente = oClienteBL.getInmueble(idInmueble).IdCliente;
             ViewBag.IdInmueble = idInmueble;
+            ViewBag.IdPeriodo = idPeriodo;
 
             OpcionRespuestaBL obj = new OpcionRespuestaBL();
             ViewBag.Horas = new BaseDTO().fillHoras().ToJSON();
@@ -1174,6 +1175,13 @@ namespace ESSACInspecciones.Controllers
             //if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
             TareaBL objBL = new TareaBL();
             return Json(objBL.getServicios(true), JsonRequestBehavior.AllowGet);
+        }
+        [HttpGet]
+        public ActionResult GetPlantillas()
+        {
+            //if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
+            TareaBL objBL = new TareaBL();
+            return Json(objBL.getPlantillasBag(true), JsonRequestBehavior.AllowGet);
         }
         [HttpGet]
         public ActionResult GetResponsables()
