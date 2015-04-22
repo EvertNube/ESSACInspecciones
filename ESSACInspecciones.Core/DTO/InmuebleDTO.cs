@@ -21,5 +21,8 @@ namespace ESSACInspecciones.Core.DTO
         public bool Active { get; set; }
 
         public ClienteDTO Cliente { get; set; }
+
+        public List<PlantillaDTO> Plantillas { get; set; }
+        public int IdPlantilla { get; set; }
     }
 }

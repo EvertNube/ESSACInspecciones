@@ -276,11 +276,16 @@ namespace ESSACInspecciones.Controllers
             return View();
         }
 
-        public ActionResult AddInmueble(InmuebleDTO dto)
+        public ActionResult AddInmueble(InmuebleDTO dto, int[] plantillas)
         {
             if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
             try
             {
+                if (plantillas != null)
+                    dto.Plantillas = plantillas.Select(x => new PlantillaDTO { IdPlantilla = x }).ToList();
+                else
+                    dto.Plantillas = new List<PlantillaDTO>();
+
                 ClienteBL objBL = new ClienteBL();
                 if (dto.IdInmueble == 0)
                 {

@@ -19,13 +19,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/25/2015 18:07:52</publishTime>
     </File>
     <File Include="bin/ESSACInspecciones.Core.dll">
-      <publishTime>04/20/2015 12:09:00</publishTime>
+      <publishTime>04/21/2015 16:39:43</publishTime>
     </File>
     <File Include="bin/ESSACInspecciones.Data.dll">
       <publishTime>04/20/2015 12:08:59</publishTime>
     </File>
     <File Include="bin/ESSACInspecciones.dll">
-      <publishTime>04/20/2015 12:09:02</publishTime>
+      <publishTime>04/21/2015 16:39:44</publishTime>
     </File>
     <File Include="bin/ESSACInspecciones.Helpers.dll">
       <publishTime>03/12/2015 20:22:52</publishTime>
@@ -2095,7 +2095,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/22/2014 19:24:12</publishTime>
     </File>
     <File Include="Views/Admin/Index.cshtml">
-      <publishTime>10/22/2014 19:24:12</publishTime>
+      <publishTime>04/21/2015 16:38:54</publishTime>
     </File>
     <File Include="Views/Admin/Ingresar.cshtml">
       <publishTime>03/03/2015 15:24:39</publishTime>
@@ -2143,7 +2143,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/22/2014 19:24:12</publishTime>
     </File>
     <File Include="Views/Admin/Tarea.cshtml">
-      <publishTime>04/09/2015 18:13:04</publishTime>
+      <publishTime>04/20/2015 15:51:43</publishTime>
     </File>
     <File Include="Views/Admin/Tareas.cshtml">
       <publishTime>04/10/2015 16:36:19</publishTime>
