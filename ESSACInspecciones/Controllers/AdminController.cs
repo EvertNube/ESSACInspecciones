@@ -264,16 +264,41 @@ namespace ESSACInspecciones.Controllers
         public ActionResult Inmueble(int IdCliente, int? id = null)
         {
             if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
+            
             ClienteBL objBL = new ClienteBL();
+            var dataPlantillas = objBL.getPlantillas(true);
             ViewBag.IdCliente = IdCliente;
-            var objSent = TempData["Inmueble"];
-            if (objSent != null) { TempData["Inmueble"] = null; return View(objSent); }
+            var objSent = (InmuebleDTO)TempData["Inmueble"];
+            if (objSent != null) 
+            { 
+                TempData["Inmueble"] = null;
+                ViewBag.Plantillas = removePlantillas(dataPlantillas, objSent.Plantillas);//ViewBag.Responsables = dataResponsables;
+                return View(objSent); 
+            }
             if (id != null)
             {
                 InmuebleDTO obj = objBL.getInmueble((int)id);
+                ViewBag.Plantillas = removePlantillas(dataPlantillas, obj.Plantillas);
                 return View(obj);
             }
+            else
+            {
+                ViewBag.Plantillas = dataPlantillas;
+            }
             return View();
+        }
+        public List<PlantillaDTO> removePlantillas(IList<PlantillaDTO> AllPlantillas, List<PlantillaDTO> SeldPlantillas)
+        {
+            List<PlantillaDTO> plantillasLeft = new List<PlantillaDTO>();//.ToList();
+            plantillasLeft = AllPlantillas.ToList();
+            if (SeldPlantillas != null)
+            {
+                foreach (var plan in AllPlantillas)
+                    foreach (var planInm in SeldPlantillas)
+                        if (plan.IdPlantilla > 0 && plan.IdPlantilla == planInm.IdPlantilla)
+                            plantillasLeft.Remove(planInm);
+            }
+            return plantillasLeft;
         }
 
         public ActionResult AddInmueble(InmuebleDTO dto, int[] plantillas)

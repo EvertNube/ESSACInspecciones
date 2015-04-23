@@ -51,6 +51,7 @@
     <Compile Include="BL\BolsaTareasBL.cs" />
     <Compile Include="BL\ClienteBL.cs" />
     <Compile Include="BL\PeriodoBL.cs" />
+    <Compile Include="BL\PlantillaBL.cs" />
     <Compile Include="BL\ServiciosBL.cs" />
     <Compile Include="BL\ProtocoloBL.cs" />
     <Compile Include="BL\OpcionRespuestaBL.cs" />

@@ -20,6 +20,7 @@ namespace ESSACInspecciones.Data
             this.Seccion = new HashSet<Seccion>();
             this.Tarea = new HashSet<Tarea>();
             this.SeccionBody = new HashSet<SeccionBody>();
+            this.Inmueble = new HashSet<Inmueble>();
         }
     
         public int IdPlantilla { get; set; }
@@ -31,5 +32,6 @@ namespace ESSACInspecciones.Data
         public virtual ICollection<Seccion> Seccion { get; set; }
         public virtual ICollection<Tarea> Tarea { get; set; }
         public virtual ICollection<SeccionBody> SeccionBody { get; set; }
+        public virtual ICollection<Inmueble> Inmueble { get; set; }
     }
 }

@@ -98,6 +98,14 @@
     <Property Name="Nombre2" Type="nchar" MaxLength="200" />
     <Property Name="Active" Type="bit" Nullable="false" />
   </EntityType>
+  <EntityType Name="PlantillasPorInmueble">
+    <Key>
+      <PropertyRef Name="IdInmueble" />
+      <PropertyRef Name="IdPlantilla" />
+    </Key>
+    <Property Name="IdInmueble" Type="int" Nullable="false" />
+    <Property Name="IdPlantilla" Type="int" Nullable="false" />
+  </EntityType>
   <EntityType Name="Protocolo">
     <Key>
       <PropertyRef Name="IdProtocolo" />
@@ -326,6 +334,30 @@
       </Principal>
       <Dependent Role="OpcionRespuesta">
         <PropertyRef Name="IdTipoRespuesta" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_PlantillasPorInmueble_Inmueble">
+    <End Role="Inmueble" Type="Self.Inmueble" Multiplicity="1" />
+    <End Role="PlantillasPorInmueble" Type="Self.PlantillasPorInmueble" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Inmueble">
+        <PropertyRef Name="IdInmueble" />
+      </Principal>
+      <Dependent Role="PlantillasPorInmueble">
+        <PropertyRef Name="IdInmueble" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_PlantillasPorInmueble_Plantilla">
+    <End Role="Plantilla" Type="Self.Plantilla" Multiplicity="1" />
+    <End Role="PlantillasPorInmueble" Type="Self.PlantillasPorInmueble" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Plantilla">
+        <PropertyRef Name="IdPlantilla" />
+      </Principal>
+      <Dependent Role="PlantillasPorInmueble">
+        <PropertyRef Name="IdPlantilla" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -669,6 +701,7 @@
     <EntitySet Name="OpcionRespuesta" EntityType="Self.OpcionRespuesta" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Periodo" EntityType="Self.Periodo" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Plantilla" EntityType="Self.Plantilla" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="PlantillasPorInmueble" EntityType="Self.PlantillasPorInmueble" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Protocolo" EntityType="Self.Protocolo" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Responsables_Tarea" EntityType="Self.Responsables_Tarea" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Respuesta" EntityType="Self.Respuesta" Schema="dbo" store:Type="Tables" />
@@ -703,6 +736,14 @@
     <AssociationSet Name="FK_OpcionRespuesta_TipoTag" Association="Self.FK_OpcionRespuesta_TipoTag">
       <End Role="TipoTag" EntitySet="TipoTag" />
       <End Role="OpcionRespuesta" EntitySet="OpcionRespuesta" />
+    </AssociationSet>
+    <AssociationSet Name="FK_PlantillasPorInmueble_Inmueble" Association="Self.FK_PlantillasPorInmueble_Inmueble">
+      <End Role="Inmueble" EntitySet="Inmueble" />
+      <End Role="PlantillasPorInmueble" EntitySet="PlantillasPorInmueble" />
+    </AssociationSet>
+    <AssociationSet Name="FK_PlantillasPorInmueble_Plantilla" Association="Self.FK_PlantillasPorInmueble_Plantilla">
+      <End Role="Plantilla" EntitySet="Plantilla" />
+      <End Role="PlantillasPorInmueble" EntitySet="PlantillasPorInmueble" />
     </AssociationSet>
     <AssociationSet Name="FK_Protocolo_EstadoProtocolo" Association="Self.FK_Protocolo_EstadoProtocolo">
       <End Role="EstadoProtocolo" EntitySet="EstadoProtocolo" />

@@ -279,6 +279,13 @@ namespace ESSACInspecciones.Core.BL
                     Inmueble.IdCliente = InmuebleDTO.IdCliente;
                     Inmueble.Active = true;
                     context.Inmueble.Add(Inmueble);
+
+                    foreach (var plan in InmuebleDTO.Plantillas)
+                    {
+                        var plantilla = context.Plantilla.Where(x => x.IdPlantilla == plan.IdPlantilla).SingleOrDefault();
+                        Inmueble.Plantilla.Remove(plantilla);
+                    }
+
                     context.SaveChanges();
                     return true;
                 }
@@ -301,6 +308,23 @@ namespace ESSACInspecciones.Core.BL
                     Inmueble.Direccion = InmuebleDTO.Direccion;
                     Inmueble.IdCliente = InmuebleDTO.IdCliente;
                     Inmueble.Active = InmuebleDTO.Active;
+
+                    var oldPlantillas = Inmueble.Plantilla.Select(x => x.IdPlantilla).ToList();
+                    var newPlantillas = InmuebleDTO.Plantillas.Select(x => x.IdPlantilla).ToList();
+                    var PlantillasToRemove = oldPlantillas.Except(newPlantillas).ToList();
+                    var PlantillasToAdd = newPlantillas.Except(oldPlantillas).ToList();
+
+                    foreach (var plan in PlantillasToRemove)
+                    {
+                        var plantilla = context.Plantilla.Where(x => x.IdPlantilla == plan).SingleOrDefault();
+                        Inmueble.Plantilla.Remove(plantilla);
+                    }
+                    foreach (var plan in PlantillasToAdd)
+                    {
+                        var plantilla = context.Plantilla.Where(x => x.IdPlantilla == plan).SingleOrDefault();
+                        Inmueble.Plantilla.Add(plantilla);
+                    }
+
                     context.SaveChanges();
                     return true;
                 }
@@ -393,5 +417,17 @@ namespace ESSACInspecciones.Core.BL
             }
         }
         #endregion
+        public IList<PlantillaDTO> getPlantillas(bool AsSelectList = false)
+        {
+            PlantillaBL oBL = new PlantillaBL();
+            if (!AsSelectList)
+                return oBL.getPlantillas();
+            else
+            {
+                var lista = oBL.getPlantillas().ToList();
+                lista.Insert(0, new PlantillaDTO() { IdPlantilla = 0, Nombre = "Seleccione una plantilla" });
+                return lista;
+            }
+        }
     }
 }

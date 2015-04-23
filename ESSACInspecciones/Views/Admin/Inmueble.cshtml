@@ -11,50 +11,48 @@
 @section scripts{
     <script type="text/javascript">
         $(document).ready(function () {
-
-        });
-
-        $("#add-plantilla").click(function () {
-            var existe = false;
-            var valuePlantilla = $('#plantillaInmueble :selected').val();
-            if (valueResponsable > 0) {
-                var textPlantilla = $('#plantillaInmueble :selected').text();
-                $('#Plantillas option').each(function () {
-                    if ($(this).val() == valuePlantilla) existe = true;
-                });
-                if (!existe) {
-                    $('#Plantillas').append($('<option>', {
-                        value: valuePlantilla,
-                        text: textPlantilla
-                    }));
-                    $('#plantillaInmueble :selected').remove();
+            $("#add-plantilla").click(function () {
+                var existe = false;
+                var valuePlantilla = $('#plantillaInmueble :selected').val();
+                if (valuePlantilla > 0) {
+                    var textPlantilla = $('#plantillaInmueble :selected').text();
+                    $('#Plantillas option').each(function () {
+                        if ($(this).val() == valuePlantilla) existe = true;
+                    });
+                    if (!existe) {
+                        $('#Plantillas').append($('<option>', {
+                            value: valuePlantilla,
+                            text: textPlantilla
+                        }));
+                        $('#plantillaInmueble :selected').remove();
+                    } else {
+                        alert("No se puede agregar el protocolo " + textPlantilla + ", porque ya se encuentra agregado.");
+                    }
                 } else {
-                    alert("No se puede agregar el protocolo " + textPlantilla + ", porque ya se encuentra agregado.");
+                    alert("Por favor, seleccione un protocolo válido.");
                 }
-            } else {
-                alert("Por favor, seleccione un protocolo válido.");
-            }
-        });
-        $("#remove-plantilla").click(function () {
-            var val = $('#Plantillas :selected').val();
-            var text = $('#Plantillas :selected').text();
-            $('#plantillaInmueble').append($('<option>', {
-                value: val,
-                text: text
-            }));
-            $("select#plantillaInmueble").html($("select#responsableTarea option").sort(function (a, b) {
-                return a.text == b.text ? 0 : a.value > b.value ? 1 : -1;
-            }));
-            $('#Responsables :selected').remove();
-        });
-
-        $("#btnGuardar").click(function () {
-            //console.log("seteando");
-            var values = [];
-            $('#Responsables option').each(function () {
-                values.push($(this).val());
             });
-            $("#Responsables").val(values);//(["2", "3"]);
+            $("#remove-plantilla").click(function () {
+                var val = $('#Plantillas :selected').val();
+                var text = $('#Plantillas :selected').text();
+                $('#plantillaInmueble').append($('<option>', {
+                    value: val,
+                    text: text
+                }));
+                $("select#plantillaInmueble").html($("select#plantillaInmueble option").sort(function (a, b) {
+                    return a.text == b.text ? 0 : a.value > b.value ? 1 : -1;
+                }));
+                $('#Plantillas :selected').remove();
+            });
+
+            $("#btnGuardar").click(function () {
+                //console.log("seteando");
+                var values = [];
+                $('#Plantillas option').each(function () {
+                    values.push($(this).val());
+                });
+                $("#Plantillas").val(values);//(["2", "3"]);
+            });
         });
     </script>
 }
@@ -92,12 +90,12 @@
                                     </div>
                                     <div class=" form-horizontal">
                                         <div class="form-group">
-                                            <label class="col-lg-3">Responsable</label>
+                                            <label class="col-lg-3">Plantilla</label>
                                             <div class="col-lg-8">
                                                 @Html.DropDownList("plantillaInmueble", new SelectList(ViewBag.Plantillas, "IdPlantilla", "Nombre", 0), new { @class = "form-control parsley-validated" })
                                             </div>
                                             <div class="col-lg-1">
-                                                <button type="button" class="btn btn-dark btn-sm btn-icon btn-rounded" id="add-responsable" data-toggle="tooltip" data-placement="right" title="" data-original-title="Agregar Responsable">
+                                                <button type="button" class="btn btn-dark btn-sm btn-icon btn-rounded" id="add-plantilla" data-toggle="tooltip" data-placement="right" title="" data-original-title="Agregar Protocolo">
                                                     <i class="fa fa-plus"></i>
                                                 </button>
                                             </div>
@@ -111,7 +109,7 @@
                                                 @Html.DropDownListFor(u => u.Plantillas, new MultiSelectList(Model != null ? ViewBag.Resources ?? new List<ESSACInspecciones.Core.DTO.PlantillaDTO>() : new List<ESSACInspecciones.Core.DTO.PlantillaDTO>(), "IdPlantilla", "Nombre"), new { @multiple = "multiple", @class = "form-control" })
                                             </div>
                                             <div class="col-lg-1">
-                                                <button type="button" class="btn btn-dark btn-sm btn-icon btn-rounded" id="remove-responsable" data-toggle="tooltip" data-placement="right" title="" data-original-title="Quitar Responsable">
+                                                <button type="button" class="btn btn-dark btn-sm btn-icon btn-rounded" id="remove-plantilla" data-toggle="tooltip" data-placement="right" title="" data-original-title="Quitar Plantilla">
                                                     <i class="fa fa-minus-circle"></i>
                                                 </button>
                                             </div>
@@ -136,7 +134,7 @@
                                     @Html.TextBoxFor(u => u.IdInmueble, new { @value = Model != null ? Model.IdInmueble.ToString() : "", @type = "hidden" })
                                     @Html.TextBoxFor(u => u.IdCliente, new { @value = Model != null ? ViewBag.IdCliente : "", @type = "hidden" })
                                     @{var btnName = (Model != null && Model.IdInmueble > 0) ? "Guardar Cambios" : "Crear";}
-                                    <button type="submit" class="btn btn-sm btn-primary btn-rounded">@btnName</button>
+                                    <button type="submit" id="btnGuardar" class="btn btn-sm btn-primary btn-rounded">@btnName</button>
                                     <a class="btn btn-sm btn-danger btn-rounded" href="@Url.Action("Cliente", new { id = ViewBag.IdCliente })">Salir</a>
                                 </div>
                             </section>

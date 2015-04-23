@@ -136,6 +136,28 @@ namespace ESSACInspecciones.Data
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetDefaultValues_Result>("SP_GetDefaultValues", idPlantillaParameter, idInmuebleParameter);
         }
     
+        public virtual ObjectResult<SP_GetPlantillas_Result> SP_GetPlantillas(Nullable<int> idUsuario, Nullable<int> idInmueble, Nullable<int> idPeriodo)
+        {
+            var idUsuarioParameter = idUsuario.HasValue ?
+                new ObjectParameter("IdUsuario", idUsuario) :
+                new ObjectParameter("IdUsuario", typeof(int));
+    
+            var idInmuebleParameter = idInmueble.HasValue ?
+                new ObjectParameter("IdInmueble", idInmueble) :
+                new ObjectParameter("IdInmueble", typeof(int));
+    
+            var idPeriodoParameter = idPeriodo.HasValue ?
+                new ObjectParameter("IdPeriodo", idPeriodo) :
+                new ObjectParameter("IdPeriodo", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetPlantillas_Result>("SP_GetPlantillas", idUsuarioParameter, idInmuebleParameter, idPeriodoParameter);
+        }
+    
+        public virtual ObjectResult<SP_GetTareas_Result> SP_GetTareas()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetTareas_Result>("SP_GetTareas");
+        }
+    
         public virtual ObjectResult<SP_GetTareasResponsables_Result> SP_GetTareasResponsables(Nullable<System.DateTime> fechaInicio, Nullable<System.DateTime> fechaFin)
         {
             var fechaInicioParameter = fechaInicio.HasValue ?
@@ -195,28 +217,6 @@ namespace ESSACInspecciones.Data
         public virtual int sp_upgraddiagrams()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_upgraddiagrams");
-        }
-    
-        public virtual ObjectResult<SP_GetTareas_Result> SP_GetTareas()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetTareas_Result>("SP_GetTareas");
-        }
-    
-        public virtual ObjectResult<SP_GetPlantillas_Result> SP_GetPlantillas(Nullable<int> idUsuario, Nullable<int> idInmueble, Nullable<int> idPeriodo)
-        {
-            var idUsuarioParameter = idUsuario.HasValue ?
-                new ObjectParameter("IdUsuario", idUsuario) :
-                new ObjectParameter("IdUsuario", typeof(int));
-    
-            var idInmuebleParameter = idInmueble.HasValue ?
-                new ObjectParameter("IdInmueble", idInmueble) :
-                new ObjectParameter("IdInmueble", typeof(int));
-    
-            var idPeriodoParameter = idPeriodo.HasValue ?
-                new ObjectParameter("IdPeriodo", idPeriodo) :
-                new ObjectParameter("IdPeriodo", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetPlantillas_Result>("SP_GetPlantillas", idUsuarioParameter, idInmuebleParameter, idPeriodoParameter);
         }
     }
 }
