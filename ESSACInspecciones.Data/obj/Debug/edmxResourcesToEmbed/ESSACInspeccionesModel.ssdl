@@ -671,6 +671,11 @@
     <Parameter Name="IdInmueble" Type="int" Mode="In" />
     <Parameter Name="IdPeriodo" Type="int" Mode="In" />
   </Function>
+  <Function Name="SP_GetPlantillas2" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="IdUsuario" Type="int" Mode="In" />
+    <Parameter Name="IdInmueble" Type="int" Mode="In" />
+    <Parameter Name="IdPeriodo" Type="int" Mode="In" />
+  </Function>
   <Function Name="SP_GetTareas" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
   <Function Name="SP_GetTareasResponsables" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="FechaInicio" Type="date" Mode="In" />

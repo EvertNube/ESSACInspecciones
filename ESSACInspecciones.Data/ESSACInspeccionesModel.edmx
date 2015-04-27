@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="ESSAC.InspeccionesDbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="ESSAC.InspeccionesDbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Cargo">
           <Key>
             <PropertyRef Name="IdCargo" />
@@ -676,6 +676,11 @@
           <Parameter Name="IdInmueble" Type="int" Mode="In" />
           <Parameter Name="IdPeriodo" Type="int" Mode="In" />
         </Function>
+        <Function Name="SP_GetPlantillas2" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="IdUsuario" Type="int" Mode="In" />
+          <Parameter Name="IdInmueble" Type="int" Mode="In" />
+          <Parameter Name="IdPeriodo" Type="int" Mode="In" />
+        </Function>
         <Function Name="SP_GetTareas" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="SP_GetTareasResponsables" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="FechaInicio" Type="date" Mode="In" />
@@ -843,8 +848,7 @@
             <End Role="Usuario" EntitySet="Usuario" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="ESSAC.InspeccionesDbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -1612,11 +1616,6 @@
             <Parameter Name="IdPlantilla" Mode="In" Type="Int32" />
             <Parameter Name="IdInmueble" Mode="In" Type="Int32" />
           </FunctionImport>
-          <FunctionImport Name="SP_GetPlantillas" ReturnType="Collection(ESSAC.InspeccionesDbModel.SP_GetPlantillas_Result)">
-            <Parameter Name="IdUsuario" Mode="In" Type="Int32" />
-            <Parameter Name="IdInmueble" Mode="In" Type="Int32" />
-            <Parameter Name="IdPeriodo" Mode="In" Type="Int32" />
-          </FunctionImport>
           <FunctionImport Name="SP_GetTareas" ReturnType="Collection(ESSAC.InspeccionesDbModel.SP_GetTareas_Result)" />
           <FunctionImport Name="SP_GetTareasResponsables" ReturnType="Collection(ESSAC.InspeccionesDbModel.SP_GetTareasResponsables_Result)">
             <Parameter Name="FechaInicio" Mode="In" Type="DateTime" />
@@ -1636,6 +1635,16 @@
             <Parameter Name="new_diagramname" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="sp_upgraddiagrams" />
+          <FunctionImport Name="SP_GetPlantillas" ReturnType="Collection(ESSAC.InspeccionesDbModel.SP_GetPlantillas_Result)">
+            <Parameter Name="IdUsuario" Mode="In" Type="Int32" />
+            <Parameter Name="IdInmueble" Mode="In" Type="Int32" />
+            <Parameter Name="IdPeriodo" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="SP_GetPlantillas2" ReturnType="Collection(ESSAC.InspeccionesDbModel.SP_GetPlantillas2_Result)">
+            <Parameter Name="IdUsuario" Mode="In" Type="Int32" />
+            <Parameter Name="IdInmueble" Mode="In" Type="Int32" />
+            <Parameter Name="IdPeriodo" Mode="In" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
         <ComplexType Name="SP_CountEstados_Result">
           <Property Type="String" Name="NombreEstado" Nullable="false" MaxLength="100" />
@@ -1644,16 +1653,6 @@
         <ComplexType Name="SP_GetDefaultValues_Result">
           <Property Type="Int32" Name="IdSeccionBody" Nullable="false" />
           <Property Type="String" Name="Descripcion" Nullable="false" />
-        </ComplexType>
-        <ComplexType Name="SP_GetPlantillas_Result">
-          <Property Type="Int32" Name="IdPlantilla" Nullable="false" />
-          <Property Type="String" Name="Nombre" Nullable="false" MaxLength="100" />
-          <Property Type="Boolean" Name="Active" Nullable="false" />
-          <Property Type="Int32" Name="IdProtocolo" Nullable="false" />
-          <Property Type="Int32" Name="IdInmueble" Nullable="true" />
-          <Property Type="Int32" Name="IdEstado" Nullable="false" />
-          <Property Type="String" Name="NombreEstado" Nullable="false" MaxLength="100" />
-          <Property Type="Int32" Name="IdPeriodo" Nullable="true" />
         </ComplexType>
         <ComplexType Name="SP_GetTareas_Result">
           <Property Type="Int32" Name="IdTarea" Nullable="false" />
@@ -1684,6 +1683,26 @@
           <Property Type="Int32" Name="ID" Nullable="false" />
           <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
           <Property Type="Int32" Name="OwnerID" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="SP_GetPlantillas_Result">
+          <Property Type="Int32" Name="IdPlantilla" Nullable="false" />
+          <Property Type="String" Name="Nombre" Nullable="false" MaxLength="100" />
+          <Property Type="Boolean" Name="Active" Nullable="false" />
+          <Property Type="Int32" Name="IdProtocolo" Nullable="false" />
+          <Property Type="Int32" Name="IdInmueble" Nullable="true" />
+          <Property Type="Int32" Name="IdEstado" Nullable="false" />
+          <Property Type="String" Name="NombreEstado" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="IdPeriodo" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="SP_GetPlantillas2_Result">
+          <Property Type="Int32" Name="IdPlantilla" Nullable="false" />
+          <Property Type="String" Name="Nombre" Nullable="false" MaxLength="100" />
+          <Property Type="Boolean" Name="Active" Nullable="false" />
+          <Property Type="Int32" Name="IdProtocolo" Nullable="false" />
+          <Property Type="Int32" Name="IdInmueble" Nullable="true" />
+          <Property Type="Int32" Name="IdEstado" Nullable="false" />
+          <Property Type="String" Name="NombreEstado" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="IdPeriodo" Nullable="true" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -2008,20 +2027,6 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="SP_GetPlantillas" FunctionName="ESSAC.InspeccionesDbModel.Store.SP_GetPlantillas">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="ESSAC.InspeccionesDbModel.SP_GetPlantillas_Result">
-                <ScalarProperty Name="IdPlantilla" ColumnName="IdPlantilla" />
-                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
-                <ScalarProperty Name="Active" ColumnName="Active" />
-                <ScalarProperty Name="IdProtocolo" ColumnName="IdProtocolo" />
-                <ScalarProperty Name="IdInmueble" ColumnName="IdInmueble" />
-                <ScalarProperty Name="IdEstado" ColumnName="IdEstado" />
-                <ScalarProperty Name="NombreEstado" ColumnName="NombreEstado" />
-                <ScalarProperty Name="IdPeriodo" ColumnName="IdPeriodo" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="SP_GetTareas" FunctionName="ESSAC.InspeccionesDbModel.Store.SP_GetTareas">
             <ResultMapping>
               <ComplexTypeMapping TypeName="ESSAC.InspeccionesDbModel.SP_GetTareas_Result">
@@ -2070,6 +2075,34 @@
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="ESSAC.InspeccionesDbModel.Store.sp_renamediagram" />
           <FunctionImportMapping FunctionImportName="sp_upgraddiagrams" FunctionName="ESSAC.InspeccionesDbModel.Store.sp_upgraddiagrams" />
+          <FunctionImportMapping FunctionImportName="SP_GetPlantillas" FunctionName="ESSAC.InspeccionesDbModel.Store.SP_GetPlantillas">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="ESSAC.InspeccionesDbModel.SP_GetPlantillas_Result">
+                <ScalarProperty Name="IdPlantilla" ColumnName="IdPlantilla" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="IdProtocolo" ColumnName="IdProtocolo" />
+                <ScalarProperty Name="IdInmueble" ColumnName="IdInmueble" />
+                <ScalarProperty Name="IdEstado" ColumnName="IdEstado" />
+                <ScalarProperty Name="NombreEstado" ColumnName="NombreEstado" />
+                <ScalarProperty Name="IdPeriodo" ColumnName="IdPeriodo" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SP_GetPlantillas2" FunctionName="ESSAC.InspeccionesDbModel.Store.SP_GetPlantillas2">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="ESSAC.InspeccionesDbModel.SP_GetPlantillas2_Result">
+                <ScalarProperty Name="IdPlantilla" ColumnName="IdPlantilla" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="IdProtocolo" ColumnName="IdProtocolo" />
+                <ScalarProperty Name="IdInmueble" ColumnName="IdInmueble" />
+                <ScalarProperty Name="IdEstado" ColumnName="IdEstado" />
+                <ScalarProperty Name="NombreEstado" ColumnName="NombreEstado" />
+                <ScalarProperty Name="IdPeriodo" ColumnName="IdPeriodo" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

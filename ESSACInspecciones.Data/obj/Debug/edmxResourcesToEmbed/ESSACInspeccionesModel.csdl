@@ -764,11 +764,6 @@
       <Parameter Name="IdPlantilla" Mode="In" Type="Int32" />
       <Parameter Name="IdInmueble" Mode="In" Type="Int32" />
     </FunctionImport>
-    <FunctionImport Name="SP_GetPlantillas" ReturnType="Collection(ESSAC.InspeccionesDbModel.SP_GetPlantillas_Result)">
-      <Parameter Name="IdUsuario" Mode="In" Type="Int32" />
-      <Parameter Name="IdInmueble" Mode="In" Type="Int32" />
-      <Parameter Name="IdPeriodo" Mode="In" Type="Int32" />
-    </FunctionImport>
     <FunctionImport Name="SP_GetTareas" ReturnType="Collection(ESSAC.InspeccionesDbModel.SP_GetTareas_Result)" />
     <FunctionImport Name="SP_GetTareasResponsables" ReturnType="Collection(ESSAC.InspeccionesDbModel.SP_GetTareasResponsables_Result)">
       <Parameter Name="FechaInicio" Mode="In" Type="DateTime" />
@@ -788,6 +783,16 @@
       <Parameter Name="new_diagramname" Mode="In" Type="String" />
     </FunctionImport>
     <FunctionImport Name="sp_upgraddiagrams" />
+    <FunctionImport Name="SP_GetPlantillas" ReturnType="Collection(ESSAC.InspeccionesDbModel.SP_GetPlantillas_Result)">
+      <Parameter Name="IdUsuario" Mode="In" Type="Int32" />
+      <Parameter Name="IdInmueble" Mode="In" Type="Int32" />
+      <Parameter Name="IdPeriodo" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="SP_GetPlantillas2" ReturnType="Collection(ESSAC.InspeccionesDbModel.SP_GetPlantillas2_Result)">
+      <Parameter Name="IdUsuario" Mode="In" Type="Int32" />
+      <Parameter Name="IdInmueble" Mode="In" Type="Int32" />
+      <Parameter Name="IdPeriodo" Mode="In" Type="Int32" />
+    </FunctionImport>
   </EntityContainer>
   <ComplexType Name="SP_CountEstados_Result">
     <Property Type="String" Name="NombreEstado" Nullable="false" MaxLength="100" />
@@ -796,16 +801,6 @@
   <ComplexType Name="SP_GetDefaultValues_Result">
     <Property Type="Int32" Name="IdSeccionBody" Nullable="false" />
     <Property Type="String" Name="Descripcion" Nullable="false" />
-  </ComplexType>
-  <ComplexType Name="SP_GetPlantillas_Result">
-    <Property Type="Int32" Name="IdPlantilla" Nullable="false" />
-    <Property Type="String" Name="Nombre" Nullable="false" MaxLength="100" />
-    <Property Type="Boolean" Name="Active" Nullable="false" />
-    <Property Type="Int32" Name="IdProtocolo" Nullable="false" />
-    <Property Type="Int32" Name="IdInmueble" Nullable="true" />
-    <Property Type="Int32" Name="IdEstado" Nullable="false" />
-    <Property Type="String" Name="NombreEstado" Nullable="false" MaxLength="100" />
-    <Property Type="Int32" Name="IdPeriodo" Nullable="true" />
   </ComplexType>
   <ComplexType Name="SP_GetTareas_Result">
     <Property Type="Int32" Name="IdTarea" Nullable="false" />
@@ -836,5 +831,25 @@
     <Property Type="Int32" Name="ID" Nullable="false" />
     <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
     <Property Type="Int32" Name="OwnerID" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="SP_GetPlantillas_Result">
+    <Property Type="Int32" Name="IdPlantilla" Nullable="false" />
+    <Property Type="String" Name="Nombre" Nullable="false" MaxLength="100" />
+    <Property Type="Boolean" Name="Active" Nullable="false" />
+    <Property Type="Int32" Name="IdProtocolo" Nullable="false" />
+    <Property Type="Int32" Name="IdInmueble" Nullable="true" />
+    <Property Type="Int32" Name="IdEstado" Nullable="false" />
+    <Property Type="String" Name="NombreEstado" Nullable="false" MaxLength="100" />
+    <Property Type="Int32" Name="IdPeriodo" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="SP_GetPlantillas2_Result">
+    <Property Type="Int32" Name="IdPlantilla" Nullable="false" />
+    <Property Type="String" Name="Nombre" Nullable="false" MaxLength="100" />
+    <Property Type="Boolean" Name="Active" Nullable="false" />
+    <Property Type="Int32" Name="IdProtocolo" Nullable="false" />
+    <Property Type="Int32" Name="IdInmueble" Nullable="true" />
+    <Property Type="Int32" Name="IdEstado" Nullable="false" />
+    <Property Type="String" Name="NombreEstado" Nullable="false" MaxLength="100" />
+    <Property Type="Int32" Name="IdPeriodo" Nullable="true" />
   </ComplexType>
 </Schema>

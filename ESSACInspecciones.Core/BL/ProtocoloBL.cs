@@ -43,7 +43,7 @@ namespace ESSACInspecciones.Core.BL
         {
             using (var context = getContext())
             {
-                var result = context.SP_GetPlantillas(idUsuario, idInmueble, idPeriodo)
+                var result = context.SP_GetPlantillas2(idUsuario, idInmueble, idPeriodo)
                     .Select(x => new ProtocoloDTO
                     {
                         IdProtocolo = x.IdProtocolo,
@@ -54,7 +54,7 @@ namespace ESSACInspecciones.Core.BL
                         Estado = new EstadoDTO { NombreEstado = x.NombreEstado },
                         Active = x.Active,
                         IdPeriodo = x.IdPeriodo.GetValueOrDefault()
-                    }).ToList();
+                    }).OrderBy(y => y.IdPlantilla).ToList();
                 return result;
             }
         }

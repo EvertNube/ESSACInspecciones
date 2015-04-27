@@ -266,6 +266,7 @@ namespace ESSACInspecciones.Controllers
             if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
             
             ClienteBL objBL = new ClienteBL();
+            PlantillaBL objPlantillaBL = new PlantillaBL();
             var dataPlantillas = objBL.getPlantillas(true);
             ViewBag.IdCliente = IdCliente;
             var objSent = (InmuebleDTO)TempData["Inmueble"];
@@ -273,12 +274,14 @@ namespace ESSACInspecciones.Controllers
             { 
                 TempData["Inmueble"] = null;
                 ViewBag.Plantillas = removePlantillas(dataPlantillas, objSent.Plantillas);//ViewBag.Responsables = dataResponsables;
+                ViewBag.Resources = objSent.Plantillas.AsEnumerable().Select(r => new PlantillaDTO { IdPlantilla = r.IdPlantilla, Nombre = objPlantillaBL.getPlantilla(r.IdPlantilla).Nombre }).ToList();
                 return View(objSent); 
             }
             if (id != null)
             {
                 InmuebleDTO obj = objBL.getInmueble((int)id);
                 ViewBag.Plantillas = removePlantillas(dataPlantillas, obj.Plantillas);
+                ViewBag.Resources = obj.Plantillas;
                 return View(obj);
             }
             else
@@ -291,13 +294,10 @@ namespace ESSACInspecciones.Controllers
         {
             List<PlantillaDTO> plantillasLeft = new List<PlantillaDTO>();//.ToList();
             plantillasLeft = AllPlantillas.ToList();
-            if (SeldPlantillas != null)
-            {
-                foreach (var plan in AllPlantillas)
-                    foreach (var planInm in SeldPlantillas)
-                        if (plan.IdPlantilla > 0 && plan.IdPlantilla == planInm.IdPlantilla)
-                            plantillasLeft.Remove(planInm);
-            }
+            foreach (var plan in AllPlantillas)
+                foreach (var planInm in SeldPlantillas)
+                    if (plan.IdPlantilla > 0 && plan.IdPlantilla == planInm.IdPlantilla)
+                        plantillasLeft.Remove(planInm);
             return plantillasLeft;
         }
 

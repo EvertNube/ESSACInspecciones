@@ -29,6 +29,22 @@ namespace ESSACInspecciones.Core.BL
                 return result.AsEnumerable<PlantillaDTO>().OrderBy(x => x.IdPlantilla).ToList<PlantillaDTO>();
             }
         }
-        
+
+        public PlantillaDTO getPlantilla(int id)
+        {
+            using(var context = getContext())
+            {
+                var result = from r in context.Plantilla
+                             where r.IdPlantilla == id
+                             select new PlantillaDTO
+                             {
+                                 IdPlantilla = r.IdPlantilla,
+                                 Nombre = r.Nombre,
+                                 Nombre2 = r.Nombre2,
+                                 Active = r.Active
+                             };
+                return result.SingleOrDefault();
+            }
+        }
     }
 }

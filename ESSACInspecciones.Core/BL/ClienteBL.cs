@@ -348,7 +348,8 @@ namespace ESSACInspecciones.Core.BL
                                  NombreInmueble = r.Nombre,
                                  Direccion = r.Direccion,
                                  IdCliente = r.IdCliente,
-                                 Active = r.Active
+                                 Active = r.Active,
+                                 Plantillas = r.Plantilla.Select(x => new PlantillaDTO{ IdPlantilla = x.IdPlantilla, Nombre = x.Nombre }).ToList()
                              };
                 return result.SingleOrDefault();
             }
