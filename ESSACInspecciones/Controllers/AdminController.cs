@@ -733,7 +733,8 @@ namespace ESSACInspecciones.Controllers
             try
             {
                 ProtocoloBL objBL = new ProtocoloBL();
-                dto.IdUsuario = getCurrentUser().IdUsuario;
+                //IdUsuario
+                //dto.IdUsuario = getCurrentUser().IdUsuario;
                 if (dto.IdProtocolo == 0)
                 {
                     //int idProtocolo = objBL.add_053(dto);
@@ -1042,7 +1043,8 @@ namespace ESSACInspecciones.Controllers
         {
             if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
             var objProtocolo = new JavaScriptSerializer().Deserialize<ProtocoloDTO>(protocolo);
-            objProtocolo.IdUsuario = getCurrentUser().IdUsuario;
+            //IdUsuario
+            //objProtocolo.IdUsuario = getCurrentUser().IdUsuario;
             if (!string.IsNullOrEmpty(objProtocolo.StrFecha)) objProtocolo.Fecha = Convert.ToDateTime(objProtocolo.StrFecha);
             ProtocoloBL objBL = new ProtocoloBL();
             bool response = false;

@@ -22,7 +22,6 @@ namespace ESSACInspecciones.Data
         public int IdProtocolo { get; set; }
         public int IdPlantilla { get; set; }
         public int IdInmueble { get; set; }
-        public int IdUsuario { get; set; }
         public int IdEstado { get; set; }
         public string NombreAreaProtegida { get; set; }
         public Nullable<System.DateTime> Fecha { get; set; }
@@ -35,7 +34,6 @@ namespace ESSACInspecciones.Data
         public virtual Inmueble Inmueble { get; set; }
         public virtual Periodo Periodo { get; set; }
         public virtual Plantilla Plantilla { get; set; }
-        public virtual Usuario Usuario { get; set; }
         public virtual ICollection<Respuesta> Respuesta { get; set; }
     }
 }

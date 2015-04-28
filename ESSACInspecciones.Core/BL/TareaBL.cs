@@ -425,7 +425,7 @@ namespace ESSACInspecciones.Core.BL
                     Tarea.IdCliente = TareaDTO.IdCliente;
                     Tarea.IdInmueble = TareaDTO.IdInmueble;
                     Tarea.IdServicio = TareaDTO.IdServicio;
-                    if (TareaDTO.IdServicio == 3 || TareaDTO.IdServicio == 5)
+                    if (TareaDTO.IdServicio == 4 || TareaDTO.IdServicio == 5)
                         Tarea.IdPlantilla = (TareaDTO.IdPlantilla.GetValueOrDefault() != 0) ? TareaDTO.IdPlantilla : null;
                     else
                         Tarea.IdPlantilla = null;
@@ -478,7 +478,7 @@ namespace ESSACInspecciones.Core.BL
                     Tarea.IdCliente = oTareaDTO.IdCliente;
                     Tarea.IdInmueble = oTareaDTO.IdInmueble;
                     Tarea.IdServicio = oTareaDTO.IdServicio;
-                    if (oTareaDTO.IdServicio == 3 || oTareaDTO.IdServicio == 5)
+                    if (oTareaDTO.IdServicio == 4 || oTareaDTO.IdServicio == 5)
                         Tarea.IdPlantilla = (oTareaDTO.IdPlantilla.GetValueOrDefault() != 0) ? oTareaDTO.IdPlantilla : null;
                     else
                         Tarea.IdPlantilla = null;

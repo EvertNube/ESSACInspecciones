@@ -12,7 +12,7 @@ namespace ESSACInspecciones.Core.DTO
         public int IdProtocolo { get; set; }
         public int IdPlantilla { get; set; }
         public int IdInmueble { get; set; }
-        public int IdUsuario { get; set; }
+        //public int IdUsuario { get; set; }
         public int IdEstado { get; set; }
         [Required]
         public string NombreAreaProtegida { get; set; }

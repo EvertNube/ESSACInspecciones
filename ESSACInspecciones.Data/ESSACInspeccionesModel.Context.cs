@@ -36,7 +36,6 @@ namespace ESSACInspecciones.Data
         public virtual DbSet<OpcionRespuesta> OpcionRespuesta { get; set; }
         public virtual DbSet<Periodo> Periodo { get; set; }
         public virtual DbSet<Plantilla> Plantilla { get; set; }
-        public virtual DbSet<Protocolo> Protocolo { get; set; }
         public virtual DbSet<Respuesta> Respuesta { get; set; }
         public virtual DbSet<Rol> Rol { get; set; }
         public virtual DbSet<Seccion> Seccion { get; set; }
@@ -49,6 +48,7 @@ namespace ESSACInspecciones.Data
         public virtual DbSet<TipoCelda> TipoCelda { get; set; }
         public virtual DbSet<TipoSeccion> TipoSeccion { get; set; }
         public virtual DbSet<TipoTag> TipoTag { get; set; }
+        public virtual DbSet<Protocolo> Protocolo { get; set; }
         public virtual DbSet<Usuario> Usuario { get; set; }
     
         public virtual int sp_alterdiagram(string diagramname, Nullable<int> owner_id, Nullable<int> version, byte[] definition)

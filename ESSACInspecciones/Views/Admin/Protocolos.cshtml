@@ -178,7 +178,7 @@
             });
             return true;
         }
-
+        /*
         function generarPdfProtocolo(idInmueble, idProtocolo, idPlantilla) {
             $.ajax({
                 async: false,
@@ -192,7 +192,7 @@
                 alert('Error al crear el PDF. Por favor, actualice la página o presione F5.');
             });
             return true;
-        }
+        }*/
 
         //////////////////////////////////////////
         function listarProtocolos(InmuebleId, PeriodoId) {
@@ -217,7 +217,7 @@
                 var url = '@Url.Action("Protocolo", "Admin", new { idInmueble = "abcInmueble", idPeriodo = "abcPeriodo" })';
                 url = url.replace("abcInmueble", itemData.IdInmueble);
                 url = url.replace("abcPeriodo", itemData.IdPeriodo);
-                var urlReporte = '@Url.Action("GenerarPdfProtocolo", "Admin")?idProtocolo=' + itemData.IdProtocolo + '&idPlantilla=' + itemData.IdPlantilla + '&idInmueble=' + itemData.IdInmueble;//ProtocoloReporte
+                var urlReporte = '@Url.Action("GenerarPdfProtocolo", "Admin")?idInmueble=' + itemData.IdInmueble + '&idPeriodo=' + itemData.IdPeriodo + '&idProtocolo=' + itemData.IdProtocolo + '&idPlantilla=' + itemData.IdPlantilla;//ProtocoloReporte
                 $('#tableProtocolo > tbody:last').append(
                     '<tr><td>' + (index + 1) + '</td>' +
                     '<td>' + itemData.Plantilla.Nombre + '</td>' +

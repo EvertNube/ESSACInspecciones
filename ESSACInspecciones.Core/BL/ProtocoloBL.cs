@@ -278,7 +278,7 @@ namespace ESSACInspecciones.Core.BL
                     protocolo.IdPlantilla = oProtocoloDTO.IdPlantilla;
                     protocolo.IdInmueble = oProtocoloDTO.IdInmueble;
                     protocolo.IdPeriodo = oProtocoloDTO.IdPeriodo;
-                    protocolo.IdUsuario = oProtocoloDTO.IdUsuario;
+                    //protocolo.IdUsuario = oProtocoloDTO.IdUsuario;
                     protocolo.IdEstado = (oProtocoloDTO.IdEstado != 0 ? oProtocoloDTO.IdEstado : (contaEstado != 0 ? 2 : 3));    // 2: Incompleto, 3: Completo, 4: Finalizado
                     protocolo.NombreAreaProtegida = oProtocoloDTO.NombreAreaProtegida;
                     protocolo.Direccion = oProtocoloDTO.Direccion;

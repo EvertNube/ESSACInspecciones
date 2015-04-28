@@ -113,7 +113,6 @@
     <Property Name="IdProtocolo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="IdPlantilla" Type="int" Nullable="false" />
     <Property Name="IdInmueble" Type="int" Nullable="false" />
-    <Property Name="IdUsuario" Type="int" Nullable="false" />
     <Property Name="IdEstado" Type="int" Nullable="false" />
     <Property Name="NombreAreaProtegida" Type="nvarchar" MaxLength="100" />
     <Property Name="Fecha" Type="datetime" />
@@ -406,18 +405,6 @@
       </Principal>
       <Dependent Role="Protocolo">
         <PropertyRef Name="IdPlantilla" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_Protocolo_Usuario">
-    <End Role="Usuario" Type="Self.Usuario" Multiplicity="1" />
-    <End Role="Protocolo" Type="Self.Protocolo" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Usuario">
-        <PropertyRef Name="IdUsuario" />
-      </Principal>
-      <Dependent Role="Protocolo">
-        <PropertyRef Name="IdUsuario" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -764,10 +751,6 @@
     </AssociationSet>
     <AssociationSet Name="FK_Protocolo_Plantilla" Association="Self.FK_Protocolo_Plantilla">
       <End Role="Plantilla" EntitySet="Plantilla" />
-      <End Role="Protocolo" EntitySet="Protocolo" />
-    </AssociationSet>
-    <AssociationSet Name="FK_Protocolo_Usuario" Association="Self.FK_Protocolo_Usuario">
-      <End Role="Usuario" EntitySet="Usuario" />
       <End Role="Protocolo" EntitySet="Protocolo" />
     </AssociationSet>
     <AssociationSet Name="FK_Responsables_Tarea_Tarea" Association="Self.FK_Responsables_Tarea_Tarea">
