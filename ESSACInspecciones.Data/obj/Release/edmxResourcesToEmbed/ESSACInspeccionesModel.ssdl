@@ -113,7 +113,6 @@
     <Property Name="IdProtocolo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="IdPlantilla" Type="int" Nullable="false" />
     <Property Name="IdInmueble" Type="int" Nullable="false" />
-    <Property Name="IdUsuario" Type="int" Nullable="false" />
     <Property Name="IdEstado" Type="int" Nullable="false" />
     <Property Name="NombreAreaProtegida" Type="nvarchar" MaxLength="100" />
     <Property Name="Fecha" Type="datetime" />
@@ -409,18 +408,6 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_Protocolo_Usuario">
-    <End Role="Usuario" Type="Self.Usuario" Multiplicity="1" />
-    <End Role="Protocolo" Type="Self.Protocolo" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Usuario">
-        <PropertyRef Name="IdUsuario" />
-      </Principal>
-      <Dependent Role="Protocolo">
-        <PropertyRef Name="IdUsuario" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="FK_Responsables_Tarea_Tarea">
     <End Role="Tarea" Type="Self.Tarea" Multiplicity="1" />
     <End Role="Responsables_Tarea" Type="Self.Responsables_Tarea" Multiplicity="*" />
@@ -671,6 +658,11 @@
     <Parameter Name="IdInmueble" Type="int" Mode="In" />
     <Parameter Name="IdPeriodo" Type="int" Mode="In" />
   </Function>
+  <Function Name="SP_GetPlantillas2" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="IdUsuario" Type="int" Mode="In" />
+    <Parameter Name="IdInmueble" Type="int" Mode="In" />
+    <Parameter Name="IdPeriodo" Type="int" Mode="In" />
+  </Function>
   <Function Name="SP_GetTareas" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
   <Function Name="SP_GetTareasResponsables" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="FechaInicio" Type="date" Mode="In" />
@@ -759,10 +751,6 @@
     </AssociationSet>
     <AssociationSet Name="FK_Protocolo_Plantilla" Association="Self.FK_Protocolo_Plantilla">
       <End Role="Plantilla" EntitySet="Plantilla" />
-      <End Role="Protocolo" EntitySet="Protocolo" />
-    </AssociationSet>
-    <AssociationSet Name="FK_Protocolo_Usuario" Association="Self.FK_Protocolo_Usuario">
-      <End Role="Usuario" EntitySet="Usuario" />
       <End Role="Protocolo" EntitySet="Protocolo" />
     </AssociationSet>
     <AssociationSet Name="FK_Responsables_Tarea_Tarea" Association="Self.FK_Responsables_Tarea_Tarea">

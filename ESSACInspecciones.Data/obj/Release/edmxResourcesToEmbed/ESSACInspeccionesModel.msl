@@ -100,23 +100,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Protocolo">
-      <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.Protocolo">
-        <MappingFragment StoreEntitySet="Protocolo">
-          <ScalarProperty Name="IdProtocolo" ColumnName="IdProtocolo" />
-          <ScalarProperty Name="IdPlantilla" ColumnName="IdPlantilla" />
-          <ScalarProperty Name="IdInmueble" ColumnName="IdInmueble" />
-          <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
-          <ScalarProperty Name="IdEstado" ColumnName="IdEstado" />
-          <ScalarProperty Name="NombreAreaProtegida" ColumnName="NombreAreaProtegida" />
-          <ScalarProperty Name="Fecha" ColumnName="Fecha" />
-          <ScalarProperty Name="Direccion" ColumnName="Direccion" />
-          <ScalarProperty Name="Active" ColumnName="Active" />
-          <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
-          <ScalarProperty Name="IdPeriodo" ColumnName="IdPeriodo" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="Respuesta">
       <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.Respuesta">
         <MappingFragment StoreEntitySet="Respuesta">
@@ -257,24 +240,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Usuario">
-      <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.Usuario">
-        <MappingFragment StoreEntitySet="Usuario">
-          <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
-          <ScalarProperty Name="Nombre" ColumnName="Nombre" />
-          <ScalarProperty Name="InicialesNombre" ColumnName="InicialesNombre" />
-          <ScalarProperty Name="Email" ColumnName="Email" />
-          <ScalarProperty Name="Cuenta" ColumnName="Cuenta" />
-          <ScalarProperty Name="Pass" ColumnName="Pass" />
-          <ScalarProperty Name="Estado" ColumnName="Estado" />
-          <ScalarProperty Name="FechaRegistro" ColumnName="FechaRegistro" />
-          <ScalarProperty Name="IdRol" ColumnName="IdRol" />
-          <ScalarProperty Name="IdCargo" ColumnName="IdCargo" />
-          <ScalarProperty Name="RutaFirma" ColumnName="RutaFirma" />
-          <ScalarProperty Name="IdCliente" ColumnName="IdCliente" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <AssociationSetMapping Name="DefaultValue" TypeName="ESSAC.InspeccionesDbModel.DefaultValue" StoreEntitySet="DefaultValue">
       <EndProperty Name="Plantilla">
         <ScalarProperty Name="IdPlantilla" ColumnName="IdPlantilla" />
@@ -289,14 +254,6 @@
       </EndProperty>
       <EndProperty Name="Plantilla">
         <ScalarProperty Name="IdPlantilla" ColumnName="IdPlantilla" />
-      </EndProperty>
-    </AssociationSetMapping>
-    <AssociationSetMapping Name="Responsables_Tarea" TypeName="ESSAC.InspeccionesDbModel.Responsables_Tarea" StoreEntitySet="Responsables_Tarea">
-      <EndProperty Name="Tarea">
-        <ScalarProperty Name="IdTarea" ColumnName="IdTarea" />
-      </EndProperty>
-      <EndProperty Name="Usuario">
-        <ScalarProperty Name="IdUsuario" ColumnName="IdResponsable" />
       </EndProperty>
     </AssociationSetMapping>
     <FunctionImportMapping FunctionImportName="sp_alterdiagram" FunctionName="ESSAC.InspeccionesDbModel.Store.sp_alterdiagram" />
@@ -369,6 +326,62 @@
     <FunctionImportMapping FunctionImportName="SP_GetPlantillas" FunctionName="ESSAC.InspeccionesDbModel.Store.SP_GetPlantillas">
       <ResultMapping>
         <ComplexTypeMapping TypeName="ESSAC.InspeccionesDbModel.SP_GetPlantillas_Result">
+          <ScalarProperty Name="IdPlantilla" ColumnName="IdPlantilla" />
+          <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+          <ScalarProperty Name="Active" ColumnName="Active" />
+          <ScalarProperty Name="IdProtocolo" ColumnName="IdProtocolo" />
+          <ScalarProperty Name="IdInmueble" ColumnName="IdInmueble" />
+          <ScalarProperty Name="IdEstado" ColumnName="IdEstado" />
+          <ScalarProperty Name="NombreEstado" ColumnName="NombreEstado" />
+          <ScalarProperty Name="IdPeriodo" ColumnName="IdPeriodo" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <EntitySetMapping Name="Protocolo">
+      <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.Protocolo">
+        <MappingFragment StoreEntitySet="Protocolo">
+          <ScalarProperty Name="IdPeriodo" ColumnName="IdPeriodo" />
+          <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
+          <ScalarProperty Name="Active" ColumnName="Active" />
+          <ScalarProperty Name="Direccion" ColumnName="Direccion" />
+          <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+          <ScalarProperty Name="NombreAreaProtegida" ColumnName="NombreAreaProtegida" />
+          <ScalarProperty Name="IdEstado" ColumnName="IdEstado" />
+          <ScalarProperty Name="IdInmueble" ColumnName="IdInmueble" />
+          <ScalarProperty Name="IdPlantilla" ColumnName="IdPlantilla" />
+          <ScalarProperty Name="IdProtocolo" ColumnName="IdProtocolo" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Usuario">
+      <EntityTypeMapping TypeName="ESSAC.InspeccionesDbModel.Usuario">
+        <MappingFragment StoreEntitySet="Usuario">
+          <ScalarProperty Name="IdCliente" ColumnName="IdCliente" />
+          <ScalarProperty Name="RutaFirma" ColumnName="RutaFirma" />
+          <ScalarProperty Name="IdCargo" ColumnName="IdCargo" />
+          <ScalarProperty Name="IdRol" ColumnName="IdRol" />
+          <ScalarProperty Name="FechaRegistro" ColumnName="FechaRegistro" />
+          <ScalarProperty Name="Estado" ColumnName="Estado" />
+          <ScalarProperty Name="Pass" ColumnName="Pass" />
+          <ScalarProperty Name="Cuenta" ColumnName="Cuenta" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="InicialesNombre" ColumnName="InicialesNombre" />
+          <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+          <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="Responsables_Tarea" TypeName="ESSAC.InspeccionesDbModel.Responsables_Tarea" StoreEntitySet="Responsables_Tarea">
+      <EndProperty Name="Usuario">
+        <ScalarProperty Name="IdUsuario" ColumnName="IdResponsable" />
+      </EndProperty>
+      <EndProperty Name="Tarea">
+        <ScalarProperty Name="IdTarea" ColumnName="IdTarea" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <FunctionImportMapping FunctionImportName="SP_GetPlantillas2" FunctionName="ESSAC.InspeccionesDbModel.Store.SP_GetPlantillas2">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="ESSAC.InspeccionesDbModel.SP_GetPlantillas2_Result">
           <ScalarProperty Name="IdPlantilla" ColumnName="IdPlantilla" />
           <ScalarProperty Name="Nombre" ColumnName="Nombre" />
           <ScalarProperty Name="Active" ColumnName="Active" />
