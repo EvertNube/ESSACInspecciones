@@ -257,8 +257,9 @@ blockquote.leyend p{
 }
 .navbar-brand img {
     max-height: 32px;
-    width: 204px;
+    width: 125px;
     height: 32px;    
+    margin-left: 33px;
 }
 .bg-gray.dk, .bg-gray .dk {
     background-color: #ccc;
@@ -328,4 +329,10 @@ margin: 0;
 }
 .bkred{
     /*background-color: #FB6B5B;*/
+}
+.blue-color {
+    color:#428bca;
+}
+input.rounded {
+    min-width: 63px;
 }

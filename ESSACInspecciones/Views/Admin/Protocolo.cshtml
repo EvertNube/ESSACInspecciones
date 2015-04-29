@@ -174,6 +174,7 @@
                                         strHtmlSubSecRow += '<th class="redondeado" rowspan="' + subSeccion.SeccionBodys[s].Rowspan + '" colspan="' + subSeccion.SeccionBodys[s].Colspan + '" ' + styleItem + '>' + subSeccion.SeccionBodys[s].Descripcion + '</th>';
                                     } else {
                                         var classTextBox = "form-control input-sm GroupDescripcion " + stepname + tipoSeccion; var strHtmlTag = '';
+                                        var idCeldaFirma = "";
                                         switch (subSeccion.SeccionBodys[s].IdTipoTag) {
                                             case 2: strHtmlTag = '<input type="text" id=tag"' + subSeccion.SeccionBodys[s].IdSeccionBody + '" class="rounded ' + classTextBox + '" value="' + removeNull(subSeccion.SeccionBodys[s].Respuesta) + '"/>'; break;
                                             case 3: strHtmlTag = drawSelect("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectSINO, subSeccion.SeccionBodys[s].Respuesta, 2, stepname, tipoSeccion); break;
@@ -455,17 +456,6 @@
             }
         });
 
-        //$('.claseGrafica').click(function () {
-        //        switch (protocolo.IdPlantilla) {
-        //            case 4:
-        //                paintGraficaElectrobomba();
-        //                break;
-        //            case 5:
-        //                paintGraficaMotobomba();
-        //                break;
-        //        }
-        //});
-
         $(".accordion-toggle").click(function () {
             setInterval(function () {
                 switch (protocolo.IdPlantilla) {
@@ -478,8 +468,11 @@
                 }
             }, 1)
         });
-    });
 
+        $('td.redondeado').click(function () {
+            $(this).children().first().addClass("blue-color");
+        });
+    });
 
     //Funciones
     function removerFila(fila) {
@@ -829,7 +822,7 @@
 <section class="vbox">
     <section class="scrollable padder">
         <div class="row m-b">
-            <div class="col-xs-12 col-md-10 col-md-offset-1">
+            <div class="col-xs-12 col-md-12">
                 @Html.ValidationSummary(true)
                 <div class="row m-b">
                     <div class="col-xs-12 col-md-12">
@@ -844,7 +837,6 @@
                                     </header>
                                     <div class="panel-body">
                                         <div class="tab-content">
-
                                         </div>
                                     </div>
                                 </section>
