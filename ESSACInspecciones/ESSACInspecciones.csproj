@@ -463,6 +463,7 @@
     <Content Include="Content\themes\admin\js\nestable\nestable.css" />
     <Content Include="Content\themes\admin\js\slimscroll\jquery.slimscroll.min.js" />
     <Content Include="Content\themes\admin\js\sortable\jquery.sortable.js" />
+    <Content Include="Content\themes\admin\js\test.js" />
     <Content Include="Content\themes\admin\js\uploader\jquery.fileupload.js" />
     <Content Include="Content\themes\admin\js\uploader\jquery.iframe-transport.js" />
     <Content Include="Content\themes\admin\js\uploader\jquery.min.js" />

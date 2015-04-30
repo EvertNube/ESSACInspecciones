@@ -846,10 +846,6 @@ namespace ESSACInspecciones.Controllers
             //Document doc = new Document(PageSize.A4.Rotate(), 1, 1, 1, 1);
             PdfWriter writer = PdfWriter.GetInstance(doc, ms);
 
-            //Document doc = new Document();
-            //string path = Server.MapPath("~/Content/pdfs");
-            //PdfWriter.GetInstance(doc, new FileStream(path + "/Doc1.pdf", FileMode.Create));
-
             //Mis Fonts
             Font myFontTitle18 = FontFactory.GetFont("Open Sans", 16);
             Font myFontTitle18_B = FontFactory.GetFont("Open Sans", 16, Font.BOLD);
@@ -863,8 +859,37 @@ namespace ESSACInspecciones.Controllers
             Font myFontText8_B = FontFactory.GetFont("Open Sans", 8, Font.BOLD);
             int numColumns = 12;
 
+            //Imagen
+            //string pdfpath = Server.MapPath("PDFs");
+            string imagespath = Server.MapPath("/Content/themes/admin/images");
+            string imgPath1 = imagespath +"/logo.png";
+            string imgPath2 = imagespath + "/logo-essac.png";
+            iTextSharp.text.Image pic1 = iTextSharp.text.Image.GetInstance(imgPath1);
+            iTextSharp.text.Image pic2 = iTextSharp.text.Image.GetInstance(imgPath2);
+            pic1.Alignment = Element.ALIGN_CENTER;
+            if (pic1.Height > pic1.Width)
+            {
+                //Maximum height is 800 pixels.
+                float percentage = 0.0f;
+                percentage = 350 / pic1.Height;
+                pic1.ScalePercent(percentage * 100);
+                //percentage = 350 / pic2.Height;
+                //pic2.ScalePercent(percentage * 100);
+            }
+            else
+            {
+                //Maximum width is 600 pixels.
+                float percentage = 0.0f;
+                percentage = 270 / pic1.Width;
+                pic1.ScalePercent(percentage * 100);
+                //percentage = 270 / pic2.Height;
+                //pic2.ScalePercent(percentage * 100);
+            }
+
             doc.Open();
-            Paragraph Titulo = new Paragraph("Protocolo de Pruebas" + protocolo.Plantilla.Nombre, myFontTitle18_B);
+            doc.Add(pic1);
+            //doc.Add(pic2);
+            Paragraph Titulo = new Paragraph("Protocolo de Pruebas " + protocolo.Plantilla.Nombre, myFontTitle18_B);
             Titulo.Alignment = Element.ALIGN_CENTER;
             doc.Add(Titulo);
             Paragraph SubTitulo = new Paragraph(protocolo.Plantilla.Nombre2, myFontTitle15);
