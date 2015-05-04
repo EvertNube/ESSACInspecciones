@@ -26,6 +26,7 @@ namespace ESSACInspecciones.Data
         public string NombreAreaProtegida { get; set; }
         public Nullable<System.DateTime> Fecha { get; set; }
         public string Direccion { get; set; }
+        public string TipoPrueba { get; set; }
         public bool Active { get; set; }
         public System.DateTime FechaCreacion { get; set; }
         public int IdPeriodo { get; set; }

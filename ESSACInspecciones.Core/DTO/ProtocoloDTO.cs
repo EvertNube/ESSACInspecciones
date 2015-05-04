@@ -19,6 +19,7 @@ namespace ESSACInspecciones.Core.DTO
         public string Direccion { get; set; }
         [Required]
         public Nullable<DateTime> Fecha { get; set; }
+        public string TipoPrueba { get; set; }
         public bool Active { get; set; }
         public int IdPeriodo { get; set; }
         public List<SeccionDTO> Secciones { get; set; }

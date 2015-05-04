@@ -16,11 +16,11 @@ namespace ESSACInspecciones.Data
     {
         public Plantilla()
         {
+            this.Protocolo = new HashSet<Protocolo>();
             this.Seccion = new HashSet<Seccion>();
             this.Tarea = new HashSet<Tarea>();
             this.SeccionBody = new HashSet<SeccionBody>();
             this.Inmueble = new HashSet<Inmueble>();
-            this.Protocolo = new HashSet<Protocolo>();
         }
     
         public int IdPlantilla { get; set; }
@@ -28,10 +28,10 @@ namespace ESSACInspecciones.Data
         public string Nombre2 { get; set; }
         public bool Active { get; set; }
     
+        public virtual ICollection<Protocolo> Protocolo { get; set; }
         public virtual ICollection<Seccion> Seccion { get; set; }
         public virtual ICollection<Tarea> Tarea { get; set; }
         public virtual ICollection<SeccionBody> SeccionBody { get; set; }
         public virtual ICollection<Inmueble> Inmueble { get; set; }
-        public virtual ICollection<Protocolo> Protocolo { get; set; }
     }
 }

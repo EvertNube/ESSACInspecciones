@@ -28,6 +28,8 @@ namespace ESSACInspecciones.Core.BL
                         IdInmueble = r.IdInmueble,
                         NombreAreaProtegida = r.NombreAreaProtegida,
                         Fecha = r.Fecha,
+                        Direccion = r.Direccion,
+                        TipoPrueba = r.TipoPrueba,
                         HoraInicio = Convert.ToInt32(r.Fecha.Value.ToString("HH")),
                         MinutoInicio = Convert.ToInt32(r.Fecha.Value.ToString("mm")),
                         Active = r.Active,
@@ -78,6 +80,8 @@ namespace ESSACInspecciones.Core.BL
                         Fecha = r.Fecha,
                         HoraInicio = r.Fecha != null ? Convert.ToInt32(r.Fecha.Value.ToString("HH")) : 0,
                         MinutoInicio = r.Fecha != null ? Convert.ToInt32(r.Fecha.Value.ToString("mm")) : 0,
+                        Direccion = r.Direccion,
+                        TipoPrueba = r.TipoPrueba,
                         Active = r.Active,
                         IdPeriodo = r.IdPeriodo,
                         TotalPaginas = r.Plantilla.Seccion.GroupBy(x => x.Pagina).Count(),
@@ -205,66 +209,6 @@ namespace ESSACInspecciones.Core.BL
             }
         }
 
-        //public ProtocoloDTO getPlantilla_PP053(int id)
-        //{
-        //    using (var context = getContext())
-        //    {
-
-        //        var result = (context.Protocolo.Where(x => x.IdProtocolo == id).AsEnumerable()
-        //            .Select(r => new ProtocoloDTO
-        //            {
-        //                IdProtocolo = r.IdProtocolo,
-        //                IdPlantilla = r.IdPlantilla,
-        //                NombreAreaProtegida = r.NombreAreaProtegida,
-        //                Fecha = r.Fecha,
-        //                HoraInicio = Convert.ToInt32(r.Fecha.Value.ToString("HH")),
-        //                MinutoInicio = Convert.ToInt32(r.Fecha.Value.ToString("mm")),
-        //                Active = r.Active,
-        //                TotalPaginas = r.Plantilla.Seccion.GroupBy(x => x.Pagina).Count(),
-        //                Secciones = r.Plantilla.Seccion.Where(y => y.IdSeccionPadre == null).Select(y => new SeccionDTO
-        //                {
-        //                    IdSeccion = y.IdSeccion,
-        //                    Nombre = y.Nombre,
-        //                    Pagina = y.Pagina,
-        //                    Orden = y.Orden,
-        //                    SubSecciones = r.Plantilla.Seccion.Where(z => z.IdSeccionPadre == y.IdSeccion).Select(z => new SeccionDTO
-        //                    {
-        //                        IdSeccion = z.IdSeccion,
-        //                        Nombre = z.Nombre,
-        //                        Orden = z.Orden,
-        //                        SeccionBodys = z.SeccionBody.Select(w => new SeccionBodyDTO
-        //                        {
-        //                            IdSeccionBody = w.IdSeccionBody,
-        //                            Descripcion = w.Descripcion,
-        //                            Rowspan = w.Rowspan,
-        //                            Colspan = w.Colspan,
-        //                            BackgroundColor = w.BackgroundColor,
-        //                            NumeroFila = w.NumeroFila,
-        //                            IdTipoCelda = w.IdTipoCelda,
-        //                            IdTipoTag = w.IdTipoTag ?? 0,
-        //                            Orden = w.Orden,
-        //                            Respuesta = r.Respuesta.Where(a => a.IdSeccionBody == w.IdSeccionBody).Select(a => a.Descripcion).SingleOrDefault()
-        //                        }).OrderBy(w => w.Orden).ToList()
-        //                    }).OrderBy(z => z.Orden).ToList(),
-        //                    SeccionBodys = y.SeccionBody.Select(w => new SeccionBodyDTO
-        //                    {
-        //                        IdSeccionBody = w.IdSeccionBody,
-        //                        Descripcion = w.Descripcion,
-        //                        Rowspan = w.Rowspan,
-        //                        Colspan = w.Colspan,
-        //                        BackgroundColor = w.BackgroundColor,
-        //                        NumeroFila = w.NumeroFila,
-        //                        IdTipoCelda = w.IdTipoCelda,
-        //                        IdTipoTag = w.IdTipoTag ?? 0,
-        //                        Orden = w.Orden
-        //                    }).OrderBy(w => w.Orden).ToList()
-        //                }).OrderBy(y => y.Orden).ToList(),
-        //                //Respuestas = r.Respuesta.Select(z => new RespuestaDTO { IdSeccionBody = z.IdSeccionBody, Respuesta = z.Descripcion }).ToList()
-        //            })).SingleOrDefault();
-        //        return result;
-        //    }
-        //}
-
         public bool add(ProtocoloDTO oProtocoloDTO)
         {
 
@@ -282,6 +226,7 @@ namespace ESSACInspecciones.Core.BL
                     protocolo.IdEstado = (oProtocoloDTO.IdEstado != 0 ? oProtocoloDTO.IdEstado : (contaEstado != 0 ? 2 : 3));    // 2: Incompleto, 3: Completo, 4: Finalizado
                     protocolo.NombreAreaProtegida = oProtocoloDTO.NombreAreaProtegida;
                     protocolo.Direccion = oProtocoloDTO.Direccion;
+                    protocolo.TipoPrueba = oProtocoloDTO.TipoPrueba;
                     protocolo.FechaCreacion = DateTime.Now;
                     protocolo.Fecha = (oProtocoloDTO.Fecha != null ? Convert.ToDateTime(oProtocoloDTO.Fecha.Value.ToString("dd/MM/yyyy") + " " + oProtocoloDTO.HoraInicio + ":" + oProtocoloDTO.MinutoInicio) : oProtocoloDTO.Fecha);
                     protocolo.Active = true;
@@ -323,6 +268,7 @@ namespace ESSACInspecciones.Core.BL
                     protocolo.IdEstado = (oProtocoloDTO.IdEstado != 0 ? oProtocoloDTO.IdEstado : (contaEstado != 0 ? 2 : 3));    // 2: Incompleto, 3: Completo, 4: Finalizado
                     protocolo.NombreAreaProtegida = oProtocoloDTO.NombreAreaProtegida;
                     protocolo.Direccion = oProtocoloDTO.Direccion;
+                    protocolo.TipoPrueba = oProtocoloDTO.TipoPrueba;
                     protocolo.Fecha = (oProtocoloDTO.Fecha != null ? Convert.ToDateTime(oProtocoloDTO.Fecha.Value.ToString("dd/MM/yyyy") + " " + oProtocoloDTO.HoraInicio + ":" + oProtocoloDTO.MinutoInicio) : oProtocoloDTO.Fecha);
                     protocolo.Active = oProtocoloDTO.Active;
 

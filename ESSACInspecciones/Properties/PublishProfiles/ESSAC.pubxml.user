@@ -19,13 +19,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/25/2015 18:07:52</publishTime>
     </File>
     <File Include="bin/ESSACInspecciones.Core.dll">
-      <publishTime>04/29/2015 17:45:54</publishTime>
+      <publishTime>05/04/2015 17:34:25</publishTime>
     </File>
     <File Include="bin/ESSACInspecciones.Data.dll">
-      <publishTime>04/29/2015 17:45:54</publishTime>
+      <publishTime>05/04/2015 17:34:25</publishTime>
     </File>
     <File Include="bin/ESSACInspecciones.dll">
-      <publishTime>04/29/2015 17:45:55</publishTime>
+      <publishTime>05/04/2015 17:34:26</publishTime>
     </File>
     <File Include="bin/ESSACInspecciones.Helpers.dll">
       <publishTime>03/12/2015 20:22:52</publishTime>
@@ -130,7 +130,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/22/2014 19:24:08</publishTime>
     </File>
     <File Include="Content/themes/admin/css/main.css">
-      <publishTime>04/29/2015 17:43:31</publishTime>
+      <publishTime>04/30/2015 16:01:52</publishTime>
     </File>
     <File Include="Content/themes/admin/fonts/fontawesome-webfont.eot">
       <publishTime>10/22/2014 19:24:08</publishTime>
@@ -172,7 +172,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/22/2014 19:24:08</publishTime>
     </File>
     <File Include="Content/themes/admin/images/logo-essac.png">
-      <publishTime>10/22/2014 19:24:08</publishTime>
+      <publishTime>03/11/2015 21:41:46</publishTime>
     </File>
     <File Include="Content/themes/admin/images/Logo-rpd.png">
       <publishTime>10/22/2014 19:24:08</publishTime>
@@ -1073,6 +1073,9 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     </File>
     <File Include="Content/themes/admin/js/sortable/jquery.sortable.js">
       <publishTime>10/22/2014 19:24:10</publishTime>
+    </File>
+    <File Include="Content/themes/admin/js/test.js">
+      <publishTime>04/30/2015 17:46:45</publishTime>
     </File>
     <File Include="Content/themes/admin/js/uploader/jquery.fileupload.js">
       <publishTime>10/22/2014 19:24:10</publishTime>
@@ -2098,7 +2101,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>04/21/2015 16:38:54</publishTime>
     </File>
     <File Include="Views/Admin/Ingresar.cshtml">
-      <publishTime>03/03/2015 15:24:39</publishTime>
+      <publishTime>04/30/2015 15:52:23</publishTime>
     </File>
     <File Include="Views/Admin/Inmueble.cshtml">
       <publishTime>04/23/2015 16:26:02</publishTime>
@@ -2110,7 +2113,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/30/2015 15:39:12</publishTime>
     </File>
     <File Include="Views/Admin/Protocolo.cshtml">
-      <publishTime>04/29/2015 16:28:08</publishTime>
+      <publishTime>05/04/2015 17:34:02</publishTime>
     </File>
     <File Include="Views/Admin/ProtocoloReporte.cshtml">
       <publishTime>10/22/2014 19:24:12</publishTime>
@@ -2176,10 +2179,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/22/2014 19:24:12</publishTime>
     </File>
     <File Include="Views/Shared/_Layout.cshtml">
-      <publishTime>10/22/2014 19:24:12</publishTime>
+      <publishTime>05/04/2015 08:26:32</publishTime>
     </File>
     <File Include="Views/Shared/_LayoutAdmin.cshtml">
-      <publishTime>04/29/2015 17:31:58</publishTime>
+      <publishTime>05/04/2015 08:26:36</publishTime>
     </File>
     <File Include="Views/Shared/_showAlertMessages.cshtml">
       <publishTime>10/22/2014 19:24:12</publishTime>

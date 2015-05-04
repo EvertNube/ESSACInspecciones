@@ -19,7 +19,7 @@ namespace ESSACInspecciones.Data
         public string Descripcion { get; set; }
         public bool Active { get; set; }
     
-        public virtual SeccionBody SeccionBody { get; set; }
         public virtual Protocolo Protocolo { get; set; }
+        public virtual SeccionBody SeccionBody { get; set; }
     }
 }

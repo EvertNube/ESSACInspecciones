@@ -98,45 +98,38 @@
                                                 <span>Clientes</span>
                                             </a>
                                         </li>
-                                        @*@if (ViewBag.EsAdmin)
-                                        {*@
-                                            <li class="">
-                                                <a href="@Url.Action("Servicios")" class="active">
-                                                    <i class="fa fa-gear icon">
-                                                        <b class="bg-info"></b>
-                                                    </i>
-                                                    <span>Servicios</span>
-                                                </a>
-                                            </li>
-
-                                            <li>
-                                                <a href="@Url.Action("Usuarios")">
-                                                    <i class="fa fa-user icon">
-                                                        <b class="bg-warning"></b>
-                                                    </i>
-                                                    <span>Usuarios</span>
-                                                </a>
-                                            </li>
-                                        @*}*@
-                                        @*@if (ViewBag.IdRol == CONSTANTES.ROL_RESPONSABLE)
-                                        {*@
-                                            <li class="">
-                                                <a href="@Url.Action("Protocolos")" class="active">
-                                                    <i class="fa fa-gear icon">
-                                                        <b class="bg-primary"></b>
-                                                    </i>
-                                                    <span>Protocolos Asignados</span>
-                                                </a>
-                                            </li>
-                                        @*}*@
-                                            <li class="">
-                                                <a href="@Url.Action("Periodos")" class="active">
-                                                    <i class="fa fa-clock-o icon">
-                                                        <b class="bg-success"></b>
-                                                    </i>
-                                                    <span>Periodos</span>
-                                                </a>
-                                            </li>
+                                        <li class="">
+                                            <a href="@Url.Action("Servicios")" class="active">
+                                                <i class="fa fa-gear icon">
+                                                    <b class="bg-info"></b>
+                                                </i>
+                                                <span>Servicios</span>
+                                            </a>
+                                        </li>
+                                        <li class="">
+                                            <a href="@Url.Action("Usuarios")">
+                                                <i class="fa fa-user icon">
+                                                    <b class="bg-warning"></b>
+                                                </i>
+                                                <span>Usuarios</span>
+                                            </a>
+                                        </li>
+                                        <li class="">
+                                            <a href="@Url.Action("Protocolos")" class="active">
+                                                <i class="fa fa-gear icon">
+                                                    <b class="bg-primary"></b>
+                                                </i>
+                                                <span>Protocolos Asignados</span>
+                                            </a>
+                                        </li>
+                                        <li class="">
+                                            <a href="@Url.Action("Periodos")" class="active">
+                                                <i class="fa fa-clock-o icon">
+                                                    <b class="bg-success"></b>
+                                                </i>
+                                                <span>Periodos</span>
+                                            </a>
+                                        </li>
                                     </ul>
                                 </nav>
                                 <!-- / nav -->
@@ -166,13 +159,12 @@
     @Scripts.Render("~/Content/themes/admin/js/bootstrap.js")
     <!-- App -->
     @Scripts.Render("~/Content/themes/admin/js/app.js")
+    @Scripts.Render("~/Content/themes/admin/js/test.js")
     @Scripts.Render("~/Content/themes/admin/js/app.plugin.js")
     @Scripts.Render("~/Content/themes/admin/js/slimscroll/jquery.slimscroll.min.js")
     @Scripts.Render("~/Content/themes/admin/js/datepicker/bootstrap-datepicker.js")
     @Scripts.Render("~/Content/themes/admin/js/libs/moment.min.js")
     @Scripts.Render("~/Content/themes/admin/js/main.js")
-    @*@Scripts.Render("~/Content/themes/views/js/utilitarios.js")*@
     @RenderSection("scripts", required: false)
-    
 </body>
 </html>

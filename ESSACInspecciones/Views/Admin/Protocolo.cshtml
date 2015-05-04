@@ -58,7 +58,7 @@
                                                 '<input type="text" id="NombreAreaProtegida" class = "form-control" placeholder = "Ingrese el nombre" value="' + removeNull(protocolo.NombreAreaProtegida) + '" />' +
                                             '</td>' +
                                             '<td colspan="6">' +
-                                                '<input type="text" id="Fecha" class = "form-control datepicker-input" data-provide = "datepicker" placeholder="DD/MM/YYYY" value="' + (protocolo.Fecha != null ? moment(formatDate(protocolo.Fecha)).format("DD/MM/YYYY") : "") + '" />' +
+                                                '<input type="text" id="Fecha" class = "datepicker-input form-control" data-provide = "datepicker" placeholder="DD/MM/YYYY" value="' + (protocolo.Fecha != null ? moment(formatDate(protocolo.Fecha)).format("DD/MM/YYYY") : "") + '" />' +
                                             '</td>' +
                                         '</tr>' +
                                         '<tr>' +
@@ -67,12 +67,20 @@
                                         '</tr>' +
                                         '<tr>' +
                                             '<td colspan="6">' +
-                                                '<input type="text" id="Direccion" class = "form-control" placeholder = "Ingrese la dirección" value="' + removeNull(protocolo.Direccion) + '" />' +
+                                                '<input type="text" id="Direccion" class="form-control" placeholder = "Ingrese la dirección" value="' + removeNull(protocolo.Direccion) + '" />' +
                                             '</td>' +
                                             '<td colspan="6">' +
                                                 '<div class="input-group">' +
                                                     drawSelect("HoraInicio", listaHoras, protocolo.HoraInicio, 1, '', '') + ' : ' + drawSelect("MinutoInicio", listaMinutos, protocolo.MinutoInicio, 1, '', '') +
                                                 '</div>' +
+                                            '</td>' +
+                                        '</tr>' +
+                                        '<tr>' +
+                                            '<td colspan="12" style="background-color: #c2c0c2;"><label><strong> Tipo de Prueba: </strong></label></td>' +
+                                        '</tr>' +
+                                        '<tr>' +
+                                            '<td colspan="12">' +
+                                                '<input type="text" id="TipoPrueba" class = "form-control" placeholder = "Ingrese el tipo de prueba" value="' + removeNull(protocolo.TipoPrueba) + '" />' +
                                             '</td>' +
                                         '</tr>' +
                                     '</tbody></table>';
@@ -271,6 +279,7 @@
             $("#NombreAreaProtegida").prop('disabled', 'disabled');
             $("#Fecha").prop('disabled', 'disabled');
             $("#Direccion").prop('disabled', 'disabled');
+            $("#TipoPrueba").prop('disabled', 'disabled');
             $("#HoraInicio").prop('disabled', 'disabled');
             $("#MinutoInicio").prop('disabled', 'disabled');
             $(".GroupDescripcion").prop('disabled', 'disabled');
@@ -313,6 +322,7 @@
                     IdPeriodo: $("#IdPeriodo").val(),
                     NombreAreaProtegida: $("#NombreAreaProtegida").val(),
                     Direccion: $("#Direccion").val(),
+                    TipoPrueba: $("#TipoPrueba").val(),
                     StrFecha: $("#Fecha").val(),
                     HoraInicio: $("#HoraInicio").val(),
                     MinutoInicio: $("#MinutoInicio").val(),
@@ -343,6 +353,7 @@
                 var respuestas = {
                     NombreAreaProtegida: $("#NombreAreaProtegida").val(),
                     Direccion: $("#Direccion").val(),
+                    TipoPrueba: $("TipoPrueba").val(),
                     StrFecha: $("#Fecha").val(),
                     HoraInicio: $("#HoraInicio").val(),
                     MinutoInicio: $("#MinutoInicio").val(),
@@ -379,6 +390,7 @@
                         IdInmueble: $("#IdInmueble").val(),
                         NombreAreaProtegida: $("#NombreAreaProtegida").val(),
                         Direccion: $("#Direccion").val(),
+                        TipoPrueba: $("#TipoPrueba").val(),
                         StrFecha: $("#Fecha").val(),
                         HoraInicio: $("#HoraInicio").val(),
                         MinutoInicio: $("#MinutoInicio").val(),
@@ -733,6 +745,7 @@
             var respuestas = {}; respuestas = JSON.parse(localStorage.getItem("respuestas_" + idProtocolo + idPlantilla + idInmueble + idPeriodo));
             $("#NombreAreaProtegida").val(respuestas.NombreAreaProtegida);
             $("#Direccion").val(respuestas.Direccion);
+            $("#TipoPrueba").val(respuestas.TipoPrueba);
             $("#Fecha").val(respuestas.StrFecha);
             $("#HoraInicio").val(respuestas.HoraInicio);
             $("#MinutoInicio").val(respuestas.MinutoInicio);

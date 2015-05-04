@@ -36,6 +36,7 @@ namespace ESSACInspecciones.Data
         public virtual DbSet<OpcionRespuesta> OpcionRespuesta { get; set; }
         public virtual DbSet<Periodo> Periodo { get; set; }
         public virtual DbSet<Plantilla> Plantilla { get; set; }
+        public virtual DbSet<Protocolo> Protocolo { get; set; }
         public virtual DbSet<Respuesta> Respuesta { get; set; }
         public virtual DbSet<Rol> Rol { get; set; }
         public virtual DbSet<Seccion> Seccion { get; set; }
@@ -48,7 +49,6 @@ namespace ESSACInspecciones.Data
         public virtual DbSet<TipoCelda> TipoCelda { get; set; }
         public virtual DbSet<TipoSeccion> TipoSeccion { get; set; }
         public virtual DbSet<TipoTag> TipoTag { get; set; }
-        public virtual DbSet<Protocolo> Protocolo { get; set; }
         public virtual DbSet<Usuario> Usuario { get; set; }
     
         public virtual int sp_alterdiagram(string diagramname, Nullable<int> owner_id, Nullable<int> version, byte[] definition)
@@ -136,6 +136,40 @@ namespace ESSACInspecciones.Data
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetDefaultValues_Result>("SP_GetDefaultValues", idPlantillaParameter, idInmuebleParameter);
         }
     
+        public virtual int SP_GetPlantillas(Nullable<int> idUsuario, Nullable<int> idInmueble, Nullable<int> idPeriodo)
+        {
+            var idUsuarioParameter = idUsuario.HasValue ?
+                new ObjectParameter("IdUsuario", idUsuario) :
+                new ObjectParameter("IdUsuario", typeof(int));
+    
+            var idInmuebleParameter = idInmueble.HasValue ?
+                new ObjectParameter("IdInmueble", idInmueble) :
+                new ObjectParameter("IdInmueble", typeof(int));
+    
+            var idPeriodoParameter = idPeriodo.HasValue ?
+                new ObjectParameter("IdPeriodo", idPeriodo) :
+                new ObjectParameter("IdPeriodo", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_GetPlantillas", idUsuarioParameter, idInmuebleParameter, idPeriodoParameter);
+        }
+    
+        public virtual ObjectResult<SP_GetPlantillas2_Result> SP_GetPlantillas2(Nullable<int> idUsuario, Nullable<int> idInmueble, Nullable<int> idPeriodo)
+        {
+            var idUsuarioParameter = idUsuario.HasValue ?
+                new ObjectParameter("IdUsuario", idUsuario) :
+                new ObjectParameter("IdUsuario", typeof(int));
+    
+            var idInmuebleParameter = idInmueble.HasValue ?
+                new ObjectParameter("IdInmueble", idInmueble) :
+                new ObjectParameter("IdInmueble", typeof(int));
+    
+            var idPeriodoParameter = idPeriodo.HasValue ?
+                new ObjectParameter("IdPeriodo", idPeriodo) :
+                new ObjectParameter("IdPeriodo", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetPlantillas2_Result>("SP_GetPlantillas2", idUsuarioParameter, idInmuebleParameter, idPeriodoParameter);
+        }
+    
         public virtual ObjectResult<SP_GetTareas_Result> SP_GetTareas()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetTareas_Result>("SP_GetTareas");
@@ -200,40 +234,6 @@ namespace ESSACInspecciones.Data
         public virtual int sp_upgraddiagrams()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_upgraddiagrams");
-        }
-    
-        public virtual ObjectResult<SP_GetPlantillas_Result> SP_GetPlantillas(Nullable<int> idUsuario, Nullable<int> idInmueble, Nullable<int> idPeriodo)
-        {
-            var idUsuarioParameter = idUsuario.HasValue ?
-                new ObjectParameter("IdUsuario", idUsuario) :
-                new ObjectParameter("IdUsuario", typeof(int));
-    
-            var idInmuebleParameter = idInmueble.HasValue ?
-                new ObjectParameter("IdInmueble", idInmueble) :
-                new ObjectParameter("IdInmueble", typeof(int));
-    
-            var idPeriodoParameter = idPeriodo.HasValue ?
-                new ObjectParameter("IdPeriodo", idPeriodo) :
-                new ObjectParameter("IdPeriodo", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetPlantillas_Result>("SP_GetPlantillas", idUsuarioParameter, idInmuebleParameter, idPeriodoParameter);
-        }
-    
-        public virtual ObjectResult<SP_GetPlantillas2_Result> SP_GetPlantillas2(Nullable<int> idUsuario, Nullable<int> idInmueble, Nullable<int> idPeriodo)
-        {
-            var idUsuarioParameter = idUsuario.HasValue ?
-                new ObjectParameter("IdUsuario", idUsuario) :
-                new ObjectParameter("IdUsuario", typeof(int));
-    
-            var idInmuebleParameter = idInmueble.HasValue ?
-                new ObjectParameter("IdInmueble", idInmueble) :
-                new ObjectParameter("IdInmueble", typeof(int));
-    
-            var idPeriodoParameter = idPeriodo.HasValue ?
-                new ObjectParameter("IdPeriodo", idPeriodo) :
-                new ObjectParameter("IdPeriodo", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetPlantillas2_Result>("SP_GetPlantillas2", idUsuarioParameter, idInmuebleParameter, idPeriodoParameter);
         }
     }
 }

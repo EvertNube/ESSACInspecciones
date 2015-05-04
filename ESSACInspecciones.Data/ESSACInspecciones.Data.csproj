@@ -122,9 +122,6 @@
     <Compile Include="SP_GetPlantillas2_Result.cs">
       <DependentUpon>ESSACInspeccionesModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="SP_GetPlantillas_Result.cs">
-      <DependentUpon>ESSACInspeccionesModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="SP_GetTareasResponsables_Result.cs">
       <DependentUpon>ESSACInspeccionesModel.tt</DependentUpon>
     </Compile>
