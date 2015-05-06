@@ -20,6 +20,7 @@ namespace ESSACInspecciones.Helpers
         public static string ERROR_UPDATE_MESSAGE = "<strong>Hubo un error al actualizar.</strong> Por favor, verifique la información a actualizar.";
         public static string ERROR_INSERT_MESSAGE = "<strong>Hubo un error al insertar.</strong> Por favor, verifique que la información ingresada sea correcta.";
         public static string ERROR_RECOVERY_PASSWORD = "<strong>La cuenta o correo ingresado no existe.</strong> Por favor, verifique la información.";
+        public static string ERROR_ROL_PERMISSION = "<strong>Hubo un error al realizar la acción.</strong> Por favor, verifique que su rol cuenta con los privilegios necesarios para realizar la operación.";
         public static string SUCCESS_RECOVERY_PASSWORD = "<strong>Se ha enviado un correo con la contraseña.</strong>";
 
         public static string STATUS_FIELD = "status";

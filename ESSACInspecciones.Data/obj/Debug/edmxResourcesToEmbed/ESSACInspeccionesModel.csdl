@@ -7,7 +7,7 @@
     <Property Name="IdCargo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
     <Property Name="Active" Type="Boolean" Nullable="false" />
-    <NavigationProperty Name="Usuario" Relationship="Self.FK_Usuario_Cargo" FromRole="Cargo" ToRole="Usuario" />
+    <NavigationProperty Name="Usuario" Relationship="ESSAC.InspeccionesDbModel.FK_Usuario_Cargo" FromRole="Cargo" ToRole="Usuario" />
   </EntityType>
   <EntityType Name="Cliente">
     <Key>
@@ -21,7 +21,7 @@
     <NavigationProperty Name="ContactoCliente" Relationship="Self.FK_ContactoCliente_Cliente" FromRole="Cliente" ToRole="ContactoCliente" />
     <NavigationProperty Name="Inmueble" Relationship="Self.FK_Inmueble_Cliente" FromRole="Cliente" ToRole="Inmueble" />
     <NavigationProperty Name="Tarea" Relationship="Self.FK_Tarea_Cliente" FromRole="Cliente" ToRole="Tarea" />
-    <NavigationProperty Name="Usuario" Relationship="Self.FK_Usuario_Cliente" FromRole="Cliente" ToRole="Usuario" />
+    <NavigationProperty Name="Usuario" Relationship="ESSAC.InspeccionesDbModel.FK_Usuario_Cliente" FromRole="Cliente" ToRole="Usuario" />
   </EntityType>
   <EntityType Name="ContactoCliente">
     <Key>
@@ -150,7 +150,7 @@
     <Property Name="IdRol" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
     <Property Name="DescripcionRol" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-    <NavigationProperty Name="Usuario" Relationship="Self.FK_Usuario_Rol" FromRole="Rol" ToRole="Usuario" />
+    <NavigationProperty Name="Usuario" Relationship="ESSAC.InspeccionesDbModel.FK_Usuario_Rol" FromRole="Rol" ToRole="Usuario" />
   </EntityType>
   <EntityType Name="Seccion">
     <Key>
@@ -255,7 +255,7 @@
     <NavigationProperty Name="Inmueble" Relationship="Self.FK_Tarea_Inmueble" FromRole="Tarea" ToRole="Inmueble" />
     <NavigationProperty Name="Plantilla" Relationship="Self.FK_Tarea_Plantilla" FromRole="Tarea" ToRole="Plantilla" />
     <NavigationProperty Name="Servicio" Relationship="Self.FK_Tarea_Servicio" FromRole="Tarea" ToRole="Servicio" />
-    <NavigationProperty Name="Usuario" Relationship="Self.Responsables_Tarea" FromRole="Tarea" ToRole="Usuario" />
+    <NavigationProperty Name="Usuario" Relationship="ESSAC.InspeccionesDbModel.Responsables_Tarea" FromRole="Tarea" ToRole="Usuario" />
   </EntityType>
   <EntityType Name="TipoCelda">
     <Key>
@@ -284,39 +284,6 @@
     <NavigationProperty Name="OpcionRespuesta" Relationship="Self.FK_OpcionRespuesta_TipoTag" FromRole="TipoTag" ToRole="OpcionRespuesta" />
     <NavigationProperty Name="SeccionBody" Relationship="Self.FK_TableBody_TipoTag" FromRole="TipoTag" ToRole="SeccionBody" />
   </EntityType>
-  <EntityType Name="Usuario">
-    <Key>
-      <PropertyRef Name="IdUsuario" />
-    </Key>
-    <Property Name="IdUsuario" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-    <Property Name="InicialesNombre" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
-    <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="Cuenta" Type="String" MaxLength="40" FixedLength="false" Unicode="true" Nullable="false" />
-    <Property Name="Pass" Type="String" MaxLength="64" FixedLength="false" Unicode="true" Nullable="false" />
-    <Property Name="Estado" Type="Boolean" Nullable="false" />
-    <Property Name="FechaRegistro" Type="DateTime" Precision="3" />
-    <Property Name="IdRol" Type="Int32" Nullable="false" />
-    <Property Name="IdCargo" Type="Int32" />
-    <Property Name="RutaFirma" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-    <Property Name="IdCliente" Type="Int32" />
-    <NavigationProperty Name="Cargo" Relationship="Self.FK_Usuario_Cargo" FromRole="Usuario" ToRole="Cargo" />
-    <NavigationProperty Name="Cliente" Relationship="Self.FK_Usuario_Cliente" FromRole="Usuario" ToRole="Cliente" />
-    <NavigationProperty Name="Rol" Relationship="Self.FK_Usuario_Rol" FromRole="Usuario" ToRole="Rol" />
-    <NavigationProperty Name="Tarea" Relationship="Self.Responsables_Tarea" FromRole="Usuario" ToRole="Tarea" />
-  </EntityType>
-  <Association Name="FK_Usuario_Cargo">
-    <End Role="Cargo" Type="Self.Cargo" Multiplicity="0..1" />
-    <End Role="Usuario" Type="Self.Usuario" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Cargo">
-        <PropertyRef Name="IdCargo" />
-      </Principal>
-      <Dependent Role="Usuario">
-        <PropertyRef Name="IdCargo" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="FK_ContactoCliente_Cliente">
     <End Role="Cliente" Type="Self.Cliente" Multiplicity="1" />
     <End Role="ContactoCliente" Type="Self.ContactoCliente" Multiplicity="*" />
@@ -349,18 +316,6 @@
         <PropertyRef Name="IdCliente" />
       </Principal>
       <Dependent Role="Tarea">
-        <PropertyRef Name="IdCliente" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_Usuario_Cliente">
-    <End Role="Cliente" Type="Self.Cliente" Multiplicity="0..1" />
-    <End Role="Usuario" Type="Self.Usuario" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Cliente">
-        <PropertyRef Name="IdCliente" />
-      </Principal>
-      <Dependent Role="Usuario">
         <PropertyRef Name="IdCliente" />
       </Dependent>
     </ReferentialConstraint>
@@ -509,18 +464,6 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_Usuario_Rol">
-    <End Role="Rol" Type="Self.Rol" Multiplicity="1" />
-    <End Role="Usuario" Type="Self.Usuario" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Rol">
-        <PropertyRef Name="IdRol" />
-      </Principal>
-      <Dependent Role="Usuario">
-        <PropertyRef Name="IdRol" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="FK_TableBody_Seccion">
     <End Role="Seccion" Type="Self.Seccion" Multiplicity="1" />
     <End Role="SeccionBody" Type="Self.SeccionBody" Multiplicity="*" />
@@ -589,10 +532,6 @@
     <End Role="Inmueble" Type="Self.Inmueble" Multiplicity="*" />
     <End Role="Plantilla" Type="Self.Plantilla" Multiplicity="*" />
   </Association>
-  <Association Name="Responsables_Tarea">
-    <End Role="Tarea" Type="Self.Tarea" Multiplicity="*" />
-    <End Role="Usuario" Type="Self.Usuario" Multiplicity="*" />
-  </Association>
   <EntityContainer Name="ESSACInspeccionesEntities" annotation:LazyLoadingEnabled="true">
     <EntitySet Name="Cargo" EntityType="Self.Cargo" />
     <EntitySet Name="Cliente" EntityType="Self.Cliente" />
@@ -616,11 +555,6 @@
     <EntitySet Name="TipoCelda" EntityType="Self.TipoCelda" />
     <EntitySet Name="TipoSeccion" EntityType="Self.TipoSeccion" />
     <EntitySet Name="TipoTag" EntityType="Self.TipoTag" />
-    <EntitySet Name="Usuario" EntityType="Self.Usuario" />
-    <AssociationSet Name="FK_Usuario_Cargo" Association="Self.FK_Usuario_Cargo">
-      <End Role="Cargo" EntitySet="Cargo" />
-      <End Role="Usuario" EntitySet="Usuario" />
-    </AssociationSet>
     <AssociationSet Name="FK_ContactoCliente_Cliente" Association="Self.FK_ContactoCliente_Cliente">
       <End Role="Cliente" EntitySet="Cliente" />
       <End Role="ContactoCliente" EntitySet="ContactoCliente" />
@@ -632,10 +566,6 @@
     <AssociationSet Name="FK_Tarea_Cliente" Association="Self.FK_Tarea_Cliente">
       <End Role="Cliente" EntitySet="Cliente" />
       <End Role="Tarea" EntitySet="Tarea" />
-    </AssociationSet>
-    <AssociationSet Name="FK_Usuario_Cliente" Association="Self.FK_Usuario_Cliente">
-      <End Role="Cliente" EntitySet="Cliente" />
-      <End Role="Usuario" EntitySet="Usuario" />
     </AssociationSet>
     <AssociationSet Name="FK_ServicioEstado_Estado" Association="Self.FK_ServicioEstado_Estado">
       <End Role="Estado" EntitySet="Estado" />
@@ -685,10 +615,6 @@
       <End Role="SeccionBody" EntitySet="SeccionBody" />
       <End Role="Respuesta" EntitySet="Respuesta" />
     </AssociationSet>
-    <AssociationSet Name="FK_Usuario_Rol" Association="Self.FK_Usuario_Rol">
-      <End Role="Rol" EntitySet="Rol" />
-      <End Role="Usuario" EntitySet="Usuario" />
-    </AssociationSet>
     <AssociationSet Name="FK_TableBody_Seccion" Association="Self.FK_TableBody_Seccion">
       <End Role="Seccion" EntitySet="Seccion" />
       <End Role="SeccionBody" EntitySet="SeccionBody" />
@@ -716,10 +642,6 @@
     <AssociationSet Name="PlantillasPorInmueble" Association="Self.PlantillasPorInmueble">
       <End Role="Inmueble" EntitySet="Inmueble" />
       <End Role="Plantilla" EntitySet="Plantilla" />
-    </AssociationSet>
-    <AssociationSet Name="Responsables_Tarea" Association="Self.Responsables_Tarea">
-      <End Role="Tarea" EntitySet="Tarea" />
-      <End Role="Usuario" EntitySet="Usuario" />
     </AssociationSet>
     <FunctionImport Name="sp_alterdiagram">
       <Parameter Name="diagramname" Mode="In" Type="String" />
@@ -775,6 +697,23 @@
       <Parameter Name="new_diagramname" Mode="In" Type="String" />
     </FunctionImport>
     <FunctionImport Name="sp_upgraddiagrams" />
+    <EntitySet Name="Usuario" EntityType="ESSAC.InspeccionesDbModel.Usuario" />
+    <AssociationSet Name="FK_Usuario_Cargo" Association="ESSAC.InspeccionesDbModel.FK_Usuario_Cargo">
+      <End Role="Cargo" EntitySet="Cargo" />
+      <End Role="Usuario" EntitySet="Usuario" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Usuario_Cliente" Association="ESSAC.InspeccionesDbModel.FK_Usuario_Cliente">
+      <End Role="Cliente" EntitySet="Cliente" />
+      <End Role="Usuario" EntitySet="Usuario" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Usuario_Rol" Association="ESSAC.InspeccionesDbModel.FK_Usuario_Rol">
+      <End Role="Rol" EntitySet="Rol" />
+      <End Role="Usuario" EntitySet="Usuario" />
+    </AssociationSet>
+    <AssociationSet Name="Responsables_Tarea" Association="ESSAC.InspeccionesDbModel.Responsables_Tarea">
+      <End Role="Tarea" EntitySet="Tarea" />
+      <End Role="Usuario" EntitySet="Usuario" />
+    </AssociationSet>
   </EntityContainer>
   <ComplexType Name="SP_CountEstados_Result">
     <Property Type="String" Name="NombreEstado" Nullable="false" MaxLength="100" />
@@ -824,4 +763,65 @@
     <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
     <Property Type="Int32" Name="OwnerID" Nullable="false" />
   </ComplexType>
+  <EntityType Name="Usuario">
+    <Key>
+      <PropertyRef Name="IdUsuario" />
+    </Key>
+    <Property Name="IdUsuario" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Nombre" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="InicialesNombre" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Cuenta" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="true" />
+    <Property Name="Pass" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="true" />
+    <Property Name="Estado" Type="Boolean" Nullable="false" />
+    <Property Name="FechaRegistro" Type="DateTime" Precision="3" />
+    <Property Name="IdRol" Type="Int32" Nullable="false" />
+    <Property Name="IdCargo" Type="Int32" />
+    <Property Name="RutaFirma" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="IdCliente" Type="Int32" />
+    <NavigationProperty Name="Cargo" Relationship="ESSAC.InspeccionesDbModel.FK_Usuario_Cargo" FromRole="Usuario" ToRole="Cargo" />
+    <NavigationProperty Name="Cliente" Relationship="ESSAC.InspeccionesDbModel.FK_Usuario_Cliente" FromRole="Usuario" ToRole="Cliente" />
+    <NavigationProperty Name="Rol" Relationship="ESSAC.InspeccionesDbModel.FK_Usuario_Rol" FromRole="Usuario" ToRole="Rol" />
+    <NavigationProperty Name="Tarea" Relationship="ESSAC.InspeccionesDbModel.Responsables_Tarea" FromRole="Usuario" ToRole="Tarea" />
+  </EntityType>
+  <Association Name="FK_Usuario_Cargo">
+    <End Type="ESSAC.InspeccionesDbModel.Cargo" Role="Cargo" Multiplicity="0..1" />
+    <End Type="ESSAC.InspeccionesDbModel.Usuario" Role="Usuario" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Cargo">
+        <PropertyRef Name="IdCargo" />
+      </Principal>
+      <Dependent Role="Usuario">
+        <PropertyRef Name="IdCargo" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Usuario_Cliente">
+    <End Type="ESSAC.InspeccionesDbModel.Cliente" Role="Cliente" Multiplicity="0..1" />
+    <End Type="ESSAC.InspeccionesDbModel.Usuario" Role="Usuario" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Cliente">
+        <PropertyRef Name="IdCliente" />
+      </Principal>
+      <Dependent Role="Usuario">
+        <PropertyRef Name="IdCliente" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Usuario_Rol">
+    <End Type="ESSAC.InspeccionesDbModel.Rol" Role="Rol" Multiplicity="1" />
+    <End Type="ESSAC.InspeccionesDbModel.Usuario" Role="Usuario" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Rol">
+        <PropertyRef Name="IdRol" />
+      </Principal>
+      <Dependent Role="Usuario">
+        <PropertyRef Name="IdRol" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="Responsables_Tarea">
+    <End Type="ESSAC.InspeccionesDbModel.Tarea" Role="Tarea" Multiplicity="*" />
+    <End Type="ESSAC.InspeccionesDbModel.Usuario" Role="Usuario" Multiplicity="*" />
+  </Association>
 </Schema>

@@ -1,6 +1,6 @@
-﻿var selector = 'ul li';
-
-$(selector).on('click', function () {
-    $(selector).removeClass('active');
-    $(this).addClass('active');
+﻿$(window).load(function () {
+    $('.nav-primary').on('click', 'li', function () {
+        $('.nav-primary li.active').removeClass('active');
+        $(this).addClass('active');
+    });
 });

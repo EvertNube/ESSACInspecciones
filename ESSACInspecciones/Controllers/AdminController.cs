@@ -129,11 +129,11 @@ namespace ESSACInspecciones.Controllers
         {
             if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
             UsuarioDTO currentUser = getCurrentUser();
-            if (!this.isAdministrator() && user.IdUsuario != currentUser.IdUsuario) { return RedirectToAction("Usuarios"); }
-            if (user.IdRolUsuario == 1 && !this.isSuperAdministrator()) { return RedirectToAction("Usuarios"); }
-            if (user.IdRolUsuario == 2 && !this.isAdministrator()) { return RedirectToAction("Usuarios"); }
-            if (currentUser.IdRolUsuario == 2 && user.IdRolUsuario == 2 && user.IdUsuario != currentUser.IdUsuario) { return RedirectToAction("Usuarios"); }
-            if (currentUser.IdRolUsuario >= 3 && user.IdUsuario != currentUser.IdUsuario) { return RedirectToAction("Usuarios"); }
+            if (!this.isAdministrator() && user.IdUsuario != currentUser.IdUsuario) { createResponseMessage(CONSTANTES.ERROR, CONSTANTES.ERROR_ROL_PERMISSION); return RedirectToAction("Usuarios"); }
+            if (user.IdRolUsuario == 1 && !this.isSuperAdministrator()) { createResponseMessage(CONSTANTES.ERROR, CONSTANTES.ERROR_ROL_PERMISSION); return RedirectToAction("Usuarios"); }
+            if (user.IdRolUsuario == 2 && !this.isAdministrator()) { createResponseMessage(CONSTANTES.ERROR, CONSTANTES.ERROR_ROL_PERMISSION); return RedirectToAction("Usuarios"); }
+            if (currentUser.IdRolUsuario == 2 && user.IdRolUsuario == 2 && user.IdUsuario != currentUser.IdUsuario) { createResponseMessage(CONSTANTES.ERROR, CONSTANTES.ERROR_ROL_PERMISSION); return RedirectToAction("Usuarios"); }
+            if (currentUser.IdRolUsuario >= 3 && user.IdUsuario != currentUser.IdUsuario) { createResponseMessage(CONSTANTES.ERROR, CONSTANTES.ERROR_ROL_PERMISSION); return RedirectToAction("Usuarios"); }
             try
             {
                 if (Request.Files.Count > 0)
@@ -159,6 +159,9 @@ namespace ESSACInspecciones.Controllers
                 }
                 else if (user.IdUsuario != 0)
                 {
+                    if (usuariosBL.getUsuario(user.IdUsuario).IdRolUsuario == 1 && !this.isSuperAdministrator()) { createResponseMessage(CONSTANTES.ERROR, CONSTANTES.ERROR_ROL_PERMISSION); return RedirectToAction("Usuarios"); }
+                    if (usuariosBL.getUsuario(user.IdUsuario).IdRolUsuario == 2 && !this.isAdministrator()) { createResponseMessage(CONSTANTES.ERROR, CONSTANTES.ERROR_ROL_PERMISSION); return RedirectToAction("Usuarios"); }
+
                     if (usuariosBL.update(user, passUser, passChange, this.getCurrentUser()))
                     {
                         createResponseMessage(CONSTANTES.SUCCESS);
