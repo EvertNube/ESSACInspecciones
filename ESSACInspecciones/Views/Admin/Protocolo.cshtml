@@ -50,6 +50,14 @@
             if (i == 1) {
                 strHtmlHeader = '<table class="table table-bordered"><tbody>' +
                                         '<tr>' +
+                                            '<td colspan="12" style="background-color: #c2c0c2;"><label><strong> Código de protocolo: </strong></label></td>' +
+                                        '</tr>' +
+                                        '<tr>' +
+                                            '<td colspan="12">' +
+                                                '<input type="text" id="Codigo" class = "form-control" placeholder = "Ingrese el código del protocolo" value="' + removeNull(protocolo.Codigo) + '" />' +
+                                            '</td>' +
+                                        '</tr>' +
+                                        '<tr>' +
                                             '<td colspan="6" style="background-color: #c2c0c2;"><label><strong> Nombre del Área Protegida: </strong></label></td>' +
                                             '<td colspan="6" style="background-color: #c2c0c2;"><label><strong> Fecha: </strong></label></td>' +
                                         '</tr>' +
@@ -276,6 +284,7 @@
         //paintGraficaMotobomba();
 
         if (protocolo.IdEstado == 4) {
+            $("#Codigo").prop('disabled', 'disabled');
             $("#NombreAreaProtegida").prop('disabled', 'disabled');
             $("#Fecha").prop('disabled', 'disabled');
             $("#Direccion").prop('disabled', 'disabled');
@@ -320,6 +329,7 @@
                     IdPlantilla: $("#IdPlantilla").val(),
                     IdInmueble: $("#IdInmueble").val(),
                     IdPeriodo: $("#IdPeriodo").val(),
+                    Codigo: $("#Codigo").val(),
                     NombreAreaProtegida: $("#NombreAreaProtegida").val(),
                     Direccion: $("#Direccion").val(),
                     TipoPrueba: $("#TipoPrueba").val(),
@@ -351,6 +361,7 @@
                 });
             } else {
                 var respuestas = {
+                    Codigo: $("#Codigo").val(),
                     NombreAreaProtegida: $("#NombreAreaProtegida").val(),
                     Direccion: $("#Direccion").val(),
                     TipoPrueba: $("TipoPrueba").val(),
@@ -388,6 +399,7 @@
                         IdProtocolo: IdProtocolo,
                         IdPlantilla: $("#IdPlantilla").val(),
                         IdInmueble: $("#IdInmueble").val(),
+                        Codigo: $("#Codigo").val(),
                         NombreAreaProtegida: $("#NombreAreaProtegida").val(),
                         Direccion: $("#Direccion").val(),
                         TipoPrueba: $("#TipoPrueba").val(),
@@ -743,6 +755,7 @@
     function setRespuestas(idProtocolo, idPlantilla, idInmueble, idPeriodo) {
         if (localStorage.getItem("respuestas_" + idProtocolo + idPlantilla + idInmueble + idPeriodo)) {
             var respuestas = {}; respuestas = JSON.parse(localStorage.getItem("respuestas_" + idProtocolo + idPlantilla + idInmueble + idPeriodo));
+            $("#Codigo").val(respuestas.Codigo);
             $("#NombreAreaProtegida").val(respuestas.NombreAreaProtegida);
             $("#Direccion").val(respuestas.Direccion);
             $("#TipoPrueba").val(respuestas.TipoPrueba);

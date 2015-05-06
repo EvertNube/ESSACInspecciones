@@ -866,35 +866,35 @@ namespace ESSACInspecciones.Controllers
             //string pdfpath = Server.MapPath("PDFs");
             string imagespath = Server.MapPath("/Content/themes/admin/images");
             string imgPath1 = imagespath +"/logo.png";
-            string imgPath2 = imagespath + "/logo-essac.png";
             iTextSharp.text.Image pic1 = iTextSharp.text.Image.GetInstance(imgPath1);
-            iTextSharp.text.Image pic2 = iTextSharp.text.Image.GetInstance(imgPath2);
-            pic1.Alignment = Element.ALIGN_CENTER;
+            //pic1.Alignment = Element.ALIGN_RIGHT;
             if (pic1.Height > pic1.Width)
             {
                 //Maximum height is 800 pixels.
                 float percentage = 0.0f;
-                percentage = 350 / pic1.Height;
+                percentage = 175 / pic1.Height;
                 pic1.ScalePercent(percentage * 100);
-                //percentage = 350 / pic2.Height;
-                //pic2.ScalePercent(percentage * 100);
             }
             else
             {
                 //Maximum width is 600 pixels.
                 float percentage = 0.0f;
-                percentage = 270 / pic1.Width;
+                percentage = 135 / pic1.Width;
                 pic1.ScalePercent(percentage * 100);
-                //percentage = 270 / pic2.Height;
-                //pic2.ScalePercent(percentage * 100);
             }
 
             doc.Open();
-            doc.Add(pic1);
-            //doc.Add(pic2);
-            Paragraph Titulo = new Paragraph("Protocolo de Pruebas " + protocolo.Plantilla.Nombre, myFontTitle18_B);
-            Titulo.Alignment = Element.ALIGN_CENTER;
+            Paragraph Titulo = new Paragraph();
+            Titulo.SpacingBefore = 30;
+            Titulo.IndentationLeft = 55;
+            Titulo.Add(new Phrase(protocolo.Plantilla.Nombre, myFontTitle18_B));
+            Titulo.Add(new Chunk(pic1, 155, -15));
+            Titulo.SpacingAfter = 10;
+
             doc.Add(Titulo);
+            //Imagen
+            //doc.Add(pic1);
+
             Paragraph SubTitulo = new Paragraph(protocolo.Plantilla.Nombre2, myFontTitle15);
             SubTitulo.Alignment = Element.ALIGN_CENTER;
             doc.Add(SubTitulo);

@@ -23,7 +23,8 @@
                                     <thead>
                                         <tr>
                                             <th width="10%">ID</th>
-                                            <th width="70%">Nombre</th>
+                                            <th width="50%">Nombre</th>
+                                            <th width="20%">Código</th>
                                             <th width="10%" colspan="2">Estado</th>
                                             <th width="10%">Opciones</th>
                                         </tr>
@@ -217,10 +218,12 @@
                 var url = '@Url.Action("Protocolo", "Admin", new { idInmueble = "abcInmueble", idPeriodo = "abcPeriodo" })';
                 url = url.replace("abcInmueble", itemData.IdInmueble);
                 url = url.replace("abcPeriodo", itemData.IdPeriodo);
+                var codenul = (itemData.Codigo != null) ? itemData.Codigo : 'N/A';
                 var urlReporte = '@Url.Action("GenerarPdfProtocolo", "Admin")?idInmueble=' + itemData.IdInmueble + '&idPeriodo=' + itemData.IdPeriodo + '&idProtocolo=' + itemData.IdProtocolo + '&idPlantilla=' + itemData.IdPlantilla;//ProtocoloReporte
                 $('#tableProtocolo > tbody:last').append(
                     '<tr><td>' + (index + 1) + '</td>' +
                     '<td>' + itemData.Plantilla.Nombre + '</td>' +
+                    '<td>' + codenul + '</td>' +
                     '<td>' + itemData.Estado.NombreEstado + '</td>' + //+ "\t"
                     '<td>' + setImage(itemData.IdProtocolo, itemData.IdPlantilla, itemData.IdInmueble, itemData.IdEstado) + '</td>' +
                     '<td>' + '<a href="' + url + '" onclick="return getProtocolo(' + itemData.IdInmueble + ', ' + itemData.IdPeriodo + ', ' + itemData.IdProtocolo + ', ' + itemData.IdPlantilla + ')" title="Editar" ><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;' +
