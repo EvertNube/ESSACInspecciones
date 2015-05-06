@@ -23,6 +23,7 @@ namespace ESSACInspecciones.Data
         public int IdPlantilla { get; set; }
         public int IdInmueble { get; set; }
         public int IdEstado { get; set; }
+        public string Codigo { get; set; }
         public string NombreAreaProtegida { get; set; }
         public Nullable<System.DateTime> Fecha { get; set; }
         public string Direccion { get; set; }

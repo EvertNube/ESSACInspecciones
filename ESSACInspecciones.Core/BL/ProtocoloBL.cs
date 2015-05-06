@@ -26,6 +26,7 @@ namespace ESSACInspecciones.Core.BL
                         IdProtocolo = r.IdProtocolo,
                         IdPlantilla = r.IdPlantilla,
                         IdInmueble = r.IdInmueble,
+                        Codigo = r.Codigo,
                         NombreAreaProtegida = r.NombreAreaProtegida,
                         Fecha = r.Fecha,
                         Direccion = r.Direccion,
@@ -52,6 +53,7 @@ namespace ESSACInspecciones.Core.BL
                         IdPlantilla = x.IdPlantilla,
                         IdInmueble = x.IdInmueble.GetValueOrDefault(),
                         IdEstado = x.IdEstado,
+                        Codigo = x.Codigo,
                         Plantilla = new PlantillaDTO { Nombre = x.Nombre },
                         Estado = new EstadoDTO { NombreEstado = x.NombreEstado },
                         Active = x.Active,
@@ -76,6 +78,7 @@ namespace ESSACInspecciones.Core.BL
                         IdPlantilla = r.IdPlantilla,
                         IdInmueble = r.IdInmueble,
                         IdEstado = r.IdEstado,
+                        Codigo = r.Codigo,
                         NombreAreaProtegida = r.NombreAreaProtegida,
                         Fecha = r.Fecha,
                         HoraInicio = r.Fecha != null ? Convert.ToInt32(r.Fecha.Value.ToString("HH")) : 0,
@@ -141,6 +144,7 @@ namespace ESSACInspecciones.Core.BL
                             IdPlantilla = x.IdPlantilla,
                             IdInmueble = idInmueble,//
                             IdEstado = 0,
+                            Codigo = null,
                             NombreAreaProtegida = null,
                             Fecha = null,
                             HoraInicio = 0,
@@ -224,6 +228,7 @@ namespace ESSACInspecciones.Core.BL
                     protocolo.IdPeriodo = oProtocoloDTO.IdPeriodo;
                     //protocolo.IdUsuario = oProtocoloDTO.IdUsuario;
                     protocolo.IdEstado = (oProtocoloDTO.IdEstado != 0 ? oProtocoloDTO.IdEstado : (contaEstado != 0 ? 2 : 3));    // 2: Incompleto, 3: Completo, 4: Finalizado
+                    protocolo.Codigo = oProtocoloDTO.Codigo;
                     protocolo.NombreAreaProtegida = oProtocoloDTO.NombreAreaProtegida;
                     protocolo.Direccion = oProtocoloDTO.Direccion;
                     protocolo.TipoPrueba = oProtocoloDTO.TipoPrueba;
@@ -266,6 +271,7 @@ namespace ESSACInspecciones.Core.BL
                     int contaEstado = EstadoProtocolo(oProtocoloDTO.GroupDescripcion);
                     var protocolo = context.Protocolo.Where(x => x.IdProtocolo == oProtocoloDTO.IdProtocolo).SingleOrDefault();
                     protocolo.IdEstado = (oProtocoloDTO.IdEstado != 0 ? oProtocoloDTO.IdEstado : (contaEstado != 0 ? 2 : 3));    // 2: Incompleto, 3: Completo, 4: Finalizado
+                    protocolo.Codigo = oProtocoloDTO.Codigo;
                     protocolo.NombreAreaProtegida = oProtocoloDTO.NombreAreaProtegida;
                     protocolo.Direccion = oProtocoloDTO.Direccion;
                     protocolo.TipoPrueba = oProtocoloDTO.TipoPrueba;

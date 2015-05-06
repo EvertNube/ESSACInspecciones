@@ -18,6 +18,7 @@ namespace ESSACInspecciones.Data
         public bool Active { get; set; }
         public int IdProtocolo { get; set; }
         public Nullable<int> IdInmueble { get; set; }
+        public string Codigo { get; set; }
         public int IdEstado { get; set; }
         public string NombreEstado { get; set; }
         public Nullable<int> IdPeriodo { get; set; }

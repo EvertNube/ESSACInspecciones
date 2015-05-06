@@ -114,6 +114,7 @@
     <Property Name="IdPlantilla" Type="int" Nullable="false" />
     <Property Name="IdInmueble" Type="int" Nullable="false" />
     <Property Name="IdEstado" Type="int" Nullable="false" />
+    <Property Name="Codigo" Type="nvarchar" MaxLength="100" />
     <Property Name="NombreAreaProtegida" Type="nvarchar" MaxLength="100" />
     <Property Name="Fecha" Type="datetime" />
     <Property Name="Direccion" Type="nvarchar" MaxLength="150" />

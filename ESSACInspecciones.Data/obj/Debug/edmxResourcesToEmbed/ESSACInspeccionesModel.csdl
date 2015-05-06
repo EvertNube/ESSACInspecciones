@@ -57,7 +57,7 @@
     <Property Name="IdEstado" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="NombreEstado" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
     <Property Name="Active" Type="Boolean" Nullable="false" />
-    <NavigationProperty Name="Protocolo" Relationship="Self.FK_Protocolo_EstadoProtocolo" FromRole="EstadoProtocolo" ToRole="Protocolo" />
+    <NavigationProperty Name="Protocolo" Relationship="ESSAC.InspeccionesDbModel.FK_Protocolo_EstadoProtocolo" FromRole="EstadoProtocolo" ToRole="Protocolo" />
   </EntityType>
   <EntityType Name="Inmueble">
     <Key>
@@ -69,9 +69,9 @@
     <Property Name="Direccion" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
     <Property Name="Active" Type="Boolean" Nullable="false" />
     <NavigationProperty Name="Cliente" Relationship="Self.FK_Inmueble_Cliente" FromRole="Inmueble" ToRole="Cliente" />
-    <NavigationProperty Name="Protocolo" Relationship="Self.FK_Protocolo_Inmueble" FromRole="Inmueble" ToRole="Protocolo" />
     <NavigationProperty Name="Tarea" Relationship="Self.FK_Tarea_Inmueble" FromRole="Inmueble" ToRole="Tarea" />
     <NavigationProperty Name="Plantilla" Relationship="Self.PlantillasPorInmueble" FromRole="Inmueble" ToRole="Plantilla" />
+    <NavigationProperty Name="Protocolo" Relationship="ESSAC.InspeccionesDbModel.FK_Protocolo_Inmueble" FromRole="Inmueble" ToRole="Protocolo" />
   </EntityType>
   <EntityType Name="OpcionRespuesta">
     <Key>
@@ -94,7 +94,7 @@
     <Property Name="FechaInicio" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="FechaFin" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="Active" Type="Boolean" Nullable="false" />
-    <NavigationProperty Name="Protocolo" Relationship="Self.FK_Protocolo_Periodo" FromRole="Periodo" ToRole="Protocolo" />
+    <NavigationProperty Name="Protocolo" Relationship="ESSAC.InspeccionesDbModel.FK_Protocolo_Periodo" FromRole="Periodo" ToRole="Protocolo" />
   </EntityType>
   <EntityType Name="Plantilla">
     <Key>
@@ -104,32 +104,11 @@
     <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
     <Property Name="Nombre2" Type="String" MaxLength="200" FixedLength="true" Unicode="true" />
     <Property Name="Active" Type="Boolean" Nullable="false" />
-    <NavigationProperty Name="Protocolo" Relationship="Self.FK_Protocolo_Plantilla" FromRole="Plantilla" ToRole="Protocolo" />
     <NavigationProperty Name="Seccion" Relationship="Self.FK_Seccion_Plantilla" FromRole="Plantilla" ToRole="Seccion" />
     <NavigationProperty Name="Tarea" Relationship="Self.FK_Tarea_Plantilla" FromRole="Plantilla" ToRole="Tarea" />
     <NavigationProperty Name="SeccionBody" Relationship="Self.DefaultValue" FromRole="Plantilla" ToRole="SeccionBody" />
     <NavigationProperty Name="Inmueble" Relationship="Self.PlantillasPorInmueble" FromRole="Plantilla" ToRole="Inmueble" />
-  </EntityType>
-  <EntityType Name="Protocolo">
-    <Key>
-      <PropertyRef Name="IdProtocolo" />
-    </Key>
-    <Property Name="IdProtocolo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="IdPlantilla" Type="Int32" Nullable="false" />
-    <Property Name="IdInmueble" Type="Int32" Nullable="false" />
-    <Property Name="IdEstado" Type="Int32" Nullable="false" />
-    <Property Name="NombreAreaProtegida" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-    <Property Name="Fecha" Type="DateTime" Precision="3" />
-    <Property Name="Direccion" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
-    <Property Name="TipoPrueba" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
-    <Property Name="Active" Type="Boolean" Nullable="false" />
-    <Property Name="FechaCreacion" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="IdPeriodo" Type="Int32" Nullable="false" />
-    <NavigationProperty Name="EstadoProtocolo" Relationship="Self.FK_Protocolo_EstadoProtocolo" FromRole="Protocolo" ToRole="EstadoProtocolo" />
-    <NavigationProperty Name="Inmueble" Relationship="Self.FK_Protocolo_Inmueble" FromRole="Protocolo" ToRole="Inmueble" />
-    <NavigationProperty Name="Periodo" Relationship="Self.FK_Protocolo_Periodo" FromRole="Protocolo" ToRole="Periodo" />
-    <NavigationProperty Name="Plantilla" Relationship="Self.FK_Protocolo_Plantilla" FromRole="Protocolo" ToRole="Plantilla" />
-    <NavigationProperty Name="Respuesta" Relationship="Self.FK_Respuesta_Protocolo" FromRole="Protocolo" ToRole="Respuesta" />
+    <NavigationProperty Name="Protocolo" Relationship="ESSAC.InspeccionesDbModel.FK_Protocolo_Plantilla" FromRole="Plantilla" ToRole="Protocolo" />
   </EntityType>
   <EntityType Name="Respuesta">
     <Key>
@@ -140,8 +119,8 @@
     <Property Name="IdSeccionBody" Type="Int32" Nullable="false" />
     <Property Name="Descripcion" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
     <Property Name="Active" Type="Boolean" Nullable="false" />
-    <NavigationProperty Name="Protocolo" Relationship="Self.FK_Respuesta_Protocolo" FromRole="Respuesta" ToRole="Protocolo" />
     <NavigationProperty Name="SeccionBody" Relationship="Self.FK_Respuesta_TableBody" FromRole="Respuesta" ToRole="SeccionBody" />
+    <NavigationProperty Name="Protocolo" Relationship="ESSAC.InspeccionesDbModel.FK_Respuesta_Protocolo" FromRole="Respuesta" ToRole="Protocolo" />
   </EntityType>
   <EntityType Name="Rol">
     <Key>
@@ -344,30 +323,6 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_Protocolo_EstadoProtocolo">
-    <End Role="EstadoProtocolo" Type="Self.EstadoProtocolo" Multiplicity="1" />
-    <End Role="Protocolo" Type="Self.Protocolo" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="EstadoProtocolo">
-        <PropertyRef Name="IdEstado" />
-      </Principal>
-      <Dependent Role="Protocolo">
-        <PropertyRef Name="IdEstado" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_Protocolo_Inmueble">
-    <End Role="Inmueble" Type="Self.Inmueble" Multiplicity="1" />
-    <End Role="Protocolo" Type="Self.Protocolo" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Inmueble">
-        <PropertyRef Name="IdInmueble" />
-      </Principal>
-      <Dependent Role="Protocolo">
-        <PropertyRef Name="IdInmueble" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="FK_Tarea_Inmueble">
     <End Role="Inmueble" Type="Self.Inmueble" Multiplicity="1" />
     <End Role="Tarea" Type="Self.Tarea" Multiplicity="*" />
@@ -392,30 +347,6 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_Protocolo_Periodo">
-    <End Role="Periodo" Type="Self.Periodo" Multiplicity="1" />
-    <End Role="Protocolo" Type="Self.Protocolo" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Periodo">
-        <PropertyRef Name="IdPeriodo" />
-      </Principal>
-      <Dependent Role="Protocolo">
-        <PropertyRef Name="IdPeriodo" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_Protocolo_Plantilla">
-    <End Role="Plantilla" Type="Self.Plantilla" Multiplicity="1" />
-    <End Role="Protocolo" Type="Self.Protocolo" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Plantilla">
-        <PropertyRef Name="IdPlantilla" />
-      </Principal>
-      <Dependent Role="Protocolo">
-        <PropertyRef Name="IdPlantilla" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="FK_Seccion_Plantilla">
     <End Role="Plantilla" Type="Self.Plantilla" Multiplicity="1" />
     <End Role="Seccion" Type="Self.Seccion" Multiplicity="*" />
@@ -437,18 +368,6 @@
       </Principal>
       <Dependent Role="Tarea">
         <PropertyRef Name="IdPlantilla" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_Respuesta_Protocolo">
-    <End Role="Protocolo" Type="Self.Protocolo" Multiplicity="1" />
-    <End Role="Respuesta" Type="Self.Respuesta" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Protocolo">
-        <PropertyRef Name="IdProtocolo" />
-      </Principal>
-      <Dependent Role="Respuesta">
-        <PropertyRef Name="IdProtocolo" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -542,7 +461,6 @@
     <EntitySet Name="OpcionRespuesta" EntityType="Self.OpcionRespuesta" />
     <EntitySet Name="Periodo" EntityType="Self.Periodo" />
     <EntitySet Name="Plantilla" EntityType="Self.Plantilla" />
-    <EntitySet Name="Protocolo" EntityType="Self.Protocolo" />
     <EntitySet Name="Respuesta" EntityType="Self.Respuesta" />
     <EntitySet Name="Rol" EntityType="Self.Rol" />
     <EntitySet Name="Seccion" EntityType="Self.Seccion" />
@@ -575,14 +493,6 @@
       <End Role="Estado" EntitySet="Estado" />
       <End Role="Tarea" EntitySet="Tarea" />
     </AssociationSet>
-    <AssociationSet Name="FK_Protocolo_EstadoProtocolo" Association="Self.FK_Protocolo_EstadoProtocolo">
-      <End Role="EstadoProtocolo" EntitySet="EstadoProtocolo" />
-      <End Role="Protocolo" EntitySet="Protocolo" />
-    </AssociationSet>
-    <AssociationSet Name="FK_Protocolo_Inmueble" Association="Self.FK_Protocolo_Inmueble">
-      <End Role="Inmueble" EntitySet="Inmueble" />
-      <End Role="Protocolo" EntitySet="Protocolo" />
-    </AssociationSet>
     <AssociationSet Name="FK_Tarea_Inmueble" Association="Self.FK_Tarea_Inmueble">
       <End Role="Inmueble" EntitySet="Inmueble" />
       <End Role="Tarea" EntitySet="Tarea" />
@@ -591,14 +501,6 @@
       <End Role="TipoTag" EntitySet="TipoTag" />
       <End Role="OpcionRespuesta" EntitySet="OpcionRespuesta" />
     </AssociationSet>
-    <AssociationSet Name="FK_Protocolo_Periodo" Association="Self.FK_Protocolo_Periodo">
-      <End Role="Periodo" EntitySet="Periodo" />
-      <End Role="Protocolo" EntitySet="Protocolo" />
-    </AssociationSet>
-    <AssociationSet Name="FK_Protocolo_Plantilla" Association="Self.FK_Protocolo_Plantilla">
-      <End Role="Plantilla" EntitySet="Plantilla" />
-      <End Role="Protocolo" EntitySet="Protocolo" />
-    </AssociationSet>
     <AssociationSet Name="FK_Seccion_Plantilla" Association="Self.FK_Seccion_Plantilla">
       <End Role="Plantilla" EntitySet="Plantilla" />
       <End Role="Seccion" EntitySet="Seccion" />
@@ -606,10 +508,6 @@
     <AssociationSet Name="FK_Tarea_Plantilla" Association="Self.FK_Tarea_Plantilla">
       <End Role="Plantilla" EntitySet="Plantilla" />
       <End Role="Tarea" EntitySet="Tarea" />
-    </AssociationSet>
-    <AssociationSet Name="FK_Respuesta_Protocolo" Association="Self.FK_Respuesta_Protocolo">
-      <End Role="Protocolo" EntitySet="Protocolo" />
-      <End Role="Respuesta" EntitySet="Respuesta" />
     </AssociationSet>
     <AssociationSet Name="FK_Respuesta_TableBody" Association="Self.FK_Respuesta_TableBody">
       <End Role="SeccionBody" EntitySet="SeccionBody" />
@@ -673,11 +571,6 @@
       <Parameter Name="IdInmueble" Mode="In" Type="Int32" />
       <Parameter Name="IdPeriodo" Mode="In" Type="Int32" />
     </FunctionImport>
-    <FunctionImport Name="SP_GetPlantillas2" ReturnType="Collection(ESSAC.InspeccionesDbModel.SP_GetPlantillas2_Result)">
-      <Parameter Name="IdUsuario" Mode="In" Type="Int32" />
-      <Parameter Name="IdInmueble" Mode="In" Type="Int32" />
-      <Parameter Name="IdPeriodo" Mode="In" Type="Int32" />
-    </FunctionImport>
     <FunctionImport Name="SP_GetTareas" ReturnType="Collection(ESSAC.InspeccionesDbModel.SP_GetTareas_Result)" />
     <FunctionImport Name="SP_GetTareasResponsables" ReturnType="Collection(ESSAC.InspeccionesDbModel.SP_GetTareasResponsables_Result)">
       <Parameter Name="FechaInicio" Mode="In" Type="DateTime" />
@@ -714,6 +607,32 @@
       <End Role="Tarea" EntitySet="Tarea" />
       <End Role="Usuario" EntitySet="Usuario" />
     </AssociationSet>
+    <EntitySet Name="Protocolo" EntityType="ESSAC.InspeccionesDbModel.Protocolo" />
+    <AssociationSet Name="FK_Protocolo_EstadoProtocolo" Association="ESSAC.InspeccionesDbModel.FK_Protocolo_EstadoProtocolo">
+      <End Role="EstadoProtocolo" EntitySet="EstadoProtocolo" />
+      <End Role="Protocolo" EntitySet="Protocolo" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Protocolo_Inmueble" Association="ESSAC.InspeccionesDbModel.FK_Protocolo_Inmueble">
+      <End Role="Inmueble" EntitySet="Inmueble" />
+      <End Role="Protocolo" EntitySet="Protocolo" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Protocolo_Periodo" Association="ESSAC.InspeccionesDbModel.FK_Protocolo_Periodo">
+      <End Role="Periodo" EntitySet="Periodo" />
+      <End Role="Protocolo" EntitySet="Protocolo" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Protocolo_Plantilla" Association="ESSAC.InspeccionesDbModel.FK_Protocolo_Plantilla">
+      <End Role="Plantilla" EntitySet="Plantilla" />
+      <End Role="Protocolo" EntitySet="Protocolo" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Respuesta_Protocolo" Association="ESSAC.InspeccionesDbModel.FK_Respuesta_Protocolo">
+      <End Role="Protocolo" EntitySet="Protocolo" />
+      <End Role="Respuesta" EntitySet="Respuesta" />
+    </AssociationSet>
+    <FunctionImport Name="SP_GetPlantillas2" ReturnType="Collection(ESSAC.InspeccionesDbModel.SP_GetPlantillas2_Result)">
+      <Parameter Name="IdUsuario" Mode="In" Type="Int32" />
+      <Parameter Name="IdInmueble" Mode="In" Type="Int32" />
+      <Parameter Name="IdPeriodo" Mode="In" Type="Int32" />
+    </FunctionImport>
   </EntityContainer>
   <ComplexType Name="SP_CountEstados_Result">
     <Property Type="String" Name="NombreEstado" Nullable="false" MaxLength="100" />
@@ -722,16 +641,6 @@
   <ComplexType Name="SP_GetDefaultValues_Result">
     <Property Type="Int32" Name="IdSeccionBody" Nullable="false" />
     <Property Type="String" Name="Descripcion" Nullable="false" />
-  </ComplexType>
-  <ComplexType Name="SP_GetPlantillas2_Result">
-    <Property Type="Int32" Name="IdPlantilla" Nullable="false" />
-    <Property Type="String" Name="Nombre" Nullable="false" MaxLength="100" />
-    <Property Type="Boolean" Name="Active" Nullable="false" />
-    <Property Type="Int32" Name="IdProtocolo" Nullable="false" />
-    <Property Type="Int32" Name="IdInmueble" Nullable="true" />
-    <Property Type="Int32" Name="IdEstado" Nullable="false" />
-    <Property Type="String" Name="NombreEstado" Nullable="false" MaxLength="100" />
-    <Property Type="Int32" Name="IdPeriodo" Nullable="true" />
   </ComplexType>
   <ComplexType Name="SP_GetTareas_Result">
     <Property Type="Int32" Name="IdTarea" Nullable="false" />
@@ -824,4 +733,97 @@
     <End Type="ESSAC.InspeccionesDbModel.Tarea" Role="Tarea" Multiplicity="*" />
     <End Type="ESSAC.InspeccionesDbModel.Usuario" Role="Usuario" Multiplicity="*" />
   </Association>
+  <EntityType Name="Protocolo">
+    <Key>
+      <PropertyRef Name="IdProtocolo" />
+    </Key>
+    <Property Name="IdProtocolo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="IdPlantilla" Type="Int32" Nullable="false" />
+    <Property Name="IdInmueble" Type="Int32" Nullable="false" />
+    <Property Name="IdEstado" Type="Int32" Nullable="false" />
+    <Property Name="Codigo" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="NombreAreaProtegida" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Fecha" Type="DateTime" Precision="3" />
+    <Property Name="Direccion" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+    <Property Name="TipoPrueba" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+    <Property Name="Active" Type="Boolean" Nullable="false" />
+    <Property Name="FechaCreacion" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="IdPeriodo" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="EstadoProtocolo" Relationship="ESSAC.InspeccionesDbModel.FK_Protocolo_EstadoProtocolo" FromRole="Protocolo" ToRole="EstadoProtocolo" />
+    <NavigationProperty Name="Inmueble" Relationship="ESSAC.InspeccionesDbModel.FK_Protocolo_Inmueble" FromRole="Protocolo" ToRole="Inmueble" />
+    <NavigationProperty Name="Periodo" Relationship="ESSAC.InspeccionesDbModel.FK_Protocolo_Periodo" FromRole="Protocolo" ToRole="Periodo" />
+    <NavigationProperty Name="Plantilla" Relationship="ESSAC.InspeccionesDbModel.FK_Protocolo_Plantilla" FromRole="Protocolo" ToRole="Plantilla" />
+    <NavigationProperty Name="Respuesta" Relationship="ESSAC.InspeccionesDbModel.FK_Respuesta_Protocolo" FromRole="Protocolo" ToRole="Respuesta" />
+  </EntityType>
+  <Association Name="FK_Protocolo_EstadoProtocolo">
+    <End Type="ESSAC.InspeccionesDbModel.EstadoProtocolo" Role="EstadoProtocolo" Multiplicity="1" />
+    <End Type="ESSAC.InspeccionesDbModel.Protocolo" Role="Protocolo" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="EstadoProtocolo">
+        <PropertyRef Name="IdEstado" />
+      </Principal>
+      <Dependent Role="Protocolo">
+        <PropertyRef Name="IdEstado" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Protocolo_Inmueble">
+    <End Type="ESSAC.InspeccionesDbModel.Inmueble" Role="Inmueble" Multiplicity="1" />
+    <End Type="ESSAC.InspeccionesDbModel.Protocolo" Role="Protocolo" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Inmueble">
+        <PropertyRef Name="IdInmueble" />
+      </Principal>
+      <Dependent Role="Protocolo">
+        <PropertyRef Name="IdInmueble" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Protocolo_Periodo">
+    <End Type="ESSAC.InspeccionesDbModel.Periodo" Role="Periodo" Multiplicity="1" />
+    <End Type="ESSAC.InspeccionesDbModel.Protocolo" Role="Protocolo" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Periodo">
+        <PropertyRef Name="IdPeriodo" />
+      </Principal>
+      <Dependent Role="Protocolo">
+        <PropertyRef Name="IdPeriodo" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Protocolo_Plantilla">
+    <End Type="ESSAC.InspeccionesDbModel.Plantilla" Role="Plantilla" Multiplicity="1" />
+    <End Type="ESSAC.InspeccionesDbModel.Protocolo" Role="Protocolo" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Plantilla">
+        <PropertyRef Name="IdPlantilla" />
+      </Principal>
+      <Dependent Role="Protocolo">
+        <PropertyRef Name="IdPlantilla" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Respuesta_Protocolo">
+    <End Type="ESSAC.InspeccionesDbModel.Protocolo" Role="Protocolo" Multiplicity="1" />
+    <End Type="ESSAC.InspeccionesDbModel.Respuesta" Role="Respuesta" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Protocolo">
+        <PropertyRef Name="IdProtocolo" />
+      </Principal>
+      <Dependent Role="Respuesta">
+        <PropertyRef Name="IdProtocolo" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <ComplexType Name="SP_GetPlantillas2_Result">
+    <Property Type="Int32" Name="IdPlantilla" Nullable="false" />
+    <Property Type="String" Name="Nombre" Nullable="false" MaxLength="100" />
+    <Property Type="Boolean" Name="Active" Nullable="false" />
+    <Property Type="Int32" Name="IdProtocolo" Nullable="false" />
+    <Property Type="Int32" Name="IdInmueble" Nullable="true" />
+    <Property Type="String" Name="Codigo" Nullable="true" MaxLength="100" />
+    <Property Type="Int32" Name="IdEstado" Nullable="false" />
+    <Property Type="String" Name="NombreEstado" Nullable="false" MaxLength="100" />
+    <Property Type="Int32" Name="IdPeriodo" Nullable="true" />
+  </ComplexType>
 </Schema>

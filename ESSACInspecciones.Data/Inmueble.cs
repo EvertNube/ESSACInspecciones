@@ -16,9 +16,9 @@ namespace ESSACInspecciones.Data
     {
         public Inmueble()
         {
-            this.Protocolo = new HashSet<Protocolo>();
             this.Tarea = new HashSet<Tarea>();
             this.Plantilla = new HashSet<Plantilla>();
+            this.Protocolo = new HashSet<Protocolo>();
         }
     
         public int IdInmueble { get; set; }
@@ -28,8 +28,8 @@ namespace ESSACInspecciones.Data
         public bool Active { get; set; }
     
         public virtual Cliente Cliente { get; set; }
-        public virtual ICollection<Protocolo> Protocolo { get; set; }
         public virtual ICollection<Tarea> Tarea { get; set; }
         public virtual ICollection<Plantilla> Plantilla { get; set; }
+        public virtual ICollection<Protocolo> Protocolo { get; set; }
     }
 }

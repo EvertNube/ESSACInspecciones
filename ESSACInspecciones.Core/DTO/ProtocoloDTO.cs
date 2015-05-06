@@ -14,6 +14,7 @@ namespace ESSACInspecciones.Core.DTO
         public int IdInmueble { get; set; }
         //public int IdUsuario { get; set; }
         public int IdEstado { get; set; }
+        public string Codigo { get; set; }
         [Required]
         public string NombreAreaProtegida { get; set; }
         public string Direccion { get; set; }
