@@ -884,8 +884,12 @@ namespace ESSACInspecciones.Controllers
             }
 
             doc.Open();
+            string miCodigo = (protocolo.Codigo != null) ? protocolo.Codigo : "N/A";
+            Paragraph CodigoProtocolo = new Paragraph("Código: " + miCodigo, myFontTextH12);
+            CodigoProtocolo.IndentationLeft = 55;
+            doc.Add(CodigoProtocolo);
             Paragraph Titulo = new Paragraph();
-            Titulo.SpacingBefore = 30;
+            Titulo.SpacingBefore = 20;
             Titulo.IndentationLeft = 55;
             Titulo.Add(new Phrase(protocolo.Plantilla.Nombre, myFontTitle18_B));
             Titulo.Add(new Chunk(pic1, 155, -15));
