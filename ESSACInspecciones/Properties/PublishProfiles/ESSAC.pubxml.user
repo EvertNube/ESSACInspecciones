@@ -19,13 +19,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/25/2015 18:07:52</publishTime>
     </File>
     <File Include="bin/ESSACInspecciones.Core.dll">
-      <publishTime>05/05/2015 13:53:25</publishTime>
+      <publishTime>05/07/2015 13:25:01</publishTime>
     </File>
     <File Include="bin/ESSACInspecciones.Data.dll">
-      <publishTime>05/05/2015 13:53:25</publishTime>
+      <publishTime>05/07/2015 13:25:00</publishTime>
     </File>
     <File Include="bin/ESSACInspecciones.dll">
-      <publishTime>05/05/2015 13:53:26</publishTime>
+      <publishTime>05/07/2015 13:25:03</publishTime>
     </File>
     <File Include="bin/ESSACInspecciones.Helpers.dll">
       <publishTime>05/05/2015 13:53:25</publishTime>
@@ -2113,13 +2113,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/30/2015 15:39:12</publishTime>
     </File>
     <File Include="Views/Admin/Protocolo.cshtml">
-      <publishTime>05/04/2015 17:34:02</publishTime>
+      <publishTime>05/06/2015 13:24:21</publishTime>
     </File>
     <File Include="Views/Admin/ProtocoloReporte.cshtml">
       <publishTime>10/22/2014 19:24:12</publishTime>
     </File>
     <File Include="Views/Admin/Protocolos.cshtml">
-      <publishTime>04/28/2015 14:44:15</publishTime>
+      <publishTime>05/06/2015 15:54:39</publishTime>
     </File>
     <File Include="Views/Admin/Protocolo_053.cshtml">
       <publishTime>07/11/2014 11:44:02</publishTime>
