@@ -726,7 +726,9 @@ namespace ESSACInspecciones.Controllers
             ViewBag.Items_SelectNivelTanque = obj.getOpcionRespuesta(5).ToJSON();
             ViewBag.Items_SelectAccesorios = obj.getOpcionRespuesta(6).ToJSON();
             ViewBag.Items_SelectPresiones = obj.getOpcionRespuesta(7).ToJSON();
+            ViewBag.Items_SelectSINOonly = obj.getOpcionRespuesta(13).ToJSON();
             ViewBag.Items_SelectInspectores = listaInspectores.ToJSON();
+
             return View();
         }
 

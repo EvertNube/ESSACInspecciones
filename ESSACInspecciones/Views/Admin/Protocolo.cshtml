@@ -39,6 +39,7 @@
         var jsonSelectNivelTanque = '@Html.Raw(ViewBag.Items_SelectNivelTanque)'; var Items_SelectNivelTanque = JSON.parse(jsonSelectNivelTanque);
         var jsonSelectAccesorios = '@Html.Raw(ViewBag.Items_SelectAccesorios)'; var Items_SelectAccesorios = JSON.parse(jsonSelectAccesorios);
         var jsonSelectPresiones = '@Html.Raw(ViewBag.Items_SelectPresiones)'; var Items_SelectPresiones = JSON.parse(jsonSelectPresiones);
+        var jsonSelectSINOonly = '@Html.Raw(ViewBag.Items_SelectSINOonly)'; var Items_SelectSINOonly = JSON.parse(jsonSelectSINOonly);
         var jsonSelectInspectores = '@Html.Raw(ViewBag.Items_SelectInspectores)'; var Items_SelectInspectores = JSON.parse(jsonSelectInspectores);
 
         var strHtmlStepContent = "";
@@ -92,7 +93,7 @@
                                                     '<label>' +
                                                         'Recepción del sistema' +
                                                         '<input type="radio" name="optionsRadios" id="TipoPrueba1" value="1" ' + removeNull(protocolo.TipoPrueba == 1 ? "checked='checked'" : "") + '>' +
-                                                    '</label>'+
+                                                    '</label>' +
                                                 '</div>' +
                                             '</td>' +
                                             '<td colspan="6">' +
@@ -164,6 +165,8 @@
                                         idCeldaFirma = 'id = "firmadigital' + seccion.SeccionBodys[s].NumeroFila + '"';
                                         break;
                                     case 12: strHtmlTag = '<input type="text" id="tag' + seccion.SeccionBodys[s].IdSeccionBody + '" class="' + classTextBox + '" value="' + removeNull(seccion.SeccionBodys[s].Respuesta) + '"/>'; break;
+                                    case 13: strHtmlTag = drawSelect("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectSINOonly, subSeccion.SeccionBodys[s].Respuesta, 2, stepname, tipoSeccion); break;
+                                    case 14: strHtmlTag = '<input type="text" id=tag"' + subSeccion.SeccionBodys[s].IdSeccionBody + '" class="rounded ubicacion ' + classTextBox + '" value="' + removeNull(subSeccion.SeccionBodys[s].Respuesta) + '"/>'; break;
                                     default: break;
                                 }
                                 strHtmlSecRow += '<td class="redondeado" ' + idCeldaFirma + ' rowspan="' + seccion.SeccionBodys[s].Rowspan + '" colspan="' + seccion.SeccionBodys[s].Colspan + '">' + strHtmlTag + '<input type="hidden" name="GroupIdTableBody" class="GroupIdTableBody redondeado" value="' + seccion.SeccionBodys[s].IdSeccionBody + '" />' + '</td>';
@@ -222,6 +225,8 @@
                                                 idCeldaFirma = 'id = "firmadigital' + subSeccion.SeccionBodys[s].NumeroFila + '"';
                                                 break;
                                             case 12: strHtmlTag = '<input type="text" id="tag' + subSeccion.SeccionBodys[s].IdSeccionBody + '" class="' + classTextBox + '" value="' + removeNull(subSeccion.SeccionBodys[s].Respuesta) + '"/>'; break;
+                                            case 13: strHtmlTag = drawSelect("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectSINOonly, subSeccion.SeccionBodys[s].Respuesta, 2, stepname, tipoSeccion); break;
+                                            case 14: strHtmlTag = '<input type="text" id=tag"' + subSeccion.SeccionBodys[s].IdSeccionBody + '" class="rounded ubicacion ' + classTextBox + '" value="' + removeNull(subSeccion.SeccionBodys[s].Respuesta) + '"/>'; break;
                                             default: break;
                                         }
                                         /*strHtmlSubSecRow += '<td class="redondeado" rowspan="' + subSeccion.SeccionBodys[s].Rowspan + '" colspan="' + subSeccion.SeccionBodys[s].Colspan + '" style="text-align:-webkit-center;">' + strHtmlTag + '</td>';
@@ -363,7 +368,7 @@
                     if (data) {
                         localStorage.removeItem("respuestas_" + IdProtocolo + IdPlantilla + IdInmueble + IdPeriodo);
                         var urlGuardar = '/Admin/Protocolos?inmueble=' + '@ViewBag.IdInmueble' + "&periodo=" + '@ViewBag.IdPeriodo';
-                        
+
                         window.location.href = urlGuardar;
                         $("#btnGuardar").val("Guardar");
                         $("#btnGuardar").prop('disabled', false);
@@ -777,12 +782,10 @@
             $("#NombreAreaProtegida").val(respuestas.NombreAreaProtegida);
             $("#Direccion").val(respuestas.Direccion);
             //$("#TipoPrueba").val(respuestas.TipoPrueba);
-            if (respuestas.TipoPrueba == "1")
-            {
+            if (respuestas.TipoPrueba == "1") {
                 $("#TipoPrueba1").prop('checked', true);
             }
-            else
-            {
+            else {
                 $("#TipoPrueba2").prop('checked', true);
             }
             $("#Fecha").val(respuestas.StrFecha);
@@ -865,7 +868,7 @@
 
 
 
-    </script>
+</script>
 
 }
 @{
