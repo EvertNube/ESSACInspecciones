@@ -894,7 +894,7 @@ namespace ESSACInspecciones.Controllers
             Titulo.SpacingBefore = 20;
             Titulo.IndentationLeft = 55;
             Titulo.Add(new Phrase(protocolo.Plantilla.Nombre, myFontTitle18_B));
-            Titulo.Add(new Chunk(pic1, 155, -15));
+            Titulo.Add(new Chunk(pic1, 250, -15));
             Titulo.SpacingAfter = 10;
 
             doc.Add(Titulo);
