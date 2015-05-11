@@ -336,3 +336,6 @@ margin: 0;
 input.rounded {
     min-width: 63px;
 }
+input.ubicacion {
+    min-width: 315px;
+}

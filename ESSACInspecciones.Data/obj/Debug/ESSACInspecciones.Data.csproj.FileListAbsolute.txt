@@ -36,8 +36,6 @@ C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Dat
 C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Data\obj\Debug\ESSACInspecciones.Data.dll
 C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Data\obj\Debug\ESSACInspecciones.Data.pdb
 C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Data\obj\Debug\ESSACInspecciones.Data.csprojResolveAssemblyReference.cache
-C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Data\bin\Debug\ESSACInspecciones.Data.dll.CodeAnalysisLog.xml
-C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Data\bin\Debug\ESSACInspecciones.Data.dll.lastcodeanalysissucceeded
 D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Data\obj\Debug\ESSACInspecciones.Data.csprojResolveAssemblyReference.cache
 C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones.Data\bin\Debug\ESSACInspecciones.Data.dll.config
 C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015_Evert\ESSACInspecciones.Data\bin\Debug\ESSACInspecciones.Data.dll
@@ -59,3 +57,5 @@ C:\Archivos\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Data\bin\Debug\E
 C:\Archivos\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Data\obj\Debug\ESSACInspecciones.Data.csprojResolveAssemblyReference.cache
 C:\Archivos\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Data\obj\Debug\ESSACInspecciones.Data.dll
 C:\Archivos\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Data\obj\Debug\ESSACInspecciones.Data.pdb
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Data\bin\Debug\EntityFramework.SqlServer.dll
+C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Data\bin\Debug\EntityFramework.SqlServer.xml

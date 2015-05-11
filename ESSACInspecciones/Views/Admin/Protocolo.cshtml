@@ -165,8 +165,8 @@
                                         idCeldaFirma = 'id = "firmadigital' + seccion.SeccionBodys[s].NumeroFila + '"';
                                         break;
                                     case 12: strHtmlTag = '<input type="text" id="tag' + seccion.SeccionBodys[s].IdSeccionBody + '" class="' + classTextBox + '" value="' + removeNull(seccion.SeccionBodys[s].Respuesta) + '"/>'; break;
-                                    case 13: strHtmlTag = drawSelect("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectSINOonly, subSeccion.SeccionBodys[s].Respuesta, 2, stepname, tipoSeccion); break;
-                                    case 14: strHtmlTag = '<input type="text" id=tag"' + subSeccion.SeccionBodys[s].IdSeccionBody + '" class="rounded ubicacion ' + classTextBox + '" value="' + removeNull(subSeccion.SeccionBodys[s].Respuesta) + '"/>'; break;
+                                    case 13: strHtmlTag = drawSelect("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectSINOonly, seccion.SeccionBodys[s].Respuesta, 2, stepname, tipoSeccion); break;
+                                    case 14: strHtmlTag = '<input type="text" id=tag"' + seccion.SeccionBodys[s].IdSeccionBody + '" class="rounded ubicacion ' + classTextBox + '" value="' + removeNull(seccion.SeccionBodys[s].Respuesta) + '"/>'; break;
                                     default: break;
                                 }
                                 strHtmlSecRow += '<td class="redondeado" ' + idCeldaFirma + ' rowspan="' + seccion.SeccionBodys[s].Rowspan + '" colspan="' + seccion.SeccionBodys[s].Colspan + '">' + strHtmlTag + '<input type="hidden" name="GroupIdTableBody" class="GroupIdTableBody redondeado" value="' + seccion.SeccionBodys[s].IdSeccionBody + '" />' + '</td>';
@@ -464,10 +464,11 @@
 
         });
 
-        $(".claseGraficaMotobomba").change(function () {
+        $(".claseGraficaMotobomba").keyup(function () {
             paintGraficaMotobomba();
         });
-        $(".claseGraficaElectrobomba").change(function () {
+        $(".claseGraficaElectrobomba").keyup(function () {
+            calcularDatosProtocolo(5);
             paintGraficaElectrobomba();
         });
 
@@ -526,6 +527,40 @@
         $('#firma' + fila).hide();
         RemovedFirmas.push(fila);
     }
+    function calcularDatosProtocolo(numProto)
+    {
+        var datosGrafica = [];
+
+        var pFP = 0;
+        $('.claseGraficaElectrobomba').each(function (index, item)
+        {
+            if (index == 0) pFP = trim(item.value);
+
+            if(index > 0 && index < 41)
+            {
+                if(datosGrafica.length != 7)
+                {
+                    datosGrafica.push(trim(item.value));
+                }
+                else
+                {
+                    var sum1 = 0; var sum2 = 0;
+                    for (var i = 1; i < 4; i++) {
+                        sum1 += parseInt(datosGrafica[i], 10); //don't forget to add the base
+                    }
+                    for (var i = 4; i < 7; i++) {
+                        sum2 += parseInt(datosGrafica[i], 10); //don't forget to add the base
+                    }
+                    var avg1 = sum1 / 3;
+                    var avg2 = sum2 / 3;
+                    var result = (avg1 * avg2 * pFP * Math.sqrt(3)) / (0.736 * 1000);
+                    item.value = Math.round(result * 10) / 10;
+                    datosGrafica = [];
+                }
+            }
+        });
+    }
+
     function paintGraficaMotobomba() {
         $("#flot-chart").css("width", "100%");
         //var datosGrafica = []; var d2 = []; var d3 = []; var d4 = [];

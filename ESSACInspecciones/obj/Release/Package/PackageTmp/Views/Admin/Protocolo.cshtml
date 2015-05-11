@@ -39,6 +39,7 @@
         var jsonSelectNivelTanque = '@Html.Raw(ViewBag.Items_SelectNivelTanque)'; var Items_SelectNivelTanque = JSON.parse(jsonSelectNivelTanque);
         var jsonSelectAccesorios = '@Html.Raw(ViewBag.Items_SelectAccesorios)'; var Items_SelectAccesorios = JSON.parse(jsonSelectAccesorios);
         var jsonSelectPresiones = '@Html.Raw(ViewBag.Items_SelectPresiones)'; var Items_SelectPresiones = JSON.parse(jsonSelectPresiones);
+        var jsonSelectSINOonly = '@Html.Raw(ViewBag.Items_SelectSINOonly)'; var Items_SelectSINOonly = JSON.parse(jsonSelectSINOonly);
         var jsonSelectInspectores = '@Html.Raw(ViewBag.Items_SelectInspectores)'; var Items_SelectInspectores = JSON.parse(jsonSelectInspectores);
 
         var strHtmlStepContent = "";
@@ -84,12 +85,28 @@
                                             '</td>' +
                                         '</tr>' +
                                         '<tr>' +
-                                            '<td colspan="12" style="background-color: #c2c0c2;"><label><strong> Tipo de Prueba: </strong></label></td>' +
+                                            '<td colspan="12" style="background-color: #c2c0c2;"><label><strong> Tipo de prueba: </strong></label></td>' +
                                         '</tr>' +
                                         '<tr>' +
-                                            '<td colspan="12">' +
-                                                '<input type="text" id="TipoPrueba" class = "form-control" placeholder = "Ingrese el tipo de prueba" value="' + removeNull(protocolo.TipoPrueba) + '" />' +
+                                            '<td colspan="6">' +
+                                                '<div class="radio">' +
+                                                    '<label>' +
+                                                        'Recepción del sistema' +
+                                                        '<input type="radio" name="optionsRadios" id="TipoPrueba1" value="1" ' + removeNull(protocolo.TipoPrueba == 1 ? "checked='checked'" : "") + '>' +
+                                                    '</label>' +
+                                                '</div>' +
                                             '</td>' +
+                                            '<td colspan="6">' +
+                                                '<div class="radio">' +
+                                                    '<label>' +
+                                                        'Pruebas periódicas anuales' +
+                                                        '<input type="radio" name="optionsRadios" id="TipoPrueba2" value="2" ' + removeNull(protocolo.TipoPrueba == 2 ? "checked='checked'" : "") + '>' +
+                                                    '</label>' +
+                                                '</div>' +
+                                            '</td>' +
+                                            //'<td colspan="6">' +
+                                            //    '<input type="text" id="TipoPrueba" class = "form-control" placeholder = "Ingrese el tipo de prueba" value="' + removeNull(protocolo.TipoPrueba) + '" />' +
+                                            //'</td>' +
                                         '</tr>' +
                                     '</tbody></table>';
             }
@@ -148,9 +165,11 @@
                                         idCeldaFirma = 'id = "firmadigital' + seccion.SeccionBodys[s].NumeroFila + '"';
                                         break;
                                     case 12: strHtmlTag = '<input type="text" id="tag' + seccion.SeccionBodys[s].IdSeccionBody + '" class="' + classTextBox + '" value="' + removeNull(seccion.SeccionBodys[s].Respuesta) + '"/>'; break;
+                                    case 13: strHtmlTag = drawSelect("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectSINOonly, subSeccion.SeccionBodys[s].Respuesta, 2, stepname, tipoSeccion); break;
+                                    case 14: strHtmlTag = '<input type="text" id=tag"' + subSeccion.SeccionBodys[s].IdSeccionBody + '" class="rounded ubicacion ' + classTextBox + '" value="' + removeNull(subSeccion.SeccionBodys[s].Respuesta) + '"/>'; break;
                                     default: break;
                                 }
-                                strHtmlSecRow += '<td ' + idCeldaFirma + ' rowspan="' + seccion.SeccionBodys[s].Rowspan + '" colspan="' + seccion.SeccionBodys[s].Colspan + '">' + strHtmlTag + '<input type="hidden" name="GroupIdTableBody" class="GroupIdTableBody redondeado" value="' + seccion.SeccionBodys[s].IdSeccionBody + '" />' + '</td>';
+                                strHtmlSecRow += '<td class="redondeado" ' + idCeldaFirma + ' rowspan="' + seccion.SeccionBodys[s].Rowspan + '" colspan="' + seccion.SeccionBodys[s].Colspan + '">' + strHtmlTag + '<input type="hidden" name="GroupIdTableBody" class="GroupIdTableBody redondeado" value="' + seccion.SeccionBodys[s].IdSeccionBody + '" />' + '</td>';
                             }
                             if (s == (totalItems - 1) || filaItem != seccion.SeccionBodys[s + 1].NumeroFila) {
                                 if (seccion.SeccionBodys[s].IdTipoCelda == 1 && seccion.SeccionBodys[s].IdTipoTag == 8) { strHtmlSecRow += '<td><a id="btnAgregarFirma" class="btn btn-sm btn-success btn-rounded" title="Agregar"><i class="fa fa-plus"></i></a></td>'; }
@@ -206,6 +225,8 @@
                                                 idCeldaFirma = 'id = "firmadigital' + subSeccion.SeccionBodys[s].NumeroFila + '"';
                                                 break;
                                             case 12: strHtmlTag = '<input type="text" id="tag' + subSeccion.SeccionBodys[s].IdSeccionBody + '" class="' + classTextBox + '" value="' + removeNull(subSeccion.SeccionBodys[s].Respuesta) + '"/>'; break;
+                                            case 13: strHtmlTag = drawSelect("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectSINOonly, subSeccion.SeccionBodys[s].Respuesta, 2, stepname, tipoSeccion); break;
+                                            case 14: strHtmlTag = '<input type="text" id=tag"' + subSeccion.SeccionBodys[s].IdSeccionBody + '" class="rounded ubicacion ' + classTextBox + '" value="' + removeNull(subSeccion.SeccionBodys[s].Respuesta) + '"/>'; break;
                                             default: break;
                                         }
                                         /*strHtmlSubSecRow += '<td class="redondeado" rowspan="' + subSeccion.SeccionBodys[s].Rowspan + '" colspan="' + subSeccion.SeccionBodys[s].Colspan + '" style="text-align:-webkit-center;">' + strHtmlTag + '</td>';
@@ -288,7 +309,8 @@
             $("#NombreAreaProtegida").prop('disabled', 'disabled');
             $("#Fecha").prop('disabled', 'disabled');
             $("#Direccion").prop('disabled', 'disabled');
-            $("#TipoPrueba").prop('disabled', 'disabled');
+            $("#TipoPrueba1").prop('disabled', 'disabled');
+            $("#TipoPrueba2").prop('disabled', 'disabled');
             $("#HoraInicio").prop('disabled', 'disabled');
             $("#MinutoInicio").prop('disabled', 'disabled');
             $(".GroupDescripcion").prop('disabled', 'disabled');
@@ -332,7 +354,8 @@
                     Codigo: $("#Codigo").val(),
                     NombreAreaProtegida: $("#NombreAreaProtegida").val(),
                     Direccion: $("#Direccion").val(),
-                    TipoPrueba: $("#TipoPrueba").val(),
+                    //TipoPrueba: $("#TipoPrueba").val(),
+                    TipoPrueba: $("input:checked").val(),
                     StrFecha: $("#Fecha").val(),
                     HoraInicio: $("#HoraInicio").val(),
                     MinutoInicio: $("#MinutoInicio").val(),
@@ -345,7 +368,7 @@
                     if (data) {
                         localStorage.removeItem("respuestas_" + IdProtocolo + IdPlantilla + IdInmueble + IdPeriodo);
                         var urlGuardar = '/Admin/Protocolos?inmueble=' + '@ViewBag.IdInmueble' + "&periodo=" + '@ViewBag.IdPeriodo';
-                        
+
                         window.location.href = urlGuardar;
                         $("#btnGuardar").val("Guardar");
                         $("#btnGuardar").prop('disabled', false);
@@ -364,7 +387,7 @@
                     Codigo: $("#Codigo").val(),
                     NombreAreaProtegida: $("#NombreAreaProtegida").val(),
                     Direccion: $("#Direccion").val(),
-                    TipoPrueba: $("TipoPrueba").val(),
+                    TipoPrueba: $("input:checked").val(),
                     StrFecha: $("#Fecha").val(),
                     HoraInicio: $("#HoraInicio").val(),
                     MinutoInicio: $("#MinutoInicio").val(),
@@ -402,7 +425,7 @@
                         Codigo: $("#Codigo").val(),
                         NombreAreaProtegida: $("#NombreAreaProtegida").val(),
                         Direccion: $("#Direccion").val(),
-                        TipoPrueba: $("#TipoPrueba").val(),
+                        TipoPrueba: $("input:checked").val(),
                         StrFecha: $("#Fecha").val(),
                         HoraInicio: $("#HoraInicio").val(),
                         MinutoInicio: $("#MinutoInicio").val(),
@@ -531,10 +554,10 @@
 
         $("#flot-chart").length && $.plot($("#flot-chart"), [{
             data: d1,
-            label: "Curva de Fábrica de la Bomba"
+            label: "Curva de Prueba de la Bomba"
         }, {
             data: d2,
-            label: "Curva de Prueba de la Bomba"
+            label: "Curva de Fábrica de la Bomba"
         }, {
             data: d3,
             label: "Curva de Prueba de la Bomba 2"
@@ -573,7 +596,7 @@
                     tickColor: "#f0f0f0",
                     borderWidth: 0
                 },
-                colors: ["#dddddd", "#89cb4e", "#6783B7"],
+                colors: ["#FE2E2E", "#6783B7", "#8258FA"],
                 xaxis: {
                     //show: false
                 },
@@ -758,7 +781,13 @@
             $("#Codigo").val(respuestas.Codigo);
             $("#NombreAreaProtegida").val(respuestas.NombreAreaProtegida);
             $("#Direccion").val(respuestas.Direccion);
-            $("#TipoPrueba").val(respuestas.TipoPrueba);
+            //$("#TipoPrueba").val(respuestas.TipoPrueba);
+            if (respuestas.TipoPrueba == "1") {
+                $("#TipoPrueba1").prop('checked', true);
+            }
+            else {
+                $("#TipoPrueba2").prop('checked', true);
+            }
             $("#Fecha").val(respuestas.StrFecha);
             $("#HoraInicio").val(respuestas.HoraInicio);
             $("#MinutoInicio").val(respuestas.MinutoInicio);
@@ -839,7 +868,7 @@
 
 
 
-    </script>
+</script>
 
 }
 @{

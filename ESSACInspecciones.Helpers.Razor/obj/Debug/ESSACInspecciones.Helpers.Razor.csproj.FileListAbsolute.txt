@@ -63,8 +63,6 @@ D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\bin\D
 D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\bin\Debug\System.Web.WebPages.xml
 D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\bin\Debug\System.Web.WebPages.Deployment.xml
 D:\Proyectos\Repositorio\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\bin\Debug\System.Web.WebPages.Razor.xml
-C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\bin\Debug\ESSACInspecciones.Helpers.Razor.dll.CodeAnalysisLog.xml
-C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Helpers.Razor\bin\Debug\ESSACInspecciones.Helpers.Razor.dll.lastcodeanalysissucceeded
 C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015\ESSACInspecciones.Helpers.Razor\bin\Debug\ESSACInspecciones.Helpers.Razor.dll.config
 C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015\ESSACInspecciones.Helpers.Razor\bin\Debug\ESSACInspecciones.Helpers.Razor.dll
 C:\Archivos\Personal_Pro\NubeLabs\Barbas\ESSACInspecciones_17022015\ESSACInspecciones.Helpers.Razor\bin\Debug\ESSACInspecciones.Helpers.Razor.pdb

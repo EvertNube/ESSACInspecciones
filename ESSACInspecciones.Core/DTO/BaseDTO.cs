@@ -12,7 +12,7 @@ namespace ESSACInspecciones.Core.DTO
         public IList<OpcionDTO> fillHoras()
         {
             var lista = new List<OpcionDTO>();
-            //lista.Insert(0, new ItemDTO() { id = -1, name = "" });
+            //lista.Insert(0, new OpcionDTO() { IdOpcion = -1, NombreOpcion = "" });
             lista.Insert(0, new OpcionDTO() { IdOpcion = 0, NombreOpcion = "00" });
             lista.Insert(1, new OpcionDTO() { IdOpcion = 1, NombreOpcion = "01" });
             lista.Insert(2, new OpcionDTO() { IdOpcion = 2, NombreOpcion = "02" });
@@ -43,6 +43,7 @@ namespace ESSACInspecciones.Core.DTO
         {
             var lista = new List<OpcionDTO>();
             //lista.Insert(0, new ItemDTO() { id = -1, name = "" });
+            //lista.Insert(0, new OpcionDTO() { IdOpcion = -1, NombreOpcion = "" });
             lista.Insert(0, new OpcionDTO() { IdOpcion = 0, NombreOpcion = "00" });
             lista.Insert(1, new OpcionDTO() { IdOpcion = 5, NombreOpcion = "05" });
             lista.Insert(2, new OpcionDTO() { IdOpcion = 10, NombreOpcion = "10" });
