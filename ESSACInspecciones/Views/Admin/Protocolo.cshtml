@@ -464,12 +464,14 @@
 
         });
 
-        $(".claseGraficaMotobomba").keyup(function () {
-            paintGraficaMotobomba();
-        });
         $(".claseGraficaElectrobomba").keyup(function () {
-            calcularDatosProtocolo(5);
+            calcularDatosProtocolo(4);
             paintGraficaElectrobomba();
+        });
+
+        $(".claseGraficaMotobomba").keyup(function () {
+            calcularDatosProtocolo(5);
+            paintGraficaMotobomba();
         });
 
         //var contaFirma = 0; var indexFirma = 0;
@@ -527,14 +529,28 @@
         $('#firma' + fila).hide();
         RemovedFirmas.push(fila);
     }
+        //Auto Calculado de valores en las graficas
     function calcularDatosProtocolo(numProto)
+    {
+        switch(numProto)
+        {
+            case 4:
+                calcularDatosElectrobomba();
+                break;
+            case 5:
+                calcularDatosMotobomba();
+                break;
+        }
+    }
+
+    function calcularDatosElectrobomba()
     {
         var datosGrafica = [];
 
-        var pFP = 0;
+        var FP = 0; var dnRPM = 0; var dnSuccion = 0; var dnDescarga = 0;
         $('.claseGraficaElectrobomba').each(function (index, item)
         {
-            if (index == 0) pFP = trim(item.value);
+            if (index == 0) FP = trim(item.value);
 
             if(index > 0 && index < 41)
             {
@@ -553,10 +569,124 @@
                     }
                     var avg1 = sum1 / 3;
                     var avg2 = sum2 / 3;
-                    var result = (avg1 * avg2 * pFP * Math.sqrt(3)) / (0.736 * 1000);
+                    var result = (avg1 * avg2 * FP * Math.sqrt(3)) / (0.736 * 1000);
                     item.value = Math.round(result * 10) / 10;
                     datosGrafica = [];
                 }
+            } else if(index > 40 && index < 47) {
+                switch(index)
+                {
+                    case 43:
+                        dnSuccion = trim(item.value); break;
+                    case 44:
+                        dnRPM = trim(item.value); break;
+                    case 46:
+                        dnDescarga = trim(item.value); break;
+                }
+            }
+            else if (index > 46 && index < 79) {
+                var result = 0;
+                if(datosGrafica.length == 4)
+                {
+                    result = 0;
+                    if (dnSuccion == dnDescarga)
+                    {
+                        result = 0;
+                        item.value = result;
+                    }
+                    else {
+                        result = 0.001123 * Math.pow(parseInt(datosGrafica[0], 10), 2) / (Math.pow(dnSuccion, 4) - Math.pow(dnDescarga, 4));
+                        item.value = Math.round(result * 10) / 10;
+                    }
+                    datosGrafica.push(trim(item.value));
+                } else if(datosGrafica.length == 6)
+                {
+                    result = 0;
+                    result = (dnRPM / parseInt(datosGrafica[1], 10)) * parseInt(datosGrafica[0]);
+                    item.value = Math.round(result);
+                    datosGrafica.push(trim(item.value));
+                } else if(datosGrafica.length == 7)
+                {
+                    result = 0;
+                    result = (dnRPM / parseInt(datosGrafica[1], 10)) * (dnRPM / parseInt(datosGrafica[1], 10)) * (parseInt(datosGrafica[3], 10) - parseInt(datosGrafica[2], 10) + parseInt(datosGrafica[4], 10) - parseInt(datosGrafica[5], 10));
+                    item.value = Math.round(result);
+                    datosGrafica = [];
+                }
+                else
+                { datosGrafica.push(trim(item.value)); }
+            }
+        });
+    }
+
+    function calcularDatosMotobomba()
+    {
+        var datosGrafica = [];
+
+        var dpdSuccion = 0; var dpdDescarga = 0; var dpRPM = 0;
+        //claseGraficaMotobomba
+        $('.claseGraficaMotobomba').each(function (index, item) {
+            if (index >= 0 && index <= 5) {
+                switch (index) {
+                    case 2:
+                        dpdSuccion = trim(item.value); break;
+                    case 3:
+                        dpRPM = trim(item.value); break;
+                    case 5:
+                        dpdDescarga = trim(item.value); break;
+                }
+            } else if (index >= 16 && index <= 47) {
+                var result = 0;
+                if(datosGrafica.length == 4)
+                {
+                    result = 0;
+                    if (dpdSuccion == dpdDescarga) {
+                        result = 0;
+                        item.value = result;
+                    }
+                    else {
+                        result = 0.001123 * Math.pow(parseInt(datosGrafica[0], 10), 2) / (Math.pow(dpdSuccion, 4) - Math.pow(dpdDescarga, 4));
+                        item.value = Math.round(result * 10) / 10;
+                    }
+                    datosGrafica.push(trim(item.value));
+                } else if(datosGrafica.length == 6)
+                {
+                    result = 0;
+                    result = (dpRPM / parseInt(datosGrafica[1], 10)) * parseInt(datosGrafica[0]);
+                    item.value = Math.round(result);
+                    datosGrafica.push(trim(item.value));
+                } else if(datosGrafica.length == 7)
+                {
+                    result = 0;
+                    result = Math.pow((dpRPM / parseInt(datosGrafica[1], 10)), 2) * (parseInt(datosGrafica[3], 10) - parseInt(datosGrafica[2], 10) + parseInt(datosGrafica[4], 10) - parseInt(datosGrafica[5], 10));
+                    item.value = Math.round(result);
+                    datosGrafica = [];
+                } else { datosGrafica.push(trim(item.value)); }
+            }
+            else if (index >= 51 && index <= 83) {
+                var result = 0;
+                if (datosGrafica.length == 4) {
+                    result = 0;
+                    if (dpdSuccion == dpdDescarga) {
+                        result = 0;
+                        item.value = result;
+                    }
+                    else {
+                        result = 0.001123 * Math.pow(parseInt(datosGrafica[0], 10), 2) / (Math.pow(dpdSuccion, 4) - Math.pow(dpdDescarga, 4));
+                        item.value = Math.round(result * 10) / 10;
+                    }
+                    datosGrafica.push(trim(item.value));
+                } else if (datosGrafica.length == 6) {
+                    result = 0;
+                    result = (dpRPM / parseInt(datosGrafica[1], 10)) * parseInt(datosGrafica[0]);
+                    item.value = Math.round(result);
+                    datosGrafica.push(trim(item.value));
+                } else if (datosGrafica.length == 7) {
+                    result = 0;
+                    result = Math.pow((dpRPM / parseInt(datosGrafica[1], 10)), 2) * (parseInt(datosGrafica[3], 10) - parseInt(datosGrafica[2], 10) + parseInt(datosGrafica[4], 10) - parseInt(datosGrafica[5], 10));
+                    item.value = Math.round(result);
+                    datosGrafica = [];
+                }
+                else { datosGrafica.push(trim(item.value)); }
             }
         });
     }
