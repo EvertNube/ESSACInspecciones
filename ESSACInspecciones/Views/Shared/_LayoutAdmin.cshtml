@@ -74,7 +74,7 @@
                                 <!-- nav -->
                                 <nav class="nav-primary hidden-xs">
                                     <ul id="menulista" class="nav">
-                                        <li class="menuli active" data-index="0">
+                                        <li class="menuli" data-index="0">
                                             <a href="@Url.Action("Index")" class="active">
                                                 <i class="fa fa-calendar icon">
                                                     <b class="bg-danger"></b>
@@ -101,7 +101,7 @@
                                         <li class="menuli" data-index="3">
                                             <a href="@Url.Action("Servicios")" class="active">
                                                 <i class="fa fa-gear icon">
-                                                    <b class="bg-info"></b>
+                                                    <b class="bg-success"></b>
                                                 </i>
                                                 <span>Servicios</span>
                                             </a>
@@ -142,9 +142,22 @@
                             </a>
                         </footer>
                         <script type="text/javascript">
-                            menuliSelected = null;
                             document.addEventListener("DOMContentLoaded", function (event) {
                                 //alert(menuliSelected);
+                                if (localStorage.getItem("dataIndex"))
+                                {
+                                    var menulist = document.getElementsByClassName('menuli');
+                                    agregarClase(menulist[localStorage.getItem("dataIndex")], "active")
+                                    localStorage.removeItem("dataIndex");
+                                }
+                                else
+                                {
+                                    var menulist = document.getElementsByClassName('menuli');
+                                    agregarClase(menulist[0], "active")
+                                }
+
+                                var menuliSelected = null;
+                                
 
                                 var theParent = document.getElementById('menulista');
                                 theParent.addEventListener('click', addClass, false)
@@ -169,16 +182,23 @@
                                 function existeClase(obj, cls) {
                                     return obj.className.match(new RegExp('(\\s|^)' + cls + '(\\s|$)'));
                                 }
+
+                                function agregarClase(obj, cls) {
+                                    if (!existeClase(obj, cls)) {
+                                        obj.className += " " + cls;
+                                    }
+                                }
                                 function addClass(e) {
                                     var cls = 'active';
-                                    var menulist = document.getElementsByClassName('menuli');
+                                    /*var menulist = document.getElementsByClassName('menuli');
                                     for (var i = 0; i < menulist.length; i++) {
                                         removeClass(menulist[i], 'active');
-                                    }
+                                    }*/
                                     if (!existeClase(e.target.parentElement, cls)) {
                                         e.target.parentElement.className += " " + cls;
-                                        console.log(e.target.parentElement.getAttribute("data-index"));
+                                        //console.log(e.target.parentElement.getAttribute("data-index"));
                                         menuliSelected = e.target.parentElement.getAttribute("data-index");
+                                        localStorage.setItem("dataIndex", menuliSelected);
                                     }
                                 }
                                 function removeClass(obj, cls) {
