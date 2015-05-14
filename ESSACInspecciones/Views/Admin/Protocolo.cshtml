@@ -12,9 +12,7 @@
     @Scripts.Render("~/Content/themes/admin/js/fuelux/fuelux.js")
     @Scripts.Render("~/Content/js/jquery.flot.min.js")
     @Scripts.Render("~/Content/js/jquery.flot.tooltip.min.js")
-    @*@Scripts.Render("~/Content/js/jquery.flot.resize.js")*@
-    @*@Scripts.Render("~/Content/js/jquery.flot.orderBars.js")*@
-    @*@Scripts.Render("~/Content/js/jquery.flot.grow.js")*@
+    @Scripts.Render("~/Content/js/jquery.flot.axislabels.js")
 
     <script type="text/javascript">
     var RemovedFirmas = [];
@@ -712,11 +710,6 @@
         d3[2] = [parseInt(datosGrafica[73]), parseInt(datosGrafica[74])];
         d3[3] = [parseInt(datosGrafica[81]), parseInt(datosGrafica[82])];
 
-        //d4[0] = [parseInt(datosGrafica[49]), parseInt(datosGrafica[50])];
-        //d4[1] = [parseInt(datosGrafica[57]), parseInt(datosGrafica[58])];
-        //d4[2] = [parseInt(datosGrafica[65]), parseInt(datosGrafica[66])];
-        //d4[3] = [parseInt(datosGrafica[73]), parseInt(datosGrafica[74])];
-
         $("#flot-chart").length && $.plot($("#flot-chart"), [{
             data: d1,
             label: "Curva de Prueba de la Bomba"
@@ -726,9 +719,6 @@
         }, {
             data: d3,
             label: "Curva de Prueba de la Bomba 2"
-            //}, {
-            //    data: d4,
-            //    label: "Curva de Prueba de la Bomba 2"
         }],
             {
                 series: {
@@ -764,9 +754,11 @@
                 colors: ["#FE2E2E", "#6783B7", "#8258FA"],
                 xaxis: {
                     //show: false
+                    axisLabel: 'Caudal (GPM)'
                 },
                 yaxis: {
-                    ticks: 5
+                    ticks: 5,
+                    axisLabel: 'Presión (PSI)'
                 },
                 tooltip: true,
                 tooltipOpts: {
@@ -815,10 +807,12 @@
             label: "Curva de Prueba del Motor"
         }, {
             data: d3,
-            label: "Curva de Prueba de la Bomba"
+            label: "Curva de Prueba de la Bomba",
+            yaxis: 2
         }, {
             data: d4,
-            label: "Curva de Fábrica de la Bomba"
+            label: "Curva de Fábrica de la Bomba",
+            yaxis: 2
         }],
             {
                 series: {
@@ -854,12 +848,23 @@
                     borderWidth: 0
                 },
                 colors: ["#9900FF", "#6D9EEB", "#CC0000", "#93C47D"],
-                xaxis: {
-                    //show: false
+                axisLabels: {
+                    show: true
                 },
-                yaxis: {
-                    ticks: 5
+                xaxes: [{
+                    axisLabel: 'Caudal (GPM)'
+                }],
+                yaxes: [{
+                    //label : "Potencia (BHP)",
+                    ticks: 5,
+                    position: "left",
+                    axisLabel: 'Potencia (BHP)'
                 },
+                {
+                    ticks: 5,
+                    position: "right",
+                    axisLabel: 'Presión (PSI)'
+                }],
                 tooltip: true,
                 tooltipOpts: {
                     content: "'%s' of %x.1 is %y.4",
@@ -868,28 +873,12 @@
                         x: 0,
                         y: 20
                     }
-                }
+                },
+                legend: { position: 'sw' }
             }
         );
     }
-    //function getUsuariosInspectores(descripcion) {
-    //    $.ajax({
-    //        url: "/Admin/GetUsuariosInspectores",
-    //        type: "GET",
-    //        cache: false,
-    //        data: { descripcion: descripcion },
-    //        dataType: "json"
-    //    }).done(function (data) {
-    //        $('#usuariosTable td').remove();
-    //        $.each(data, function (index, item) {
-    //            $('#usuariosTable > tbody:last').append(
-    //                '<tr><td>' + item.Nombre + '</td>' +
-    //                '<td><button type="button" onclick="agregarFirma(' + item.Nombre + ', \'' + item.RutaFirma + '\')" data-dismiss="modal"><i class="fa fa-check"></i></button></td></tr>');
-    //        });
-    //    }).fail(function () {
-    //        alert('Error al intentar obtener el listado de Usuarios. Por favor, actualice la página o presione F5.');
-    //    });
-    //}
+    
     function pintarDatosFilaFirma(lista, idUsuario, fila) {
         var urlAbsolute = ""; var img = "";
         $.each(lista, function (x, item) {

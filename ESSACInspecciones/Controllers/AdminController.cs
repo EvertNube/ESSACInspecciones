@@ -174,7 +174,10 @@ namespace ESSACInspecciones.Controllers
                     }
                     else
                     {
-                        createResponseMessage(CONSTANTES.ERROR, CONSTANTES.ERROR_UPDATE_MESSAGE + "<br>Si está intentando actualizar la contraseña, verifique que ha ingresado la contraseña actual correctamente.");
+                        if(currentUser.IdRolUsuario <= 2)
+                            createResponseMessage(CONSTANTES.ERROR, CONSTANTES.ERROR_UPDATE_MESSAGE + "<br>Si está intentando actualizar una contraseña, verifique que conozca la <strong>actual contraseña del usuario a modificar</strong>.");
+                        else
+                            createResponseMessage(CONSTANTES.ERROR, CONSTANTES.ERROR_UPDATE_MESSAGE + "<br>Si está intentando actualizar la contraseña, verifique que ha ingresado la contraseña actual correctamente.");
                     }
 
                 }
@@ -590,6 +593,7 @@ namespace ESSACInspecciones.Controllers
                     return RedirectToAction("Index");
                 }
             }
+            createResponseMessage(CONSTANTES.ERROR, CONSTANTES.ERROR_LOGIN);
             return RedirectToAction("Ingresar");
         }
         public ActionResult Logout()
@@ -887,7 +891,7 @@ namespace ESSACInspecciones.Controllers
 
             doc.Open();
             string miCodigo = (protocolo.Codigo != null) ? protocolo.Codigo : "N/A";
-            Paragraph CodigoProtocolo = new Paragraph("Código: " + miCodigo, myFontTextH12);
+            Paragraph CodigoProtocolo = new Paragraph(miCodigo, myFontTextH12);
             CodigoProtocolo.IndentationLeft = 55;
             doc.Add(CodigoProtocolo);
             Paragraph Titulo = new Paragraph();

@@ -18,7 +18,14 @@ namespace ESSACInspecciones.Helpers
             try
             {
                 string[] listCopy = copy == string.Empty ? new string[0] : copy.Split(',');
-                MailMessage mail = new MailMessage(ConfigurationManager.AppSettings["MailFrom"], to, subject, body);
+                MailAddress from = new MailAddress(ConfigurationManager.AppSettings["MailFrom"], "Calendario RPD");
+                //MailMessage mail = new MailMessage(ConfigurationManager.AppSettings["MailFrom"], to, subject, body);
+                MailMessage mail = new MailMessage();
+                mail.From = from;
+                mail.To.Add(to);
+                mail.Subject = subject;
+                mail.Body = body;
+
                 foreach (var item in listCopy)
                     mail.CC.Add(new MailAddress(item));
                 //mail.Bcc.Add(new MailAddress(ConfigurationManager.AppSettings["MailFrom"]));

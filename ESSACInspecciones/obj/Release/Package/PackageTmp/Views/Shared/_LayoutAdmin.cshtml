@@ -73,8 +73,8 @@
 
                                 <!-- nav -->
                                 <nav class="nav-primary hidden-xs">
-                                    <ul class="nav">
-                                        <li class="active">
+                                    <ul id="menulista" class="nav">
+                                        <li class="menuli" data-index="0">
                                             <a href="@Url.Action("Index")" class="active">
                                                 <i class="fa fa-calendar icon">
                                                     <b class="bg-danger"></b>
@@ -82,7 +82,7 @@
                                                 <span>Calendario</span>
                                             </a>
                                         </li>
-                                        <li class="">
+                                        <li class="menuli" data-index="1">
                                             <a href="@Url.Action("Tareas")" class="active">
                                                 <i class="fa fa-tasks icon">
                                                     <b class="bg-warning"></b>
@@ -90,7 +90,7 @@
                                                 <span>Tareas</span>
                                             </a>
                                         </li>
-                                        <li class="">
+                                        <li class="menuli" data-index="2">
                                             <a href="@Url.Action("Clientes")" class="active">
                                                 <i class="fa fa-building-o icon">
                                                     <b class="bg-info"></b>
@@ -98,15 +98,15 @@
                                                 <span>Clientes</span>
                                             </a>
                                         </li>
-                                        <li class="">
+                                        <li class="menuli" data-index="3">
                                             <a href="@Url.Action("Servicios")" class="active">
                                                 <i class="fa fa-gear icon">
-                                                    <b class="bg-info"></b>
+                                                    <b class="bg-success"></b>
                                                 </i>
                                                 <span>Servicios</span>
                                             </a>
                                         </li>
-                                        <li class="">
+                                        <li class="menuli" data-index="4">
                                             <a href="@Url.Action("Usuarios")">
                                                 <i class="fa fa-user icon">
                                                     <b class="bg-warning"></b>
@@ -114,7 +114,7 @@
                                                 <span>Usuarios</span>
                                             </a>
                                         </li>
-                                        <li class="">
+                                        <li class="menuli" data-index="5">
                                             <a href="@Url.Action("Protocolos")" class="active">
                                                 <i class="fa fa-gear icon">
                                                     <b class="bg-primary"></b>
@@ -122,7 +122,7 @@
                                                 <span>Protocolos Asignados</span>
                                             </a>
                                         </li>
-                                        <li class="">
+                                        <li class="menuli" data-index="6">
                                             <a href="@Url.Action("Periodos")" class="active">
                                                 <i class="fa fa-clock-o icon">
                                                     <b class="bg-success"></b>
@@ -141,6 +141,75 @@
                                 <i class="fa fa-angle-right text-active"></i>
                             </a>
                         </footer>
+                        <script type="text/javascript">
+                            document.addEventListener("DOMContentLoaded", function (event) {
+                                //alert(menuliSelected);
+                                if (localStorage.getItem("dataIndex"))
+                                {
+                                    var menulist = document.getElementsByClassName('menuli');
+                                    agregarClase(menulist[localStorage.getItem("dataIndex")], "active")
+                                    localStorage.removeItem("dataIndex");
+                                }
+                                else
+                                {
+                                    var menulist = document.getElementsByClassName('menuli');
+                                    agregarClase(menulist[0], "active")
+                                }
+
+                                var menuliSelected = null;
+                                
+
+                                var theParent = document.getElementById('menulista');
+                                theParent.addEventListener('click', addClass, false)
+
+                                //var menulist = document.getElementsByClassName('menuli');
+                                //for (var i = 0; i < menulist.length; i++) {
+                                //    menulist[i].addEventListener('click', addClass(menulist[i], 'active'), false);
+                                //    //console.log(menulist[i].childNodes[1]);
+                                //}
+                                /*menulist[0].addEventListener('click', addClass(menulist[0], 'active'), false);
+                                menulist[1].addEventListener('click', addClass(menulist[1], 'active'), false);
+                                menulist[2].addEventListener('click', addClass(menulist[2], 'active'), false);
+                                menulist[3].addEventListener('click', addClass(menulist[3], 'active'), false);
+                                menulist[4].addEventListener('click', addClass(menulist[4], 'active'), false);
+                                menulist[5].addEventListener('click', addClass(menulist[5], 'active'), false);
+                                menulist[6].addEventListener('click', addClass(menulist[6], 'active'), false);*/
+
+                                function activarObjeto(e) {
+                                    console.log(e);
+                                }
+
+                                function existeClase(obj, cls) {
+                                    return obj.className.match(new RegExp('(\\s|^)' + cls + '(\\s|$)'));
+                                }
+
+                                function agregarClase(obj, cls) {
+                                    if (!existeClase(obj, cls)) {
+                                        obj.className += " " + cls;
+                                    }
+                                }
+                                function addClass(e) {
+                                    var cls = 'active';
+                                    /*var menulist = document.getElementsByClassName('menuli');
+                                    for (var i = 0; i < menulist.length; i++) {
+                                        removeClass(menulist[i], 'active');
+                                    }*/
+                                    if (!existeClase(e.target.parentElement, cls)) {
+                                        e.target.parentElement.className += " " + cls;
+                                        //console.log(e.target.parentElement.getAttribute("data-index"));
+                                        menuliSelected = e.target.parentElement.getAttribute("data-index");
+                                        localStorage.setItem("dataIndex", menuliSelected);
+                                    }
+                                }
+                                function removeClass(obj, cls) {
+                                    if (existeClase(obj, cls)) {
+                                        var exp = new RegExp('(\\s|^)' + cls + '(\\s|$)');
+                                        obj.className = obj.className.replace(exp, "");
+                                    }
+                                }
+                            });
+                        </script>
+
                     </section>
                 </aside>
                 <!-- /.aside -->

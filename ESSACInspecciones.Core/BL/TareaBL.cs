@@ -172,17 +172,17 @@ namespace ESSACInspecciones.Core.BL
             //Modificado: Aplica a la modificacion de todos los campos todos los campos de Tarea menos Responsables.
             if (responsablesRemoved.Count == 0 && responsablesAdded.Count == 0)
             {
-                enviarCorreo("modificado", oTareaDTO, new List<int>());
+                enviarCorreo("Se ha actualizado la tarea asignada: ", oTareaDTO, new List<int>());
             }
             //Nuevo Responsable (Asignacion)
             if (responsablesAdded.Count > 0)
             {
-                enviarCorreo("asignado", oTareaDTO, responsablesAdded);
+                enviarCorreo("Se te ha asignado una nueva tarea: ", oTareaDTO, responsablesAdded);
             }
             //Removido Responsable (Desasignacion)
             if (responsablesRemoved.Count > 0)
             {
-                enviarCorreo("desasignado", oTareaDTO, responsablesRemoved);
+                enviarCorreo("Se ha eliminado la tarea asignada: ", oTareaDTO, responsablesRemoved);
             }
 
             //UsuariosBL oBL = new UsuariosBL();
@@ -229,7 +229,8 @@ namespace ESSACInspecciones.Core.BL
         private void enviarCorreo(string accion, TareaDTO oTareaDTO, List<int> toResponsables)
         {
             string to = string.Empty, copy = string.Empty, subject = string.Empty, body = string.Empty;
-            subject = "Se ha " + accion + " una tarea: " + oTareaDTO.NombreTarea;
+            //subject = "Se ha " + accion + " una tarea: " + oTareaDTO.NombreTarea;
+            subject = accion + oTareaDTO.NombreTarea;
             body = "<div>Nombre Tarea : " + oTareaDTO.NombreTarea + " </div>" +
                 "<div>Descripción : " + oTareaDTO.Descripcion + " </div>" +
                 "<div>Fecha Inicio : " + oTareaDTO.FechaInicio + " </div>" +
@@ -256,8 +257,8 @@ namespace ESSACInspecciones.Core.BL
                 body += "<br/> - " + resp.Nombre;
                 if (toResponsables.Count > 0)//(toResponsables != null)
                 {
-                    if (toResponsables.IndexOf(resp.IdUsuario) == -1)
-                        copy += resp.Email + ",";
+                    /*if (toResponsables.IndexOf(resp.IdUsuario) == -1)
+                        copy += resp.Email + ",";*/
                 }
                 else
                     to += resp.Email + ",";
@@ -265,8 +266,11 @@ namespace ESSACInspecciones.Core.BL
             to = to.Substring(0, to.Length - 1);
             copy = copy.Substring(0, copy.Length - (copy.Length == 0 ? 0 : 1));
             body += " </div>" + "<div>Servicio : " + oTareaDTO.Servicio.NombreServicio + " </div>" + "<div>Estado : " + oTareaDTO.Estado.NombreEstado + " </div>";
-            if(oTareaDTO.Plantilla.IdPlantilla != 0)
-                body += "<div>Protocolo : " + oTareaDTO.Plantilla.Nombre + " - " + oTareaDTO.Plantilla.Nombre2 + " </div>";
+            if(oTareaDTO.Plantilla != null)
+            { 
+                if(oTareaDTO.Plantilla.IdPlantilla != 0)
+                    body += "<div>Protocolo : " + oTareaDTO.Plantilla.Nombre + " - " + oTareaDTO.Plantilla.Nombre2 + " </div>";
+            }
 
             MailHandler.Send(to, copy, subject, body);
             //MailHandler.sendEmail(body);
