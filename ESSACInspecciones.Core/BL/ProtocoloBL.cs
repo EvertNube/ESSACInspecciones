@@ -327,16 +327,43 @@ namespace ESSACInspecciones.Core.BL
         {
             using (var context = getContext())
             {
-                var lista = (from r in context.Tarea
-                             from u in context.Usuario
-                             where u.IdUsuario == idUsuario && r.IdEstado != 5 && r.Active == true
-                             select new ClienteDTO
-                             {
-                                 IdCliente = r.IdCliente,
-                                 NombreEmpresa = r.Cliente.Nombre
-                             }).Distinct().ToList();
-                lista.Insert(0, new ClienteDTO() { IdCliente = 0, NombreEmpresa = "Seleccione" });
-                return lista;
+                //Obtener el usuario
+                var cliente = (from user in context.Usuario
+                              where user.IdUsuario == idUsuario
+                              select new UsuarioDTO
+                              {
+                                  IdUsuario = user.IdUsuario,
+                                  Nombre = user.Nombre,
+                                  IdRolUsuario = user.IdRol,
+                                  IdCliente = user.IdCliente
+                              }).SingleOrDefault();
+
+                if(cliente.IdRolUsuario != 4)
+                { 
+                    //Obtener el usuario segun la tarea
+                    var lista = (from r in context.Tarea
+                                 from u in context.Usuario
+                                 where u.IdUsuario == idUsuario && r.IdEstado != 5 && r.Active == true
+                                 select new ClienteDTO
+                                 {
+                                     IdCliente = r.IdCliente,
+                                     NombreEmpresa = r.Cliente.Nombre
+                                 }).Distinct().ToList();
+                    lista.Insert(0, new ClienteDTO() { IdCliente = 0, NombreEmpresa = "Seleccione" });
+                    return lista;
+                }
+                else
+                {
+                    var lista = (from c in context.Cliente
+                                 where c.IdCliente == cliente.IdCliente
+                                 select new ClienteDTO
+                                 {
+                                     IdCliente = c.IdCliente,
+                                     NombreEmpresa = c.Nombre
+                                 }).Distinct().ToList();
+                    lista.Insert(0, new ClienteDTO() { IdCliente = 0, NombreEmpresa = "Seleccione" });
+                    return lista;
+                }
             }
         }
         #endregion
