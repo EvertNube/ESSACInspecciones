@@ -266,7 +266,7 @@
                         }
 
                         var seccionConGrafica = (seccion.Nombre.toUpperCase().indexOf("RESULTADOS DE LA PRUEBA DE LA BOMBA CONTRA INCENDIO") > -1) ? ' claseGrafica' : '';
-                        var grafica = (tipoSeccion != '') ? '<div id="flot-chart" style="height:240px"></div>' : '';
+                        var grafica = (tipoSeccion != '') ? '<div id="flot-chart" style="height:240px"></div><div id="legend-container" align="center"></div>' : '';
                         strHtmlSeccion += '<div class="panel panel-default">' +
                             '<a class="accordion-toggle panel-default bkgray collapsed" data-toggle="collapse" data-parent="#' + firstLevelName + '" href="#' + seccion.IdSeccion + '">' +
                                             '<div class="panel-heading' + seccionConGrafica + '">' +
@@ -750,6 +750,11 @@
                             x: 0,
                             y: 20
                         }
+                    },
+                    legend: {
+                        //position: 'sw'
+                        noColumns: 3,
+                        container: $("#legend-container"),
                     }
                 }
             );
@@ -856,7 +861,11 @@
                             y: 20
                         }
                     },
-                    legend: { position: 'sw' }
+                    legend: {
+                        //position: 'sw'
+                        noColumns: 4,
+                        container: $("#legend-container"),
+                    }
                 }
             );
         }
