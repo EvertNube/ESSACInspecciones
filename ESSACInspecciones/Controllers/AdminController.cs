@@ -873,7 +873,7 @@ namespace ESSACInspecciones.Controllers
             string imagespath = Server.MapPath("/Content/themes/admin/images");
             string imgPath1 = imagespath +"/logo.png";
             iTextSharp.text.Image pic1 = iTextSharp.text.Image.GetInstance(imgPath1);
-            //pic1.Alignment = Element.ALIGN_RIGHT;
+            pic1.Alignment = Image.TEXTWRAP | Image.ALIGN_RIGHT;
             if (pic1.Height > pic1.Width)
             {
                 //Maximum height is 800 pixels.
@@ -890,15 +890,26 @@ namespace ESSACInspecciones.Controllers
             }
 
             doc.Open();
+
             string miCodigo = (protocolo.Codigo != null) ? protocolo.Codigo : "N/A";
             Paragraph CodigoProtocolo = new Paragraph(miCodigo, myFontTextH12);
+            CodigoProtocolo.Alignment = Element.ALIGN_JUSTIFIED;
             CodigoProtocolo.IndentationLeft = 55;
+            pic1.IndentationLeft = 9f;
+            pic1.SpacingAfter = 9f;
+            //pic1.BorderWidthTop = 36f;
+            //pic1.BorderColorTop = System.Drawing.Color;
+            CodigoProtocolo.Add(pic1);
             doc.Add(CodigoProtocolo);
+            
             Paragraph Titulo = new Paragraph();
             Titulo.SpacingBefore = 20;
             Titulo.IndentationLeft = 55;
+            Titulo.Alignment = Element.ALIGN_JUSTIFIED;
             Titulo.Add(new Phrase(protocolo.Plantilla.Nombre, myFontTitle18_B));
-            Titulo.Add(new Chunk(pic1, 250, -15));
+            //250
+            float miEspaciado = PageSize.A4.Width * 0.45f;
+            //Titulo.Add(new Chunk(pic1, miEspaciado, -15));
             Titulo.SpacingAfter = 10;
 
             doc.Add(Titulo);
