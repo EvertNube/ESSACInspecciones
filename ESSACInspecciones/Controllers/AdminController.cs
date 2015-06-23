@@ -851,8 +851,8 @@ namespace ESSACInspecciones.Controllers
         {
             MemoryStream ms = new MemoryStream();
             //Document doc = new Document(PageSize.A4, 1, 1, 1, 1);
-            Document doc = new Document(PageSize.A4, 5f, 5f, 15f, 15f);
-            //Document doc = new Document(PageSize.A4.Rotate(), 1, 1, 1, 1);
+            //Document doc = new Document(PageSize.A4, 5f, 5f, 15f, 15f);
+            Document doc = new Document(PageSize.A4.Rotate(), 1, 1, 1, 1);
             PdfWriter writer = PdfWriter.GetInstance(doc, ms);
 
             //Mis Fonts
@@ -961,7 +961,7 @@ namespace ESSACInspecciones.Controllers
             {
                 numColumns = Seccion.Nombre.Equals("ANEXO - RELACIÓN DE DIPOSITIVOS PROBADOS") ? 32 : 12;
                 //Validacion del tamaño de tabla de los ANEXOS
-                numColumns = numeroFilasEnSeccion(Seccion.Nombre);
+                numColumns = numeroFilasEnSeccion(protocolo.Plantilla.Nombre, Seccion.Nombre);
 
                 PdfPTable tableSeccion = new PdfPTable(numColumns);
                 PdfPCell cellSeccion = new PdfPCell();
@@ -1063,6 +1063,25 @@ namespace ESSACInspecciones.Controllers
             return ms;
         }
 
+        private int numeroFilasEnSeccionPlantilla(string NombrePlantilla, string NombreSeccion)
+        {
+            switch (NombreSeccion)
+            {
+                case "ANEXO - HOJA DE INSPECCIÓN DE GABINETES CONTRA INCENDIOS":
+                    return 36;
+                case "ANEXO - LISTADO DE CASETAS DE ATAQUE RÁPIDO (CAR)":
+                    return 36;
+                case "ANEXO - INSPECCION DE MONITORES":
+                    return 28;
+                case "ANEXO - RELACIÓN DE DIPOSITIVOS PROBADOS":
+                    return 32;
+                case "DETALLE - RNE":
+                    return 18;
+                default:
+                    return 12;
+            }
+        }
+        
         private int numeroFilasEnSeccion(string NombreSeccion)
         {
             switch (NombreSeccion)
@@ -1075,6 +1094,8 @@ namespace ESSACInspecciones.Controllers
                     return 28;
                 case "ANEXO - RELACIÓN DE DIPOSITIVOS PROBADOS":
                     return 32;
+                case "DETALLE - RNE":
+                    return 18;
                 default:
                     return 12;
             }
