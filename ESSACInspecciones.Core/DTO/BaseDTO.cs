@@ -106,5 +106,15 @@ namespace ESSACInspecciones.Core.DTO
             lista.Insert(2, new ItemDTO() { id = 2, name = "Registro electrónico" });
             return lista;
         }
+        public IList<ItemDTO> fillSelectControlMonitoreo()
+        {
+            var lista = new List<ItemDTO>();
+            lista.Insert(0, new ItemDTO() { id = 0, name = "Seleccione" });
+            lista.Insert(1, new ItemDTO() { id = 1, name = "Control" });
+            lista.Insert(2, new ItemDTO() { id = 2, name = "Monitoreo" });
+            lista.Insert(3, new ItemDTO() { id = 3, name = "Control y Monitoreo" });
+            lista.Insert(4, new ItemDTO() { id = 4, name = "N/A" });
+            return lista;
+        }
     }
 }

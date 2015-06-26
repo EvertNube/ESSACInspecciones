@@ -705,6 +705,8 @@ namespace ESSACInspecciones.Controllers
             ViewBag.Items_SelectNivelTanque = new BaseDTO().fillSelectNivelTanque();
             ViewBag.Items_SelectAccesorios = new BaseDTO().fillSelectAccesorios();
             ViewBag.Items_SelectPresiones = new BaseDTO().fillSelectPresiones();
+            ViewBag.Items_SelectControlMonitoreo = new BaseDTO().fillSelectControlMonitoreo();
+            
             ProtocoloBL objBL = new ProtocoloBL();
             ProtocoloDTO obj = objBL.getProtocolo(idInmueble, idPeriodo, idProtocolo, idPlantilla);
             return View(obj);
@@ -732,6 +734,7 @@ namespace ESSACInspecciones.Controllers
             ViewBag.Items_SelectPresiones = obj.getOpcionRespuesta(7).ToJSON();
             ViewBag.Items_SelectSINOonly = obj.getOpcionRespuesta(13).ToJSON();
             ViewBag.Items_SelectInspectores = listaInspectores.ToJSON();
+            ViewBag.Items_SelectControlMonitoreo = obj.getOpcionRespuesta(15).ToJSON();
 
             return View();
         }
@@ -961,7 +964,7 @@ namespace ESSACInspecciones.Controllers
             {
                 numColumns = Seccion.Nombre.Equals("ANEXO - RELACIÓN DE DIPOSITIVOS PROBADOS") ? 32 : 12;
                 //Validacion del tamaño de tabla de los ANEXOS
-                numColumns = numeroFilasEnSeccion(protocolo.Plantilla.Nombre, Seccion.Nombre);
+                numColumns = numeroFilasEnSeccionPlantilla(protocolo.Plantilla.Nombre, Seccion.Nombre);
 
                 PdfPTable tableSeccion = new PdfPTable(numColumns);
                 PdfPCell cellSeccion = new PdfPCell();
