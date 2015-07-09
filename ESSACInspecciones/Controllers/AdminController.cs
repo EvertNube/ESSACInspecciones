@@ -15,11 +15,13 @@ using PagedList;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using System.Globalization;
+using ESSACInspecciones.Models;
 
 namespace ESSACInspecciones.Controllers
-{
+{   
     public class AdminController : Controller
     {
+        protected Navbar navbar { get; set; }
         private bool currentUser()
         {
             if (System.Web.HttpContext.Current.Session != null && System.Web.HttpContext.Current.Session["User"] != null) { return true; }
@@ -57,6 +59,9 @@ namespace ESSACInspecciones.Controllers
             UsuarioDTO user = getCurrentUser();
             if (user != null)
             {
+                this.navbar = new Navbar();
+                ViewBag.Navbar = this.navbar;
+
                 ViewBag.currentUser = user;
                 ViewBag.EsAdmin = isAdministrator();
                 ViewBag.EsSuperAdmin = isSuperAdministrator();
@@ -68,6 +73,8 @@ namespace ESSACInspecciones.Controllers
         public ActionResult Index(int? searchResponsable)
         {
             if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
+
+            MenuNavBarSelected(1);
 
             TareaBL objBL = new TareaBL();
             var model = objBL.getResponsables(true);
@@ -95,7 +102,7 @@ namespace ESSACInspecciones.Controllers
         public ActionResult Usuarios()
         {
             if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
-            //if (!this.isAdministrator()) { return RedirectToAction("Index"); }
+            MenuNavBarSelected(5);
             UsuariosBL usuariosBL = new UsuariosBL();
             UsuarioDTO currentUser = getCurrentUser();
             return View(usuariosBL.getUsuariosTodos());//(CONSTANTES.ROL_RESPONSABLE));
@@ -104,9 +111,10 @@ namespace ESSACInspecciones.Controllers
         public ActionResult Usuario(int? id = null)
         {
             if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
+            MenuNavBarSelected(5);
+            
             UsuarioDTO currentUser = getCurrentUser();
-            //if (!this.isAdministrator() && id != currentUser.IdUsuario) { return RedirectToAction("Index"); }
-            //if (id == 1 && !this.isSuperAdministrator()) { return RedirectToAction("Index"); }
+
             UsuariosBL usuariosBL = new UsuariosBL();
             IList<RolDTO> roles = usuariosBL.getRolesCurrent(this.getCurrentUser().IdRolUsuario);
             IList<ClienteDTO> clientes = usuariosBL.getClientesBag(true);
@@ -199,6 +207,7 @@ namespace ESSACInspecciones.Controllers
         public ActionResult Clientes()
         {
             if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
+            MenuNavBarSelected(3);
             ClienteBL objBL = new ClienteBL();
             return View(objBL.getClientes());
         }
@@ -206,7 +215,7 @@ namespace ESSACInspecciones.Controllers
         public ActionResult Cliente(int? id = null)
         {
             if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
-            //if (!this.isAdministrator()) { return RedirectToAction("Index"); }
+            MenuNavBarSelected(3);
             ClienteBL objBL = new ClienteBL();
             ViewBag.IdCliente = id;
             var objSent = TempData["Cliente"];
@@ -270,7 +279,8 @@ namespace ESSACInspecciones.Controllers
         public ActionResult Inmueble(int IdCliente, int? id = null)
         {
             if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
-            
+            MenuNavBarSelected(3);
+
             ClienteBL objBL = new ClienteBL();
             PlantillaBL objPlantillaBL = new PlantillaBL();
             var dataPlantillas = objBL.getPlantillas(true);
@@ -310,6 +320,7 @@ namespace ESSACInspecciones.Controllers
         public ActionResult AddInmueble(InmuebleDTO dto, int[] plantillas)
         {
             if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
+            MenuNavBarSelected(3);
             try
             {
                 if (plantillas != null)
@@ -355,6 +366,7 @@ namespace ESSACInspecciones.Controllers
         public ActionResult Contacto(int IdCliente, int? id = null)
         {
             if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
+            MenuNavBarSelected(3);
             ClienteBL objBL = new ClienteBL();
             ViewBag.IdCliente = IdCliente;
             var objSent = TempData["Contacto"];
@@ -370,6 +382,7 @@ namespace ESSACInspecciones.Controllers
         public ActionResult AddContacto(ContactoDTO dto)
         {
             if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
+            MenuNavBarSelected(3);
             try
             {
                 ClienteBL objBL = new ClienteBL();
@@ -410,6 +423,7 @@ namespace ESSACInspecciones.Controllers
         public ActionResult Servicios()
         {
             if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
+            MenuNavBarSelected(4);
             ServiciosBL objBL = new ServiciosBL();
             return View(objBL.getServicios());
         }
@@ -417,6 +431,7 @@ namespace ESSACInspecciones.Controllers
         public ActionResult Servicio(int? id = null)
         {
             if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
+            MenuNavBarSelected(4);
             ServiciosBL objBL = new ServiciosBL();
             var objSent = TempData["Servicio"];
             if (objSent != null) { TempData["Servicio"] = null; return View(objSent); }
@@ -471,6 +486,7 @@ namespace ESSACInspecciones.Controllers
         public ActionResult Tareas(int? searchResponsable, int? page)
         {
             if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
+            MenuNavBarSelected(2);
 
             TareaBL objBL = new TareaBL();
             var model = objBL.getTareas();
@@ -489,6 +505,7 @@ namespace ESSACInspecciones.Controllers
         public ActionResult Tarea(int? id = null)
         {
             if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
+            MenuNavBarSelected(2);
 
             TareaBL objBL = new TareaBL();
             var dataResponsables = objBL.getResponsables(true);
@@ -643,6 +660,9 @@ namespace ESSACInspecciones.Controllers
         public ActionResult Responsables()
         {
             if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
+            
+            MenuNavBarSelected(1);
+
             UsuariosBL usuariosBL = new UsuariosBL();
             var responsables = usuariosBL.getUsuarios(CONSTANTES.ROL_RESPONSABLE).OrderBy(x => x.IdUsuario).ToList();
             ViewBag.Responsables = responsables;
@@ -673,6 +693,8 @@ namespace ESSACInspecciones.Controllers
         public ActionResult Protocolos(int? inmueble, int? periodo)
         {
             if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
+            MenuNavBarSelected(6);
+
             List<ProtocoloDTO> model = new List<ProtocoloDTO>();
             ProtocoloBL objBL = new ProtocoloBL();
             int idUsuario = getCurrentUser().IdUsuario;
@@ -713,6 +735,8 @@ namespace ESSACInspecciones.Controllers
         }
         public ActionResult Protocolo(int idInmueble, int idPeriodo)
         {
+            MenuNavBarSelected(6);
+
             UsuariosBL oUsuariosBL = new UsuariosBL();
             var listaInspectores = oUsuariosBL.getUsuariosInspectores();
             var usuarioActual = getCurrentUser();
@@ -788,6 +812,7 @@ namespace ESSACInspecciones.Controllers
         {
             if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
             //if (!this.isAdministrator()) { return RedirectToAction("Index"); }
+            MenuNavBarSelected(7);
             PeriodoBL periodoBL = new PeriodoBL();
             return View(periodoBL.getPeriodos());
         }
@@ -795,6 +820,7 @@ namespace ESSACInspecciones.Controllers
         public ActionResult Periodo(int? id = null)
         {
             if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
+            MenuNavBarSelected(7);
 
             PeriodoBL objBL = new PeriodoBL();
             ViewBag.IdPeriodo = id;
@@ -1329,5 +1355,36 @@ namespace ESSACInspecciones.Controllers
         #endregion
         public ActionResult Formulario()
         { return View(); }
+
+        public void MenuNavBarSelected(int num)
+        {
+            navbar.clearAll();
+            switch (num)
+            {
+                case 1:
+                    navbar.dangerActive = "active";
+                    break;
+                case 2:
+                    navbar.warningActive = "active";
+                    break;
+                case 3:
+                    navbar.infoActive = "active";
+                    break;
+                case 4:
+                    navbar.successActive = "active";
+                    break;
+                case 5:
+                    navbar.warningActive2 = "active";
+                    break;
+                case 6:
+                    navbar.primaryActive = "active";
+                    break;
+                case 7:
+                    navbar.successActive2 = "active";
+                    break;
+            }
+
+            ViewBag.navbar = navbar;
+        }
     }
 }
