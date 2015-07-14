@@ -990,7 +990,7 @@ namespace ESSACInspecciones.Controllers
             {
                 numColumns = Seccion.Nombre.Equals("ANEXO - RELACIÓN DE DIPOSITIVOS PROBADOS") ? 32 : 12;
                 //Validacion del tamaño de tabla de los ANEXOS
-                numColumns = numeroFilasEnSeccionPlantilla(protocolo.Plantilla.Nombre, Seccion.Nombre);
+                numColumns = numeroFilasEnSeccion(Seccion.Nombre);
 
                 PdfPTable tableSeccion = new PdfPTable(numColumns);
                 PdfPCell cellSeccion = new PdfPCell();
@@ -1091,38 +1091,31 @@ namespace ESSACInspecciones.Controllers
             doc.Close();
             return ms;
         }
-
-        private int numeroFilasEnSeccionPlantilla(string NombrePlantilla, string NombreSeccion)
-        {
-            switch (NombreSeccion)
-            {
-                case "ANEXO - HOJA DE INSPECCIÓN DE GABINETES CONTRA INCENDIOS":
-                    return 36;
-                case "ANEXO - LISTADO DE CASETAS DE ATAQUE RÁPIDO (CAR)":
-                    return 36;
-                case "ANEXO - INSPECCION DE MONITORES":
-                    return 28;
-                case "ANEXO - RELACIÓN DE DIPOSITIVOS PROBADOS":
-                    return 32;
-                case "DETALLE - RNE":
-                    return 18;
-                default:
-                    return 12;
-            }
-        }
         
         private int numeroFilasEnSeccion(string NombreSeccion)
         {
             switch (NombreSeccion)
             {
+                //NFPA 14
                 case "ANEXO - HOJA DE INSPECCIÓN DE GABINETES CONTRA INCENDIOS":
-                    return 36;
+                    return 39;
+                //NFPA 24
                 case "ANEXO - LISTADO DE CASETAS DE ATAQUE RÁPIDO (CAR)":
                     return 36;
                 case "ANEXO - INSPECCION DE MONITORES":
                     return 28;
+                //NFPA 72
                 case "ANEXO - RELACIÓN DE DIPOSITIVOS PROBADOS":
-                    return 32;
+                    return 35;
+                //NFPA 11
+                case "ANEXO - PRUEBA DEL SISTEMA DE MONITOR AGUA-ESPUMA":
+                    return 12;
+                //NFPA 10
+                case "NFPA 10":
+                    return 40;
+                //NFPA 101
+                case "NFPA 101":
+                    return 40;
                 case "DETALLE - RNE":
                     return 18;
                 default:
