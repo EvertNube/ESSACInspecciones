@@ -758,7 +758,7 @@ namespace ESSACInspecciones.Controllers
             ViewBag.Items_SelectPresiones = obj.getOpcionRespuesta(7).ToJSON();
             ViewBag.Items_SelectSINOonly = obj.getOpcionRespuesta(13).ToJSON();
             ViewBag.Items_SelectInspectores = listaInspectores.ToJSON();
-            ViewBag.Items_SelectControlMonitoreo = obj.getOpcionRespuesta(15).ToJSON();
+            ViewBag.Items_SelectControlMonitoreo = obj.getOpcionRespuesta(16).ToJSON();
 
             return View();
         }
@@ -881,7 +881,7 @@ namespace ESSACInspecciones.Controllers
             MemoryStream ms = new MemoryStream();
             //Document doc = new Document(PageSize.A4, 1, 1, 1, 1);
             //Document doc = new Document(PageSize.A4, 5f, 5f, 15f, 15f);
-            Document doc = new Document(PageSize.A4.Rotate(), 1, 1, 1, 1);
+            Document doc = new Document(PageSize.A4, 1, 1, 1, 1);
             PdfWriter writer = PdfWriter.GetInstance(doc, ms);
 
             //Mis Fonts
@@ -895,6 +895,8 @@ namespace ESSACInspecciones.Controllers
             Font myFontText10_B = FontFactory.GetFont("Open Sans", 10, Font.BOLD);
             Font myFontText8 = FontFactory.GetFont("Open Sans", 8);
             Font myFontText8_B = FontFactory.GetFont("Open Sans", 8, Font.BOLD);
+            Font myFontText8_blue = FontFactory.GetFont("Open Sans", 8, new BaseColor(66, 139, 202));
+            Font myFontTextH12_blue = FontFactory.GetFont("Open Sans", 12, new BaseColor(66, 139, 202));
             int numColumns = 12;
 
             //Imagen
@@ -902,7 +904,8 @@ namespace ESSACInspecciones.Controllers
             string imagespath = Server.MapPath("/Content/themes/admin/images");
             string imgPath1 = imagespath +"/logo.png";
             iTextSharp.text.Image pic1 = iTextSharp.text.Image.GetInstance(imgPath1);
-            pic1.Alignment = Image.TEXTWRAP | Image.ALIGN_RIGHT;
+            pic1.SetAbsolutePosition(doc.PageSize.Width - 150, doc.PageSize.Height - 45);
+            //pic1.Alignment = Image.TEXTWRAP | Image.ALIGN_RIGHT;
             if (pic1.Height > pic1.Width)
             {
                 //Maximum height is 800 pixels.
@@ -924,8 +927,8 @@ namespace ESSACInspecciones.Controllers
             Paragraph CodigoProtocolo = new Paragraph(miCodigo, myFontTextH12);
             CodigoProtocolo.Alignment = Element.ALIGN_JUSTIFIED;
             CodigoProtocolo.IndentationLeft = 55;
-            pic1.IndentationLeft = 9f;
-            pic1.SpacingAfter = 9f;
+            //pic1.IndentationLeft = 9f;
+            //pic1.SpacingAfter = 9f;
             //pic1.BorderWidthTop = 36f;
             //pic1.BorderColorTop = System.Drawing.Color;
             CodigoProtocolo.Add(pic1);
@@ -948,7 +951,7 @@ namespace ESSACInspecciones.Controllers
             Paragraph SubTitulo = new Paragraph(protocolo.Plantilla.Nombre2, myFontTitle15);
             SubTitulo.Alignment = Element.ALIGN_CENTER;
             doc.Add(SubTitulo);
-            doc.Add(new Paragraph(" "));
+            //doc.Add(new Paragraph(" "));
 
             //Cabecera del protocolo
             PdfPTable tableHeader = new PdfPTable(numColumns);
@@ -958,19 +961,25 @@ namespace ESSACInspecciones.Controllers
             tableHeader.AddCell(cellHeader);
             cellHeader.Phrase = new Phrase("Fecha:", myFontTextH12_B);
             tableHeader.AddCell(cellHeader);
-            cellHeader.Phrase = new Phrase(protocolo.NombreAreaProtegida, myFontTextH12);
+            cellHeader.Phrase = new Phrase(protocolo.NombreAreaProtegida, myFontTextH12_blue);
             tableHeader.AddCell(cellHeader);
-            cellHeader.Phrase = new Phrase(protocolo.Fecha.ToString(), myFontTextH12);
+            cellHeader.Phrase = new Phrase(protocolo.Fecha.ToString(), myFontTextH12_blue);
             tableHeader.AddCell(cellHeader);
 
             cellHeader.Phrase = new Phrase("Dirección:", myFontTextH12_B);
             tableHeader.AddCell(cellHeader);
             cellHeader.Phrase = new Phrase("Hora de Inicio:", myFontTextH12_B);
             tableHeader.AddCell(cellHeader);
-            cellHeader.Phrase = new Phrase(protocolo.Direccion, myFontTextH12);
+            cellHeader.Phrase = new Phrase(protocolo.Direccion, myFontTextH12_blue);
             tableHeader.AddCell(cellHeader);
-            cellHeader.Phrase = new Phrase(protocolo.HoraInicio + ":" + protocolo.MinutoInicio, myFontTextH12);
+            cellHeader.Phrase = new Phrase(protocolo.HoraInicio + ":" + protocolo.MinutoInicio, myFontTextH12_blue);
             tableHeader.AddCell(cellHeader);
+
+            cellHeader.Phrase = new Phrase("Tipo de prueba:", myFontTextH12_B);
+            tableHeader.AddCell(cellHeader);
+            cellHeader.Phrase = new Phrase(protocolo.TipoPrueba == "1" ? "Recepción del sistema" : "Pruebas periódicas anuales", myFontTextH12_blue);
+            tableHeader.AddCell(cellHeader);
+
             doc.Add(tableHeader);
             //Fin de la cabecera del protocolo
 
@@ -984,6 +993,8 @@ namespace ESSACInspecciones.Controllers
             List<OpcionDTO> opciones5 = (List<OpcionDTO>)obj.getOpcionRespuesta(5);
             List<OpcionDTO> opciones6 = (List<OpcionDTO>)obj.getOpcionRespuesta(6);
             List<OpcionDTO> opciones7 = (List<OpcionDTO>)obj.getOpcionRespuesta(7);
+            List<OpcionDTO> opciones13 = (List<OpcionDTO>)obj.getOpcionRespuesta(13);
+            List<OpcionDTO> opciones16 = (List<OpcionDTO>)obj.getOpcionRespuesta(16);
 
             //Inicio Tabla Reporte
             foreach(var Seccion in protocolo.Secciones)
@@ -1021,6 +1032,8 @@ namespace ESSACInspecciones.Controllers
                             case 5: auxOpc = opciones5; break;
                             case 6: auxOpc = opciones6; break;
                             case 7: auxOpc = opciones7; break;
+                            case 13: auxOpc = opciones13; break;
+                            case 16: auxOpc = opciones16; break;
                             default: auxOpc = null; break;
                         }
                         //NO HAY CASE 2 PORQUE ESTA CONTEMPLADO EN "ELSE" DE ABAJO
@@ -1033,7 +1046,7 @@ namespace ESSACInspecciones.Controllers
                         else
                             rpta = SeccionBody.Respuesta;
                         
-                        cellSeccionBody.Phrase = new Phrase(rpta, myFontText8);
+                        cellSeccionBody.Phrase = new Phrase(rpta, myFontText8_blue);
                     }
                     tableSeccion.AddCell(cellSeccionBody);
                 }
@@ -1067,6 +1080,8 @@ namespace ESSACInspecciones.Controllers
                                 case 5: auxOpc = opciones5; break;
                                 case 6: auxOpc = opciones6; break;
                                 case 7: auxOpc = opciones7; break;
+                                case 13: auxOpc = opciones13; break;
+                                case 16: auxOpc = opciones16; break;
                                 default: auxOpc = null; break;
                             }
                             //NO HAY CASE 2 PORQUE ESTA CONTEMPLADO EN "ELSE" DE ABAJO
@@ -1079,7 +1094,7 @@ namespace ESSACInspecciones.Controllers
                             else
                                 rpta = SubSeccionBody.Respuesta;
 
-                            cellSubSeccionBody.Phrase = new Phrase(rpta, myFontText8);
+                            cellSubSeccionBody.Phrase = new Phrase(rpta, myFontText8_blue);
                         }
                         tableSeccion.AddCell(cellSubSeccionBody);
                     }
@@ -1110,11 +1125,29 @@ namespace ESSACInspecciones.Controllers
                 //NFPA 11
                 case "ANEXO - PRUEBA DEL SISTEMA DE MONITOR AGUA-ESPUMA":
                     return 12;
-                //NFPA 10
+                //NFPA 10 - Completo
                 case "NFPA 10":
                     return 40;
-                //NFPA 101
+                //NFPA 101 - Completo
                 case "NFPA 101":
+                    return 40;
+                //NFPA 2001
+                case "ANEXO - LISTADO DE DISPOSITIVOS DE SISTEMA DE DETECCIÓN Y EXTINCIÓN POR AGENTES LIMPIOS":
+                    return 40;
+                //CCTV - Completo
+                case "CCTV":
+                    return 40;
+                //ANX de Intrusion - Completo
+                case "ANX de Intrusion":
+                    return 40;
+                //ANX Control de Acceso - Completo
+                case "ANX Control de Acceso":
+                    return 40;
+                //INSPECCIÓN DE LECTORAS - Completo
+                case "INSPECCIÓN DE LECTORAS":
+                    return 40;
+                //NFPA 80 - Completo
+                case "NFPA 80":
                     return 40;
                 case "DETALLE - RNE":
                     return 18;

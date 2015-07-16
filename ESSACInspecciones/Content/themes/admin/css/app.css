@@ -2746,7 +2746,7 @@ fieldset[disabled] .btn-gplus.active {
   float: none;
 }
 .rounded {
-  border-radius: 500px;
+  border-radius: 15px;
 }
 .btn-s-xs {
   min-width: 90px;

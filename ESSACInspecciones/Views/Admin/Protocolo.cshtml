@@ -162,7 +162,8 @@
                                         case 12: strHtmlTag = '<input type="text" id="tag' + seccion.SeccionBodys[s].IdSeccionBody + '" class="' + classTextBox + '" value="' + removeNull(seccion.SeccionBodys[s].Respuesta) + '"' + desactivar + '/>'; break;
                                         case 13: strHtmlTag = drawSelect("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectSINOonly, seccion.SeccionBodys[s].Respuesta, 2, stepname); break;
                                         case 14: strHtmlTag = '<input type="text" id=tag"' + seccion.SeccionBodys[s].IdSeccionBody + '" class="rounded ubicacion ' + classTextBox + '" value="' + removeNull(seccion.SeccionBodys[s].Respuesta) + '"' + desactivar + '/>'; break;
-                                        case 15: strHtmlTag = drawSelect("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectControlMonitoreo, seccion.SeccionBodys[s].Respuesta, 2, stepname); break;
+                                        case 15: strHtmlTag = '<textarea rows="5" id="tag' + seccion.SeccionBodys[s].IdSeccionBody + '" class="rounded ' + classTextBox + '"' + desactivar + 'style="resize:none;" >' + removeNull(seccion.SeccionBodys[s].Respuesta) + '</textarea>'; break;
+                                        case 16: strHtmlTag = drawSelect("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectControlMonitoreo, seccion.SeccionBodys[s].Respuesta, 2, stepname); break;
                                         default: break;
                                     }
                                     strHtmlSecRow += '<td class="redondeado" ' + idCeldaFirma + ' rowspan="' + seccion.SeccionBodys[s].Rowspan + '" colspan="' + seccion.SeccionBodys[s].Colspan + '">' + strHtmlTag + '<input type="hidden" name="GroupIdTableBody" class="GroupIdTableBody redondeado" value="' + seccion.SeccionBodys[s].IdSeccionBody + '" />' + '</td>';
@@ -225,7 +226,8 @@
                                                 case 12: strHtmlTag = '<input type="text" id="tag' + subSeccion.SeccionBodys[s].IdSeccionBody + '" class="' + classTextBox + '" value="' + removeNull(subSeccion.SeccionBodys[s].Respuesta) + '"' + desactivar + '/>'; break;
                                                 case 13: strHtmlTag = drawSelect("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectSINOonly, subSeccion.SeccionBodys[s].Respuesta, 2, stepname, tipoSeccion); break;
                                                 case 14: strHtmlTag = '<input type="text" id=tag"' + subSeccion.SeccionBodys[s].IdSeccionBody + '" class="rounded ubicacion ' + classTextBox + '" value="' + removeNull(subSeccion.SeccionBodys[s].Respuesta) + '"' + desactivar + '/>'; break;
-                                                case 15: strHtmlTag = drawSelect("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectControlMonitoreo, subSeccion.SeccionBodys[s].Respuesta, 2, stepname, tipoSeccion); break;
+                                                case 15: strHtmlTag = '<textarea rows="5" id="tag' + subSeccion.SeccionBodys[s].IdSeccionBody + '" class="rounded ' + classTextBox + '"' + desactivar + 'style="resize:none;" >' + removeNull(subSeccion.SeccionBodys[s].Respuesta) + '</textarea>'; break;
+                                                case 16: strHtmlTag = drawSelect("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectControlMonitoreo, subSeccion.SeccionBodys[s].Respuesta, 2, stepname, tipoSeccion); break;
                                                 default: break;
                                             }
                                             /*strHtmlSubSecRow += '<td class="redondeado" rowspan="' + subSeccion.SeccionBodys[s].Rowspan + '" colspan="' + subSeccion.SeccionBodys[s].Colspan + '" style="text-align:-webkit-center;">' + strHtmlTag + '</td>';
