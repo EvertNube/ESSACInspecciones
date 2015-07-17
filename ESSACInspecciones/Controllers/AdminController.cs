@@ -18,7 +18,7 @@ using System.Globalization;
 using ESSACInspecciones.Models;
 
 namespace ESSACInspecciones.Controllers
-{   
+{
     public class AdminController : Controller
     {
         protected Navbar navbar { get; set; }
@@ -112,7 +112,7 @@ namespace ESSACInspecciones.Controllers
         {
             if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
             MenuNavBarSelected(5);
-            
+
             UsuarioDTO currentUser = getCurrentUser();
 
             UsuariosBL usuariosBL = new UsuariosBL();
@@ -182,7 +182,7 @@ namespace ESSACInspecciones.Controllers
                     }
                     else
                     {
-                        if(currentUser.IdRolUsuario <= 2)
+                        if (currentUser.IdRolUsuario <= 2)
                             createResponseMessage(CONSTANTES.ERROR, CONSTANTES.ERROR_UPDATE_MESSAGE + "<br>Si está intentando actualizar una contraseña, verifique que conozca la <strong>actual contraseña del usuario a modificar</strong>.");
                         else
                             createResponseMessage(CONSTANTES.ERROR, CONSTANTES.ERROR_UPDATE_MESSAGE + "<br>Si está intentando actualizar la contraseña, verifique que ha ingresado la contraseña actual correctamente.");
@@ -286,12 +286,12 @@ namespace ESSACInspecciones.Controllers
             var dataPlantillas = objBL.getPlantillas(true);
             ViewBag.IdCliente = IdCliente;
             var objSent = (InmuebleDTO)TempData["Inmueble"];
-            if (objSent != null) 
-            { 
+            if (objSent != null)
+            {
                 TempData["Inmueble"] = null;
                 ViewBag.Plantillas = removePlantillas(dataPlantillas, objSent.Plantillas);//ViewBag.Responsables = dataResponsables;
                 ViewBag.Resources = objSent.Plantillas.AsEnumerable().Select(r => new PlantillaDTO { IdPlantilla = r.IdPlantilla, Nombre = objPlantillaBL.getPlantilla(r.IdPlantilla).Nombre }).ToList();
-                return View(objSent); 
+                return View(objSent);
             }
             if (id != null)
             {
@@ -497,7 +497,7 @@ namespace ESSACInspecciones.Controllers
             int pageSize = 10;
             int pageNumber = (page ?? 1);
             if (searchResponsable != null && searchResponsable != 0)
-                model = model.Where(x => x.Responsables.Any(y=>y.IdUsuario == searchResponsable)).ToList();
+                model = model.Where(x => x.Responsables.Any(y => y.IdUsuario == searchResponsable)).ToList();
 
             return View(model.ToPagedList(pageNumber, pageSize));
         }
@@ -660,7 +660,7 @@ namespace ESSACInspecciones.Controllers
         public ActionResult Responsables()
         {
             if (!this.currentUser()) { return RedirectToAction("Ingresar"); }
-            
+
             MenuNavBarSelected(1);
 
             UsuariosBL usuariosBL = new UsuariosBL();
@@ -728,7 +728,7 @@ namespace ESSACInspecciones.Controllers
             ViewBag.Items_SelectAccesorios = new BaseDTO().fillSelectAccesorios();
             ViewBag.Items_SelectPresiones = new BaseDTO().fillSelectPresiones();
             ViewBag.Items_SelectControlMonitoreo = new BaseDTO().fillSelectControlMonitoreo();
-            
+
             ProtocoloBL objBL = new ProtocoloBL();
             ProtocoloDTO obj = objBL.getProtocolo(idInmueble, idPeriodo, idProtocolo, idPlantilla);
             return View(obj);
@@ -879,10 +879,6 @@ namespace ESSACInspecciones.Controllers
         private MemoryStream CrearPDF(ProtocoloDTO protocolo)
         {
             MemoryStream ms = new MemoryStream();
-            //Document doc = new Document(PageSize.A4, 1, 1, 1, 1);
-            //Document doc = new Document(PageSize.A4, 5f, 5f, 15f, 15f);
-            Document doc = new Document(PageSize.A4, 1, 1, 1, 1);
-            PdfWriter writer = PdfWriter.GetInstance(doc, ms);
 
             //Mis Fonts
             Font myFontTitle18 = FontFactory.GetFont("Open Sans", 16);
@@ -897,14 +893,32 @@ namespace ESSACInspecciones.Controllers
             Font myFontText8_B = FontFactory.GetFont("Open Sans", 8, Font.BOLD);
             Font myFontText8_blue = FontFactory.GetFont("Open Sans", 8, new BaseColor(66, 139, 202));
             Font myFontTextH12_blue = FontFactory.GetFont("Open Sans", 12, new BaseColor(66, 139, 202));
+
+            //Numero de columnas
             int numColumns = 12;
 
             //Imagen
-            //string pdfpath = Server.MapPath("PDFs");
             string imagespath = Server.MapPath("/Content/themes/admin/images");
-            string imgPath1 = imagespath +"/logo.png";
+            string imgPath1 = imagespath + "/logo.png";
             iTextSharp.text.Image pic1 = iTextSharp.text.Image.GetInstance(imgPath1);
+
+            //Creación del PDF
+            Document doc;
+            bool protocoloANX = esProtocoloAnexo(protocolo.Plantilla.Nombre) != 0 ? true : false;
+
+            if (protocoloANX)
+            {
+                doc = new Document(PageSize.A4.Rotate(), 1, 1, 1, 1);
+                numColumns = esProtocoloAnexo(protocolo.Plantilla.Nombre);
+            }
+            else
+            {
+                doc = new Document(PageSize.A4, 1, 1, 1, 1);
+            }
+            PdfWriter writer = PdfWriter.GetInstance(doc, ms);
+
             pic1.SetAbsolutePosition(doc.PageSize.Width - 150, doc.PageSize.Height - 45);
+
             //pic1.Alignment = Image.TEXTWRAP | Image.ALIGN_RIGHT;
             if (pic1.Height > pic1.Width)
             {
@@ -933,7 +947,7 @@ namespace ESSACInspecciones.Controllers
             //pic1.BorderColorTop = System.Drawing.Color;
             CodigoProtocolo.Add(pic1);
             doc.Add(CodigoProtocolo);
-            
+
             Paragraph Titulo = new Paragraph();
             Titulo.SpacingBefore = 20;
             Titulo.IndentationLeft = 55;
@@ -997,11 +1011,30 @@ namespace ESSACInspecciones.Controllers
             List<OpcionDTO> opciones16 = (List<OpcionDTO>)obj.getOpcionRespuesta(16);
 
             //Inicio Tabla Reporte
-            foreach(var Seccion in protocolo.Secciones)
+            foreach (var Seccion in protocolo.Secciones)
             {
-                numColumns = Seccion.Nombre.Equals("ANEXO - RELACIÓN DE DIPOSITIVOS PROBADOS") ? 32 : 12;
                 //Validacion del tamaño de tabla de los ANEXOS
-                numColumns = numeroFilasEnSeccion(Seccion.Nombre);
+                //numColumns = numeroFilasEnSeccion(Seccion.Nombre);
+
+                if (!protocoloANX)
+                {
+                    int esAnexo = numeroFilasEnSeccion(Seccion.Nombre);
+                    numColumns = esAnexo != 0 ? esAnexo : 12;
+                    if (esAnexo != 0)
+                    {
+                        doc.SetPageSize(iTextSharp.text.PageSize.A4.Rotate());
+                        doc.SetMargins(1, 1, 1, 1);
+                        doc.NewPage();
+                    }
+                    else
+                    {
+                        doc.SetPageSize(PageSize.A4);
+                    }
+                }
+                else
+                {
+
+                }
 
                 PdfPTable tableSeccion = new PdfPTable(numColumns);
                 PdfPCell cellSeccion = new PdfPCell();
@@ -1015,7 +1048,7 @@ namespace ESSACInspecciones.Controllers
                     PdfPCell cellSeccionBody = new PdfPCell();
                     cellSeccionBody.Rowspan = SeccionBody.Rowspan;
                     cellSeccionBody.Colspan = SeccionBody.Colspan;
-                    
+
                     if (SeccionBody.IdTipoCelda == 1)
                     {
                         cellSeccionBody.Phrase = new Phrase(SeccionBody.Descripcion, myFontText8);
@@ -1024,7 +1057,7 @@ namespace ESSACInspecciones.Controllers
                     {
                         string rpta = "";
                         List<OpcionDTO> auxOpc = new List<OpcionDTO>();
-                        switch(SeccionBody.IdTipoTag)
+                        switch (SeccionBody.IdTipoTag)
                         {
                             case 2: auxOpc = null; break;
                             case 3: auxOpc = opciones3; break;
@@ -1038,20 +1071,20 @@ namespace ESSACInspecciones.Controllers
                         }
                         //NO HAY CASE 2 PORQUE ESTA CONTEMPLADO EN "ELSE" DE ABAJO
                         if (auxOpc != null)
-                            foreach(var itemAux in auxOpc)
+                            foreach (var itemAux in auxOpc)
                             {
-                                if(itemAux.IdOpcion == Convert.ToInt32(SeccionBody.Respuesta))
+                                if (itemAux.IdOpcion == Convert.ToInt32(SeccionBody.Respuesta))
                                     rpta = itemAux.NombreOpcion;
                             }
                         else
                             rpta = SeccionBody.Respuesta;
-                        
+
                         cellSeccionBody.Phrase = new Phrase(rpta, myFontText8_blue);
                     }
                     tableSeccion.AddCell(cellSeccionBody);
                 }
 
-                foreach(var SubSeccion in Seccion.SubSecciones)
+                foreach (var SubSeccion in Seccion.SubSecciones)
                 {
                     PdfPCell cellSubSeccion = new PdfPCell();
                     cellSubSeccion.Colspan = numColumns;
@@ -1102,11 +1135,40 @@ namespace ESSACInspecciones.Controllers
                 doc.Add(tableSeccion);
                 doc.Add(new Paragraph(" "));
             }
-            
+
             doc.Close();
             return ms;
         }
-        
+
+        private int esProtocoloAnexo(string NombreProtocolo)
+        {
+            switch (NombreProtocolo)
+            {
+                //NFPA 10 - Completo
+                case "NFPA 10":
+                    return 40;
+                //NFPA 101 - Completo
+                case "NFPA 101":
+                    return 12;
+                //CCTV - Completo
+                case "CCTV":
+                    return 32;
+                //ANX de Intrusion - Completo
+                case "ANX de Intrusion":
+                    return 19;
+                //ANX Control de Acceso - Completo
+                case "ANX Control de Acceso":
+                    return 12;
+                //INSPECCIÓN DE LECTORAS - Completo
+                case "INSPECCIÓN DE LECTORAS":
+                    return 12;
+                //NFPA 80 - Completo
+                case "NFPA 80":
+                    return 12;
+                default:
+                    return 0;
+            }
+        }
         private int numeroFilasEnSeccion(string NombreSeccion)
         {
             switch (NombreSeccion)
@@ -1125,34 +1187,13 @@ namespace ESSACInspecciones.Controllers
                 //NFPA 11
                 case "ANEXO - PRUEBA DEL SISTEMA DE MONITOR AGUA-ESPUMA":
                     return 12;
-                //NFPA 10 - Completo
-                case "NFPA 10":
-                    return 40;
-                //NFPA 101 - Completo
-                case "NFPA 101":
-                    return 40;
                 //NFPA 2001
                 case "ANEXO - LISTADO DE DISPOSITIVOS DE SISTEMA DE DETECCIÓN Y EXTINCIÓN POR AGENTES LIMPIOS":
-                    return 40;
-                //CCTV - Completo
-                case "CCTV":
-                    return 40;
-                //ANX de Intrusion - Completo
-                case "ANX de Intrusion":
-                    return 40;
-                //ANX Control de Acceso - Completo
-                case "ANX Control de Acceso":
-                    return 40;
-                //INSPECCIÓN DE LECTORAS - Completo
-                case "INSPECCIÓN DE LECTORAS":
-                    return 40;
-                //NFPA 80 - Completo
-                case "NFPA 80":
-                    return 40;
+                    return 12;
                 case "DETALLE - RNE":
                     return 18;
                 default:
-                    return 12;
+                    return 0;
             }
         }
 
