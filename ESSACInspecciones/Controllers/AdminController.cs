@@ -16,6 +16,7 @@ using iTextSharp.text;
 using iTextSharp.text.pdf;
 using System.Globalization;
 using ESSACInspecciones.Models;
+using System.Web.UI.DataVisualization.Charting;
 
 namespace ESSACInspecciones.Controllers
 {
@@ -902,18 +903,20 @@ namespace ESSACInspecciones.Controllers
             string imgPath1 = imagespath + "/logo.png";
             iTextSharp.text.Image pic1 = iTextSharp.text.Image.GetInstance(imgPath1);
 
+            //var grafica = Image.GetInstance(CrearGrafica());
+
             //Creación del PDF
             Document doc;
             bool protocoloANX = esProtocoloAnexo(protocolo.Plantilla.Nombre) != 0 ? true : false;
 
             if (protocoloANX)
             {
-                doc = new Document(PageSize.A4.Rotate(), 1, 1, 1, 1);
+                doc = new Document(PageSize.A4.Rotate(), 0f, 0f, 0f, 0f);
                 numColumns = esProtocoloAnexo(protocolo.Plantilla.Nombre);
             }
             else
             {
-                doc = new Document(PageSize.A4, 1, 1, 1, 1);
+                doc = new Document(PageSize.A4, 0f, 0f, 0f, 0f);
             }
             PdfWriter writer = PdfWriter.GetInstance(doc, ms);
 
@@ -953,22 +956,21 @@ namespace ESSACInspecciones.Controllers
             Titulo.IndentationLeft = 55;
             Titulo.Alignment = Element.ALIGN_JUSTIFIED;
             Titulo.Add(new Phrase(protocolo.Plantilla.Nombre, myFontTitle18_B));
-            //250
-            float miEspaciado = PageSize.A4.Width * 0.45f;
-            //Titulo.Add(new Chunk(pic1, miEspaciado, -15));
-            Titulo.SpacingAfter = 10;
+            Titulo.SpacingAfter = 2;
 
             doc.Add(Titulo);
-            //Imagen
-            //doc.Add(pic1);
-
+            
             Paragraph SubTitulo = new Paragraph(protocolo.Plantilla.Nombre2, myFontTitle15);
+            SubTitulo.SpacingBefore = 20;
+            SubTitulo.IndentationLeft = 55;
             SubTitulo.Alignment = Element.ALIGN_CENTER;
+            SubTitulo.SpacingAfter = 2;
+
             doc.Add(SubTitulo);
             //doc.Add(new Paragraph(" "));
 
             //Cabecera del protocolo
-            PdfPTable tableHeader = new PdfPTable(numColumns);
+            PdfPTable tableHeader = new PdfPTable(12);
             PdfPCell cellHeader = new PdfPCell();
             cellHeader.Colspan = 6;
             cellHeader.Phrase = new Phrase("Nombre del Área Protegida:", myFontTextH12_B);
@@ -996,7 +998,6 @@ namespace ESSACInspecciones.Controllers
 
             doc.Add(tableHeader);
             //Fin de la cabecera del protocolo
-
             doc.Add(new Paragraph(" "));
 
             OpcionRespuestaBL obj = new OpcionRespuestaBL();
@@ -1031,12 +1032,9 @@ namespace ESSACInspecciones.Controllers
                         doc.SetPageSize(PageSize.A4);
                     }
                 }
-                else
-                {
-
-                }
 
                 PdfPTable tableSeccion = new PdfPTable(numColumns);
+                //tableSeccion.HorizontalAlignment = Element.ALIGN_JUSTIFIED;
                 PdfPCell cellSeccion = new PdfPCell();
                 cellSeccion.Colspan = numColumns;
                 cellSeccion.Phrase = new Phrase(Seccion.Nombre, myFontText10_B);
@@ -1165,10 +1163,14 @@ namespace ESSACInspecciones.Controllers
                 //NFPA 80 - Completo
                 case "NFPA 80":
                     return 12;
+                //RNE - Completo
+                case "RNE":
+                    return 18;
                 default:
                     return 0;
             }
         }
+
         private int numeroFilasEnSeccion(string NombreSeccion)
         {
             switch (NombreSeccion)
@@ -1190,11 +1192,43 @@ namespace ESSACInspecciones.Controllers
                 //NFPA 2001
                 case "ANEXO - LISTADO DE DISPOSITIVOS DE SISTEMA DE DETECCIÓN Y EXTINCIÓN POR AGENTES LIMPIOS":
                     return 12;
-                case "DETALLE - RNE":
-                    return 18;
                 default:
                     return 0;
             }
+        }
+
+        private bool siTieneGraficaElProtocoloOSeccion(string nombre)
+        {
+            switch(nombre)
+            {
+                case "NFPA 20 - ELECTROBOMBA":
+                    return true;
+                case "NFPA 20 - MOTOBOMBA":
+                    return true;
+                case "RESULTADOS DE LA PRUEBA DE LA BOMBA CONTRA INCENDIO":
+                    return true;
+                default:
+                    return false;
+            }
+
+        }
+
+        private Byte CrearGrafica()
+        {
+            var chart = new Chart
+            {
+                Width = 300,
+                Height = 450,
+                RenderType = RenderType.ImageTag,
+                AntiAliasing = AntiAliasingStyles.All,
+                TextAntiAliasingQuality = TextAntiAliasingQuality.High
+            };
+
+            using (var chartimage = new MemoryStream())
+            {
+                chart.SaveImage(chartimage, System.Web.UI.DataVisualization.Charting.ChartImageFormat.Png);
+            }
+            return new Byte();
         }
 
         [HttpGet]
