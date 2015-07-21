@@ -29,6 +29,11 @@
         <div class="container aside-xxl m-t-90">
             <a class="text-center block"><img src="@Url.Content("~/Content/themes/admin/images/logo.png")" style="width: 100%;"></a>
             <section class="panel m-t-lg panel-login">
+                <script type="text/javascript">
+                    document.addEventListener("DOMContentLoaded", function (event) {
+                        localStorage.setItem("dataIndex", 0);
+                    });
+                </script>
                 @using (Html.BeginForm("Login", "Admin", FormMethod.Post, new { @class = "panel-body wrapper-lg" }))
                 {
                     <div class="form-group">

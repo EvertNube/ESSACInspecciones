@@ -36,18 +36,6 @@
                                 <div class="row">
                                     <div class="col-sm-12 m-b-xs">
                                         <div class="btn-group" data-toggle="buttons" id="grupoPeriodos">
-                                            @*<label class="btn btn-sm btn-info active">
-                                                <input type="radio" name="options" id="option1">
-                                                <i class="fa fa-check text-active"></i> Male
-                                            </label> 
-                                            <label class="btn btn-sm btn-success">
-                                                <input type="radio" name="options" id="option2">
-                                                <i class="fa fa-check text-active"></i> Female
-                                            </label>
-                                            <label class="btn btn-sm btn-primary">
-                                                <input type="radio" name="options" id="option3">
-                                                <i class="fa fa-check text-active"></i> N/A
-                                            </label>*@
                                         </div>
                                     </div>
                                 </div>
@@ -88,17 +76,6 @@
                 PeriodoId = PeriodoId.replace('periodo', '');
                 listarProtocolos(InmuebleId, PeriodoId);
             });
-
-            /*$('.periodos').click(function () {
-                var InmuebleId = $("#Inmueble").val();
-                if(InmuebleId != null || InmuebleId != 0)
-                {
-                    var PeriodoId = $(this).first.children().first().attr('id');
-                    PeriodoId = PeriodoId.replace('periodo', '');
-                    listarProtocolos(InmuebleId, PeriodoId);
-                }
-            });*/
-            
 
             var varin = '@ViewBag.IdInmueble';
             var varper = '@ViewBag.IdPeriodo';

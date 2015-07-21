@@ -12,416 +12,379 @@
     @Scripts.Render("~/Content/themes/admin/js/fuelux/fuelux.js")
     @Scripts.Render("~/Content/js/jquery.flot.min.js")
     @Scripts.Render("~/Content/js/jquery.flot.tooltip.min.js")
-    @*@Scripts.Render("~/Content/js/jquery.flot.resize.js")*@
-    @*@Scripts.Render("~/Content/js/jquery.flot.orderBars.js")*@
-    @*@Scripts.Render("~/Content/js/jquery.flot.grow.js")*@
+    @Scripts.Render("~/Content/js/jquery.flot.axislabels.js")
 
     <script type="text/javascript">
-    var RemovedFirmas = [];
-    $(document).ready(function () {
-        var protocolo = JSON.parse(localStorage.getItem("protocolo"));
-        //Imrimir titulo del protocolo
-        var strHtmlTitle = "<h2>" + protocolo.Plantilla.Nombre + "<br /></h2><h4>" + protocolo.Plantilla.Nombre2 + " </h4>";
-        $(".prototitle").append(strHtmlTitle);
+        var RemovedFirmas = [];
+        var desactivar = ('@ViewBag.IdRol' != 4) ? '' : 'disabled';
+        $(document).ready(function () {
+            var protocolo = JSON.parse(localStorage.getItem("protocolo"));
+            //Imrimir titulo del protocolo
+            var strHtmlTitle = "<h2>" + protocolo.Plantilla.Nombre + "<br /></h2><h4>" + protocolo.Plantilla.Nombre2 + " </h4>";
+            $(".prototitle").append(strHtmlTitle);
 
-        var strHtmlStep = "";
-        for (var i = 1; i <= protocolo.TotalPaginas; i++) {
-            var stepName = "step" + i, activeStep = "", badgeStep = "", pagina = "Paso " + i;
-            if (i == 1) { activeStep = "active"; badgeStep = "badge-info"; }
-            strHtmlStep += '<li class="' + activeStep + '">' + '<a href="#' + stepName + '" data-toggle="tab">' + pagina + ' <b class="badge dot" id="bg_tab' + i + '"></b></a>' + '</li>';
-        }
-        $(".nav-tabs").append(strHtmlStep);
-        //
-        var jsonHoras = '@Html.Raw(ViewBag.Horas)'; var listaHoras = JSON.parse(jsonHoras);
-        var jsonMinutos = '@Html.Raw(ViewBag.Minutos)'; var listaMinutos = JSON.parse(jsonMinutos);
-        var jsonSelectSINO = '@Html.Raw(ViewBag.Items_SelectSINO)'; var Items_SelectSINO = JSON.parse(jsonSelectSINO);
-        var jsonSelectBomba = '@Html.Raw(ViewBag.Items_SelectBomba)'; var Items_SelectBomba = JSON.parse(jsonSelectBomba);
-        var jsonSelectNivelTanque = '@Html.Raw(ViewBag.Items_SelectNivelTanque)'; var Items_SelectNivelTanque = JSON.parse(jsonSelectNivelTanque);
-        var jsonSelectAccesorios = '@Html.Raw(ViewBag.Items_SelectAccesorios)'; var Items_SelectAccesorios = JSON.parse(jsonSelectAccesorios);
-        var jsonSelectPresiones = '@Html.Raw(ViewBag.Items_SelectPresiones)'; var Items_SelectPresiones = JSON.parse(jsonSelectPresiones);
-        var jsonSelectSINOonly = '@Html.Raw(ViewBag.Items_SelectSINOonly)'; var Items_SelectSINOonly = JSON.parse(jsonSelectSINOonly);
-        var jsonSelectInspectores = '@Html.Raw(ViewBag.Items_SelectInspectores)'; var Items_SelectInspectores = JSON.parse(jsonSelectInspectores);
-
-        var strHtmlStepContent = "";
-        for (var i = 1; i <= protocolo.TotalPaginas; i++) {
-            var stepname = "step" + i; activeStep = "";
-            if (i == 1) { activeStep = "active"; }
-
-            var strHtmlHeader = "";
-            if (i == 1) {
-                strHtmlHeader = '<table class="table table-bordered"><tbody>' +
-                                        '<tr>' +
-                                            '<td colspan="12" style="background-color: #c2c0c2;"><label><strong> Código de protocolo: </strong></label></td>' +
-                                        '</tr>' +
-                                        '<tr>' +
-                                            '<td colspan="12">' +
-                                                '<input type="text" id="Codigo" class = "form-control" placeholder = "Ingrese el código del protocolo" value="' + removeNull(protocolo.Codigo) + '" />' +
-                                            '</td>' +
-                                        '</tr>' +
-                                        '<tr>' +
-                                            '<td colspan="6" style="background-color: #c2c0c2;"><label><strong> Nombre del Área Protegida: </strong></label></td>' +
-                                            '<td colspan="6" style="background-color: #c2c0c2;"><label><strong> Fecha: </strong></label></td>' +
-                                        '</tr>' +
-                                        '<tr>' +
-                                            '<td colspan="6">' +
-                                                '<input type="text" id="NombreAreaProtegida" class = "form-control" placeholder = "Ingrese el nombre" value="' + removeNull(protocolo.NombreAreaProtegida) + '" />' +
-                                            '</td>' +
-                                            '<td colspan="6">' +
-                                                '<input type="text" id="Fecha" class = "datepicker-input form-control" data-provide = "datepicker" placeholder="DD/MM/YYYY" value="' + (protocolo.Fecha != null ? moment(formatDate(protocolo.Fecha)).format("DD/MM/YYYY") : "") + '" />' +
-                                            '</td>' +
-                                        '</tr>' +
-                                        '<tr>' +
-                                            '<td colspan="6" style="background-color: #c2c0c2;"><label><strong> Dirección: </strong></label></td>' +
-                                            '<td colspan="6" style="background-color: #c2c0c2;"><label><strong> Hora de Inicio: </strong></label></td>' +
-                                        '</tr>' +
-                                        '<tr>' +
-                                            '<td colspan="6">' +
-                                                '<input type="text" id="Direccion" class="form-control" placeholder = "Ingrese la dirección" value="' + removeNull(protocolo.Direccion) + '" />' +
-                                            '</td>' +
-                                            '<td colspan="6">' +
-                                                '<div class="input-group">' +
-                                                    drawSelect("HoraInicio", listaHoras, protocolo.HoraInicio, 1, '', '') + ' : ' + drawSelect("MinutoInicio", listaMinutos, protocolo.MinutoInicio, 1, '', '') +
-                                                '</div>' +
-                                            '</td>' +
-                                        '</tr>' +
-                                        '<tr>' +
-                                            '<td colspan="12" style="background-color: #c2c0c2;"><label><strong> Tipo de prueba: </strong></label></td>' +
-                                        '</tr>' +
-                                        '<tr>' +
-                                            '<td colspan="6">' +
-                                                '<div class="radio">' +
-                                                    '<label>' +
-                                                        'Recepción del sistema' +
-                                                        '<input type="radio" name="optionsRadios" id="TipoPrueba1" value="1" ' + removeNull(protocolo.TipoPrueba == 1 ? "checked='checked'" : "") + '>' +
-                                                    '</label>' +
-                                                '</div>' +
-                                            '</td>' +
-                                            '<td colspan="6">' +
-                                                '<div class="radio">' +
-                                                    '<label>' +
-                                                        'Pruebas periódicas anuales' +
-                                                        '<input type="radio" name="optionsRadios" id="TipoPrueba2" value="2" ' + removeNull(protocolo.TipoPrueba == 2 ? "checked='checked'" : "") + '>' +
-                                                    '</label>' +
-                                                '</div>' +
-                                            '</td>' +
-                                            //'<td colspan="6">' +
-                                            //    '<input type="text" id="TipoPrueba" class = "form-control" placeholder = "Ingrese el tipo de prueba" value="' + removeNull(protocolo.TipoPrueba) + '" />' +
-                                            //'</td>' +
-                                        '</tr>' +
-                                    '</tbody></table>';
+            var strHtmlStep = "";
+            for (var i = 1; i <= protocolo.TotalPaginas; i++) {
+                var stepName = "step" + i, activeStep = "", badgeStep = "", pagina = "Paso " + i;
+                if (i == 1) { activeStep = "active"; badgeStep = "badge-info"; }
+                strHtmlStep += '<li class="' + activeStep + '">' + '<a href="#' + stepName + '" data-toggle="tab">' + pagina + ' <b class="badge dot" id="bg_tab' + i + '"></b></a>' + '</li>';
             }
+            $(".nav-tabs").append(strHtmlStep);
+            //
+            var jsonHoras = '@Html.Raw(ViewBag.Horas)'; var listaHoras = JSON.parse(jsonHoras);
+            var jsonMinutos = '@Html.Raw(ViewBag.Minutos)'; var listaMinutos = JSON.parse(jsonMinutos);
+            var jsonSelectSINO = '@Html.Raw(ViewBag.Items_SelectSINO)'; var Items_SelectSINO = JSON.parse(jsonSelectSINO);
+            var jsonSelectBomba = '@Html.Raw(ViewBag.Items_SelectBomba)'; var Items_SelectBomba = JSON.parse(jsonSelectBomba);
+            var jsonSelectNivelTanque = '@Html.Raw(ViewBag.Items_SelectNivelTanque)'; var Items_SelectNivelTanque = JSON.parse(jsonSelectNivelTanque);
+            var jsonSelectAccesorios = '@Html.Raw(ViewBag.Items_SelectAccesorios)'; var Items_SelectAccesorios = JSON.parse(jsonSelectAccesorios);
+            var jsonSelectPresiones = '@Html.Raw(ViewBag.Items_SelectPresiones)'; var Items_SelectPresiones = JSON.parse(jsonSelectPresiones);
+            var jsonSelectSINOonly = '@Html.Raw(ViewBag.Items_SelectSINOonly)'; var Items_SelectSINOonly = JSON.parse(jsonSelectSINOonly);
+            var jsonSelectInspectores = '@Html.Raw(ViewBag.Items_SelectInspectores)'; var Items_SelectInspectores = JSON.parse(jsonSelectInspectores);
+            var jsonSelectControlMonitoreo = '@Html.Raw(ViewBag.Items_SelectControlMonitoreo)'; var Items_SelectControlMonitoreo = JSON.parse(jsonSelectControlMonitoreo);
 
-            var panelGroupPadre = ""; var tipoSeccion = "";
-            if (protocolo.Secciones.length > 0) {
-                var firstLevelName = "accordionN1_" + stepname;
+            var strHtmlStepContent = "";
+            for (var i = 1; i <= protocolo.TotalPaginas; i++) {
+                var stepname = "step" + i; activeStep = "";
+                if (i == 1) { activeStep = "active"; }
 
-                var Secciones = [];
-                $.each(protocolo.Secciones, function (x, item) {
-                    if (item.Pagina == i) {
-                        Secciones.push(item);
-                    }
-                });
+                var strHtmlHeader = "";
+                if (i == 1) {
+                    strHtmlHeader = '<table class="table table-bordered"><tbody>' +
+                                            '<tr>' +
+                                                '<td colspan="12" style="background-color: #c2c0c2;"><label><strong> Código de protocolo: </strong></label></td>' +
+                                            '</tr>' +
+                                            '<tr>' +
+                                                '<td colspan="12">' +
+                                                    '<input type="text" id="Codigo" class = "form-control" placeholder = "Ingrese el código del protocolo" value="' + removeNull(protocolo.Codigo) + '" ' + desactivar + '/>' +
+                                                '</td>' +
+                                            '</tr>' +
+                                            '<tr>' +
+                                                '<td colspan="6" style="background-color: #c2c0c2;"><label><strong> Nombre del Área Protegida: </strong></label></td>' +
+                                                '<td colspan="6" style="background-color: #c2c0c2;"><label><strong> Fecha: </strong></label></td>' +
+                                            '</tr>' +
+                                            '<tr>' +
+                                                '<td colspan="6">' +
+                                                    '<input type="text" id="NombreAreaProtegida" class = "form-control" placeholder = "Ingrese el nombre" value="' + removeNull(protocolo.NombreAreaProtegida) + '" ' + desactivar + '/>' +
+                                                '</td>' +
+                                                '<td colspan="6">' +
+                                                    '<input type="text" id="Fecha" class = "datepicker-input form-control" data-provide = "datepicker" placeholder="DD/MM/YYYY" value="' + (protocolo.Fecha != null ? moment(formatDate(protocolo.Fecha)).format("DD/MM/YYYY") : "") + '" ' + desactivar + '/>' +
+                                                '</td>' +
+                                            '</tr>' +
+                                            '<tr>' +
+                                                '<td colspan="6" style="background-color: #c2c0c2;"><label><strong> Dirección: </strong></label></td>' +
+                                                '<td colspan="6" style="background-color: #c2c0c2;"><label><strong> Hora de Inicio: </strong></label></td>' +
+                                            '</tr>' +
+                                            '<tr>' +
+                                                '<td colspan="6">' +
+                                                    '<input type="text" id="Direccion" class="form-control" placeholder = "Ingrese la dirección" value="' + removeNull(protocolo.Direccion) + '" ' + desactivar + '/>' +
+                                                '</td>' +
+                                                '<td colspan="6">' +
+                                                    '<div class="input-group">' +
+                                                        drawSelect("HoraInicio", listaHoras, protocolo.HoraInicio, 1, '', '') + ' : ' + drawSelect("MinutoInicio", listaMinutos, protocolo.MinutoInicio, 1, '', '') +
+                                                    '</div>' +
+                                                '</td>' +
+                                            '</tr>' +
+                                            '<tr>' +
+                                                '<td colspan="12" style="background-color: #c2c0c2;"><label><strong> Tipo de prueba: </strong></label></td>' +
+                                            '</tr>' +
+                                            '<tr>' +
+                                                '<td colspan="6">' +
+                                                    '<div class="radio">' +
+                                                        '<label>' +
+                                                            'Recepción del sistema' +
+                                                            '<input type="radio" name="optionsRadios" id="TipoPrueba1" value="1" ' + removeNull(protocolo.TipoPrueba == 1 ? "checked='checked'" : "") + desactivar + '>' +
+                                                        '</label>' +
+                                                    '</div>' +
+                                                '</td>' +
+                                                '<td colspan="6">' +
+                                                    '<div class="radio">' +
+                                                        '<label>' +
+                                                            'Pruebas periódicas anuales' +
+                                                            '<input type="radio" name="optionsRadios" id="TipoPrueba2" value="2" ' + removeNull(protocolo.TipoPrueba == 2 ? "checked='checked'" : "") + desactivar + '>' +
+                                                        '</label>' +
+                                                    '</div>' +
+                                                '</td>' +
+                                            '</tr>' +
+                                        '</tbody></table>';
+                }
 
-                var strHtmlSeccion = ""; var strHtmlSeccionBodys = "", strHtmlSecRow = "";
+                var panelGroupPadre = ""; var tipoSeccion = "";
+                if (protocolo.Secciones.length > 0) {
+                    var firstLevelName = "accordionN1_" + stepname;
 
-                $.each(Secciones, function (x, seccion) {
-                    strHtmlSecRow = ""; strHtmlSeccionBodys = "";
-                    if (protocolo.IdPlantilla == 5 && seccion.Nombre.toUpperCase().indexOf("RESULTADOS DE LA PRUEBA DE LA BOMBA CONTRA INCENDIO") > -1)
-                        tipoSeccion = " claseGraficaMotobomba";
-                    else if (protocolo.IdPlantilla == 4 && seccion.Nombre.toUpperCase().indexOf("RESULTADOS DE LA PRUEBA DE LA BOMBA CONTRA INCENDIO") > -1)
-                        tipoSeccion = " claseGraficaElectrobomba";
-                    else
-                        tipoSeccion = "";
-                    if (seccion.SeccionBodys.length > 0) {
-                        var tmpFilaItem = 1, totalItems = seccion.SeccionBodys.length; var styleItem = "";
-                        for (var s = 0; s < totalItems; s++) {
-                            var filaItem = seccion.SeccionBodys[s].NumeroFila;
-                            if (s == 0 || tmpFilaItem != filaItem) {
-                                if (seccion.SeccionBodys[s].IdTipoTag == 8) { strHtmlSecRow += '<tr id="firma' + seccion.SeccionBodys[s].NumeroFila + '">'; }
-                                else strHtmlSecRow += '<tr class="redondeado">';
-                            }
-                            if (seccion.SeccionBodys[s].IdTipoCelda == 1) {
-                                if (seccion.SeccionBodys[s].BackgroundColor == true) { styleItem = 'style="background-color:#c2c0c2;"'; } else { styleItem = ''; }
-                                strHtmlSecRow += '<th class="redondeado" rowspan="' + seccion.SeccionBodys[s].Rowspan + '" colspan="' + seccion.SeccionBodys[s].Colspan + '" ' + styleItem + '>' + seccion.SeccionBodys[s].Descripcion + '</th>';
-                                //if (seccion.SeccionBodys[s].IdSeccionBody == 451) strHtmlSecRow += '<th><a id="btnAddFilaFirma" class="btn btn-sm btn-success btn-rounded" title="Agregar"><i class="fa fa-plus"></i></a></th>';
-                            } else {
-                                //if (seccion.SeccionBodys[s].IdSeccionBody = 1622) {
-                                //    debugger;
-                                //}
-                                var classTextBox = "form-control input-sm GroupDescripcion " + stepname + tipoSeccion; var strHtmlTag = '';
-                                var idCeldaFirma = "";
-                                switch (seccion.SeccionBodys[s].IdTipoTag) {
-                                    case 2: strHtmlTag = '<input type="text" id="tag' + seccion.SeccionBodys[s].IdSeccionBody + '" class="rounded ' + classTextBox + '" value="' + removeNull(seccion.SeccionBodys[s].Respuesta) + '"/>'; break;
-                                    case 3: strHtmlTag = drawSelect("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectSINO, seccion.SeccionBodys[s].Respuesta, 2, stepname); break;
-                                    case 4: strHtmlTag = drawSelect("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectBomba, seccion.SeccionBodys[s].Respuesta, 2, stepname); break;
-                                    case 5: strHtmlTag = drawSelect("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectNivelTanque, seccion.SeccionBodys[s].Respuesta, 2, stepname); break;
-                                    case 6: strHtmlTag = drawSelect("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectAccesorios, seccion.SeccionBodys[s].Respuesta, 2, stepname); break;
-                                    case 7: strHtmlTag = drawSelect("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectPresiones, seccion.SeccionBodys[s].Respuesta, 2, stepname); break;
-                                    case 8: strHtmlTag = drawSelectFirma("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectInspectores, seccion.SeccionBodys[s].Respuesta, seccion.SeccionBodys[s].NumeroFila); break;
-                                    case 9: strHtmlTag = '<input type="text" id="empresa' + seccion.SeccionBodys[s].NumeroFila + '" class="rounded ' + classTextBox + '" value="' + removeNull(seccion.SeccionBodys[s].Respuesta) + '"/>'; break;
-                                    case 10: strHtmlTag = '<input type="text" id="representante' + seccion.SeccionBodys[s].NumeroFila + '" class="rounded ' + classTextBox + '" value="' + removeNull(seccion.SeccionBodys[s].Respuesta) + '"/>'; break;
-                                    case 11: var imgFirma = seccion.SeccionBodys[s].Respuesta ? '<img src="../../Content/images/' + seccion.SeccionBodys[s].Respuesta + '" />' : "";
-                                        strHtmlTag = imgFirma + '<input id="hddFirmaDigital' + seccion.SeccionBodys[s].NumeroFila + '" type="hidden" name="GroupDescripcion" class="GroupDescripcion" value="' + removeNull(seccion.SeccionBodys[s].Respuesta) + '"/>';
-                                        idCeldaFirma = 'id = "firmadigital' + seccion.SeccionBodys[s].NumeroFila + '"';
-                                        break;
-                                    case 12: strHtmlTag = '<input type="text" id="tag' + seccion.SeccionBodys[s].IdSeccionBody + '" class="' + classTextBox + '" value="' + removeNull(seccion.SeccionBodys[s].Respuesta) + '"/>'; break;
-                                    case 13: strHtmlTag = drawSelect("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectSINOonly, seccion.SeccionBodys[s].Respuesta, 2, stepname, tipoSeccion); break;
-                                    case 14: strHtmlTag = '<input type="text" id=tag"' + seccion.SeccionBodys[s].IdSeccionBody + '" class="rounded ubicacion ' + classTextBox + '" value="' + removeNull(seccion.SeccionBodys[s].Respuesta) + '"/>'; break;
-                                    default: break;
+                    var Secciones = [];
+                    $.each(protocolo.Secciones, function (x, item) {
+                        if (item.Pagina == i) {
+                            Secciones.push(item);
+                        }
+                    });
+
+                    var strHtmlSeccion = ""; var strHtmlSeccionBodys = "", strHtmlSecRow = "";
+
+                    $.each(Secciones, function (x, seccion) {
+                        strHtmlSecRow = ""; strHtmlSeccionBodys = "";
+                        if (protocolo.IdPlantilla == 5 && seccion.Nombre.toUpperCase().indexOf("RESULTADOS DE LA PRUEBA DE LA BOMBA CONTRA INCENDIO") > -1)
+                            tipoSeccion = " claseGraficaMotobomba";
+                        else if (protocolo.IdPlantilla == 4 && seccion.Nombre.toUpperCase().indexOf("RESULTADOS DE LA PRUEBA DE LA BOMBA CONTRA INCENDIO") > -1)
+                            tipoSeccion = " claseGraficaElectrobomba";
+                        else
+                            tipoSeccion = "";
+                        if (seccion.SeccionBodys.length > 0) {
+                            var tmpFilaItem = 1, totalItems = seccion.SeccionBodys.length; var styleItem = "";
+                            for (var s = 0; s < totalItems; s++) {
+                                var filaItem = seccion.SeccionBodys[s].NumeroFila;
+                                if (s == 0 || tmpFilaItem != filaItem) {
+                                    if (seccion.SeccionBodys[s].IdTipoTag == 8) { strHtmlSecRow += '<tr id="firma' + seccion.SeccionBodys[s].NumeroFila + '">'; }
+                                    else strHtmlSecRow += '<tr class="redondeado">';
                                 }
-                                strHtmlSecRow += '<td class="redondeado" ' + idCeldaFirma + ' rowspan="' + seccion.SeccionBodys[s].Rowspan + '" colspan="' + seccion.SeccionBodys[s].Colspan + '">' + strHtmlTag + '<input type="hidden" name="GroupIdTableBody" class="GroupIdTableBody redondeado" value="' + seccion.SeccionBodys[s].IdSeccionBody + '" />' + '</td>';
+                                if (seccion.SeccionBodys[s].IdTipoCelda == 1) {
+                                    if (seccion.SeccionBodys[s].BackgroundColor == true) { styleItem = 'style="background-color:#c2c0c2;"'; } else { styleItem = ''; }
+                                    strHtmlSecRow += '<th class="redondeado" rowspan="' + seccion.SeccionBodys[s].Rowspan + '" colspan="' + seccion.SeccionBodys[s].Colspan + '" ' + styleItem + '>' + seccion.SeccionBodys[s].Descripcion + '</th>';
+                                } else {
+                                    var classTextBox = "form-control input-sm GroupDescripcion " + stepname + tipoSeccion; var strHtmlTag = '';
+                                    var idCeldaFirma = "";
+                                    switch (seccion.SeccionBodys[s].IdTipoTag) {
+                                        case 2: strHtmlTag = '<input type="text" id="tag' + seccion.SeccionBodys[s].IdSeccionBody + '" class="rounded ' + classTextBox + '" value="' + removeNull(seccion.SeccionBodys[s].Respuesta) + '"' + desactivar + '/>'; break;
+                                        case 3: strHtmlTag = drawSelect("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectSINO, seccion.SeccionBodys[s].Respuesta, 2, stepname); break;
+                                        case 4: strHtmlTag = drawSelect("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectBomba, seccion.SeccionBodys[s].Respuesta, 2, stepname); break;
+                                        case 5: strHtmlTag = drawSelect("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectNivelTanque, seccion.SeccionBodys[s].Respuesta, 2, stepname); break;
+                                        case 6: strHtmlTag = drawSelect("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectAccesorios, seccion.SeccionBodys[s].Respuesta, 2, stepname); break;
+                                        case 7: strHtmlTag = drawSelect("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectPresiones, seccion.SeccionBodys[s].Respuesta, 2, stepname); break;
+                                        case 8: strHtmlTag = drawSelectFirma("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectInspectores, seccion.SeccionBodys[s].Respuesta, seccion.SeccionBodys[s].NumeroFila); break;
+                                        case 9: strHtmlTag = '<input type="text" id="empresa' + seccion.SeccionBodys[s].NumeroFila + '" class="rounded ' + classTextBox + '" value="' + removeNull(seccion.SeccionBodys[s].Respuesta) + '"' + desactivar + '/>'; break;
+                                        case 10: strHtmlTag = '<input type="text" id="representante' + seccion.SeccionBodys[s].NumeroFila + '" class="rounded ' + classTextBox + '" value="' + removeNull(seccion.SeccionBodys[s].Respuesta) + '"' + desactivar + '/>'; break;
+                                        case 11: var imgFirma = seccion.SeccionBodys[s].Respuesta ? '<img src="../../Content/images/' + seccion.SeccionBodys[s].Respuesta + '" />' : "";
+                                            //Firma del case 8
+                                            //var selectFirma = drawSelectFirma("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectInspectores, seccion.SeccionBodys[s].Respuesta, seccion.SeccionBodys[s].NumeroFila);
+                                            strHtmlTag = imgFirma + '<input id="hddFirmaDigital' + seccion.SeccionBodys[s].NumeroFila + '" type="hidden" name="GroupDescripcion" class="GroupDescripcion" value="' + removeNull(seccion.SeccionBodys[s].Respuesta) + '"/>';
+                                            idCeldaFirma = 'id = "firmadigital' + seccion.SeccionBodys[s].NumeroFila + '"';
+                                            break;
+                                        case 12: strHtmlTag = '<input type="text" id="tag' + seccion.SeccionBodys[s].IdSeccionBody + '" class="' + classTextBox + '" value="' + removeNull(seccion.SeccionBodys[s].Respuesta) + '"' + desactivar + '/>'; break;
+                                        case 13: strHtmlTag = drawSelect("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectSINOonly, seccion.SeccionBodys[s].Respuesta, 2, stepname); break;
+                                        case 14: strHtmlTag = '<input type="text" id=tag"' + seccion.SeccionBodys[s].IdSeccionBody + '" class="rounded ubicacion ' + classTextBox + '" value="' + removeNull(seccion.SeccionBodys[s].Respuesta) + '"' + desactivar + '/>'; break;
+                                        case 15: strHtmlTag = '<textarea rows="5" id="tag' + seccion.SeccionBodys[s].IdSeccionBody + '" class="rounded ' + classTextBox + '"' + desactivar + 'style="resize:none;" >' + removeNull(seccion.SeccionBodys[s].Respuesta) + '</textarea>'; break;
+                                        case 16: strHtmlTag = drawSelect("tag" + seccion.SeccionBodys[s].IdSeccionBody, Items_SelectControlMonitoreo, seccion.SeccionBodys[s].Respuesta, 2, stepname); break;
+                                        default: break;
+                                    }
+                                    strHtmlSecRow += '<td class="redondeado" ' + idCeldaFirma + ' rowspan="' + seccion.SeccionBodys[s].Rowspan + '" colspan="' + seccion.SeccionBodys[s].Colspan + '">' + strHtmlTag + '<input type="hidden" name="GroupIdTableBody" class="GroupIdTableBody redondeado" value="' + seccion.SeccionBodys[s].IdSeccionBody + '" />' + '</td>';
+                                }
+                                if (s == (totalItems - 1) || filaItem != seccion.SeccionBodys[s + 1].NumeroFila) {
+                                    if (seccion.SeccionBodys[s].IdTipoCelda == 1 && seccion.SeccionBodys[s].IdTipoTag == 8) { strHtmlSecRow += '<td><a id="btnAgregarFirma" class="btn btn-sm btn-success btn-rounded" title="Agregar"><i class="fa fa-plus"></i></a></td>'; }
+                                    if (seccion.SeccionBodys[s].IdTipoCelda == 2 && seccion.SeccionBodys[s].IdTipoTag == 11) { strHtmlSecRow += '<td><button type="button" id="btnRemoverFirma" onclick="removerFila(' + seccion.SeccionBodys[s].NumeroFila + ');" class="btn btn-sm btn-danger btn-rounded" title="Quitar"><i class="fa fa-minus"></i></button></td>'; }
+                                    strHtmlSecRow += "</tr>";
+                                }
+                                tmpFilaItem = seccion.SeccionBodys[s].NumeroFila;
                             }
-                            if (s == (totalItems - 1) || filaItem != seccion.SeccionBodys[s + 1].NumeroFila) {
-                                if (seccion.SeccionBodys[s].IdTipoCelda == 1 && seccion.SeccionBodys[s].IdTipoTag == 8) { strHtmlSecRow += '<td><a id="btnAgregarFirma" class="btn btn-sm btn-success btn-rounded" title="Agregar"><i class="fa fa-plus"></i></a></td>'; }
-                                if (seccion.SeccionBodys[s].IdTipoCelda == 2 && seccion.SeccionBodys[s].IdTipoTag == 11) { strHtmlSecRow += '<td><button type="button" id="btnRemoverFirma" onclick="removerFila(' + seccion.SeccionBodys[s].NumeroFila + ');" class="btn btn-sm btn-danger btn-rounded" title="Quitar"><i class="fa fa-minus"></i></button></td>'; }
-                                strHtmlSecRow += "</tr>";
-                            }
-                            tmpFilaItem = seccion.SeccionBodys[s].NumeroFila;
+
+                            var id = ''; //seccion.IdSeccion == 48 ? 'id="tblFirmas"' : '';
+                            strHtmlSeccionBodys = '<div class="table-responsive" style="overflow:auto;">' +
+                                                '<table class="table table-bordered redondeado">' +
+                                                    '<tbody ' + id + '>' +
+                                                    strHtmlSecRow +
+                                                    '</tbody>' +
+                                                '</table>' +
+                                            '</div>';
+                        }
+                        //
+                        var panelGroupSubSec = "";
+                        if (seccion.SubSecciones.length > 0) {
+                            var secondtLevelName = "accordionN2_" + stepname;
+                            var strHtmlSubSeccion = "", strHtmlSubSeccionBodys = "", strHtmlSubSecRow = "";
+                            $.each(seccion.SubSecciones, function (x, subSeccion) {
+                                strHtmlSubSecRow = "";
+                                if (subSeccion.SeccionBodys.length > 0) {
+                                    var tmpFilaItem = 1, totalItems = subSeccion.SeccionBodys.length; var styleItem = "";
+                                    for (var s = 0; s < totalItems; s++) {
+                                        var filaItem = subSeccion.SeccionBodys[s].NumeroFila;
+                                        if (s == 0 || tmpFilaItem != filaItem) {
+                                            //strHtmlSubSecRow += '<tr class="redondeado">';
+                                            if (subSeccion.SeccionBodys[s].IdTipoTag == 8) { strHtmlSubSecRow += '<tr id="firma' + subSeccion.SeccionBodys[s].NumeroFila + '">'; }
+                                            else strHtmlSubSecRow += '<tr class="redondeado">';
+                                        }
+                                        if (subSeccion.SeccionBodys[s].IdTipoCelda == 1) {
+                                            if (subSeccion.SeccionBodys[s].BackgroundColor == true) { styleItem = 'style="background-color:#c2c0c2;"'; } else { styleItem = ''; }
+                                            strHtmlSubSecRow += '<th class="redondeado" rowspan="' + subSeccion.SeccionBodys[s].Rowspan + '" colspan="' + subSeccion.SeccionBodys[s].Colspan + '" ' + styleItem + '>' + subSeccion.SeccionBodys[s].Descripcion + '</th>';
+                                        } else {
+                                            var classTextBox = "form-control input-sm GroupDescripcion " + stepname + tipoSeccion; var strHtmlTag = '';
+                                            var idCeldaFirma = "";
+                                            switch (subSeccion.SeccionBodys[s].IdTipoTag) {
+                                                case 2: strHtmlTag = '<input type="text" id=tag"' + subSeccion.SeccionBodys[s].IdSeccionBody + '" class="rounded ' + classTextBox + '" value="' + removeNull(subSeccion.SeccionBodys[s].Respuesta) + '"' + desactivar + '/>'; break;
+                                                case 3: strHtmlTag = drawSelect("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectSINO, subSeccion.SeccionBodys[s].Respuesta, 2, stepname, tipoSeccion); break;
+                                                case 4: strHtmlTag = drawSelect("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectBomba, subSeccion.SeccionBodys[s].Respuesta, 2, stepname, tipoSeccion); break;
+                                                case 5: strHtmlTag = drawSelect("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectNivelTanque, subSeccion.SeccionBodys[s].Respuesta, 2, stepname, tipoSeccion); break;
+                                                case 6: strHtmlTag = drawSelect("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectAccesorios, subSeccion.SeccionBodys[s].Respuesta, 2, stepname, tipoSeccion); break;
+                                                case 7: strHtmlTag = drawSelect("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectPresiones, subSeccion.SeccionBodys[s].Respuesta, 2, stepname, tipoSeccion); break;
+                                                case 8: strHtmlTag = drawSelectFirma("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectInspectores, subSeccion.SeccionBodys[s].Respuesta, subSeccion.SeccionBodys[s].NumeroFila); break;
+                                                case 9: strHtmlTag = '<input type="text" id="empresa' + subSeccion.SeccionBodys[s].NumeroFila + '" class="rounded ' + classTextBox + '" value="' + removeNull(subSeccion.SeccionBodys[s].Respuesta) + '"' + desactivar + '/>'; break;
+                                                case 10: strHtmlTag = '<input type="text" id="representante' + subSeccion.SeccionBodys[s].NumeroFila + '" class="rounded ' + classTextBox + '" value="' + removeNull(subSeccion.SeccionBodys[s].Respuesta) + '"' + desactivar + '/>'; break;
+                                                case 11: var imgFirma = subSeccion.SeccionBodys[s].Respuesta ? '<img src="../../Content/images/' + subSeccion.SeccionBodys[s].Respuesta + '" />' : "";
+                                                    //Firma del case 8
+                                                    //var selectFirma = drawSelectFirma("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectInspectores, subSeccion.SeccionBodys[s].Respuesta, subSeccion.SeccionBodys[s].NumeroFila);
+                                                    strHtmlTag = imgFirma + '<input id="hddFirmaDigital' + subSeccion.SeccionBodys[s].NumeroFila + '" type="hidden" name="GroupDescripcion" class="GroupDescripcion" value="' + removeNull(subSeccion.SeccionBodys[s].Respuesta) + '"/>';
+                                                    idCeldaFirma = 'id = "firmadigital' + subSeccion.SeccionBodys[s].NumeroFila + '"';
+                                                    break;
+                                                case 12: strHtmlTag = '<input type="text" id="tag' + subSeccion.SeccionBodys[s].IdSeccionBody + '" class="' + classTextBox + '" value="' + removeNull(subSeccion.SeccionBodys[s].Respuesta) + '"' + desactivar + '/>'; break;
+                                                case 13: strHtmlTag = drawSelect("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectSINOonly, subSeccion.SeccionBodys[s].Respuesta, 2, stepname, tipoSeccion); break;
+                                                case 14: strHtmlTag = '<input type="text" id=tag"' + subSeccion.SeccionBodys[s].IdSeccionBody + '" class="rounded ubicacion ' + classTextBox + '" value="' + removeNull(subSeccion.SeccionBodys[s].Respuesta) + '"' + desactivar + '/>'; break;
+                                                case 15: strHtmlTag = '<textarea rows="5" id="tag' + subSeccion.SeccionBodys[s].IdSeccionBody + '" class="rounded ' + classTextBox + '"' + desactivar + 'style="resize:none;" >' + removeNull(subSeccion.SeccionBodys[s].Respuesta) + '</textarea>'; break;
+                                                case 16: strHtmlTag = drawSelect("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectControlMonitoreo, subSeccion.SeccionBodys[s].Respuesta, 2, stepname, tipoSeccion); break;
+                                                default: break;
+                                            }
+                                            /*strHtmlSubSecRow += '<td class="redondeado" rowspan="' + subSeccion.SeccionBodys[s].Rowspan + '" colspan="' + subSeccion.SeccionBodys[s].Colspan + '" style="text-align:-webkit-center;">' + strHtmlTag + '</td>';
+                                            strHtmlSubSecRow += '<input type="hidden" name="GroupIdTableBody" class="GroupIdTableBody" value="' + subSeccion.SeccionBodys[s].IdSeccionBody + '" />';*/
+                                            strHtmlSubSecRow += '<td class="redondeado" ' + idCeldaFirma + ' rowspan="' + subSeccion.SeccionBodys[s].Rowspan + '" colspan="' + subSeccion.SeccionBodys[s].Colspan + '">' + strHtmlTag + '<input type="hidden" name="GroupIdTableBody" class="GroupIdTableBody redondeado" value="' + subSeccion.SeccionBodys[s].IdSeccionBody + '" />' + '</td>';
+                                        }
+                                        /*if (s == (totalItems - 1) || filaItem != subSeccion.SeccionBodys[s + 1].NumeroFila) {
+                                            strHtmlSubSecRow += "</tr>";
+                                        }*/
+                                        if (s == (totalItems - 1) || filaItem != subSeccion.SeccionBodys[s + 1].NumeroFila) {
+                                            if (subSeccion.SeccionBodys[s].IdTipoCelda == 1 && subSeccion.SeccionBodys[s].IdTipoTag == 8) { strHtmlSubSecRow += '<td><a id="btnAgregarFirma" class="btn btn-sm btn-success btn-rounded" title="Agregar"><i class="fa fa-plus"></i></a></td>'; }
+                                            if (subSeccion.SeccionBodys[s].IdTipoCelda == 2 && subSeccion.SeccionBodys[s].IdTipoTag == 11) { strHtmlSubSecRow += '<td><button type="button" id="btnRemoverFirma" onclick="removerFila(' + subSeccion.SeccionBodys[s].NumeroFila + ');" class="btn btn-sm btn-danger btn-rounded" title="Quitar"><i class="fa fa-minus"></i></button></td>'; }
+                                            strHtmlSubSecRow += "</tr>";
+                                        }
+                                        tmpFilaItem = subSeccion.SeccionBodys[s].NumeroFila;
+                                    }
+
+                                    strHtmlSubSeccionBodys = '<div class="table-responsive" style="overflow:auto;">' +
+                                                '<table class="table table-bordered redondeado">' +
+                                                    '<tbody>' +
+                                                    strHtmlSubSecRow +
+                                                    '</tbody>' +
+                                                '</table>' +
+                                            '</div>';
+                                }
+
+                                strHtmlSubSeccion += '<div class="panel panel-default">' +
+                                    '<a class="accordion-toggle panel-default bkgray collapsed" data-toggle="collapse" data-parent="#' + secondtLevelName + '" href="#' + subSeccion.IdSeccion + '">' +
+                                                        '<div class="panel-heading">' +
+                                                            subSeccion.Nombre +
+                                                        '</div>' +
+                                                        '</a>' +
+                                                        '<div id="' + subSeccion.IdSeccion + '" class="panel-collapse collapse">' +
+                                                            '<div class="panel-body text-sm">' +
+                                                                strHtmlSubSeccionBodys +
+                                                            '</div>' +
+                                                        '</div>' +
+                                                    '</div>';
+                            });
+                            panelGroupSubSec = '<div class="panel-group m-b" id="' + secondtLevelName + '">' + strHtmlSubSeccion + '</div>';
                         }
 
-                        var id = ''; //seccion.IdSeccion == 48 ? 'id="tblFirmas"' : '';
-                        strHtmlSeccionBodys = '<div class="table-responsive" style="overflow:auto;">' +
-                                            '<table class="table table-bordered redondeado">' +
-                                                '<tbody ' + id + '>' +
-                                                strHtmlSecRow +
-                                                '</tbody>' +
-                                            '</table>' +
-                                        '</div>';
-                    }
-                    //
-                    var panelGroupSubSec = "";
-                    if (seccion.SubSecciones.length > 0) {
-                        var secondtLevelName = "accordionN2_" + stepname;
-                        var strHtmlSubSeccion = "", strHtmlSubSeccionBodys = "", strHtmlSubSecRow = "";
-                        $.each(seccion.SubSecciones, function (x, subSeccion) {
-                            strHtmlSubSecRow = "";
-                            if (subSeccion.SeccionBodys.length > 0) {
-                                var tmpFilaItem = 1, totalItems = subSeccion.SeccionBodys.length; var styleItem = "";
-                                for (var s = 0; s < totalItems; s++) {
-                                    var filaItem = subSeccion.SeccionBodys[s].NumeroFila;
-                                    if (s == 0 || tmpFilaItem != filaItem) {
-                                        //strHtmlSubSecRow += '<tr class="redondeado">';
-                                        if (subSeccion.SeccionBodys[s].IdTipoTag == 8) { strHtmlSubSecRow += '<tr id="firma' + subSeccion.SeccionBodys[s].NumeroFila + '">'; }
-                                        else strHtmlSubSecRow += '<tr class="redondeado">';
-                                    }
-                                    if (subSeccion.SeccionBodys[s].IdTipoCelda == 1) {
-                                        if (subSeccion.SeccionBodys[s].BackgroundColor == true) { styleItem = 'style="background-color:#c2c0c2;"'; } else { styleItem = ''; }
-                                        strHtmlSubSecRow += '<th class="redondeado" rowspan="' + subSeccion.SeccionBodys[s].Rowspan + '" colspan="' + subSeccion.SeccionBodys[s].Colspan + '" ' + styleItem + '>' + subSeccion.SeccionBodys[s].Descripcion + '</th>';
-                                    } else {
-                                        var classTextBox = "form-control input-sm GroupDescripcion " + stepname + tipoSeccion; var strHtmlTag = '';
-                                        var idCeldaFirma = "";
-                                        switch (subSeccion.SeccionBodys[s].IdTipoTag) {
-                                            case 2: strHtmlTag = '<input type="text" id=tag"' + subSeccion.SeccionBodys[s].IdSeccionBody + '" class="rounded ' + classTextBox + '" value="' + removeNull(subSeccion.SeccionBodys[s].Respuesta) + '"/>'; break;
-                                            case 3: strHtmlTag = drawSelect("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectSINO, subSeccion.SeccionBodys[s].Respuesta, 2, stepname, tipoSeccion); break;
-                                            case 4: strHtmlTag = drawSelect("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectBomba, subSeccion.SeccionBodys[s].Respuesta, 2, stepname, tipoSeccion); break;
-                                            case 5: strHtmlTag = drawSelect("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectNivelTanque, subSeccion.SeccionBodys[s].Respuesta, 2, stepname, tipoSeccion); break;
-                                            case 6: strHtmlTag = drawSelect("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectAccesorios, subSeccion.SeccionBodys[s].Respuesta, 2, stepname, tipoSeccion); break;
-                                            case 7: strHtmlTag = drawSelect("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectPresiones, subSeccion.SeccionBodys[s].Respuesta, 2, stepname, tipoSeccion); break;
-                                            case 8: strHtmlTag = drawSelectFirma("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectInspectores, subSeccion.SeccionBodys[s].Respuesta, subSeccion.SeccionBodys[s].NumeroFila); break;
-                                            case 9: strHtmlTag = '<input type="text" id="empresa' + subSeccion.SeccionBodys[s].NumeroFila + '" class="rounded ' + classTextBox + '" value="' + removeNull(subSeccion.SeccionBodys[s].Respuesta) + '"/>'; break;
-                                            case 10: strHtmlTag = '<input type="text" id="representante' + subSeccion.SeccionBodys[s].NumeroFila + '" class="rounded ' + classTextBox + '" value="' + removeNull(subSeccion.SeccionBodys[s].Respuesta) + '"/>'; break;
-                                            case 11: var imgFirma = subSeccion.SeccionBodys[s].Respuesta ? '<img src="../../Content/images/' + subSeccion.SeccionBodys[s].Respuesta + '" />' : "";
-                                                strHtmlTag = imgFirma + '<input id="hddFirmaDigital' + subSeccion.SeccionBodys[s].NumeroFila + '" type="hidden" name="GroupDescripcion" class="GroupDescripcion" value="' + removeNull(subSeccion.SeccionBodys[s].Respuesta) + '"/>';
-                                                idCeldaFirma = 'id = "firmadigital' + subSeccion.SeccionBodys[s].NumeroFila + '"';
-                                                break;
-                                            case 12: strHtmlTag = '<input type="text" id="tag' + subSeccion.SeccionBodys[s].IdSeccionBody + '" class="' + classTextBox + '" value="' + removeNull(subSeccion.SeccionBodys[s].Respuesta) + '"/>'; break;
-                                            case 13: strHtmlTag = drawSelect("tag" + subSeccion.SeccionBodys[s].IdSeccionBody, Items_SelectSINOonly, subSeccion.SeccionBodys[s].Respuesta, 2, stepname, tipoSeccion); break;
-                                            case 14: strHtmlTag = '<input type="text" id=tag"' + subSeccion.SeccionBodys[s].IdSeccionBody + '" class="rounded ubicacion ' + classTextBox + '" value="' + removeNull(subSeccion.SeccionBodys[s].Respuesta) + '"/>'; break;
-                                            default: break;
-                                        }
-                                        /*strHtmlSubSecRow += '<td class="redondeado" rowspan="' + subSeccion.SeccionBodys[s].Rowspan + '" colspan="' + subSeccion.SeccionBodys[s].Colspan + '" style="text-align:-webkit-center;">' + strHtmlTag + '</td>';
-                                        strHtmlSubSecRow += '<input type="hidden" name="GroupIdTableBody" class="GroupIdTableBody" value="' + subSeccion.SeccionBodys[s].IdSeccionBody + '" />';*/
-                                        strHtmlSubSecRow += '<td class="redondeado" ' + idCeldaFirma + ' rowspan="' + subSeccion.SeccionBodys[s].Rowspan + '" colspan="' + subSeccion.SeccionBodys[s].Colspan + '">' + strHtmlTag + '<input type="hidden" name="GroupIdTableBody" class="GroupIdTableBody redondeado" value="' + subSeccion.SeccionBodys[s].IdSeccionBody + '" />' + '</td>';
-                                    }
-                                    /*if (s == (totalItems - 1) || filaItem != subSeccion.SeccionBodys[s + 1].NumeroFila) {
-                                        strHtmlSubSecRow += "</tr>";
-                                    }*/
-                                    if (s == (totalItems - 1) || filaItem != subSeccion.SeccionBodys[s + 1].NumeroFila) {
-                                        if (subSeccion.SeccionBodys[s].IdTipoCelda == 1 && subSeccion.SeccionBodys[s].IdTipoTag == 8) { strHtmlSubSecRow += '<td><a id="btnAgregarFirma" class="btn btn-sm btn-success btn-rounded" title="Agregar"><i class="fa fa-plus"></i></a></td>'; }
-                                        if (subSeccion.SeccionBodys[s].IdTipoCelda == 2 && subSeccion.SeccionBodys[s].IdTipoTag == 11) { strHtmlSubSecRow += '<td><button type="button" id="btnRemoverFirma" onclick="removerFila(' + subSeccion.SeccionBodys[s].NumeroFila + ');" class="btn btn-sm btn-danger btn-rounded" title="Quitar"><i class="fa fa-minus"></i></button></td>'; }
-                                        strHtmlSubSecRow += "</tr>";
-                                    }
-                                    tmpFilaItem = subSeccion.SeccionBodys[s].NumeroFila;
-                                }
-
-                                strHtmlSubSeccionBodys = '<div class="table-responsive" style="overflow:auto;">' +
-                                            '<table class="table table-bordered redondeado">' +
-                                                '<tbody>' +
-                                                strHtmlSubSecRow +
-                                                '</tbody>' +
-                                            '</table>' +
-                                        '</div>';
-                            }
-
-                            strHtmlSubSeccion += '<div class="panel panel-default">' +
-                                '<a class="accordion-toggle panel-default bkgray collapsed" data-toggle="collapse" data-parent="#' + secondtLevelName + '" href="#' + subSeccion.IdSeccion + '">' +
-                                                    '<div class="panel-heading">' +
-                                                        subSeccion.Nombre +
+                        var seccionConGrafica = (seccion.Nombre.toUpperCase().indexOf("RESULTADOS DE LA PRUEBA DE LA BOMBA CONTRA INCENDIO") > -1) ? ' claseGrafica' : '';
+                        var grafica = (tipoSeccion != '') ? '<div id="flot-chart" style="height:240px"></div><div id="legend-container" align="center"></div>' : '';
+                        strHtmlSeccion += '<div class="panel panel-default">' +
+                            '<a class="accordion-toggle panel-default bkgray collapsed" data-toggle="collapse" data-parent="#' + firstLevelName + '" href="#' + seccion.IdSeccion + '">' +
+                                            '<div class="panel-heading' + seccionConGrafica + '">' +
+                                                '<h4 class="panel-title">' +
+                                                    seccion.Nombre +
+                                                '</h4>' +
+                                            '</div>' +
+                                            '</a>' +
+                                            '<div id="' + seccion.IdSeccion + '" class="panel-collapse collapse">' +
+                                                '<div class="panel-body">' +
+                                                    strHtmlSeccionBodys +
+                                                    panelGroupSubSec +
+                                                    grafica +//(tipoSeccion != '') ? grafica : '' +
                                                     '</div>' +
-                                                    '</a>' +
-                                                    '<div id="' + subSeccion.IdSeccion + '" class="panel-collapse collapse">' +
-                                                        '<div class="panel-body text-sm">' +
-                                                            strHtmlSubSeccionBodys +
-                                                        '</div>' +
                                                     '</div>' +
-                                                '</div>';
-                        });
-                        panelGroupSubSec = '<div class="panel-group m-b" id="' + secondtLevelName + '">' + strHtmlSubSeccion + '</div>';
-                    }
+                                             '</div>';
+                    });
 
-                    var seccionConGrafica = (seccion.Nombre.toUpperCase().indexOf("RESULTADOS DE LA PRUEBA DE LA BOMBA CONTRA INCENDIO") > -1) ? ' claseGrafica' : '';
-                    var grafica = (tipoSeccion != '') ? '<div id="flot-chart" style="height:240px"></div>' : '';
-                    strHtmlSeccion += '<div class="panel panel-default">' +
-                        '<a class="accordion-toggle panel-default bkgray collapsed" data-toggle="collapse" data-parent="#' + firstLevelName + '" href="#' + seccion.IdSeccion + '">' +
-                                        '<div class="panel-heading' + seccionConGrafica + '">' +
-                                            '<h4 class="panel-title">' +
-                                                seccion.Nombre +
-                                            '</h4>' +
-                                        '</div>' +
-                                        '</a>' +
-                                        '<div id="' + seccion.IdSeccion + '" class="panel-collapse collapse">' +
-                                            '<div class="panel-body">' +
-                                                strHtmlSeccionBodys +
-                                                panelGroupSubSec +
-                                                grafica +//(tipoSeccion != '') ? grafica : '' +
-                                                '</div>' +
-                                                '</div>' +
-                                         '</div>';
-                });
+                    panelGroupPadre = '<div class="panel-group m-b" id="' + firstLevelName + '">' + strHtmlSeccion + '</div>';
+                }
 
-                panelGroupPadre = '<div class="panel-group m-b" id="' + firstLevelName + '">' + strHtmlSeccion + '</div>';
+                strHtmlStepContent += '<div class="tab-pane ' + activeStep + '" id="' + stepname + '">' + strHtmlHeader + panelGroupPadre + '</div>';
             }
 
-            strHtmlStepContent += '<div class="tab-pane ' + activeStep + '" id="' + stepname + '">' + strHtmlHeader + panelGroupPadre + '</div>';
-        }
+            $(".tab-content").append(strHtmlStepContent);
 
-        $(".tab-content").append(strHtmlStepContent);
+            setRespuestas(protocolo.IdProtocolo, protocolo.IdPlantilla, protocolo.IdInmueble, protocolo.IdPeriodo);
+            $("#IdProtocolo").val(protocolo.IdProtocolo);
+            $("#IdPlantilla").val(protocolo.IdPlantilla);
+            $("#IdInmueble").val(protocolo.IdInmueble);
+            $("#IdPeriodo").val(protocolo.IdPeriodo);
+            //paintGraficaMotobomba();
 
-        setRespuestas(protocolo.IdProtocolo, protocolo.IdPlantilla, protocolo.IdInmueble, protocolo.IdPeriodo);
-        $("#IdProtocolo").val(protocolo.IdProtocolo);
-        $("#IdPlantilla").val(protocolo.IdPlantilla);
-        $("#IdInmueble").val(protocolo.IdInmueble);
-        $("#IdPeriodo").val(protocolo.IdPeriodo);
-        //paintGraficaMotobomba();
+            if (protocolo.IdEstado == 4) {
+                $("#Codigo").prop('disabled', 'disabled');
+                $("#NombreAreaProtegida").prop('disabled', 'disabled');
+                $("#Fecha").prop('disabled', 'disabled');
+                $("#Direccion").prop('disabled', 'disabled');
+                $("#TipoPrueba1").prop('disabled', 'disabled');
+                $("#TipoPrueba2").prop('disabled', 'disabled');
+                $("#HoraInicio").prop('disabled', 'disabled');
+                $("#MinutoInicio").prop('disabled', 'disabled');
+                $(".GroupDescripcion").prop('disabled', 'disabled');
+                $("#btnGuardar").hide();
+                $("#btnFinalizar").hide();
+            }
 
-        if (protocolo.IdEstado == 4) {
-            $("#Codigo").prop('disabled', 'disabled');
-            $("#NombreAreaProtegida").prop('disabled', 'disabled');
-            $("#Fecha").prop('disabled', 'disabled');
-            $("#Direccion").prop('disabled', 'disabled');
-            $("#TipoPrueba1").prop('disabled', 'disabled');
-            $("#TipoPrueba2").prop('disabled', 'disabled');
-            $("#HoraInicio").prop('disabled', 'disabled');
-            $("#MinutoInicio").prop('disabled', 'disabled');
-            $(".GroupDescripcion").prop('disabled', 'disabled');
-            $("#btnGuardar").hide();
-            $("#btnFinalizar").hide();
-        }
-
-        actualizarEstadoRespuestas();
-        //calcularPuntaje();
-        ///////////////////////////////////////////////////
-        $("#btnGuardar").on("click", function () {
-            $("#btnGuardar").prop('disabled', true);
-            $("#btnGuardar").val("Guardando");
-            var conexion = hostReachable();
-            var array_Descrip = []; $('.GroupDescripcion').each(function (index, item) { var value = $(".GroupDescripcion")[index].value; array_Descrip.push(value); });//Tag: Select
-            var array_Id = []; $('.GroupIdTableBody').each(function (index, item) { var value = $(".GroupIdTableBody")[index].value; array_Id.push(value); });
-            var IdProtocolo = $("#IdProtocolo").val();
-            var IdPlantilla = $("#IdPlantilla").val();
-            var IdInmueble = $("#IdInmueble").val();
-            var IdPeriodo = $("#IdPeriodo").val();
-            /*
-            Descomentar para pruebas
-            var respuestas = {
-                NombreAreaProtegida: $("#NombreAreaProtegida").val(),
-                Direccion: $("#Direccion").val(),
-                StrFecha: $("#Fecha").val(),
-                HoraInicio: $("#HoraInicio").val(),
-                MinutoInicio: $("#MinutoInicio").val(),
-                GroupIdTableBody: array_Id,
-                GroupDescripcion: array_Descrip
-            };
-            localStorage.setItem("respuestas_" + IdProtocolo + IdPlantilla + IdInmueble, JSON.stringify(respuestas));
-            return false;
-            */
-            if (conexion) {
-                var protocolo = {
-                    IdProtocolo: IdProtocolo,
-                    IdPlantilla: $("#IdPlantilla").val(),
-                    IdInmueble: $("#IdInmueble").val(),
-                    IdPeriodo: $("#IdPeriodo").val(),
-                    Codigo: $("#Codigo").val(),
-                    NombreAreaProtegida: $("#NombreAreaProtegida").val(),
-                    Direccion: $("#Direccion").val(),
-                    //TipoPrueba: $("#TipoPrueba").val(),
-                    TipoPrueba: $("input:checked").val(),
-                    StrFecha: $("#Fecha").val(),
-                    HoraInicio: $("#HoraInicio").val(),
-                    MinutoInicio: $("#MinutoInicio").val(),
-                    GroupIdTableBody: array_Id,
-                    GroupDescripcion: array_Descrip,
-                    Active: true
-                };
-                $.post("/Admin/SaveProtocolo", { protocolo: JSON.stringify(protocolo) }, function (data) {
-                }).done(function (data) {
-                    if (data) {
-                        localStorage.removeItem("respuestas_" + IdProtocolo + IdPlantilla + IdInmueble + IdPeriodo);
-                        var urlGuardar = '/Admin/Protocolos?inmueble=' + '@ViewBag.IdInmueble' + "&periodo=" + '@ViewBag.IdPeriodo';
-
-                        window.location.href = urlGuardar;
-                        $("#btnGuardar").val("Guardar");
-                        $("#btnGuardar").prop('disabled', false);
-                        //window.location = "/Admin/Protocolos";
-                    } else {
-                        console.log('Error al intentar guardar los datos.');
-                        alert("Error al intentar guardar el protocolo. Por favor, actualice la página o presione F5.");
-                        $("#btnGuardar").val("Guardar");
-                        $("#btnGuardar").prop('disabled', false);
-                    }
-                }).fail(function () {
-                    alert("Error al intentar guardar el protocolo. Por favor, actualice la página o presione F5.");
-                });
-            } else {
+            actualizarEstadoRespuestas();
+            //calcularPuntaje();
+            ///////////////////////////////////////////////////
+            $("#btnGuardar").on("click", function () {
+                $("#btnGuardar").prop('disabled', true);
+                $("#btnGuardar").val("Guardando");
+                var conexion = hostReachable();
+                var array_Descrip = []; $('.GroupDescripcion').each(function (index, item) { var value = $(".GroupDescripcion")[index].value; array_Descrip.push(value); });//Tag: Select
+                var array_Id = []; $('.GroupIdTableBody').each(function (index, item) { var value = $(".GroupIdTableBody")[index].value; array_Id.push(value); });
+                var IdProtocolo = $("#IdProtocolo").val();
+                var IdPlantilla = $("#IdPlantilla").val();
+                var IdInmueble = $("#IdInmueble").val();
+                var IdPeriodo = $("#IdPeriodo").val();
+                /*
+                Descomentar para pruebas
                 var respuestas = {
-                    Codigo: $("#Codigo").val(),
                     NombreAreaProtegida: $("#NombreAreaProtegida").val(),
                     Direccion: $("#Direccion").val(),
-                    TipoPrueba: $("input:checked").val(),
                     StrFecha: $("#Fecha").val(),
                     HoraInicio: $("#HoraInicio").val(),
                     MinutoInicio: $("#MinutoInicio").val(),
                     GroupIdTableBody: array_Id,
                     GroupDescripcion: array_Descrip
                 };
-                localStorage.setItem("respuestas_" + IdProtocolo + IdPlantilla + IdInmueble + IdPeriodo, JSON.stringify(respuestas));
-                alert("El protocolo se ha guardado temporalmente. Por favor, conectese a Internet para que lo datos sean guardados.");
-            }
-        });
-        //$(".GroupDescripcion").not("input").on("change", function () {
-        //    calcularPuntaje();
-        //});
-        $(".GroupDescripcion").change(function () {
-            actualizarEstadoRespuestas();
-            var val = $(this).val();
-            AddRemoveValidation(val, $(this));
-        });
-        $("#btnFinalizar").click(function () {
-            var conexion = hostReachable();
-            if (conexion) {
-                var array_Descrip = []; $('.GroupDescripcion').each(function (index, item) { var value = trim(item.value); array_Descrip.push(value); });//Tag: Select
-                var array_Id = []; $('.GroupIdTableBody').each(function (index, item) { var value = item.value; array_Id.push(value); });
-                var contaIncompletos = false;
-                if (array_Descrip.indexOf("0") > -1 || array_Descrip.indexOf("") > -1) contaIncompletos = true;
-                var mensaje = contaIncompletos ? confirm("No ha completado todo el protocolo. ¿Desea finalizarlo de todas maneras?") : confirm("¿Está seguro que desea enviar la encuesta?");
-                if (mensaje) {
-                    var IdProtocolo = $("#IdProtocolo").val();
-                    var IdPlantilla = $("#IdPlantilla").val();
-                    var IdInmueble = $("#IdInmueble").val();
+                localStorage.setItem("respuestas_" + IdProtocolo + IdPlantilla + IdInmueble, JSON.stringify(respuestas));
+                return false;
+                */
+                if (conexion) {
                     var protocolo = {
                         IdProtocolo: IdProtocolo,
                         IdPlantilla: $("#IdPlantilla").val(),
                         IdInmueble: $("#IdInmueble").val(),
+                        IdPeriodo: $("#IdPeriodo").val(),
+                        Codigo: $("#Codigo").val(),
+                        NombreAreaProtegida: $("#NombreAreaProtegida").val(),
+                        Direccion: $("#Direccion").val(),
+                        //TipoPrueba: $("#TipoPrueba").val(),
+                        TipoPrueba: $("input:checked").val(),
+                        StrFecha: $("#Fecha").val(),
+                        HoraInicio: $("#HoraInicio").val(),
+                        MinutoInicio: $("#MinutoInicio").val(),
+                        GroupIdTableBody: array_Id,
+                        GroupDescripcion: array_Descrip,
+                        Active: true
+                    };
+                    $.post("/Admin/SaveProtocolo", { protocolo: JSON.stringify(protocolo) }, function (data) {
+                    }).done(function (data) {
+                        if (data) {
+                            localStorage.removeItem("respuestas_" + IdProtocolo + IdPlantilla + IdInmueble + IdPeriodo);
+                            var urlGuardar = '/Admin/Protocolos?inmueble=' + '@ViewBag.IdInmueble' + "&periodo=" + '@ViewBag.IdPeriodo';
+
+                            window.location.href = urlGuardar;
+                            $("#btnGuardar").val("Guardar");
+                            $("#btnGuardar").prop('disabled', false);
+                            //window.location = "/Admin/Protocolos";
+                        } else {
+                            console.log('Error al intentar guardar los datos.');
+                            alert("Error al intentar guardar el protocolo. Por favor, actualice la página o presione F5.");
+                            $("#btnGuardar").val("Guardar");
+                            $("#btnGuardar").prop('disabled', false);
+                        }
+                    }).fail(function () {
+                        alert("Error al intentar guardar el protocolo. Por favor, actualice la página o presione F5.");
+                    });
+                } else {
+                    var respuestas = {
                         Codigo: $("#Codigo").val(),
                         NombreAreaProtegida: $("#NombreAreaProtegida").val(),
                         Direccion: $("#Direccion").val(),
@@ -430,610 +393,620 @@
                         HoraInicio: $("#HoraInicio").val(),
                         MinutoInicio: $("#MinutoInicio").val(),
                         GroupIdTableBody: array_Id,
-                        GroupDescripcion: array_Descrip,
-                        IdEstado: 4,
-                        Active: true
+                        GroupDescripcion: array_Descrip
                     };
-                    $.ajax({
-                        url: "/Admin/SaveProtocolo",
-                        type: "POST",
-                        cache: false,
-                        data: { protocolo: JSON.stringify(protocolo) },
-                        dataType: "json"
-                    }).done(function (data) {
-                        if (data) {
-                            localStorage.removeItem("respuestas_" + IdProtocolo + IdPlantilla + IdInmueble);
-                            window.location = "/Admin/Protocolos";
-                        } else {
-                            console.log('Error al intentar guardar los datos.');
-                            alert("Error al intentar finalizar el protocolo. Por favor, actualice la página o presione F5.");
-                        }
-                    }).fail(function () {
-                        alert('Error al intentar finalizar el protocolo. Por favor, actualice la página o presione F5.');
-                    });
-                } else {
-                    $('.GroupDescripcion').each(function (index, element) {
-                        var val = $(element).val();
-                        AddRemoveValidation(val, $(element));
-                    });
+                    localStorage.setItem("respuestas_" + IdProtocolo + IdPlantilla + IdInmueble + IdPeriodo, JSON.stringify(respuestas));
+                    alert("El protocolo se ha guardado temporalmente. Por favor, conectese a Internet para que lo datos sean guardados.");
                 }
-
-            } else {
-                alert("No hay conexión a Internet para realizar esta acción. Por favor conectese a Internet.");
-            }
-
-        });
-
-        $(".claseGraficaElectrobomba").keyup(function () {
-            calcularDatosProtocolo(4);
-            paintGraficaElectrobomba();
-        });
-
-        $(".claseGraficaMotobomba").keyup(function () {
-            calcularDatosProtocolo(5);
-            paintGraficaMotobomba();
-        });
-
-        //var contaFirma = 0; var indexFirma = 0;
-
-        $("#btnAgregarFirma").click(function () {
-            if (RemovedFirmas[0]) {
-                $('#firma' + RemovedFirmas[0]).show();
-                RemovedFirmas.splice(0, 1);
-            }
-        });
-
-        $(".SelectFirmas").change(function () {
-            //alert($(this)[0].id);
-            var idSelect = $(this)[0].id;
-            var idUsuario = $("#" + idSelect + " option:selected").val();
-            var fila = $(this)[0].getAttribute("data-fila");
-            pintarDatosFilaFirma(Items_SelectInspectores, idUsuario, fila);
-            //alert(fila);
-        });
-
-        $('.bkgray').click(function () {
-            if ($(this).hasClass('collapsed')) {
-                $('.bkgray').children().css("background-color", "#f5f5f5");
-                $('.bkgray').children().css("font-weight", "");
-                $('.bkgray').parent().css("border-color", "#e8e8e8");
-                $(this).children().css("background-color", "#FB6B5B");
-                $(this).children().css("font-weight", "bold");
-                $(this).parent().css("border-color", "#FB6B5B");
-            }
-            else {
-                $(this).children().css("background-color", "#f5f5f5");
-            }
-        });
-
-        $(".accordion-toggle").click(function () {
-            setInterval(function () {
-                switch (protocolo.IdPlantilla) {
-                    case 4:
-                        paintGraficaElectrobomba();
-                        break;
-                    case 5:
-                        paintGraficaMotobomba();
-                        break;
-                }
-            }, 1)
-        });
-
-        $('td.redondeado').click(function () {
-            $(this).children().first().addClass("blue-color");
-        });
-    });
-
-    //Funciones
-    function removerFila(fila) {
-        $('#firma' + fila).hide();
-        RemovedFirmas.push(fila);
-    }
-        //Auto Calculado de valores en las graficas
-    function calcularDatosProtocolo(numProto)
-    {
-        switch(numProto)
-        {
-            case 4:
-                calcularDatosElectrobomba();
-                break;
-            case 5:
-                calcularDatosMotobomba();
-                break;
-        }
-    }
-
-    function calcularDatosElectrobomba()
-    {
-        var datosGrafica = [];
-
-        var FP = 0; var dnRPM = 0; var dnSuccion = 0; var dnDescarga = 0;
-        $('.claseGraficaElectrobomba').each(function (index, item)
-        {
-            if (index == 0) FP = trim(item.value);
-
-            if(index > 0 && index < 41)
-            {
-                if(datosGrafica.length != 7)
-                {
-                    datosGrafica.push(trim(item.value));
-                }
-                else
-                {
-                    var sum1 = 0; var sum2 = 0;
-                    for (var i = 1; i < 4; i++) {
-                        sum1 += parseInt(datosGrafica[i], 10); //don't forget to add the base
-                    }
-                    for (var i = 4; i < 7; i++) {
-                        sum2 += parseInt(datosGrafica[i], 10); //don't forget to add the base
-                    }
-                    var avg1 = sum1 / 3;
-                    var avg2 = sum2 / 3;
-                    var result = (avg1 * avg2 * FP * Math.sqrt(3)) / (0.736 * 1000);
-                    item.value = Math.round(result * 10) / 10;
-                    datosGrafica = [];
-                }
-            } else if(index > 40 && index < 47) {
-                switch(index)
-                {
-                    case 43:
-                        dnSuccion = trim(item.value); break;
-                    case 44:
-                        dnRPM = trim(item.value); break;
-                    case 46:
-                        dnDescarga = trim(item.value); break;
-                }
-            }
-            else if (index > 46 && index < 79) {
-                var result = 0;
-                if(datosGrafica.length == 4)
-                {
-                    result = 0;
-                    if (dnSuccion == dnDescarga)
-                    {
-                        result = 0;
-                        item.value = result;
-                    }
-                    else {
-                        result = 0.001123 * Math.pow(parseInt(datosGrafica[0], 10), 2) / (Math.pow(dnSuccion, 4) - Math.pow(dnDescarga, 4));
-                        item.value = Math.round(result * 10) / 10;
-                    }
-                    datosGrafica.push(trim(item.value));
-                } else if(datosGrafica.length == 6)
-                {
-                    result = 0;
-                    result = (dnRPM / parseInt(datosGrafica[1], 10)) * parseInt(datosGrafica[0]);
-                    item.value = Math.round(result);
-                    datosGrafica.push(trim(item.value));
-                } else if(datosGrafica.length == 7)
-                {
-                    result = 0;
-                    result = (dnRPM / parseInt(datosGrafica[1], 10)) * (dnRPM / parseInt(datosGrafica[1], 10)) * (parseInt(datosGrafica[3], 10) - parseInt(datosGrafica[2], 10) + parseInt(datosGrafica[4], 10) - parseInt(datosGrafica[5], 10));
-                    item.value = Math.round(result);
-                    datosGrafica = [];
-                }
-                else
-                { datosGrafica.push(trim(item.value)); }
-            }
-        });
-    }
-
-    function calcularDatosMotobomba()
-    {
-        var datosGrafica = [];
-
-        var dpdSuccion = 0; var dpdDescarga = 0; var dpRPM = 0;
-        //claseGraficaMotobomba
-        $('.claseGraficaMotobomba').each(function (index, item) {
-            if (index >= 0 && index <= 5) {
-                switch (index) {
-                    case 2:
-                        dpdSuccion = trim(item.value); break;
-                    case 3:
-                        dpRPM = trim(item.value); break;
-                    case 5:
-                        dpdDescarga = trim(item.value); break;
-                }
-            } else if (index >= 16 && index <= 47) {
-                var result = 0;
-                if(datosGrafica.length == 4)
-                {
-                    result = 0;
-                    if (dpdSuccion == dpdDescarga) {
-                        result = 0;
-                        item.value = result;
-                    }
-                    else {
-                        result = 0.001123 * Math.pow(parseInt(datosGrafica[0], 10), 2) / (Math.pow(dpdSuccion, 4) - Math.pow(dpdDescarga, 4));
-                        item.value = Math.round(result * 10) / 10;
-                    }
-                    datosGrafica.push(trim(item.value));
-                } else if(datosGrafica.length == 6)
-                {
-                    result = 0;
-                    result = (dpRPM / parseInt(datosGrafica[1], 10)) * parseInt(datosGrafica[0]);
-                    item.value = Math.round(result);
-                    datosGrafica.push(trim(item.value));
-                } else if(datosGrafica.length == 7)
-                {
-                    result = 0;
-                    result = Math.pow((dpRPM / parseInt(datosGrafica[1], 10)), 2) * (parseInt(datosGrafica[3], 10) - parseInt(datosGrafica[2], 10) + parseInt(datosGrafica[4], 10) - parseInt(datosGrafica[5], 10));
-                    item.value = Math.round(result);
-                    datosGrafica = [];
-                } else { datosGrafica.push(trim(item.value)); }
-            }
-            else if (index >= 51 && index <= 83) {
-                var result = 0;
-                if (datosGrafica.length == 4) {
-                    result = 0;
-                    if (dpdSuccion == dpdDescarga) {
-                        result = 0;
-                        item.value = result;
-                    }
-                    else {
-                        result = 0.001123 * Math.pow(parseInt(datosGrafica[0], 10), 2) / (Math.pow(dpdSuccion, 4) - Math.pow(dpdDescarga, 4));
-                        item.value = Math.round(result * 10) / 10;
-                    }
-                    datosGrafica.push(trim(item.value));
-                } else if (datosGrafica.length == 6) {
-                    result = 0;
-                    result = (dpRPM / parseInt(datosGrafica[1], 10)) * parseInt(datosGrafica[0]);
-                    item.value = Math.round(result);
-                    datosGrafica.push(trim(item.value));
-                } else if (datosGrafica.length == 7) {
-                    result = 0;
-                    result = Math.pow((dpRPM / parseInt(datosGrafica[1], 10)), 2) * (parseInt(datosGrafica[3], 10) - parseInt(datosGrafica[2], 10) + parseInt(datosGrafica[4], 10) - parseInt(datosGrafica[5], 10));
-                    item.value = Math.round(result);
-                    datosGrafica = [];
-                }
-                else { datosGrafica.push(trim(item.value)); }
-            }
-        });
-    }
-
-    function paintGraficaMotobomba() {
-        $("#flot-chart").css("width", "100%");
-        //var datosGrafica = []; var d2 = []; var d3 = []; var d4 = [];
-        var datosGrafica = []; var d1 = []; var d2 = []; var d3 = [];
-        $('.claseGraficaMotobomba').each(function (index, item) { var value = trim(item.value); datosGrafica.push(value); });
-
-        d1[0] = [parseInt(datosGrafica[22]), parseInt(datosGrafica[23])];
-        d1[1] = [parseInt(datosGrafica[30]), parseInt(datosGrafica[31])];
-        d1[2] = [parseInt(datosGrafica[38]), parseInt(datosGrafica[39])];
-        d1[3] = [parseInt(datosGrafica[46]), parseInt(datosGrafica[47])];
-
-        d2[0] = [parseInt(datosGrafica[6]), parseInt(datosGrafica[11])];
-        d2[1] = [parseInt(datosGrafica[7]), parseInt(datosGrafica[12])];
-        d2[2] = [parseInt(datosGrafica[8]), parseInt(datosGrafica[13])];
-        d2[3] = [parseInt(datosGrafica[9]), parseInt(datosGrafica[14])];
-
-        d3[0] = [parseInt(datosGrafica[57]), parseInt(datosGrafica[58])];
-        d3[1] = [parseInt(datosGrafica[65]), parseInt(datosGrafica[66])];
-        d3[2] = [parseInt(datosGrafica[73]), parseInt(datosGrafica[74])];
-        d3[3] = [parseInt(datosGrafica[81]), parseInt(datosGrafica[82])];
-
-        //d4[0] = [parseInt(datosGrafica[49]), parseInt(datosGrafica[50])];
-        //d4[1] = [parseInt(datosGrafica[57]), parseInt(datosGrafica[58])];
-        //d4[2] = [parseInt(datosGrafica[65]), parseInt(datosGrafica[66])];
-        //d4[3] = [parseInt(datosGrafica[73]), parseInt(datosGrafica[74])];
-
-        $("#flot-chart").length && $.plot($("#flot-chart"), [{
-            data: d1,
-            label: "Curva de Prueba de la Bomba"
-        }, {
-            data: d2,
-            label: "Curva de Fábrica de la Bomba"
-        }, {
-            data: d3,
-            label: "Curva de Prueba de la Bomba 2"
-            //}, {
-            //    data: d4,
-            //    label: "Curva de Prueba de la Bomba 2"
-        }],
-            {
-                series: {
-                    lines: {
-                        show: true,
-                        lineWidth: 1,
-                        fill: true,
-                        fillColor: {
-                            colors: [{
-                                opacity: 0.0
-                            }, {
-                                opacity: 0.0
-                            }, {
-                                opacity: 0.0
-                            }]
-                        }
-                    },
-                    points: {
-                        show: true
-                    },
-                    grow: {
-                        active: true,
-                        steps: 50
-                    },
-                    shadowSize: 2
-                },
-                grid: {
-                    hoverable: true,
-                    clickable: true,
-                    tickColor: "#f0f0f0",
-                    borderWidth: 0
-                },
-                colors: ["#FE2E2E", "#6783B7", "#8258FA"],
-                xaxis: {
-                    //show: false
-                },
-                yaxis: {
-                    ticks: 5
-                },
-                tooltip: true,
-                tooltipOpts: {
-                    content: "'%s' of %x.1 is %y.4",
-                    defaultTheme: false,
-                    shifts: {
-                        x: 0,
-                        y: 20
-                    }
-                }
-            }
-        );
-    }
-    function paintGraficaElectrobomba() {
-        $("#flot-chart").css("width", "100%");
-        var datosGrafica = []; var d1 = []; var d2 = []; var d3 = []; var d4 = [];
-        $('.claseGraficaElectrobomba').each(function (index, item) { var value = trim(item.value); datosGrafica.push(value); });
-
-        d1[0] = [parseInt(datosGrafica[79]), parseInt(datosGrafica[89])];
-        d1[1] = [parseInt(datosGrafica[80]), parseInt(datosGrafica[90])];
-        d1[2] = [parseInt(datosGrafica[81]), parseInt(datosGrafica[91])];
-        d1[3] = [parseInt(datosGrafica[82]), parseInt(datosGrafica[92])];
-        d1[4] = [parseInt(datosGrafica[83]), parseInt(datosGrafica[93])];
-        //Linea Azul
-        d2[0] = [parseInt(datosGrafica[53]), parseInt(datosGrafica[8])];
-        d2[1] = [parseInt(datosGrafica[61]), parseInt(datosGrafica[16])];
-        d2[2] = [parseInt(datosGrafica[69]), parseInt(datosGrafica[24])];
-        d2[3] = [parseInt(datosGrafica[77]), parseInt(datosGrafica[32])];
-
-        d3[0] = [parseInt(datosGrafica[53]), parseInt(datosGrafica[54])];
-        d3[1] = [parseInt(datosGrafica[61]), parseInt(datosGrafica[62])];
-        d3[2] = [parseInt(datosGrafica[69]), parseInt(datosGrafica[70])];
-        d3[3] = [parseInt(datosGrafica[77]), parseInt(datosGrafica[78])];
-
-        d4[0] = [parseInt(datosGrafica[79]), parseInt(datosGrafica[84])];
-        d4[1] = [parseInt(datosGrafica[80]), parseInt(datosGrafica[85])];
-        d4[2] = [parseInt(datosGrafica[81]), parseInt(datosGrafica[86])];
-        d4[3] = [parseInt(datosGrafica[82]), parseInt(datosGrafica[87])];
-        d4[4] = [parseInt(datosGrafica[83]), parseInt(datosGrafica[88])];
-
-        $("#flot-chart").length && $.plot($("#flot-chart"), [{
-            data: d1,
-            label: "Curva de Fábrica del Motor"
-        }, {
-            data: d2,
-            label: "Curva de Prueba del Motor"
-        }, {
-            data: d3,
-            label: "Curva de Prueba de la Bomba"
-        }, {
-            data: d4,
-            label: "Curva de Fábrica de la Bomba"
-        }],
-            {
-                series: {
-                    lines: {
-                        show: true,
-                        lineWidth: 1,
-                        fill: true,
-                        fillColor: {
-                            colors: [{
-                                opacity: 0.0
-                            }, {
-                                opacity: 0.0
-                            }, {
-                                opacity: 0.0
-                            }, {
-                                opacity: 0.0
-                            }]
-                        }
-                    },
-                    points: {
-                        show: true
-                    },
-                    grow: {
-                        active: true,
-                        steps: 50
-                    },
-                    shadowSize: 2
-                },
-                grid: {
-                    hoverable: true,
-                    clickable: true,
-                    tickColor: "#f0f0f0",
-                    borderWidth: 0
-                },
-                colors: ["#9900FF", "#6D9EEB", "#CC0000", "#93C47D"],
-                xaxis: {
-                    //show: false
-                },
-                yaxis: {
-                    ticks: 5
-                },
-                tooltip: true,
-                tooltipOpts: {
-                    content: "'%s' of %x.1 is %y.4",
-                    defaultTheme: false,
-                    shifts: {
-                        x: 0,
-                        y: 20
-                    }
-                }
-            }
-        );
-    }
-    //function getUsuariosInspectores(descripcion) {
-    //    $.ajax({
-    //        url: "/Admin/GetUsuariosInspectores",
-    //        type: "GET",
-    //        cache: false,
-    //        data: { descripcion: descripcion },
-    //        dataType: "json"
-    //    }).done(function (data) {
-    //        $('#usuariosTable td').remove();
-    //        $.each(data, function (index, item) {
-    //            $('#usuariosTable > tbody:last').append(
-    //                '<tr><td>' + item.Nombre + '</td>' +
-    //                '<td><button type="button" onclick="agregarFirma(' + item.Nombre + ', \'' + item.RutaFirma + '\')" data-dismiss="modal"><i class="fa fa-check"></i></button></td></tr>');
-    //        });
-    //    }).fail(function () {
-    //        alert('Error al intentar obtener el listado de Usuarios. Por favor, actualice la página o presione F5.');
-    //    });
-    //}
-    function pintarDatosFilaFirma(lista, idUsuario, fila) {
-        var urlAbsolute = ""; var img = "";
-        $.each(lista, function (x, item) {
-            if (item.IdUsuario == idUsuario) {
-                $('#firmadigital' + fila).find("img").remove();
-                if (item.RutaFirma) {
-                    $('#hddFirmaDigital' + fila).val(item.RutaFirma);
-                    urlAbsolute = "../../Content/images/" + item.RutaFirma;
-                    img = '<img src="' + urlAbsolute + '" />';//width="310" height="310"
-                    $('#firmadigital' + fila).append(img);
-                } else { $('#hddFirmaDigital' + fila).val(""); }
-                //$('#firmadigital' + fila).attr("src", urlAbsolute);
-            }
-        });
-
-        //$.ajax({
-        //    url: "/Admin/GetUsuario",
-        //    type: "GET",
-        //    cache: false,
-        //    data: { id: idUsuario },
-        //    dataType: "json"
-        //}).done(function (data) {
-        //    //$('#empresa' + fila).val();
-        //    //$('#representante' + fila).val();
-        //    $('#firmadigital' + fila).val(data.RutaFirma);
-        //}).fail(function () {
-        //    alert('Error al intentar obtener el listado de Usuarios. Por favor, actualice la página o presione F5.');
-        //});
-    }
-    function eliminarFilaFirma(index) {
-        $("#firma" + index).remove();//eliminino una fila con el indice: producto1
-        //facturaDetalle.splice(index - 1, 1);//eliminio del array el elemento en la posicion  index-1
-        contaFirma--;
-    }
-    function actualizarEstadoRespuestas() {
-        var totalTabs = $("#tabProtocolo").children().length;
-        for (var i = 1; i <= totalTabs; i++) {
-            var totalito = $('.step' + i).length; var conta = 0;
-            $('.step' + i).each(function (index, element) {
-                var val = trim($(element).val());
-                if (val == '0' || val == '') conta++; //if (val.indexOf("0") > -1 || val.indexOf("") > -1) conta++;
             });
-            var clase = "red";
-            if (totalito == conta) clase = "red";
-            else if (conta == 0) clase = "";
-            else if (conta > 0) clase = "warning";
-            $("#bg_tab" + i).removeClass("red warning");
-            $("#bg_tab" + i).addClass(clase);
-        }
-    }
-    function setRespuestas(idProtocolo, idPlantilla, idInmueble, idPeriodo) {
-        if (localStorage.getItem("respuestas_" + idProtocolo + idPlantilla + idInmueble + idPeriodo)) {
-            var respuestas = {}; respuestas = JSON.parse(localStorage.getItem("respuestas_" + idProtocolo + idPlantilla + idInmueble + idPeriodo));
-            $("#Codigo").val(respuestas.Codigo);
-            $("#NombreAreaProtegida").val(respuestas.NombreAreaProtegida);
-            $("#Direccion").val(respuestas.Direccion);
-            //$("#TipoPrueba").val(respuestas.TipoPrueba);
-            if (respuestas.TipoPrueba == "1") {
-                $("#TipoPrueba1").prop('checked', true);
-            }
-            else {
-                $("#TipoPrueba2").prop('checked', true);
-            }
-            $("#Fecha").val(respuestas.StrFecha);
-            $("#HoraInicio").val(respuestas.HoraInicio);
-            $("#MinutoInicio").val(respuestas.MinutoInicio);
-            for (var i = 0; i < respuestas.GroupIdTableBody.length; i++) {
-                $("#tag" + respuestas.GroupIdTableBody[i]).val(respuestas.GroupDescripcion[i]);
-            }
-        }
-    }
-    function hostReachable() {
-        // Handle IE and more capable browsers
-        var xhr = new (window.ActiveXObject || XMLHttpRequest)("Microsoft.XMLHTTP");
-        var status;
-        var server = window.location.hostname;
-        if (window.location.port != '') {
-            server += ':' + window.location.port;
-        }
-        // Open new request as a HEAD to the root hostname with a random param to bust the cache
-        xhr.open("HEAD", "//" + server + "/?rand=" + Math.floor((1 + Math.random()) * 0x10000), false);
-        // Issue request and handle response
-        try {
-            xhr.send();
-            return (xhr.status >= 200 && xhr.status < 300 || xhr.status === 304);
-        } catch (error) {
-            return false;
-        }
-    }
-    function drawSelect(id, lista, respuesta, tipoClase, stepName, claseAlternativa) {
-        var select = "", selected = "", clase = "";
-        switch (tipoClase) {
-            case 1: clase = "form-control hour parsley-validated rounded " + claseAlternativa; break;
-            case 2: clase = "form-control input-sm parsley-validated GroupDescripcion rounded " + stepName + claseAlternativa; break;
-            default: clase = "form-control parsley-validated GroupDescripcion " + stepName + claseAlternativa; break;
-        }
-        select = '<select id="' + id + '" class = "' + clase + '" style = "width: auto;">';
-        $.each(lista, function (x, item) {
-            if (item.IdOpcion == respuesta) selected = "selected"; else selected = "";
-            select += '<option value="' + item.IdOpcion + '" data-puntaje="' + item.Puntaje + '" ' + selected + '>' + item.NombreOpcion + '</option>';
+            //$(".GroupDescripcion").not("input").on("change", function () {
+            //    calcularPuntaje();
+            //});
+            $(".GroupDescripcion").change(function () {
+                actualizarEstadoRespuestas();
+                var val = $(this).val();
+                AddRemoveValidation(val, $(this));
+            });
+            $("#btnFinalizar").click(function () {
+                var conexion = hostReachable();
+                if (conexion) {
+                    var array_Descrip = []; $('.GroupDescripcion').each(function (index, item) { var value = trim(item.value); array_Descrip.push(value); });//Tag: Select
+                    var array_Id = []; $('.GroupIdTableBody').each(function (index, item) { var value = item.value; array_Id.push(value); });
+                    var contaIncompletos = false;
+                    if (array_Descrip.indexOf("0") > -1 || array_Descrip.indexOf("") > -1) contaIncompletos = true;
+                    var mensaje = contaIncompletos ? confirm("No ha completado todo el protocolo. ¿Desea finalizarlo de todas maneras?") : confirm("¿Está seguro que desea enviar la encuesta?");
+                    if (mensaje) {
+                        var IdProtocolo = $("#IdProtocolo").val();
+                        var IdPlantilla = $("#IdPlantilla").val();
+                        var IdInmueble = $("#IdInmueble").val();
+                        var protocolo = {
+                            IdProtocolo: IdProtocolo,
+                            IdPlantilla: $("#IdPlantilla").val(),
+                            IdInmueble: $("#IdInmueble").val(),
+                            Codigo: $("#Codigo").val(),
+                            NombreAreaProtegida: $("#NombreAreaProtegida").val(),
+                            Direccion: $("#Direccion").val(),
+                            TipoPrueba: $("input:checked").val(),
+                            StrFecha: $("#Fecha").val(),
+                            HoraInicio: $("#HoraInicio").val(),
+                            MinutoInicio: $("#MinutoInicio").val(),
+                            GroupIdTableBody: array_Id,
+                            GroupDescripcion: array_Descrip,
+                            IdEstado: 4,
+                            Active: true
+                        };
+                        $.ajax({
+                            url: "/Admin/SaveProtocolo",
+                            type: "POST",
+                            cache: false,
+                            data: { protocolo: JSON.stringify(protocolo) },
+                            dataType: "json"
+                        }).done(function (data) {
+                            if (data) {
+                                localStorage.removeItem("respuestas_" + IdProtocolo + IdPlantilla + IdInmueble);
+                                window.location = "/Admin/Protocolos";
+                            } else {
+                                console.log('Error al intentar guardar los datos.');
+                                alert("Error al intentar finalizar el protocolo. Por favor, actualice la página o presione F5.");
+                            }
+                        }).fail(function () {
+                            alert('Error al intentar finalizar el protocolo. Por favor, actualice la página o presione F5.');
+                        });
+                    } else {
+                        $('.GroupDescripcion').each(function (index, element) {
+                            var val = $(element).val();
+                            AddRemoveValidation(val, $(element));
+                        });
+                    }
+
+                } else {
+                    alert("No hay conexión a Internet para realizar esta acción. Por favor conectese a Internet.");
+                }
+
+            });
+
+            $(".claseGraficaElectrobomba").keyup(function () {
+                calcularDatosProtocolo(4);
+                paintGraficaElectrobomba();
+            });
+
+            $(".claseGraficaMotobomba").keyup(function () {
+                calcularDatosProtocolo(5);
+                paintGraficaMotobomba();
+            });
+
+            //var contaFirma = 0; var indexFirma = 0;
+
+            $("#btnAgregarFirma").click(function () {
+                if (RemovedFirmas[0]) {
+                    $('#firma' + RemovedFirmas[0]).show();
+                    RemovedFirmas.splice(0, 1);
+                }
+            });
+
+            $(".SelectFirmas").change(function () {
+                //alert($(this)[0].id);
+                var idSelect = $(this)[0].id;
+                var idUsuario = $("#" + idSelect + " option:selected").val();
+                var fila = $(this)[0].getAttribute("data-fila");
+                pintarDatosFilaFirma(Items_SelectInspectores, idUsuario, fila);
+                //alert(fila);
+            });
+
+            $('.bkgray').click(function () {
+                if ($(this).hasClass('collapsed')) {
+                    $('.bkgray').children().css("background-color", "#f5f5f5");
+                    $('.bkgray').children().css("font-weight", "");
+                    $('.bkgray').parent().css("border-color", "#e8e8e8");
+                    $(this).children().css("background-color", "#FB6B5B");
+                    $(this).children().css("font-weight", "bold");
+                    $(this).parent().css("border-color", "#FB6B5B");
+                }
+                else {
+                    $(this).children().css("background-color", "#f5f5f5");
+                }
+            });
+
+            $(".accordion-toggle").click(function () {
+                setInterval(function () {
+                    switch (protocolo.IdPlantilla) {
+                        case 4:
+                            paintGraficaElectrobomba();
+                            break;
+                        case 5:
+                            paintGraficaMotobomba();
+                            break;
+                    }
+                }, 1)
+            });
+
+            $('td.redondeado').click(function () {
+                $(this).children().first().addClass("blue-color");
+            });
         });
-        select += '</select>';
-        return select;
-    }
-    function drawSelectFirma(id, lista, respuesta, fila) {
-        var select = "", selected = "", clase = "";
-        clase = "rounded form-control input-sm parsley-validated GroupDescripcion SelectFirmas";
-        select = '<select id="' + id + '" class = "' + clase + '" style = "width: auto;" data-fila = "' + fila + '">';
-        $.each(lista, function (x, item) {
-            if (item.IdUsuario == respuesta) selected = "selected"; else selected = "";
-            select += '<option value="' + item.IdUsuario + '" ' + selected + '>' + item.Nombre + '</option>';
-        });
-        select += '</select>';
-        return select;
-    }
-    function removeNull(value) {
-        var valor = (value == null) ? "" : value;
-        return valor;
-    }
-    function formatDate(stringDate) {
-        var date = new Date(parseInt(stringDate.substr(6)));
-        return new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes())
-    }
-    function trim(cadena) {
-        cadena = cadena.replace(/^\s+/, '').replace(/\s+$/, '');
-        return (cadena);
-    }
-    function AddRemoveValidation(value, element) {
-        if (element[0].tagName.toLowerCase() == "input" && value === '') element.addClass("selectedItem");
-        else if (element[0].tagName.toLowerCase() == "select" && value === '0') element.addClass("selectedItem");
-        else element.removeClass("selectedItem");
-    }
-    function calcularPuntaje() {
-        var elements = $(".GroupDescripcion").not("input").toArray();//$("#tag5 option:selected").data("puntos")
-        var score = 0;
-        $.each(elements, function (x, item) {
-            score += $(item).find("option:selected").data("puntaje");
-        });
-        $("#puntuacion").val(score);
-    }
+
+        //Funciones
+        function removerFila(fila) {
+            $('#firma' + fila).hide();
+            RemovedFirmas.push(fila);
+        }
+        //Auto Calculado de valores en las graficas
+        function calcularDatosProtocolo(numProto) {
+            switch (numProto) {
+                case 4:
+                    calcularDatosElectrobomba();
+                    break;
+                case 5:
+                    calcularDatosMotobomba();
+                    break;
+            }
+        }
+
+        function calcularDatosElectrobomba() {
+            var datosGrafica = [];
+
+            var FP = 0; var dnRPM = 0; var dnSuccion = 0; var dnDescarga = 0;
+            $('.claseGraficaElectrobomba').each(function (index, item) {
+                if (index == 0) FP = trim(item.value);
+
+                if (index > 0 && index < 41) {
+                    if (datosGrafica.length != 7) {
+                        datosGrafica.push(trim(item.value));
+                    }
+                    else {
+                        var sum1 = 0; var sum2 = 0;
+                        for (var i = 1; i < 4; i++) {
+                            sum1 += parseInt(datosGrafica[i], 10); //don't forget to add the base
+                        }
+                        for (var i = 4; i < 7; i++) {
+                            sum2 += parseInt(datosGrafica[i], 10); //don't forget to add the base
+                        }
+                        var avg1 = sum1 / 3;
+                        var avg2 = sum2 / 3;
+                        var result = (avg1 * avg2 * FP * Math.sqrt(3)) / (0.736 * 1000);
+                        item.value = Math.round(result * 10) / 10;
+                        datosGrafica = [];
+                    }
+                } else if (index > 40 && index < 47) {
+                    switch (index) {
+                        case 43:
+                            dnSuccion = trim(item.value); break;
+                        case 44:
+                            dnRPM = trim(item.value); break;
+                        case 46:
+                            dnDescarga = trim(item.value); break;
+                    }
+                }
+                else if (index > 46 && index < 79) {
+                    var result = 0;
+                    if (datosGrafica.length == 4) {
+                        result = 0;
+                        if (dnSuccion == dnDescarga) {
+                            result = 0;
+                            item.value = result;
+                        }
+                        else {
+                            result = 0.001123 * Math.pow(parseInt(datosGrafica[0], 10), 2) / (Math.pow(dnSuccion, 4) - Math.pow(dnDescarga, 4));
+                            item.value = Math.round(result * 10) / 10;
+                        }
+                        datosGrafica.push(trim(item.value));
+                    } else if (datosGrafica.length == 6) {
+                        result = 0;
+                        result = (dnRPM / parseInt(datosGrafica[1], 10)) * parseInt(datosGrafica[0]);
+                        item.value = Math.round(result);
+                        datosGrafica.push(trim(item.value));
+                    } else if (datosGrafica.length == 7) {
+                        result = 0;
+                        result = (dnRPM / parseInt(datosGrafica[1], 10)) * (dnRPM / parseInt(datosGrafica[1], 10)) * (parseInt(datosGrafica[3], 10) - parseInt(datosGrafica[2], 10) + parseInt(datosGrafica[4], 10) - parseInt(datosGrafica[5], 10));
+                        item.value = Math.round(result);
+                        datosGrafica = [];
+                    }
+                    else { datosGrafica.push(trim(item.value)); }
+                }
+            });
+        }
+
+        function calcularDatosMotobomba() {
+            var datosGrafica = [];
+
+            var dpdSuccion = 0; var dpdDescarga = 0; var dpRPM = 0;
+            //claseGraficaMotobomba
+            $('.claseGraficaMotobomba').each(function (index, item) {
+                if (index >= 0 && index <= 5) {
+                    switch (index) {
+                        case 2:
+                            dpdSuccion = trim(item.value); break;
+                        case 3:
+                            dpRPM = trim(item.value); break;
+                        case 5:
+                            dpdDescarga = trim(item.value); break;
+                    }
+                } else if (index >= 16 && index <= 47) {
+                    var result = 0;
+                    if (datosGrafica.length == 4) {
+                        result = 0;
+                        if (dpdSuccion == dpdDescarga) {
+                            result = 0;
+                            item.value = result;
+                        }
+                        else {
+                            result = 0.001123 * Math.pow(parseInt(datosGrafica[0], 10), 2) / (Math.pow(dpdSuccion, 4) - Math.pow(dpdDescarga, 4));
+                            item.value = Math.round(result * 10) / 10;
+                        }
+                        datosGrafica.push(trim(item.value));
+                    } else if (datosGrafica.length == 6) {
+                        result = 0;
+                        result = (dpRPM / parseInt(datosGrafica[1], 10)) * parseInt(datosGrafica[0]);
+                        item.value = Math.round(result);
+                        datosGrafica.push(trim(item.value));
+                    } else if (datosGrafica.length == 7) {
+                        result = 0;
+                        result = Math.pow((dpRPM / parseInt(datosGrafica[1], 10)), 2) * (parseInt(datosGrafica[3], 10) - parseInt(datosGrafica[2], 10) + parseInt(datosGrafica[4], 10) - parseInt(datosGrafica[5], 10));
+                        item.value = Math.round(result);
+                        datosGrafica = [];
+                    } else { datosGrafica.push(trim(item.value)); }
+                }
+                else if (index >= 51 && index <= 83) {
+                    var result = 0;
+                    if (datosGrafica.length == 4) {
+                        result = 0;
+                        if (dpdSuccion == dpdDescarga) {
+                            result = 0;
+                            item.value = result;
+                        }
+                        else {
+                            result = 0.001123 * Math.pow(parseInt(datosGrafica[0], 10), 2) / (Math.pow(dpdSuccion, 4) - Math.pow(dpdDescarga, 4));
+                            item.value = Math.round(result * 10) / 10;
+                        }
+                        datosGrafica.push(trim(item.value));
+                    } else if (datosGrafica.length == 6) {
+                        result = 0;
+                        result = (dpRPM / parseInt(datosGrafica[1], 10)) * parseInt(datosGrafica[0]);
+                        item.value = Math.round(result);
+                        datosGrafica.push(trim(item.value));
+                    } else if (datosGrafica.length == 7) {
+                        result = 0;
+                        result = Math.pow((dpRPM / parseInt(datosGrafica[1], 10)), 2) * (parseInt(datosGrafica[3], 10) - parseInt(datosGrafica[2], 10) + parseInt(datosGrafica[4], 10) - parseInt(datosGrafica[5], 10));
+                        item.value = Math.round(result);
+                        datosGrafica = [];
+                    }
+                    else { datosGrafica.push(trim(item.value)); }
+                }
+            });
+        }
+
+        function paintGraficaMotobomba() {
+            $("#flot-chart").css("width", "100%");
+            //var datosGrafica = []; var d2 = []; var d3 = []; var d4 = [];
+            var datosGrafica = []; var d1 = []; var d2 = []; var d3 = [];
+            $('.claseGraficaMotobomba').each(function (index, item) { var value = trim(item.value); datosGrafica.push(value); });
+
+            d1[0] = [parseInt(datosGrafica[22]), parseInt(datosGrafica[23])];
+            d1[1] = [parseInt(datosGrafica[30]), parseInt(datosGrafica[31])];
+            d1[2] = [parseInt(datosGrafica[38]), parseInt(datosGrafica[39])];
+            d1[3] = [parseInt(datosGrafica[46]), parseInt(datosGrafica[47])];
+
+            d2[0] = [parseInt(datosGrafica[6]), parseInt(datosGrafica[11])];
+            d2[1] = [parseInt(datosGrafica[7]), parseInt(datosGrafica[12])];
+            d2[2] = [parseInt(datosGrafica[8]), parseInt(datosGrafica[13])];
+            d2[3] = [parseInt(datosGrafica[9]), parseInt(datosGrafica[14])];
+            d2[4] = [parseInt(datosGrafica[10]), parseInt(datosGrafica[15])];
+
+            d3[0] = [parseInt(datosGrafica[57]), parseInt(datosGrafica[58])];
+            d3[1] = [parseInt(datosGrafica[65]), parseInt(datosGrafica[66])];
+            d3[2] = [parseInt(datosGrafica[73]), parseInt(datosGrafica[74])];
+            d3[3] = [parseInt(datosGrafica[81]), parseInt(datosGrafica[82])];
+
+            $("#flot-chart").length && $.plot($("#flot-chart"), [{
+                data: d1,
+                label: "Curva de Prueba de la Bomba"
+            }, {
+                data: d2,
+                label: "Curva de Fábrica de la Bomba"
+            }, {
+                data: d3,
+                label: "Curva de Prueba de la Bomba 2"
+            }],
+                {
+                    series: {
+                        lines: {
+                            show: true,
+                            lineWidth: 1,
+                            fill: true,
+                            fillColor: {
+                                colors: [{
+                                    opacity: 0.0
+                                }, {
+                                    opacity: 0.0
+                                }, {
+                                    opacity: 0.0
+                                }]
+                            }
+                        },
+                        points: {
+                            show: true
+                        },
+                        grow: {
+                            active: true,
+                            steps: 50
+                        },
+                        shadowSize: 2
+                    },
+                    grid: {
+                        hoverable: true,
+                        clickable: true,
+                        tickColor: "#f0f0f0",
+                        borderWidth: 0
+                    },
+                    colors: ["#FE2E2E", "#6783B7", "#8258FA"],
+                    xaxis: {
+                        //show: false
+                        axisLabel: 'Caudal (GPM)'
+                    },
+                    yaxis: {
+                        ticks: 5,
+                        axisLabel: 'Presión (PSI)'
+                    },
+                    tooltip: true,
+                    tooltipOpts: {
+                        content: "'%s' of %x.1 is %y.4",
+                        defaultTheme: false,
+                        shifts: {
+                            x: 0,
+                            y: 20
+                        }
+                    },
+                    legend: {
+                        //position: 'sw'
+                        noColumns: 3,
+                        margin: 7,
+                        container: $("#legend-container"),
+                    }
+                }
+            );
+        }
+        function paintGraficaElectrobomba() {
+            $("#flot-chart").css("width", "100%");
+            var datosGrafica = []; var d1 = []; var d2 = []; var d3 = []; var d4 = [];
+            $('.claseGraficaElectrobomba').each(function (index, item) { var value = trim(item.value); datosGrafica.push(value); });
+
+            d1[0] = [parseInt(datosGrafica[79]), parseInt(datosGrafica[89])];
+            d1[1] = [parseInt(datosGrafica[80]), parseInt(datosGrafica[90])];
+            d1[2] = [parseInt(datosGrafica[81]), parseInt(datosGrafica[91])];
+            d1[3] = [parseInt(datosGrafica[82]), parseInt(datosGrafica[92])];
+            d1[4] = [parseInt(datosGrafica[83]), parseInt(datosGrafica[93])];
+            //Linea Azul
+            d2[0] = [parseInt(datosGrafica[53]), parseInt(datosGrafica[8])];
+            d2[1] = [parseInt(datosGrafica[61]), parseInt(datosGrafica[16])];
+            d2[2] = [parseInt(datosGrafica[69]), parseInt(datosGrafica[24])];
+            d2[3] = [parseInt(datosGrafica[77]), parseInt(datosGrafica[32])];
+
+            d3[0] = [parseInt(datosGrafica[53]), parseInt(datosGrafica[54])];
+            d3[1] = [parseInt(datosGrafica[61]), parseInt(datosGrafica[62])];
+            d3[2] = [parseInt(datosGrafica[69]), parseInt(datosGrafica[70])];
+            d3[3] = [parseInt(datosGrafica[77]), parseInt(datosGrafica[78])];
+
+            d4[0] = [parseInt(datosGrafica[79]), parseInt(datosGrafica[84])];
+            d4[1] = [parseInt(datosGrafica[80]), parseInt(datosGrafica[85])];
+            d4[2] = [parseInt(datosGrafica[81]), parseInt(datosGrafica[86])];
+            d4[3] = [parseInt(datosGrafica[82]), parseInt(datosGrafica[87])];
+            d4[4] = [parseInt(datosGrafica[83]), parseInt(datosGrafica[88])];
+
+            $("#flot-chart").length && $.plot($("#flot-chart"), [{
+                data: d1,
+                label: "Curva de Fábrica del Motor"
+            }, {
+                data: d2,
+                label: "Curva de Prueba del Motor"
+            }, {
+                data: d3,
+                label: "Curva de Prueba de la Bomba",
+                yaxis: 2
+            }, {
+                data: d4,
+                label: "Curva de Fábrica de la Bomba",
+                yaxis: 2
+            }],
+                {
+                    series: {
+                        lines: {
+                            show: true,
+                            lineWidth: 1,
+                            fill: true,
+                            fillColor: {
+                                colors: [{
+                                    opacity: 0.0
+                                }, {
+                                    opacity: 0.0
+                                }, {
+                                    opacity: 0.0
+                                }, {
+                                    opacity: 0.0
+                                }]
+                            }
+                        },
+                        points: {
+                            show: true
+                        },
+                        grow: {
+                            active: true,
+                            steps: 50
+                        },
+                        shadowSize: 2
+                    },
+                    grid: {
+                        hoverable: true,
+                        clickable: true,
+                        tickColor: "#f0f0f0",
+                        borderWidth: 0
+                    },
+                    colors: ["#9900FF", "#6D9EEB", "#CC0000", "#93C47D"],
+                    axisLabels: {
+                        show: true
+                    },
+                    xaxes: [{
+                        axisLabel: 'Caudal (GPM)'
+                    }],
+                    yaxes: [{
+                        //label : "Potencia (BHP)",
+                        ticks: 5,
+                        position: "left",
+                        axisLabel: 'Potencia (BHP)'
+                    },
+                    {
+                        ticks: 5,
+                        position: "right",
+                        axisLabel: 'Presión (PSI)'
+                    }],
+                    tooltip: true,
+                    tooltipOpts: {
+                        content: "'%s' of %x.1 is %y.4",
+                        defaultTheme: false,
+                        shifts: {
+                            x: 0,
+                            y: 20
+                        }
+                    },
+                    legend: {
+                        //position: 'sw'
+                        noColumns: 4,
+                        margin: 7,
+                        container: $("#legend-container"),
+                    }
+                }
+            );
+        }
+
+        function pintarDatosFilaFirma(lista, idUsuario, fila) {
+            var urlAbsolute = ""; var img = "";
+            $.each(lista, function (x, item) {
+                if (item.IdUsuario == idUsuario) {
+                    $('#firmadigital' + fila).find("img").remove();
+                    if (item.RutaFirma) {
+                        $('#hddFirmaDigital' + fila).val(item.RutaFirma);
+                        urlAbsolute = "../../Content/images/" + item.RutaFirma;
+                        img = '<img src="' + urlAbsolute + '" />';//width="310" height="310"
+                        $('#firmadigital' + fila).append(img);
+                    } else { $('#hddFirmaDigital' + fila).val(""); }
+                    //$('#firmadigital' + fila).attr("src", urlAbsolute);
+                }
+            });
+        }
+        function eliminarFilaFirma(index) {
+            $("#firma" + index).remove();//eliminino una fila con el indice: producto1
+            //facturaDetalle.splice(index - 1, 1);//eliminio del array el elemento en la posicion  index-1
+            contaFirma--;
+        }
+        function actualizarEstadoRespuestas() {
+            var totalTabs = $("#tabProtocolo").children().length;
+            for (var i = 1; i <= totalTabs; i++) {
+                var totalito = $('.step' + i).length; var conta = 0;
+                $('.step' + i).each(function (index, element) {
+                    var val = trim($(element).val());
+                    if (val == '0' || val == '') conta++; //if (val.indexOf("0") > -1 || val.indexOf("") > -1) conta++;
+                });
+                var clase = "red";
+                if (totalito == conta) clase = "red";
+                else if (conta == 0) clase = "";
+                else if (conta > 0) clase = "warning";
+                $("#bg_tab" + i).removeClass("red warning");
+                $("#bg_tab" + i).addClass(clase);
+            }
+        }
+        function setRespuestas(idProtocolo, idPlantilla, idInmueble, idPeriodo) {
+            if (localStorage.getItem("respuestas_" + idProtocolo + idPlantilla + idInmueble + idPeriodo)) {
+                var respuestas = {}; respuestas = JSON.parse(localStorage.getItem("respuestas_" + idProtocolo + idPlantilla + idInmueble + idPeriodo));
+                $("#Codigo").val(respuestas.Codigo);
+                $("#NombreAreaProtegida").val(respuestas.NombreAreaProtegida);
+                $("#Direccion").val(respuestas.Direccion);
+                //$("#TipoPrueba").val(respuestas.TipoPrueba);
+                if (respuestas.TipoPrueba == "1") {
+                    $("#TipoPrueba1").prop('checked', true);
+                }
+                else {
+                    $("#TipoPrueba2").prop('checked', true);
+                }
+                $("#Fecha").val(respuestas.StrFecha);
+                $("#HoraInicio").val(respuestas.HoraInicio);
+                $("#MinutoInicio").val(respuestas.MinutoInicio);
+                for (var i = 0; i < respuestas.GroupIdTableBody.length; i++) {
+                    $("#tag" + respuestas.GroupIdTableBody[i]).val(respuestas.GroupDescripcion[i]);
+                }
+            }
+        }
+        function hostReachable() {
+            // Handle IE and more capable browsers
+            var xhr = new (window.ActiveXObject || XMLHttpRequest)("Microsoft.XMLHTTP");
+            var status;
+            var server = window.location.hostname;
+            if (window.location.port != '') {
+                server += ':' + window.location.port;
+            }
+            // Open new request as a HEAD to the root hostname with a random param to bust the cache
+            xhr.open("HEAD", "//" + server + "/?rand=" + Math.floor((1 + Math.random()) * 0x10000), false);
+            // Issue request and handle response
+            try {
+                xhr.send();
+                return (xhr.status >= 200 && xhr.status < 300 || xhr.status === 304);
+            } catch (error) {
+                return false;
+            }
+        }
+        function drawSelect(id, lista, respuesta, tipoClase, stepName, claseAlternativa) {
+            var select = "", selected = "", clase = "";
+            switch (tipoClase) {
+                case 1: clase = "form-control hour parsley-validated rounded " + claseAlternativa; break;
+                case 2: clase = "form-control input-sm parsley-validated GroupDescripcion rounded " + stepName + claseAlternativa; break;
+                default: clase = "form-control parsley-validated GroupDescripcion " + stepName + claseAlternativa; break;
+            }
+            select = '<select id="' + id + '" class = "' + clase + '" style = "width: auto;"' + desactivar + '>';
+            $.each(lista, function (x, item) {
+                if (item.IdOpcion == respuesta) selected = "selected"; else selected = "";
+                select += '<option value="' + item.IdOpcion + '" data-puntaje="' + item.Puntaje + '" ' + selected + '>' + item.NombreOpcion + '</option>';
+            });
+            select += '</select>';
+            return select;
+        }
+        function drawSelectFirma(id, lista, respuesta, fila) {
+            var select = "", selected = "", clase = "";
+            clase = "rounded form-control input-sm parsley-validated GroupDescripcion SelectFirmas";
+            select = '<select id="' + id + '" class = "' + clase + '" style = "width: auto;" data-fila = "' + fila + '"' + desactivar + '>';
+            $.each(lista, function (x, item) {
+                if (item.IdUsuario == respuesta) selected = "selected"; else selected = "";
+                select += '<option value="' + item.IdUsuario + '" ' + selected + '>' + item.Nombre + '</option>';
+            });
+            select += '</select>';
+            return select;
+        }
+        function removeNull(value) {
+            var valor = (value == null) ? "" : value;
+            return valor;
+        }
+        function formatDate(stringDate) {
+            var date = new Date(parseInt(stringDate.substr(6)));
+            return new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes())
+        }
+        function trim(cadena) {
+            cadena = cadena.replace(/^\s+/, '').replace(/\s+$/, '');
+            return (cadena);
+        }
+        function AddRemoveValidation(value, element) {
+            if (element[0].tagName.toLowerCase() == "input" && value === '') element.addClass("selectedItem");
+            else if (element[0].tagName.toLowerCase() == "select" && value === '0') element.addClass("selectedItem");
+            else element.removeClass("selectedItem");
+        }
+        function calcularPuntaje() {
+            var elements = $(".GroupDescripcion").not("input").toArray();//$("#tag5 option:selected").data("puntos")
+            var score = 0;
+            $.each(elements, function (x, item) {
+                score += $(item).find("option:selected").data("puntaje");
+            });
+            $("#puntuacion").val(score);
+        }
 
 
 
-</script>
+    </script>
 
 }
 @{
@@ -1060,18 +1033,20 @@
                                         </div>
                                     </div>
                                 </section>
-                                <div class="line line-dashed line-lg pull-in"></div>
+                                @*<div class="line line-dashed line-lg pull-in"></div>*@
                                 <input type="hidden" id="IdProtocolo" />
                                 <input type="hidden" id="IdPlantilla" />
                                 <input type="hidden" id="IdInmueble" />
                                 <input type="hidden" id="IdPeriodo" />
                             </div>
                             <footer class="panel-footer text-right bg-light lter">
-                                @*<button type="button" id="btnGuardar" class="btn btn-s-xs btn-success btn-rounded">Guardar</button>*@
-                                <input type="button" id="btnGuardar" class="btn btn-s-xs btn-success btn-rounded" value="Guardar" />
-                                @*<button type="button" id="btnFinalizar" class="btn btn-s-xs btn-info btn-rounded">Finalizar</button>*@
+                                @if (ViewBag.IdRol != 4)
+                                {
+                                    <input type="button" id="btnGuardar" class="btn btn-s-xs btn-success btn-rounded" value="Guardar" />
+                                }
                                 <a class="btn btn-s-xs btn-danger btn-rounded" href="@Url.Action("Protocolos", new { inmueble = @ViewBag.IdInmueble, periodo = @ViewBag.IdPeriodo })">Salir</a>
                             </footer>
+
                         </section>
                     </div>
                 </div>

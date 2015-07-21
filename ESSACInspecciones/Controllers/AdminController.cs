@@ -911,12 +911,12 @@ namespace ESSACInspecciones.Controllers
 
             if (protocoloANX)
             {
-                doc = new Document(PageSize.A4.Rotate(), 0f, 0f, 0f, 0f);
+                doc = new Document(PageSize.A4.Rotate(), 20f, 20f, 20f, 20f);
                 numColumns = esProtocoloAnexo(protocolo.Plantilla.Nombre);
             }
             else
             {
-                doc = new Document(PageSize.A4, 0f, 0f, 0f, 0f);
+                doc = new Document(PageSize.A4, 20f, 20f, 20f, 20f);
             }
             PdfWriter writer = PdfWriter.GetInstance(doc, ms);
 
@@ -971,6 +971,8 @@ namespace ESSACInspecciones.Controllers
 
             //Cabecera del protocolo
             PdfPTable tableHeader = new PdfPTable(12);
+            tableHeader.WidthPercentage = 100f;
+            tableHeader.HorizontalAlignment = Element.ALIGN_JUSTIFIED_ALL;
             PdfPCell cellHeader = new PdfPCell();
             cellHeader.Colspan = 6;
             cellHeader.Phrase = new Phrase("Nombre del Área Protegida:", myFontTextH12_B);
@@ -993,7 +995,17 @@ namespace ESSACInspecciones.Controllers
 
             cellHeader.Phrase = new Phrase("Tipo de prueba:", myFontTextH12_B);
             tableHeader.AddCell(cellHeader);
-            cellHeader.Phrase = new Phrase(protocolo.TipoPrueba == "1" ? "Recepción del sistema" : "Pruebas periódicas anuales", myFontTextH12_blue);
+            string miTipoPrueba = "No se asigno el tipo de prueba";
+            if(protocolo.TipoPrueba == "1")
+            {
+                miTipoPrueba = "Recepción del sistema";
+            }
+            else if(protocolo.TipoPrueba == "2")
+            {
+                miTipoPrueba = "Pruebas periódicas anuales";
+            }
+
+            cellHeader.Phrase = new Phrase(miTipoPrueba, myFontTextH12_blue);
             tableHeader.AddCell(cellHeader);
 
             doc.Add(tableHeader);
@@ -1024,16 +1036,19 @@ namespace ESSACInspecciones.Controllers
                     if (esAnexo != 0)
                     {
                         doc.SetPageSize(iTextSharp.text.PageSize.A4.Rotate());
-                        doc.SetMargins(1, 1, 1, 1);
+                        doc.SetMargins(20f, 20f, 20f, 20f);
                         doc.NewPage();
                     }
                     else
                     {
                         doc.SetPageSize(PageSize.A4);
+                        doc.SetMargins(20f, 20f, 20f, 20f);
                     }
                 }
 
                 PdfPTable tableSeccion = new PdfPTable(numColumns);
+                tableSeccion.WidthPercentage = 100f;
+                tableSeccion.HorizontalAlignment = Element.ALIGN_JUSTIFIED_ALL;
                 //tableSeccion.HorizontalAlignment = Element.ALIGN_JUSTIFIED;
                 PdfPCell cellSeccion = new PdfPCell();
                 cellSeccion.Colspan = numColumns;
