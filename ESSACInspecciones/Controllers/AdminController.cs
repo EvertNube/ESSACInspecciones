@@ -920,7 +920,7 @@ namespace ESSACInspecciones.Controllers
             }
             PdfWriter writer = PdfWriter.GetInstance(doc, ms);
 
-            pic1.SetAbsolutePosition(doc.PageSize.Width - 150, doc.PageSize.Height - 45);
+            pic1.SetAbsolutePosition(doc.PageSize.Width - 155, doc.PageSize.Height - 55);
 
             //pic1.Alignment = Image.TEXTWRAP | Image.ALIGN_RIGHT;
             if (pic1.Height > pic1.Width)
@@ -943,7 +943,7 @@ namespace ESSACInspecciones.Controllers
             string miCodigo = (protocolo.Codigo != null) ? protocolo.Codigo : "N/A";
             Paragraph CodigoProtocolo = new Paragraph(miCodigo, myFontTextH12);
             CodigoProtocolo.Alignment = Element.ALIGN_JUSTIFIED;
-            CodigoProtocolo.IndentationLeft = 55;
+            //CodigoProtocolo.IndentationLeft = 55;
             //pic1.IndentationLeft = 9f;
             //pic1.SpacingAfter = 9f;
             //pic1.BorderWidthTop = 36f;
@@ -952,8 +952,7 @@ namespace ESSACInspecciones.Controllers
             doc.Add(CodigoProtocolo);
 
             Paragraph Titulo = new Paragraph();
-            Titulo.SpacingBefore = 20;
-            Titulo.IndentationLeft = 55;
+            Titulo.SpacingBefore = 5;
             Titulo.Alignment = Element.ALIGN_JUSTIFIED;
             Titulo.Add(new Phrase(protocolo.Plantilla.Nombre, myFontTitle18_B));
             Titulo.SpacingAfter = 2;
@@ -961,13 +960,12 @@ namespace ESSACInspecciones.Controllers
             doc.Add(Titulo);
             
             Paragraph SubTitulo = new Paragraph(protocolo.Plantilla.Nombre2, myFontTitle15);
-            SubTitulo.SpacingBefore = 20;
-            SubTitulo.IndentationLeft = 55;
+            SubTitulo.SpacingBefore = 7;
+            //SubTitulo.IndentationLeft = 55;
             SubTitulo.Alignment = Element.ALIGN_CENTER;
             SubTitulo.SpacingAfter = 2;
 
             doc.Add(SubTitulo);
-            //doc.Add(new Paragraph(" "));
 
             //Cabecera del protocolo
             PdfPTable tableHeader = new PdfPTable(12);
@@ -1167,10 +1165,10 @@ namespace ESSACInspecciones.Controllers
                 case "CCTV":
                     return 32;
                 //ANX de Intrusion - Completo
-                case "ANX de Intrusion":
+                case "ANEXO DE INTRUSIÓN":
                     return 19;
                 //ANX Control de Acceso - Completo
-                case "ANX Control de Acceso":
+                case "ANEXO DE CONTROL DE ACCESO":
                     return 12;
                 //INSPECCIÓN DE LECTORAS - Completo
                 case "INSPECCIÓN DE LECTORAS":
