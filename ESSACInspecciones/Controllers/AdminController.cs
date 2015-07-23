@@ -1095,8 +1095,13 @@ namespace ESSACInspecciones.Controllers
                     tableSeccion.AddCell(cellSeccionBody);
                 }
 
+                bool ultimaSeccionGrafica = false;
                 foreach (var SubSeccion in Seccion.SubSecciones)
                 {
+                    if (SubSeccion == Seccion.SubSecciones.Last() && Seccion.Nombre == "RESULTADOS DE LA PRUEBA DE LA BOMBA CONTRA INCENDIO")
+                    {
+                        ultimaSeccionGrafica = true;
+                    }
                     PdfPCell cellSubSeccion = new PdfPCell();
                     cellSubSeccion.Colspan = numColumns;
                     cellSubSeccion.Phrase = new Phrase(SubSeccion.Nombre, myFontText10_B);
@@ -1142,9 +1147,32 @@ namespace ESSACInspecciones.Controllers
                         }
                         tableSeccion.AddCell(cellSubSeccionBody);
                     }
+
+                    if (ultimaSeccionGrafica)
+                    {
+                        var image = Image.GetInstance(CrearGrafica());
+                        //image.Alignment = Element.ALIGN_CENTER;
+                        image.ScalePercent(95f);
+                        //image.SpacingBefore = 10f;
+                        //image.SpacingAfter = 10f;
+                        PdfPCell imageCell = new PdfPCell(image);
+                        imageCell.Rowspan = 1;
+                        imageCell.Colspan = 12;
+                        imageCell.Padding = 1f;
+                        //imageCell.HorizontalAlignment = Element.ALIGN_CENTER;
+                        //imageCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+
+
+                        //imageCell.Rowspan = 5;
+                        //imageCell.Colspan = 12;
+                        tableSeccion.AddCell(imageCell);
+                    }
                 }
                 doc.Add(tableSeccion);
                 doc.Add(new Paragraph(" "));
+
+                //Grafica
+                
             }
 
             doc.Close();
@@ -1226,22 +1254,59 @@ namespace ESSACInspecciones.Controllers
 
         }
 
-        private Byte CrearGrafica()
+        private Byte[] CrearGrafica()
         {
             var chart = new Chart
             {
-                Width = 300,
-                Height = 450,
-                RenderType = RenderType.ImageTag,
+                Width = 580,
+                Height = 230
+                /*RenderType = RenderType.ImageTag,
                 AntiAliasing = AntiAliasingStyles.All,
-                TextAntiAliasingQuality = TextAntiAliasingQuality.High
+                TextAntiAliasingQuality = TextAntiAliasingQuality.High*/
             };
+
+            //chart.Titles.Add("Sales By Employee");
+            //chart.Titles[0].Font = new System.Drawing.Font("Arial", 12f);
+
+            chart.ChartAreas.Add("");
+            chart.ChartAreas[0].AxisX.Title = "Caudal (GPM)";
+            chart.ChartAreas[0].AxisY.Title = "Potencia (BHP)";
+            chart.ChartAreas[0].AxisX.MajorGrid.LineColor = System.Drawing.Color.LightGray;
+            chart.ChartAreas[0].AxisY.MajorGrid.LineColor = System.Drawing.Color.LightGray;
+            //chart.ChartAreas[0].AxisX.TitleFont = new System.Drawing.Font("Arial", 10f);
+            //chart.ChartAreas[0].AxisY.TitleFont = new System.Drawing.Font("Arial", 10f);
+            chart.ChartAreas[0].AxisX.LabelStyle.Font = new System.Drawing.Font("Arial", 8f);
+            chart.ChartAreas[0].AxisY.LabelStyle.Font = new System.Drawing.Font("Arial", 8f);
+            chart.ChartAreas[0].AxisY2.LabelStyle.Font = new System.Drawing.Font("Arial", 8f);
+            chart.ChartAreas[0].AxisY2.MajorGrid.LineColor = System.Drawing.Color.LightGray;
+            chart.ChartAreas[0].AxisY2.Enabled = AxisEnabled.True;
+            chart.ChartAreas[0].AxisY2.Title = "Presión (PSI)";
+            //chart.ChartAreas[0].AxisX.LabelStyle.Angle = -90;
+            chart.ChartAreas[0].BackColor = System.Drawing.Color.White;
+            //---------------------------
+
+            var series = new Series();
+            series.Name = "Series1";
+            series.ChartType = SeriesChartType.Line;
+            //series.XValueType = ChartValueType.DateTime;
+            chart.Series.Add(series);
+
+            //chart.Series.Add("");
+            //chart.Series[0].ChartType = SeriesChartType.Column;
+
+            for (int i = 0; i < 20; i++ )
+            {
+                chart.Series[0].Points.AddXY(i, Convert.ToDouble(new Random((int)DateTime.Now.Ticks).Next(1, 30)));
+                chart.Series[0].Label = "Y = " + i.ToString();
+
+            }
 
             using (var chartimage = new MemoryStream())
             {
                 chart.SaveImage(chartimage, System.Web.UI.DataVisualization.Charting.ChartImageFormat.Png);
+                return chartimage.GetBuffer();
             }
-            return new Byte();
+            //return new Byte();
         }
 
         [HttpGet]
