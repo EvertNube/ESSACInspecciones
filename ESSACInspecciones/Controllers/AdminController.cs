@@ -1098,9 +1098,13 @@ namespace ESSACInspecciones.Controllers
                 bool ultimaSeccionGrafica = false;
                 foreach (var SubSeccion in Seccion.SubSecciones)
                 {
-                    if (SubSeccion == Seccion.SubSecciones.Last() && Seccion.Nombre == "RESULTADOS DE LA PRUEBA DE LA BOMBA CONTRA INCENDIO")
+                    //Validacion de la plantilla para imprimir la grafica posteriormente
+                    if (protocolo.IdPlantilla == 4 || protocolo.IdPlantilla == 5)
                     {
-                        ultimaSeccionGrafica = true;
+                        if (SubSeccion == Seccion.SubSecciones.Last() && Seccion.Nombre == "RESULTADOS DE LA PRUEBA DE LA BOMBA CONTRA INCENDIO")
+                        { 
+                            ultimaSeccionGrafica = true;
+                        }
                     }
                     PdfPCell cellSubSeccion = new PdfPCell();
                     cellSubSeccion.Colspan = numColumns;
@@ -1150,7 +1154,7 @@ namespace ESSACInspecciones.Controllers
 
                     if (ultimaSeccionGrafica)
                     {
-                        var image = Image.GetInstance(CrearGrafica());
+                        var image = Image.GetInstance(CrearGrafica(protocolo));
                         //image.Alignment = Element.ALIGN_CENTER;
                         image.ScalePercent(95f);
                         //image.SpacingBefore = 10f;
@@ -1254,51 +1258,18 @@ namespace ESSACInspecciones.Controllers
 
         }
 
-        private Byte[] CrearGrafica()
+        private Byte[] CrearGrafica(ProtocoloDTO protocolo)
         {
-            var chart = new Chart
+            Chart chart = new Chart();
+
+            switch(protocolo.IdPlantilla)
             {
-                Width = 580,
-                Height = 230
-                /*RenderType = RenderType.ImageTag,
-                AntiAliasing = AntiAliasingStyles.All,
-                TextAntiAliasingQuality = TextAntiAliasingQuality.High*/
-            };
-
-            //chart.Titles.Add("Sales By Employee");
-            //chart.Titles[0].Font = new System.Drawing.Font("Arial", 12f);
-
-            chart.ChartAreas.Add("");
-            chart.ChartAreas[0].AxisX.Title = "Caudal (GPM)";
-            chart.ChartAreas[0].AxisY.Title = "Potencia (BHP)";
-            chart.ChartAreas[0].AxisX.MajorGrid.LineColor = System.Drawing.Color.LightGray;
-            chart.ChartAreas[0].AxisY.MajorGrid.LineColor = System.Drawing.Color.LightGray;
-            //chart.ChartAreas[0].AxisX.TitleFont = new System.Drawing.Font("Arial", 10f);
-            //chart.ChartAreas[0].AxisY.TitleFont = new System.Drawing.Font("Arial", 10f);
-            chart.ChartAreas[0].AxisX.LabelStyle.Font = new System.Drawing.Font("Arial", 8f);
-            chart.ChartAreas[0].AxisY.LabelStyle.Font = new System.Drawing.Font("Arial", 8f);
-            chart.ChartAreas[0].AxisY2.LabelStyle.Font = new System.Drawing.Font("Arial", 8f);
-            chart.ChartAreas[0].AxisY2.MajorGrid.LineColor = System.Drawing.Color.LightGray;
-            chart.ChartAreas[0].AxisY2.Enabled = AxisEnabled.True;
-            chart.ChartAreas[0].AxisY2.Title = "Presión (PSI)";
-            //chart.ChartAreas[0].AxisX.LabelStyle.Angle = -90;
-            chart.ChartAreas[0].BackColor = System.Drawing.Color.White;
-            //---------------------------
-
-            var series = new Series();
-            series.Name = "Series1";
-            series.ChartType = SeriesChartType.Line;
-            //series.XValueType = ChartValueType.DateTime;
-            chart.Series.Add(series);
-
-            //chart.Series.Add("");
-            //chart.Series[0].ChartType = SeriesChartType.Column;
-
-            for (int i = 0; i < 20; i++ )
-            {
-                chart.Series[0].Points.AddXY(i, Convert.ToDouble(new Random((int)DateTime.Now.Ticks).Next(1, 30)));
-                chart.Series[0].Label = "Y = " + i.ToString();
-
+                case 4:
+                    chart = CrearGraficaElectrobomba(protocolo);
+                    break;
+                case 5:
+                    chart = CrearGraficaMotobomba(protocolo);
+                    break;
             }
 
             using (var chartimage = new MemoryStream())
@@ -1306,7 +1277,261 @@ namespace ESSACInspecciones.Controllers
                 chart.SaveImage(chartimage, System.Web.UI.DataVisualization.Charting.ChartImageFormat.Png);
                 return chartimage.GetBuffer();
             }
-            //return new Byte();
+        }
+
+        private Chart CrearGraficaElectrobomba(ProtocoloDTO protocolo)
+        {
+            Chart chart = new Chart { Width = 580, Height = 230 };
+
+            var chartArea = new ChartArea();
+
+            chartArea.AxisY2.Enabled = AxisEnabled.True;
+            chartArea.AxisX2.LabelStyle.Enabled = true;
+
+            chartArea.AxisX.Title = "Caudal (GPM)";
+            chartArea.AxisY.Title = "Potencia (BHP)";
+            chartArea.AxisY2.Title = "Presión (PSI)";
+
+            chartArea.AxisX.MajorGrid.LineColor = System.Drawing.Color.LightGray;
+            chartArea.AxisY.MajorGrid.LineColor = System.Drawing.Color.LightGray;
+            chartArea.AxisY2.MajorGrid.LineColor = System.Drawing.Color.LightGray;
+
+            chartArea.AxisX.LabelAutoFitStyle = LabelAutoFitStyles.None;
+            chartArea.AxisY.LabelAutoFitStyle = LabelAutoFitStyles.None;
+            chartArea.AxisY2.LabelAutoFitStyle = LabelAutoFitStyles.None;
+
+            chartArea.AxisX.LabelStyle.Font = new System.Drawing.Font("Segoe UI", 8f);
+            chartArea.AxisY.LabelStyle.Font = new System.Drawing.Font("Segoe UI", 8f);
+            chartArea.AxisY2.LabelStyle.Font = new System.Drawing.Font("Segoe UI", 8f);
+
+            //chart.ChartAreas[0].AxisX.LabelStyle.Angle = -90;
+            chartArea.BackColor = System.Drawing.Color.White;
+            chart.ChartAreas.Add(chartArea);
+
+            //Ubicar seccion
+            string busSeccion = "RESULTADOS DE LA PRUEBA DE LA BOMBA CONTRA INCENDIO";
+            SeccionDTO miSeccion = protocolo.Secciones.Single(x => x.Nombre == busSeccion);
+
+            Double temp;
+            List<Double> datosGrafica = new List<Double>();
+
+            Double numTemp;
+            //Obtencion de datos para imprimir la grafica
+            foreach(var subSeccion in miSeccion.SubSecciones)
+            {
+                foreach(var SubSeccionBody in subSeccion.SeccionBodys)
+                {
+                    if(SubSeccionBody.IdTipoTag == 2)
+                    {
+                        if (Double.TryParse(SubSeccionBody.Respuesta, out temp))
+                        {
+                            numTemp = Double.Parse(SubSeccionBody.Respuesta, CultureInfo.InvariantCulture);
+                            if (!Double.IsNaN(numTemp))
+                            {
+                                datosGrafica.Add(numTemp);
+                            }
+                            else
+                            {
+                                datosGrafica.Add(0);
+                            }
+                        }
+                        else
+                        {
+                            datosGrafica.Add(0);
+                        }
+                    }
+                }
+            }
+
+            Series line1 = new Series("Curva de Fábrica del Motor");
+            Series line2 = new Series("Curva de Prueba del Motor");
+            Series line3 = new Series("Curva de Prueba de la Bomba");
+            Series line4 = new Series("Curva de Fábrica de la Bomba");
+
+            line1.ChartType = SeriesChartType.Line;
+            line2.ChartType = SeriesChartType.Line;
+            line3.ChartType = SeriesChartType.Line;
+            line4.ChartType = SeriesChartType.Line;
+
+            line1.Color = System.Drawing.Color.FromArgb(153, 0, 255);
+            line2.Color = System.Drawing.Color.FromArgb(109, 158, 235);
+            line3.Color = System.Drawing.Color.FromArgb(204, 0, 0);
+            line4.Color = System.Drawing.Color.FromArgb(147, 196, 125);
+
+            line1.Font = new System.Drawing.Font("Segoe UI", 7f);
+            line2.Font = new System.Drawing.Font("Segoe UI", 7f);
+            line3.Font = new System.Drawing.Font("Segoe UI", 7f);
+            line4.Font = new System.Drawing.Font("Segoe UI", 7f);
+
+            if (datosGrafica[79] != 0 || datosGrafica[89] != 0) line1.Points.Add(new DataPoint(datosGrafica[79], datosGrafica[89]));
+            if (datosGrafica[80] != 0 || datosGrafica[90] != 0) line1.Points.Add(new DataPoint(datosGrafica[80], datosGrafica[90]));
+            if (datosGrafica[81] != 0 || datosGrafica[91] != 0) line1.Points.Add(new DataPoint(datosGrafica[81], datosGrafica[91]));
+            if (datosGrafica[82] != 0 || datosGrafica[92] != 0) line1.Points.Add(new DataPoint(datosGrafica[82], datosGrafica[92]));
+            if (datosGrafica[83] != 0 || datosGrafica[93] != 0) line1.Points.Add(new DataPoint(datosGrafica[83], datosGrafica[93]));
+
+            if (datosGrafica[53] != 0 || datosGrafica[8] != 0) line2.Points.Add(new DataPoint(datosGrafica[53], datosGrafica[8]));
+            if (datosGrafica[61] != 0 || datosGrafica[16] != 0) line2.Points.Add(new DataPoint(datosGrafica[61], datosGrafica[16]));
+            if (datosGrafica[69] != 0 || datosGrafica[24] != 0) line2.Points.Add(new DataPoint(datosGrafica[69], datosGrafica[24]));
+            if (datosGrafica[77] != 0 || datosGrafica[32] != 0) line2.Points.Add(new DataPoint(datosGrafica[77], datosGrafica[32]));
+
+            if (datosGrafica[53] != 0 || datosGrafica[54] != 0) line3.Points.Add(new DataPoint(datosGrafica[53], datosGrafica[54]));
+            if (datosGrafica[61] != 0 || datosGrafica[62] != 0) line3.Points.Add(new DataPoint(datosGrafica[61], datosGrafica[62]));
+            if (datosGrafica[69] != 0 || datosGrafica[70] != 0) line3.Points.Add(new DataPoint(datosGrafica[69], datosGrafica[70]));
+            if (datosGrafica[77] != 0 || datosGrafica[78] != 0) line3.Points.Add(new DataPoint(datosGrafica[77], datosGrafica[78]));
+
+            if (datosGrafica[79] != 0 || datosGrafica[84] != 0) line4.Points.Add(new DataPoint(datosGrafica[79], datosGrafica[84]));
+            if (datosGrafica[80] != 0 || datosGrafica[85] != 0) line4.Points.Add(new DataPoint(datosGrafica[80], datosGrafica[85]));
+            if (datosGrafica[81] != 0 || datosGrafica[86] != 0) line4.Points.Add(new DataPoint(datosGrafica[81], datosGrafica[86]));
+            if (datosGrafica[82] != 0 || datosGrafica[87] != 0) line4.Points.Add(new DataPoint(datosGrafica[82], datosGrafica[87]));
+            if (datosGrafica[83] != 0 || datosGrafica[88] != 0) line4.Points.Add(new DataPoint(datosGrafica[83], datosGrafica[88]));
+
+            foreach (var point in line1.Points)
+            {
+                point.Label = "(" + point.XValue.ToString() + ", " + point.YValues[0].ToString() + ")";
+                point.MarkerStyle = MarkerStyle.Circle;
+                point.MarkerSize = 7;
+            }
+            foreach (var point in line2.Points)
+            {
+                point.Label = "(" + point.XValue.ToString() + ", " + point.YValues[0].ToString() + ")";
+                point.MarkerStyle = MarkerStyle.Circle;
+                point.MarkerSize = 7;
+            }
+            foreach (var point in line3.Points)
+            {
+                point.Label = "(" + point.XValue.ToString() + ", " + point.YValues[0].ToString() + ")";
+                point.MarkerStyle = MarkerStyle.Circle;
+                point.MarkerSize = 7;
+            }
+            foreach (var point in line4.Points)
+            {
+                point.Label = "(" + point.XValue.ToString() + ", " + point.YValues[0].ToString() + ")";
+                point.MarkerStyle = MarkerStyle.Circle;
+                point.MarkerSize = 7;
+            }
+
+            line3.YAxisType = AxisType.Secondary;
+            line4.YAxisType = AxisType.Secondary;
+
+            chart.Series.Add(line1);
+            chart.Series.Add(line2);
+            chart.Series.Add(line3);
+            chart.Series.Add(line4);
+
+            return chart;
+        }
+        private Chart CrearGraficaMotobomba(ProtocoloDTO protocolo)
+        {
+            Chart chart = new Chart { Width = 580, Height = 230 };
+
+            var chartArea = new ChartArea();
+
+            chartArea.AxisX.Title = "Caudal (GPM)";
+            chartArea.AxisY.Title = "Presión (PSI)";
+
+            chartArea.AxisX.MajorGrid.LineColor = System.Drawing.Color.LightGray;
+            chartArea.AxisY.MajorGrid.LineColor = System.Drawing.Color.LightGray;
+
+            chartArea.AxisX.LabelAutoFitStyle = LabelAutoFitStyles.None;
+            chartArea.AxisY.LabelAutoFitStyle = LabelAutoFitStyles.None;
+
+            chartArea.AxisX.LabelStyle.Font = new System.Drawing.Font("Segoe UI", 8f);
+            chartArea.AxisY.LabelStyle.Font = new System.Drawing.Font("Segoe UI", 8f);
+
+            chartArea.BackColor = System.Drawing.Color.White;
+            chart.ChartAreas.Add(chartArea);
+
+            //Ubicar seccion
+            string busSeccion = "RESULTADOS DE LA PRUEBA DE LA BOMBA CONTRA INCENDIO";
+            SeccionDTO miSeccion = protocolo.Secciones.Single(x => x.Nombre == busSeccion);
+
+            Double temp;
+            List<Double> datosGrafica = new List<Double>();
+
+            Double numTemp;
+            //Obtencion de datos para imprimir la grafica
+            foreach (var subSeccion in miSeccion.SubSecciones)
+            {
+                foreach (var SubSeccionBody in subSeccion.SeccionBodys)
+                {
+                    if (SubSeccionBody.IdTipoTag == 2)
+                    {
+                        if (Double.TryParse(SubSeccionBody.Respuesta, out temp))
+                        {
+                            numTemp = Double.Parse(SubSeccionBody.Respuesta, CultureInfo.InvariantCulture);
+                            if(!Double.IsNaN(numTemp))
+                            { 
+                                datosGrafica.Add(numTemp);
+                            }
+                            else
+                            {
+                                datosGrafica.Add(0);
+                            }
+                        }
+                        else
+                        {
+                            datosGrafica.Add(0);
+                        }
+                    }
+                }
+            }
+
+            Series line1 = new Series("Curva de Prueba de la Bomba");
+            Series line2 = new Series("Curva de Fábrica de la Bomba");
+            Series line3 = new Series("Curva de Prueba de la Bomba 2");
+
+            line1.ChartType = SeriesChartType.Line;
+            line2.ChartType = SeriesChartType.Line;
+            line3.ChartType = SeriesChartType.Line;
+
+            line1.Color = System.Drawing.Color.FromArgb(254, 46, 46);
+            line2.Color = System.Drawing.Color.FromArgb(103, 131, 183);
+            line3.Color = System.Drawing.Color.FromArgb(130, 88, 250);
+
+            line1.Font = new System.Drawing.Font("Segoe UI", 7f);
+            line2.Font = new System.Drawing.Font("Segoe UI", 7f);
+            line3.Font = new System.Drawing.Font("Segoe UI", 7f);
+
+            if (datosGrafica[22] != 0 || datosGrafica[23] != 0) line1.Points.Add(new DataPoint(datosGrafica[22], datosGrafica[23]));
+            if (datosGrafica[30] != 0 || datosGrafica[31] != 0) line1.Points.Add(new DataPoint(datosGrafica[30], datosGrafica[31]));
+            if (datosGrafica[38] != 0 || datosGrafica[39] != 0) line1.Points.Add(new DataPoint(datosGrafica[38], datosGrafica[39]));
+            if (datosGrafica[46] != 0 || datosGrafica[47] != 0) line1.Points.Add(new DataPoint(datosGrafica[46], datosGrafica[47]));
+
+            if (datosGrafica[6] != 0 || datosGrafica[11] != 0) line2.Points.Add(new DataPoint(datosGrafica[6], datosGrafica[11]));
+            if (datosGrafica[7] != 0 || datosGrafica[12] != 0) line2.Points.Add(new DataPoint(datosGrafica[7], datosGrafica[12]));
+            if (datosGrafica[8] != 0 || datosGrafica[13] != 0) line2.Points.Add(new DataPoint(datosGrafica[8], datosGrafica[13]));
+            if (datosGrafica[9] != 0 || datosGrafica[14] != 0) line2.Points.Add(new DataPoint(datosGrafica[9], datosGrafica[14]));
+            if (datosGrafica[10] != 0 || datosGrafica[15] != 0) line2.Points.Add(new DataPoint(datosGrafica[10], datosGrafica[15]));
+
+            if (datosGrafica[57] != 0 || datosGrafica[58] != 0) line3.Points.Add(new DataPoint(datosGrafica[57], datosGrafica[58]));
+            if (datosGrafica[65] != 0 || datosGrafica[66] != 0) line3.Points.Add(new DataPoint(datosGrafica[65], datosGrafica[66]));
+            if (datosGrafica[73] != 0 || datosGrafica[74] != 0) line3.Points.Add(new DataPoint(datosGrafica[73], datosGrafica[74]));
+            if (datosGrafica[81] != 0 || datosGrafica[82] != 0) line3.Points.Add(new DataPoint(datosGrafica[81], datosGrafica[82]));
+
+            foreach (var point in line1.Points)
+            {
+                point.Label = "(" + point.XValue.ToString() + ", " + point.YValues[0].ToString() + ")";
+                point.MarkerStyle = MarkerStyle.Circle;
+                point.MarkerSize = 7;
+            }
+            foreach (var point in line2.Points)
+            {
+                point.Label = "(" + point.XValue.ToString() + ", " + point.YValues[0].ToString() + ")";
+                point.MarkerStyle = MarkerStyle.Circle;
+                point.MarkerSize = 7;
+            }
+            foreach (var point in line3.Points)
+            {
+                point.Label = "(" + point.XValue.ToString() + ", " + point.YValues[0].ToString() + ")";
+                point.MarkerStyle = MarkerStyle.Circle;
+                point.MarkerSize = 7;
+            }
+
+            chart.Series.Add(line1);
+            chart.Series.Add(line2);
+            chart.Series.Add(line3);
+
+            return chart;
         }
 
         [HttpGet]
