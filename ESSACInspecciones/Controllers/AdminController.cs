@@ -1281,7 +1281,7 @@ namespace ESSACInspecciones.Controllers
 
         private Chart CrearGraficaElectrobomba(ProtocoloDTO protocolo)
         {
-            Chart chart = new Chart { Width = 580, Height = 230 };
+            Chart chart = new Chart { Width = 580, Height = 280 };
 
             var chartArea = new ChartArea();
 
@@ -1418,11 +1418,19 @@ namespace ESSACInspecciones.Controllers
             chart.Series.Add(line3);
             chart.Series.Add(line4);
 
+            //Leyendas
+            Legend legend = new Legend();
+            legend.Name = "Leyenda";
+            legend.Alignment = System.Drawing.StringAlignment.Center;
+            legend.Docking = Docking.Bottom;
+
+            chart.Legends.Add(legend);
+
             return chart;
         }
         private Chart CrearGraficaMotobomba(ProtocoloDTO protocolo)
         {
-            Chart chart = new Chart { Width = 580, Height = 230 };
+            Chart chart = new Chart { Width = 580, Height = 280 };
 
             var chartArea = new ChartArea();
 
@@ -1483,11 +1491,11 @@ namespace ESSACInspecciones.Controllers
             line1.ChartType = SeriesChartType.Line;
             line2.ChartType = SeriesChartType.Line;
             line3.ChartType = SeriesChartType.Line;
-
+            //Color de Lineas
             line1.Color = System.Drawing.Color.FromArgb(254, 46, 46);
             line2.Color = System.Drawing.Color.FromArgb(103, 131, 183);
             line3.Color = System.Drawing.Color.FromArgb(130, 88, 250);
-
+            //Tipo de fuente de los puntos
             line1.Font = new System.Drawing.Font("Segoe UI", 7f);
             line2.Font = new System.Drawing.Font("Segoe UI", 7f);
             line3.Font = new System.Drawing.Font("Segoe UI", 7f);
@@ -1530,6 +1538,14 @@ namespace ESSACInspecciones.Controllers
             chart.Series.Add(line1);
             chart.Series.Add(line2);
             chart.Series.Add(line3);
+
+            //Leyendas
+            Legend legend = new Legend();
+            legend.Name = "Leyenda";
+            legend.Alignment = System.Drawing.StringAlignment.Center;
+            legend.Docking = Docking.Bottom;
+
+            chart.Legends.Add(legend);
 
             return chart;
         }
