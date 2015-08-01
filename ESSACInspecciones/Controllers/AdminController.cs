@@ -1610,7 +1610,7 @@ namespace ESSACInspecciones.Controllers
             MemoryStream output = new MemoryStream();
             output.Write(file, 0, file.Length);
             output.Position = 0;
-            HttpContext.Response.AppendHeader("Content-Disposition", "inline; filename=" + model.Plantilla.Nombre);//HttpContext.Response.AddHeader("content-disposition", "attachment; filename=" + model.Plantilla.Nombre);
+            HttpContext.Response.AppendHeader("Content-Disposition", "inline; filename=" + model.Plantilla.Nombre + ".pdf");//HttpContext.Response.AddHeader("content-disposition", "attachment; filename=" + model.Plantilla.Nombre);
             return File(output, "application/pdf"); //new FileStreamResult(output, "application/pdf");
         }
 
