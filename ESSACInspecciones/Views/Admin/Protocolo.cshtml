@@ -396,6 +396,8 @@
                         GroupDescripcion: array_Descrip
                     };
                     localStorage.setItem("respuestas_" + IdProtocolo + IdPlantilla + IdInmueble + IdPeriodo, JSON.stringify(respuestas));
+                    $("#btnGuardar").val("Guardar");
+                    $("#btnGuardar").prop('disabled', false);
                     alert("El protocolo se ha guardado temporalmente. Por favor, conectese a Internet para que lo datos sean guardados.");
                 }
             });
@@ -508,7 +510,7 @@
             });
 
             $(".accordion-toggle").click(function () {
-                setInterval(function () {
+                setTimeout(function () {
                     switch (protocolo.IdPlantilla) {
                         case 4:
                             paintGraficaElectrobomba();
