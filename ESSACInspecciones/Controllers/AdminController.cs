@@ -1285,6 +1285,8 @@ namespace ESSACInspecciones.Controllers
 
             var chartArea = new ChartArea();
 
+            chartArea.AxisX.Enabled = AxisEnabled.True;
+            chartArea.AxisY.Enabled = AxisEnabled.True;
             chartArea.AxisY2.Enabled = AxisEnabled.True;
             chartArea.AxisX2.LabelStyle.Enabled = true;
 
@@ -1433,6 +1435,9 @@ namespace ESSACInspecciones.Controllers
             Chart chart = new Chart { Width = 580, Height = 280 };
 
             var chartArea = new ChartArea();
+
+            chartArea.AxisX.Enabled = AxisEnabled.True;
+            chartArea.AxisY.Enabled = AxisEnabled.True;
 
             chartArea.AxisX.Title = "Caudal (GPM)";
             chartArea.AxisY.Title = "Presión (PSI)";
