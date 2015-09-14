@@ -979,9 +979,9 @@ namespace ESSACInspecciones.Controllers
             tableHeader.AddCell(cellHeader);
             cellHeader.Phrase = new Phrase(protocolo.NombreAreaProtegida, myFontTextH12_blue);
             tableHeader.AddCell(cellHeader);
-            cellHeader.Phrase = new Phrase(protocolo.Fecha.ToString(), myFontTextH12_blue);
+            var Fecha = protocolo.Fecha != null ? protocolo.Fecha.GetValueOrDefault().ToString("dd/MM/yyyy") : null;
+            cellHeader.Phrase = new Phrase(Fecha, myFontTextH12_blue);
             tableHeader.AddCell(cellHeader);
-
             cellHeader.Phrase = new Phrase("Dirección:", myFontTextH12_B);
             tableHeader.AddCell(cellHeader);
             cellHeader.Phrase = new Phrase("Hora de Inicio:", myFontTextH12_B);
@@ -1288,6 +1288,15 @@ namespace ESSACInspecciones.Controllers
             chartArea.AxisX.Enabled = AxisEnabled.True;
             chartArea.AxisY.Enabled = AxisEnabled.True;
             chartArea.AxisY2.Enabled = AxisEnabled.True;
+
+            chartArea.AxisX.IsMarginVisible = false;
+            chartArea.AxisY.IsMarginVisible = false;
+            chartArea.AxisY2.IsMarginVisible = false;
+
+            /*chartArea.AxisX.Minimum = 0;
+            chartArea.AxisY.Minimum = 0;
+            chartArea.AxisY2.Minimum = 0;*/
+
             chartArea.AxisX2.LabelStyle.Enabled = true;
 
             chartArea.AxisX.Title = "Caudal (GPM)";
@@ -1438,6 +1447,9 @@ namespace ESSACInspecciones.Controllers
 
             chartArea.AxisX.Enabled = AxisEnabled.True;
             chartArea.AxisY.Enabled = AxisEnabled.True;
+
+            chartArea.AxisX.IsMarginVisible = false;
+            chartArea.AxisY.IsMarginVisible = false;
 
             chartArea.AxisX.Title = "Caudal (GPM)";
             chartArea.AxisY.Title = "Presión (PSI)";
