@@ -112,6 +112,5 @@ C:\Archivos\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Helpers\bin\Debu
 C:\Archivos\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Helpers\bin\Debug\System.Web.WebPages.xml
 C:\Archivos\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Helpers\bin\Debug\System.Web.WebPages.Deployment.xml
 C:\Archivos\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Helpers\bin\Debug\System.Web.WebPages.Razor.xml
-C:\Archivos\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Helpers\obj\Debug\ESSACInspecciones.Helpers.csprojResolveAssemblyReference.cache
 C:\Archivos\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Helpers\obj\Debug\ESSACInspecciones.Helpers.dll
 C:\Archivos\NubeLabs\Barbas\ESSACInspecciones\ESSACInspecciones.Helpers\obj\Debug\ESSACInspecciones.Helpers.pdb

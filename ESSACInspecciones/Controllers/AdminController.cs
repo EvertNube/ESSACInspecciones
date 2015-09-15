@@ -919,6 +919,9 @@ namespace ESSACInspecciones.Controllers
                 doc = new Document(PageSize.A4, 20f, 20f, 20f, 20f);
             }
             PdfWriter writer = PdfWriter.GetInstance(doc, ms);
+            
+            string miCodigo = (protocolo.Codigo != null) ? protocolo.Codigo : "N/A";
+            writer.PageEvent = new ITextEvents() { Header = miCodigo };
 
             pic1.SetAbsolutePosition(doc.PageSize.Width - 155, doc.PageSize.Height - 55);
 
@@ -939,15 +942,10 @@ namespace ESSACInspecciones.Controllers
             }
 
             doc.Open();
-
-            string miCodigo = (protocolo.Codigo != null) ? protocolo.Codigo : "N/A";
-            Paragraph CodigoProtocolo = new Paragraph(miCodigo, myFontTextH12);
+            //Paragraph CodigoProtocolo = new Paragraph(miCodigo, myFontTextH12);
+            Paragraph CodigoProtocolo = new Paragraph("", myFontTextH12);
             CodigoProtocolo.Alignment = Element.ALIGN_JUSTIFIED;
-            //CodigoProtocolo.IndentationLeft = 55;
-            //pic1.IndentationLeft = 9f;
-            //pic1.SpacingAfter = 9f;
-            //pic1.BorderWidthTop = 36f;
-            //pic1.BorderColorTop = System.Drawing.Color;
+            
             CodigoProtocolo.Add(pic1);
             doc.Add(CodigoProtocolo);
 
@@ -1822,6 +1820,196 @@ namespace ESSACInspecciones.Controllers
             }
 
             ViewBag.navbar = navbar;
+        }
+    }
+
+    public class ITextEvents : PdfPageEventHelper
+    {
+
+        // This is the contentbyte object of the writer
+        PdfContentByte cb;
+
+        // we will put the final number of pages in a template
+        PdfTemplate headerTemplate, footerTemplate;
+
+        // this is the BaseFont we are going to use for the header / footer
+        BaseFont bf = null;
+
+        // This keeps track of the creation time
+        DateTime PrintTime = DateTime.Now;
+
+
+        #region Fields
+        private string _header;
+        #endregion
+
+        #region Properties
+        public string Header
+        {
+            get { return _header; }
+            set { _header = value; }
+        }
+        #endregion
+
+
+        public override void OnOpenDocument(PdfWriter writer, Document document)
+        {
+            try
+            {
+                PrintTime = DateTime.Now;
+                bf = BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+                cb = writer.DirectContent;
+                headerTemplate = cb.CreateTemplate(100, 100);
+                footerTemplate = cb.CreateTemplate(50, 50);
+            }
+            catch (DocumentException de)
+            {
+
+            }
+            catch (System.IO.IOException ioe)
+            {
+
+            }
+        }
+
+        public override void OnEndPage(iTextSharp.text.pdf.PdfWriter writer, iTextSharp.text.Document document)
+        {
+            base.OnEndPage(writer, document);
+
+            iTextSharp.text.Font baseFontNormal = new iTextSharp.text.Font(iTextSharp.text.Font.FontFamily.HELVETICA, 12f, iTextSharp.text.Font.NORMAL, iTextSharp.text.BaseColor.BLACK);
+
+            iTextSharp.text.Font baseFontBig = new iTextSharp.text.Font(iTextSharp.text.Font.FontFamily.HELVETICA, 12f, iTextSharp.text.Font.BOLD, iTextSharp.text.BaseColor.BLACK);
+
+            //Phrase p1Header = new Phrase("Sample Header Here", baseFontNormal);
+            Phrase p1Header = new Phrase(Header, baseFontNormal);
+
+            //Create PdfTable object
+            PdfPTable pdfTab = new PdfPTable(3);
+
+            //We will have to create separate cells to include image logo and 2 separate strings
+            //Row 1
+            PdfPCell pdfCell1 = new PdfPCell(p1Header);
+            PdfPCell pdfCell2 = new PdfPCell();
+            PdfPCell pdfCell3 = new PdfPCell();
+            //String text = "Page " + writer.PageNumber + " of ";
+            String text = writer.PageNumber.ToString();
+            //String text = "";
+
+            //Add paging to header
+            {
+                cb.BeginText();
+                cb.SetFontAndSize(bf, 10);
+                //cb.SetTextMatrix(document.PageSize.GetRight(20), document.PageSize.GetTop(11));
+                //cb.ShowText(text);
+                cb.EndText();
+                //float len = bf.GetWidthPoint(text, 10);
+                //Adds "12" in Page 1 of 12
+                //cb.AddTemplate(headerTemplate, document.PageSize.GetRight(100) + len, document.PageSize.GetTop(11));
+            }
+            //Add paging to footer
+            {
+                cb.BeginText();
+                cb.SetFontAndSize(bf, 10);
+                cb.SetTextMatrix(document.PageSize.GetRight(30), document.PageSize.GetBottom(11));
+                cb.ShowText(text);
+                cb.EndText();
+                //float len = bf.GetWidthPoint(text, 10);
+                //cb.AddTemplate(footerTemplate, document.PageSize.GetRight(180) + len, document.PageSize.GetBottom(11));
+            }
+            //Row 2
+            //PdfPCell pdfCell4 = new PdfPCell(new Phrase("Sub Header Description", baseFontNormal));
+            //Row 3
+
+
+            //PdfPCell pdfCell5 = new PdfPCell(new Phrase("Date:" + PrintTime.ToShortDateString(), baseFontBig));
+            //PdfPCell pdfCell6 = new PdfPCell();
+            //PdfPCell pdfCell7 = new PdfPCell(new Phrase("TIME:" + string.Format("{0:t}", DateTime.Now), baseFontBig));
+
+
+            //set the alignment of all three cells and set border to 0
+            pdfCell1.HorizontalAlignment = Element.ALIGN_LEFT;
+            pdfCell2.HorizontalAlignment = Element.ALIGN_LEFT;
+            pdfCell3.HorizontalAlignment = Element.ALIGN_LEFT;
+            /*pdfCell4.HorizontalAlignment = Element.ALIGN_CENTER;
+            pdfCell5.HorizontalAlignment = Element.ALIGN_CENTER;
+            pdfCell6.HorizontalAlignment = Element.ALIGN_CENTER;
+            pdfCell7.HorizontalAlignment = Element.ALIGN_CENTER;*/
+
+
+            //pdfCell2.VerticalAlignment = Element.ALIGN_BOTTOM;
+            pdfCell3.VerticalAlignment = Element.ALIGN_MIDDLE;
+            /*pdfCell4.VerticalAlignment = Element.ALIGN_TOP;
+            pdfCell5.VerticalAlignment = Element.ALIGN_MIDDLE;
+            pdfCell6.VerticalAlignment = Element.ALIGN_MIDDLE;
+            pdfCell7.VerticalAlignment = Element.ALIGN_MIDDLE;*/
+
+
+            //pdfCell4.Colspan = 3;
+
+
+
+            pdfCell1.Border = 0;
+            pdfCell2.Border = 0;
+            pdfCell3.Border = 0;
+            /*pdfCell4.Border = 0;
+            pdfCell5.Border = 0;
+            pdfCell6.Border = 0;
+            pdfCell7.Border = 0;*/
+
+            pdfCell1.Colspan = 1;
+            pdfCell2.Colspan = 1;
+            pdfCell3.Colspan = 1;
+
+
+            //add all three cells into PdfTable
+            pdfTab.AddCell(pdfCell1);
+            pdfTab.AddCell(pdfCell2);
+            pdfTab.AddCell(pdfCell3);
+            /*pdfTab.AddCell(pdfCell4);
+            pdfTab.AddCell(pdfCell5);
+            pdfTab.AddCell(pdfCell6);
+            pdfTab.AddCell(pdfCell7);*/
+
+            pdfTab.TotalWidth = document.PageSize.Width - 10;
+            pdfTab.WidthPercentage = 90f;
+            pdfTab.HorizontalAlignment = Element.ALIGN_JUSTIFIED_ALL;
+            //pdfTab.HorizontalAlignment = Element.ALIGN_CENTER;
+
+
+            //call WriteSelectedRows of PdfTable. This writes rows from PdfWriter in PdfTable
+            //first param is start row. -1 indicates there is no end row and all the rows to be included to write
+            //Third and fourth param is x and y position to start writing
+            pdfTab.WriteSelectedRows(0, -1, 20, document.PageSize.Height - 4, writer.DirectContent);
+            //set pdfContent value
+
+            //Move the pointer and draw line to separate header section from rest of page
+            /*cb.MoveTo(40, document.PageSize.Height - 100);
+            cb.LineTo(document.PageSize.Width - 40, document.PageSize.Height - 100);
+            cb.Stroke();*/
+
+            //Move the pointer and draw line to separate footer section from rest of page
+            /*cb.MoveTo(40, document.PageSize.GetBottom(50));
+            cb.LineTo(document.PageSize.Width - 40, document.PageSize.GetBottom(50));
+            cb.Stroke();*/
+        }
+
+        public override void OnCloseDocument(PdfWriter writer, Document document)
+        {
+            base.OnCloseDocument(writer, document);
+
+            headerTemplate.BeginText();
+            headerTemplate.SetFontAndSize(bf, 10);
+            headerTemplate.SetTextMatrix(0, 0);
+            headerTemplate.ShowText((writer.PageNumber - 1).ToString());
+            headerTemplate.EndText();
+
+            footerTemplate.BeginText();
+            footerTemplate.SetFontAndSize(bf, 10);
+            footerTemplate.SetTextMatrix(0, 0);
+            footerTemplate.ShowText((writer.PageNumber - 1).ToString());
+            footerTemplate.EndText();
+
+
         }
     }
 }
