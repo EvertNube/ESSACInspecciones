@@ -283,7 +283,7 @@ namespace ESSACInspecciones.Core.BL
                     foreach (var plan in InmuebleDTO.Plantillas)
                     {
                         var plantilla = context.Plantilla.Where(x => x.IdPlantilla == plan.IdPlantilla).SingleOrDefault();
-                        Inmueble.Plantilla.Remove(plantilla);
+                        Inmueble.Plantilla.Add(plantilla);
                     }
 
                     context.SaveChanges();

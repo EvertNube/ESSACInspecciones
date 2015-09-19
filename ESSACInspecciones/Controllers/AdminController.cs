@@ -311,10 +311,11 @@ namespace ESSACInspecciones.Controllers
         {
             List<PlantillaDTO> plantillasLeft = new List<PlantillaDTO>();//.ToList();
             plantillasLeft = AllPlantillas.ToList();
-            foreach (var plan in AllPlantillas)
+            plantillasLeft.RemoveAll(a => SeldPlantillas.Exists(w => w.IdPlantilla > 0 && w.IdPlantilla == a.IdPlantilla));
+            /*foreach (var plan in AllPlantillas)
                 foreach (var planInm in SeldPlantillas)
                     if (plan.IdPlantilla > 0 && plan.IdPlantilla == planInm.IdPlantilla)
-                        plantillasLeft.Remove(planInm);
+                        plantillasLeft.Remove(planInm);*/
             return plantillasLeft;
         }
 
