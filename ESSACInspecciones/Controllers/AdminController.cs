@@ -1358,10 +1358,10 @@ namespace ESSACInspecciones.Controllers
             Series line3 = new Series("Curva de Prueba de la Bomba");
             Series line4 = new Series("Curva de Fábrica de la Bomba");
 
-            line1.ChartType = SeriesChartType.Line;
-            line2.ChartType = SeriesChartType.Line;
-            line3.ChartType = SeriesChartType.Line;
-            line4.ChartType = SeriesChartType.Line;
+            line1.ChartType = SeriesChartType.Spline;
+            line2.ChartType = SeriesChartType.Spline;
+            line3.ChartType = SeriesChartType.Spline;
+            line4.ChartType = SeriesChartType.Spline;
 
             line1.Color = System.Drawing.Color.FromArgb(153, 0, 255);
             line2.Color = System.Drawing.Color.FromArgb(109, 158, 235);
@@ -1504,9 +1504,9 @@ namespace ESSACInspecciones.Controllers
             Series line2 = new Series("Curva de Fábrica de la Bomba");
             Series line3 = new Series("Curva de Prueba de la Bomba 2");
 
-            line1.ChartType = SeriesChartType.Line;
-            line2.ChartType = SeriesChartType.Line;
-            line3.ChartType = SeriesChartType.Line;
+            line1.ChartType = SeriesChartType.Spline;
+            line2.ChartType = SeriesChartType.Spline;
+            line3.ChartType = SeriesChartType.Spline;
             //Color de Lineas
             line1.Color = System.Drawing.Color.FromArgb(254, 46, 46);
             line2.Color = System.Drawing.Color.FromArgb(103, 131, 183);
@@ -1660,6 +1660,9 @@ namespace ESSACInspecciones.Controllers
             if (!string.IsNullOrEmpty(_tarea.StrFechaInicio)) _tarea.FechaInicio = Convert.ToDateTime(_tarea.StrFechaInicio);
             if (!string.IsNullOrEmpty(_tarea.StrFechaFin)) _tarea.FechaFin = Convert.ToDateTime(_tarea.StrFechaFin);
             TareaBL objBL = new TareaBL();
+            TareaDTO miTarea = objBL.getTarea(_tarea.IdTarea);
+            if (getCurrentUser().IdRolUsuario >= 3 && miTarea.Responsables.FirstOrDefault(x => x.IdUsuario == getCurrentUser().IdUsuario) == null) { return RedirectToAction("Index", "Admin"); }
+
             ServiciosBL oServiciosBL = new ServiciosBL();
             //var color = oServiciosBL.getServicio(_tarea.IdServicio).ColorServicio;
             int idTarea = 0;
@@ -1696,8 +1699,18 @@ namespace ESSACInspecciones.Controllers
             if (!string.IsNullOrEmpty(objTarea.StrFechaInicio)) objTarea.FechaInicio = Convert.ToDateTime(objTarea.StrFechaInicio);
             if (!string.IsNullOrEmpty(objTarea.StrFechaFin)) objTarea.FechaFin = Convert.ToDateTime(objTarea.StrFechaFin);
             TareaBL objBL = new TareaBL();
+            TareaDTO miTarea = objBL.getTarea(objTarea.IdTarea);
+            if (getCurrentUser().IdRolUsuario >= 3 && miTarea.Responsables.Count() == 0) { return RedirectToAction("Index", "Admin"); }
             return Json(new { Response = objBL.updateTareaResponsable(tipoCorreo, objTarea) }, JsonRequestBehavior.AllowGet);
         }
+        public JsonResult ThrowJsonError(Exception e)
+        {
+            //Logger.Error(e.Message, e);
+            Response.StatusCode = (int)System.Net.HttpStatusCode.BadRequest;
+            Response.StatusDescription = e.Message;
+            return Json(new { Message = e.Message }, JsonRequestBehavior.AllowGet);
+        }
+
         [HttpGet]
         public ActionResult GetBolsaTareas()
         {
