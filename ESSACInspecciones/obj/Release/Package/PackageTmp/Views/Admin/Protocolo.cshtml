@@ -13,6 +13,7 @@
     @Scripts.Render("~/Content/js/jquery.flot.min.js")
     @Scripts.Render("~/Content/js/jquery.flot.tooltip.min.js")
     @Scripts.Render("~/Content/js/jquery.flot.axislabels.js")
+    
 
     <script type="text/javascript">
         var RemovedFirmas = [];
@@ -396,6 +397,8 @@
                         GroupDescripcion: array_Descrip
                     };
                     localStorage.setItem("respuestas_" + IdProtocolo + IdPlantilla + IdInmueble + IdPeriodo, JSON.stringify(respuestas));
+                    $("#btnGuardar").val("Guardar");
+                    $("#btnGuardar").prop('disabled', false);
                     alert("El protocolo se ha guardado temporalmente. Por favor, conectese a Internet para que lo datos sean guardados.");
                 }
             });
@@ -508,7 +511,7 @@
             });
 
             $(".accordion-toggle").click(function () {
-                setInterval(function () {
+                setTimeout(function () {
                     switch (protocolo.IdPlantilla) {
                         case 4:
                             paintGraficaElectrobomba();
@@ -564,7 +567,8 @@
                         var avg1 = sum1 / 3;
                         var avg2 = sum2 / 3;
                         var result = (avg1 * avg2 * FP * Math.sqrt(3)) / (0.736 * 1000);
-                        item.value = Math.round(result * 10) / 10;
+                        var FinalValue = Math.round(result * 10) / 10;
+                        item.value = isNaN(FinalValue) ? "" : FinalValue;
                         datosGrafica = [];
                     }
                 } else if (index > 40 && index < 47) {
@@ -583,22 +587,25 @@
                         result = 0;
                         if (dnSuccion == dnDescarga) {
                             result = 0;
-                            item.value = result;
+                            item.value = isNaN(result) ? "" : result;
                         }
                         else {
                             result = 0.001123 * Math.pow(parseInt(datosGrafica[0], 10), 2) / (Math.pow(dnSuccion, 4) - Math.pow(dnDescarga, 4));
-                            item.value = Math.round(result * 10) / 10;
+                            var FinalValue = Math.round(result * 10) / 10;
+                            item.value = isNaN(FinalValue) ? "" : FinalValue;
                         }
                         datosGrafica.push(trim(item.value));
                     } else if (datosGrafica.length == 6) {
                         result = 0;
                         result = (dnRPM / parseInt(datosGrafica[1], 10)) * parseInt(datosGrafica[0]);
-                        item.value = Math.round(result);
+                        var FinalValue = Math.round(result);
+                        item.value = isNaN(FinalValue) ? "" : FinalValue;
                         datosGrafica.push(trim(item.value));
                     } else if (datosGrafica.length == 7) {
                         result = 0;
                         result = (dnRPM / parseInt(datosGrafica[1], 10)) * (dnRPM / parseInt(datosGrafica[1], 10)) * (parseInt(datosGrafica[3], 10) - parseInt(datosGrafica[2], 10) + parseInt(datosGrafica[4], 10) - parseInt(datosGrafica[5], 10));
-                        item.value = Math.round(result);
+                        var FinalValue = Math.round(result);
+                        item.value = isNaN(FinalValue) ? "" : FinalValue;
                         datosGrafica = [];
                     }
                     else { datosGrafica.push(trim(item.value)); }
@@ -627,22 +634,25 @@
                         result = 0;
                         if (dpdSuccion == dpdDescarga) {
                             result = 0;
-                            item.value = result;
+                            item.value = isNaN(result) ? "" : result;
                         }
                         else {
                             result = 0.001123 * Math.pow(parseInt(datosGrafica[0], 10), 2) / (Math.pow(dpdSuccion, 4) - Math.pow(dpdDescarga, 4));
-                            item.value = Math.round(result * 10) / 10;
+                            var FinalValue = Math.round(result * 10) / 10;
+                            item.value = isNaN(FinalValue) ? "" : FinalValue;
                         }
                         datosGrafica.push(trim(item.value));
                     } else if (datosGrafica.length == 6) {
                         result = 0;
                         result = (dpRPM / parseInt(datosGrafica[1], 10)) * parseInt(datosGrafica[0]);
-                        item.value = Math.round(result);
+                        var FinalValue = Math.round(result);
+                        item.value = isNaN(FinalValue) ? "" : FinalValue;
                         datosGrafica.push(trim(item.value));
                     } else if (datosGrafica.length == 7) {
                         result = 0;
                         result = Math.pow((dpRPM / parseInt(datosGrafica[1], 10)), 2) * (parseInt(datosGrafica[3], 10) - parseInt(datosGrafica[2], 10) + parseInt(datosGrafica[4], 10) - parseInt(datosGrafica[5], 10));
-                        item.value = Math.round(result);
+                        var FinalValue = Math.round(result);
+                        item.value = isNaN(FinalValue) ? "" : FinalValue;
                         datosGrafica = [];
                     } else { datosGrafica.push(trim(item.value)); }
                 }
@@ -652,22 +662,25 @@
                         result = 0;
                         if (dpdSuccion == dpdDescarga) {
                             result = 0;
-                            item.value = result;
+                            item.value = isNaN(result) ? "" : result;
                         }
                         else {
                             result = 0.001123 * Math.pow(parseInt(datosGrafica[0], 10), 2) / (Math.pow(dpdSuccion, 4) - Math.pow(dpdDescarga, 4));
-                            item.value = Math.round(result * 10) / 10;
+                            var FinalValue = Math.round(result * 10) / 10;
+                            item.value = isNaN(FinalValue) ? "" : FinalValue;
                         }
                         datosGrafica.push(trim(item.value));
                     } else if (datosGrafica.length == 6) {
                         result = 0;
                         result = (dpRPM / parseInt(datosGrafica[1], 10)) * parseInt(datosGrafica[0]);
-                        item.value = Math.round(result);
+                        var FinalValue = Math.round(result);
+                        item.value = isNaN(FinalValue) ? "" : FinalValue;
                         datosGrafica.push(trim(item.value));
                     } else if (datosGrafica.length == 7) {
                         result = 0;
                         result = Math.pow((dpRPM / parseInt(datosGrafica[1], 10)), 2) * (parseInt(datosGrafica[3], 10) - parseInt(datosGrafica[2], 10) + parseInt(datosGrafica[4], 10) - parseInt(datosGrafica[5], 10));
-                        item.value = Math.round(result);
+                        var FinalValue = Math.round(result);
+                        item.value = isNaN(FinalValue) ? "" : FinalValue;
                         datosGrafica = [];
                     }
                     else { datosGrafica.push(trim(item.value)); }
@@ -738,7 +751,7 @@
                         tickColor: "#f0f0f0",
                         borderWidth: 0
                     },
-                    colors: ["#FE2E2E", "#6783B7", "#8258FA"],
+                    colors: ["#FE2E2E", "#6783B7", "#16a085"],
                     xaxis: {
                         //show: false
                         axisLabel: 'Caudal (GPM)'

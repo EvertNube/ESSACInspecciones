@@ -18,24 +18,27 @@
                         <h2>Tareas</h2>
                         @Html.Partial("_showAlertMessages")
                         <section class="panel panel-default">
-                            <div class="row wrapper">
-                                <div class="col-sm-4 m-b-xs">
-                                    @using (Html.BeginForm("Tareas", "Admin", FormMethod.Get))
-                                    {
-                                        @Html.DropDownList("SearchResponsable", new SelectList(ViewBag.Responsables, "IdUsuario", "Nombre", ViewBag.IdResponsable), new { @class = "input-sm form-control input-s-sm inline v-middle btn-rounded" })
-                                        <button type="submit" class="btn btn-sm btn-default btn-rounded">Buscar</button>
-                                    }
+                            @if (ViewBag.EsAdmin)
+                            {
+                                <div class="row wrapper">
+                                    <div class="col-sm-4 m-b-xs">
+                                        @using (Html.BeginForm("Tareas", "Admin", FormMethod.Get))
+                                        {
+                                            @Html.DropDownList("SearchResponsable", new SelectList(ViewBag.Responsables, "IdUsuario", "Nombre", ViewBag.IdResponsable), new { @class = "input-sm form-control input-s-sm inline v-middle btn-rounded" })
+                                            <button type="submit" class="btn btn-sm btn-default btn-rounded">Buscar</button>
+                                        }
+                                    </div>
+                                    <div class="col-sm-4 m-b-xs">
+                                        @if (ViewBag.EsAdmin)
+                                        {
+                                            <label class="text-sm"><input type="checkbox" id="btn-showInactive" /> Mostrar Inactivos</label>
+                                        }
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <a class="btn btn-sm btn-success pull-right btn-rounded" href="@Url.Action("Tarea")"><i class="fa fa-plus"></i> Crear nueva Tarea</a>
+                                    </div>
                                 </div>
-                                <div class="col-sm-4 m-b-xs">
-                                    @if (ViewBag.EsAdmin)
-                                    {
-                                        <label class="text-sm"><input type="checkbox" id="btn-showInactive" /> Mostrar Inactivos</label>
-                                    }
-                                </div>
-                                <div class="col-sm-4">
-                                    <a class="btn btn-sm btn-success pull-right btn-rounded" href="@Url.Action("Tarea")"><i class="fa fa-plus"></i> Crear nueva Tarea</a>
-                                </div>
-                            </div>
+                            }
                             <div class="table-responsive">
                                 <table class="table table-striped b-t b-light">
                                     <thead>

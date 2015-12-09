@@ -784,6 +784,7 @@
         </div>
     </aside> <!-- /.aside -->
 
+
 </section>
 
 <div class="modal fade modal-task" id="modal-form">
@@ -978,7 +979,8 @@
                             <div class="col-lg-12">
                                 <button type="button" class="btn btn-primary btn-rounded pull-right" id="guardarTarea">Guardar</button>
                                 <button type="button" class="btn btn-default btn-rounded pull-right" data-dismiss="modal">Cancelar</button>
-                                <button type="button" class="btn btn-danger btn-rounded" id="eliminarTarea" data-dismiss="modal">Eliminar</button>
+                                @if(ViewBag.EsAdmin)
+                                {<button type="button" class="btn btn-danger btn-rounded" id="eliminarTarea" data-dismiss="modal">Eliminar</button>}
                             </div>
                         </div>
                     </div>
