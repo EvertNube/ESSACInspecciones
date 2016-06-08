@@ -987,7 +987,7 @@ namespace ESSACInspecciones.Controllers
             tableHeader.AddCell(cellHeader);
             cellHeader.Phrase = new Phrase(protocolo.Direccion, myFontTextH12_blue);
             tableHeader.AddCell(cellHeader);
-            cellHeader.Phrase = new Phrase(protocolo.HoraInicio + ":" + protocolo.MinutoInicio, myFontTextH12_blue);
+            cellHeader.Phrase = new Phrase(protocolo.HoraInicio.ToString("D2") + ":" + protocolo.MinutoInicio.ToString("D2"), myFontTextH12_blue);
             tableHeader.AddCell(cellHeader);
 
             cellHeader.Phrase = new Phrase("Tipo de prueba:", myFontTextH12_B);
@@ -1025,10 +1025,15 @@ namespace ESSACInspecciones.Controllers
             {
                 //Validacion del tamaño de tabla de los ANEXOS
                 //numColumns = numeroFilasEnSeccion(Seccion.Nombre);
+                /*if(Seccion.Nombre == "ANEXO - HOJA DE INSPECCIÓN DE GABINETES CONTRA INCENDIOS")
+                {
+                    int pare = 1;
+                }*/
 
+                int esAnexo = 0;
                 if (!protocoloANX)
                 {
-                    int esAnexo = numeroFilasEnSeccion(Seccion.Nombre);
+                    esAnexo = numeroFilasEnSeccion(Seccion.Nombre);
                     numColumns = esAnexo != 0 ? esAnexo : 12;
                     if (esAnexo != 0)
                     {
@@ -1148,26 +1153,20 @@ namespace ESSACInspecciones.Controllers
 
                             cellSubSeccionBody.Phrase = new Phrase(rpta, myFontText8_blue);
                         }
+
                         tableSeccion.AddCell(cellSubSeccionBody);
                     }
 
                     if (ultimaSeccionGrafica)
                     {
                         var image = Image.GetInstance(CrearGrafica(protocolo));
-                        //image.Alignment = Element.ALIGN_CENTER;
                         image.ScalePercent(95f);
-                        //image.SpacingBefore = 10f;
-                        //image.SpacingAfter = 10f;
+                        
                         PdfPCell imageCell = new PdfPCell(image);
                         imageCell.Rowspan = 1;
                         imageCell.Colspan = 12;
                         imageCell.Padding = 1f;
-                        //imageCell.HorizontalAlignment = Element.ALIGN_CENTER;
-                        //imageCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-
-
-                        //imageCell.Rowspan = 5;
-                        //imageCell.Colspan = 12;
+                        
                         tableSeccion.AddCell(imageCell);
                     }
                 }

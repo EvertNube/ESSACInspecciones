@@ -79,7 +79,7 @@
 
             var varin = '@ViewBag.IdInmueble';
             var varper = '@ViewBag.IdPeriodo';
-            if (varin != '') {
+            if (varin > 0) {
                 $('#Cliente').val('@ViewBag.IdCliente');
                 $.getJSON("/Admin/GetListInmueblesByClienteId", { id: '@ViewBag.IdCliente' }, function (data) {
                 }).done(function (data) {
@@ -136,7 +136,15 @@
                 if (InmuebleId != null || InmuebleId != 0) {
                     var PeriodoId = target.children().first().attr('id');
                     PeriodoId = PeriodoId.replace('periodo', '');
-                    listarProtocolos(InmuebleId, PeriodoId);
+
+                    if ($("#Inmueble").val() > 0 )
+                    {
+                        listarProtocolos(InmuebleId, PeriodoId);
+                    }
+                    else
+                    {
+                        listarProtocolos(InmuebleId, 0);
+                    }
                 }
             });
         });

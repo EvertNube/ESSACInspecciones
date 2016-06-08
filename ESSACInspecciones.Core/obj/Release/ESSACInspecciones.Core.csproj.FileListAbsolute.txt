@@ -139,3 +139,4 @@ C:\Archivos\Personal_Pro\NubeLabs\ESSAC\ESSACInspecciones_pro\ESSACInspecciones.
 C:\Archivos\Personal_Pro\NubeLabs\ESSAC\ESSACInspecciones_pro\ESSACInspecciones.Core\obj\Release\ESSACInspecciones.Core.csprojResolveAssemblyReference.cache
 C:\Archivos\Personal_Pro\NubeLabs\ESSAC\ESSACInspecciones_pro\ESSACInspecciones.Core\obj\Release\ESSACInspecciones.Core.dll
 C:\Archivos\Personal_Pro\NubeLabs\ESSAC\ESSACInspecciones_pro\ESSACInspecciones.Core\obj\Release\ESSACInspecciones.Core.pdb
+C:\Archivos\Personal_Pro\NubeLabs\ESSAC\ESSACInspecciones_pro\ESSACInspecciones.Core\bin\Release\Microsoft.Web.Infrastructure.dll

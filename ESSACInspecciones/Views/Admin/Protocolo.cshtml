@@ -128,6 +128,8 @@
                             tipoSeccion = " claseGraficaMotobomba";
                         else if (protocolo.IdPlantilla == 4 && seccion.Nombre.toUpperCase().indexOf("RESULTADOS DE LA PRUEBA DE LA BOMBA CONTRA INCENDIO") > -1)
                             tipoSeccion = " claseGraficaElectrobomba";
+                        else if (protocolo.IdPlantilla == 1 && seccion.Nombre.toUpperCase().indexOf("ESPECIFICACIÓN DE LOS SISTEMAS") > -1)
+                            tipoSeccion = " claseGraficaNFPA14";
                         else
                             tipoSeccion = "";
                         if (seccion.SeccionBodys.length > 0) {
@@ -468,6 +470,10 @@
 
             });
 
+            $(".claseGraficaNFPA14").keyup(function () {
+                calcularDatosProtocolo(1);
+            });
+
             $(".claseGraficaElectrobomba").keyup(function () {
                 calcularDatosProtocolo(4);
                 paintGraficaElectrobomba();
@@ -536,6 +542,9 @@
         //Auto Calculado de valores en las graficas
         function calcularDatosProtocolo(numProto) {
             switch (numProto) {
+                case 1:
+                    calcularDatosNFPA14();
+                    break;
                 case 4:
                     calcularDatosElectrobomba();
                     break;
@@ -543,6 +552,35 @@
                     calcularDatosMotobomba();
                     break;
             }
+        }
+        var miDato = 0;
+        function calcularDatosNFPA14() {
+            var datos = [];
+
+            $('.claseGraficaNFPA14').each(function (index, item) {
+                var result = 0;
+                if (index >= 151 && index <= 159) {
+                    if(index % 2 === 0)
+                    {
+                        
+                        item.value = isNaN(miDato * 0.06895) ? "" : miDato * 0.06895;
+                        miDato = 0;
+                    }
+                    else
+                    {
+                        miDato = item.value;
+                    }
+                }
+                if (index >= 160 && index <= 161) {
+                    if (index % 2 === 0) {
+                        item.value = isNaN(miDato * 3.7854118) ? "" : miDato * 3.7854118;
+                        miDato = 0;
+                    }
+                    else {
+                        miDato = item.value;
+                    }
+                }
+            });
         }
 
         function calcularDatosElectrobomba() {
